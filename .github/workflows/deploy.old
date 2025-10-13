@@ -1,0 +1,103 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  APPLICATION_NAME: icsacv-api
+  ENVIRONMENT_NAME_DEV: Icsacv-api-dev
+  ENVIRONMENT_NAME_PROD: Icsacv-api-prod
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -r * .[^.]* deploy || true
+          rm -rf deploy/node_modules
+          cd deploy
+          zip -r ../app.zip . -x '*.git*'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
+          ENV_NAME=$([ "$BRANCH_NAME" = "main" ] && echo $ENVIRONMENT_NAME_PROD || echo $ENVIRONMENT_NAME_DEV)
+          VERSION_LABEL="$ENV_NAME-$(date +%s)"
+          FILE_KEY="$VERSION_LABEL.zip"
+
+          aws s3 cp app.zip s3://$S3_BUCKET_NAME/$FILE_KEY
+
+          echo "S3_KEY=$FILE_KEY" >> $GITHUB_ENV
+          echo "ENV_NAME=$ENV_NAME" >> $GITHUB_ENV
+          echo "VERSION_LABEL=$VERSION_LABEL" >> $GITHUB_ENV
+
+      - name: Create Elastic Beanstalk Application Version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name "$APPLICATION_NAME" \
+            --version-label "$VERSION_LABEL" \
+            --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$S3_KEY \
+            --region $AWS_REGION
+
+      - name: Wait for Application Version to be ready
+        run: |
+          echo "Esperando a que la versión sea procesada..."
+          for i in {1..20}; do
+            STATUS=$(aws elasticbeanstalk describe-application-versions \
+              --application-name "$APPLICATION_NAME" \
+              --version-label "$VERSION_LABEL" \
+              --region "$AWS_REGION" \
+              --query "ApplicationVersions[0].Status" \
+              --output text)
+
+            echo "Estado actual: $STATUS"
+
+            if [[ "$STATUS" == "PROCESSED" ]]; then
+              echo "✔ La versión fue procesada correctamente."
+              break
+            fi
+
+            if [[ $i -eq 20 ]]; then
+              echo "❌ Timeout esperando que Elastic Beanstalk procese la versión."
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name "$APPLICATION_NAME" \
+            --environment-name "$ENV_NAME" \
+            --version-label "$VERSION_LABEL" \
+            --region "$AWS_REGION"
