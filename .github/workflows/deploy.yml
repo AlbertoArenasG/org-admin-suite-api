@@ -26,6 +26,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Set ENV NAME
+        run: ENV_NAME=$([ "$BRANCH_NAME" = "main" ] && echo $ENVIRONMENT_NAME_PROD || echo $ENVIRONMENT_NAME_DEV)
+
       - name: Install dependencies
         run: npm ci
 
