@@ -32,8 +32,13 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Generate deployment zip
-        run: zip -r app.zip . -x '*.git*'
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -r * .[^.]* deploy || true
+          rm -rf deploy/node_modules
+          cd deploy
+          zip -r ../app.zip . -x '*.git*'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -58,7 +63,7 @@ jobs:
       - name: Create Elastic Beanstalk Application Version
         run: |
           aws elasticbeanstalk create-application-version \
-            --application-name $APPLICATION_NAME \
+            --application-name "$APPLICATION_NAME" \
             --version-label "$VERSION_LABEL" \
             --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$S3_KEY \
             --region $AWS_REGION
