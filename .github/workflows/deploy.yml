@@ -3,53 +3,52 @@ name: Deploy to Elastic Beanstalk
 on:
   push:
     branches:
-      - main
       - develop
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   APPLICATION_NAME: icsacv-api
-  ENVIRONMENT_NAME_DEV: Icsacv-api-dev
-  ENVIRONMENT_NAME_PROD: Icsacv-api-prod
-  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+  ENVIRONMENT_NAME: Icsacv-api-dev
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Use Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.x'
 
-      - name: Set ENV NAME
-        run: ENV_NAME=$([ "$BRANCH_NAME" = "main" ] && echo $ENVIRONMENT_NAME_PROD || echo $ENVIRONMENT_NAME_DEV)
-
-      - name: Install dependencies
+      - name: Install deps (with dev)
         run: npm ci
 
-      - name: Build NestJS application
+      - name: Build NestJS
         run: npm run build
 
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x "*.git*" "node_modules/*" # Exclude unnecessary files
+      - name: Prune dev deps (keep runtime only)
+        run: npm prune --omit=dev
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }} # Your AWS region
+      - name: Prepare bundle
+        run: |
+          mkdir -p bundle
+          cp -r dist package.json package-lock.json Procfile bundle/
+          # Instalar solo deps de runtime dentro del bundle
+          pushd bundle
+          npm ci --omit=dev
+          popd
+          cd bundle && zip -r ../app.zip . && cd ..
 
       - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
-          application_name: ${{ env.APPLICATION_NAME }} # Your Elastic Beanstalk application name
-          environment_name: ${{ env.ENV_NAME }} # Your Elastic Beanstalk environment name
-          version_label: ${{ github.sha }}
-          region: ${{ env.AWS_REGION }} # Your AWS region
-          deployment_package: deploy.zip
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ env.APPLICATION_NAME }}
+          environment_name: ${{ env.ENVIRONMENT_NAME }}
+          region: ${{ env.AWS_REGION }}
+          version_label: v-${{ github.run_number }}-${{ github.sha }}
+          deployment_package: app.zip
