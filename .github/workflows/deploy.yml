@@ -1,0 +1,64 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  APPLICATION_NAME: icsacv-api
+  ENVIRONMENT_NAME_DEV: Icsacv-api-dev
+  ENVIRONMENT_NAME_PROD: Icsacv-api-prod
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Generate deployment zip
+        run: zip -r app.zip . -x '*.git*'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
+          ENV_NAME=$([ "$BRANCH_NAME" = "main" ] && echo $ENVIRONMENT_NAME_PROD || echo $ENVIRONMENT_NAME_DEV)
+          FILE_KEY=$ENV_NAME-$(date +%s).zip
+
+          aws s3 cp app.zip s3://$S3_BUCKET_NAME/$FILE_KEY
+          echo "S3_KEY=$FILE_KEY" >> $GITHUB_ENV
+          echo "ENV_NAME=$ENV_NAME" >> $GITHUB_ENV
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name $APPLICATION_NAME \
+            --version-label "$ENV_NAME-$(date +%s)" \
+            --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$S3_KEY
+
+          aws elasticbeanstalk update-environment \
+            --environment-name $ENV_NAME \
+            --version-label "$ENV_NAME-$(date +%s)"
