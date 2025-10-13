@@ -14,4 +14,4 @@ import { envSchema, EnvService } from '@infra/env';
   providers: [EnvService],
   exports: [EnvService],
 })
-export class ConfigurationModule {}
+export class GlobalEnvModule {}

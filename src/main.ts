@@ -13,5 +13,6 @@ async function bootstrap() {
   app.enableCors(corsConfig);
 
   await app.listen(PORT);
+  console.group(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
