@@ -21,7 +21,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "-v husky >/dev/null 2>&1 && husky || echo 'husky skipped'"
+    "prepare": "command -v husky >/dev/null 2>&1 && husky || echo 'husky skipped'"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
