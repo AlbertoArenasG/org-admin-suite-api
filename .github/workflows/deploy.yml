@@ -46,19 +46,53 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_REF##*/}
           ENV_NAME=$([ "$BRANCH_NAME" = "main" ] && echo $ENVIRONMENT_NAME_PROD || echo $ENVIRONMENT_NAME_DEV)
-          FILE_KEY=$ENV_NAME-$(date +%s).zip
+          VERSION_LABEL="$ENV_NAME-$(date +%s)"
+          FILE_KEY="$VERSION_LABEL.zip"
 
           aws s3 cp app.zip s3://$S3_BUCKET_NAME/$FILE_KEY
+
           echo "S3_KEY=$FILE_KEY" >> $GITHUB_ENV
           echo "ENV_NAME=$ENV_NAME" >> $GITHUB_ENV
+          echo "VERSION_LABEL=$VERSION_LABEL" >> $GITHUB_ENV
 
-      - name: Deploy to Elastic Beanstalk
+      - name: Create Elastic Beanstalk Application Version
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name $APPLICATION_NAME \
-            --version-label "$ENV_NAME-$(date +%s)" \
-            --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$S3_KEY
+            --version-label "$VERSION_LABEL" \
+            --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key=$S3_KEY \
+            --region $AWS_REGION
 
+      - name: Wait for Application Version to be ready
+        run: |
+          echo "Esperando a que la versión sea procesada..."
+          for i in {1..20}; do
+            STATUS=$(aws elasticbeanstalk describe-application-versions \
+              --application-name "$APPLICATION_NAME" \
+              --version-label "$VERSION_LABEL" \
+              --region "$AWS_REGION" \
+              --query "ApplicationVersions[0].Status" \
+              --output text)
+
+            echo "Estado actual: $STATUS"
+
+            if [[ "$STATUS" == "PROCESSED" ]]; then
+              echo "✔ La versión fue procesada correctamente."
+              break
+            fi
+
+            if [[ $i -eq 20 ]]; then
+              echo "❌ Timeout esperando que Elastic Beanstalk procese la versión."
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
           aws elasticbeanstalk update-environment \
-            --environment-name $ENV_NAME \
-            --version-label "$ENV_NAME-$(date +%s)"
+            --application-name "$APPLICATION_NAME" \
+            --environment-name "$ENV_NAME" \
+            --version-label "$VERSION_LABEL" \
+            --region "$AWS_REGION"
