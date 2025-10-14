@@ -1,8 +1,6 @@
-import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { HttpExceptionsFilter } from '@infra/api/filters/http-exception.filter';
 
 import * as modules from '@modules/index';
@@ -11,10 +9,17 @@ const modulesList = Object.values(modules);
 
 @Module({
   imports: [...modulesList],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     { provide: APP_FILTER, useClass: HttpExceptionsFilter },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: false,
+        transform: true,
+      }),
+    },
   ],
 })
 export class AppModule {}
