@@ -11,8 +11,14 @@ import { genId } from '@src/common/utils';
   toObject: { virtuals: true },
 })
 export class UserDocument extends Document {
-  @Prop({ type: String, default: genId })
-  _id: string;
+  @Prop({
+    type: String,
+    default: genId,
+    immutable: true,
+    unique: true,
+    index: true,
+  })
+  user_id: string;
 
   @Prop()
   name: string;
@@ -23,16 +29,16 @@ export class UserDocument extends Document {
   @Prop()
   full_name: string;
 
-  @Prop()
+  @Prop({ unique: true, index: true })
   email: string;
 
   @Prop()
   password: string;
 
-  @Prop({ type: UserRole, enum: Object.values(UserRole) })
+  @Prop({ type: String, enum: Object.values(UserRole), index: true })
   role: UserRole;
 
-  @Prop({ type: UserStatus, enum: Object.values(UserStatus) })
+  @Prop({ type: String, enum: Object.values(UserStatus), index: true })
   status: UserStatus;
 
   @Prop()
@@ -43,14 +49,5 @@ export class UserDocument extends Document {
 }
 
 const UserSchema = SchemaFactory.createForClass(UserDocument);
-
-UserSchema.index({
-  name: 1,
-  lastname: 1,
-  full_name: 1,
-  email: 1,
-  role: 1,
-  status: 1,
-});
 
 export { UserSchema };

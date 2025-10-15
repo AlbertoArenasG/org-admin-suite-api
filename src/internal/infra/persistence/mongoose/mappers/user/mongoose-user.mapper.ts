@@ -2,9 +2,10 @@ import { User } from '@domain/entities';
 import { UserDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserMapper {
-  static toDomain(userDocument: UserDocument): User {
+  static toDomain(userDocument: UserDocument): User | null {
+    if (!userDocument) return null;
     return new User({
-      id: userDocument._id,
+      id: userDocument.user_id,
       name: userDocument.name,
       lastname: userDocument.lastname,
       email: userDocument.email,

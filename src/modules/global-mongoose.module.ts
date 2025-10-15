@@ -14,8 +14,6 @@ import { configSchemas } from '@infra/persistence/mongoose/schemas/schemas.confi
     MongooseModule.forRootAsync({
       useFactory: (envService: EnvService) => ({
         uri: envService.get('MONGO_URI'),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
       }),
       inject: [EnvService],
     }),

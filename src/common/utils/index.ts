@@ -1,1 +1,1 @@
-export * from './nanoid.utils';
+export * from './generate-id.utils';
