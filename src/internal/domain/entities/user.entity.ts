@@ -37,11 +37,11 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
-  get role(): string {
+  get role(): UserRole {
     return this.props.role;
   }
 
-  get status(): string {
+  get status(): UserStatus {
     return this.props.status;
   }
 

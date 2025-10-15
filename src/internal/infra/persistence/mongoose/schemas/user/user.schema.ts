@@ -33,7 +33,7 @@ export class UserDocument extends Document {
   role: UserRole;
 
   @Prop({ type: UserStatus, enum: Object.values(UserStatus) })
-  status: string;
+  status: UserStatus;
 
   @Prop()
   createdAt?: Date;
