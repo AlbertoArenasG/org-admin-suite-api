@@ -14,7 +14,7 @@ export class AppController {
 
   @Get('/healthy')
   @HealthCheck()
-  async check() {
+  async checkServerHealthy() {
     return this.health.check([
       () => {
         return {
