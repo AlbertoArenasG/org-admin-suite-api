@@ -2,7 +2,6 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
 import { HttpExceptionsFilter } from '@infra/api/filters/http-exception.filter';
-
 import * as modules from '@modules/index';
 
 const modulesList = Object.values(modules);
