@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HealthCheck } from '@nestjs/terminus';
 
 @Controller()
-export class AppController {
+export class HealthController {
   private readonly sinceTime = new Date();
 
   constructor(private readonly health: HealthCheckService) {}

@@ -13,7 +13,7 @@ import { genId } from '@src/common/utils';
 export class UserDocument extends Document {
   @Prop({
     type: String,
-    default: genId,
+    default: () => genId(),
     immutable: true,
     unique: true,
     index: true,
