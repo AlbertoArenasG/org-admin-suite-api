@@ -20,26 +20,43 @@ export class UserDocument extends Document {
   })
   user_id: string;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   lastname: string;
 
-  @Prop()
+  @Prop({ required: true })
   full_name: string;
 
   @Prop({ unique: true, index: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
-  @Prop({ type: String, enum: Object.values(UserRole), index: true })
+  @Prop({
+    type: String,
+    enum: Object.values(UserRole),
+    required: true,
+    index: true,
+  })
   role: UserRole;
 
-  @Prop({ type: String, enum: Object.values(UserStatus), index: true })
+  @Prop({
+    type: String,
+    enum: Object.values(UserStatus),
+    required: true,
+    index: true,
+  })
   status: UserStatus;
+
+  @Prop({
+    type: { country_code: String, number: String },
+    required: false,
+    default: { country_code: null, number: null },
+  })
+  cell_phone?: { country_code: string; number: string };
 
   @Prop()
   createdAt?: Date;

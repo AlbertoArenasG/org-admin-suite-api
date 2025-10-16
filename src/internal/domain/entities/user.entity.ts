@@ -1,5 +1,6 @@
-import { AggregateRoot } from '@src/internal/core/entities/aggregate-root';
+import { Entity } from '@src/internal/core/entities/entity';
 import { UserCreatedEvent } from '@domain/events';
+import { CellPhone } from '../value-objects';
 
 export interface UserProps {
   id?: string;
@@ -9,11 +10,12 @@ export interface UserProps {
   password: string;
   role: UserRole;
   status: UserStatus;
+  cellPhone: CellPhone;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export class User extends AggregateRoot<UserProps> {
+export class User extends Entity<UserProps> {
   constructor(props: UserProps) {
     super(props);
   }
@@ -44,6 +46,10 @@ export class User extends AggregateRoot<UserProps> {
 
   get status(): UserStatus {
     return this.props.status;
+  }
+
+  get cellPhone(): CellPhone {
+    return this.props.cellPhone;
   }
 
   get createdAt(): Date | undefined {
