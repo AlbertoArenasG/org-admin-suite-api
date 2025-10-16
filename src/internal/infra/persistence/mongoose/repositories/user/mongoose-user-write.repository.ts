@@ -9,7 +9,7 @@ export class MongooseUserWriteRepositoryImpl
   extends MongooseUserBaseRepository
   implements IUserWriteRepository
 {
-  async create(user: User): Promise<{ data: User }> {
+  async create(user: User): Promise<{ data: User | null }> {
     const data = this.toMongoose(user);
     const entity = new this.userModel(data);
     await entity.save();

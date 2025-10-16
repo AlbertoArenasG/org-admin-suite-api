@@ -1,4 +1,5 @@
-import { Entity } from '@src/internal/core/entities/entity';
+import { AggregateRoot } from '@src/internal/core/entities/aggregate-root';
+import { UserCreatedEvent } from '@domain/events';
 
 export interface UserProps {
   id?: string;
@@ -12,7 +13,7 @@ export interface UserProps {
   updatedAt?: Date;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends AggregateRoot<UserProps> {
   constructor(props: UserProps) {
     super(props);
   }
@@ -55,6 +56,10 @@ export class User extends Entity<UserProps> {
 
   get currentState(): UserProps {
     return this.props;
+  }
+
+  markAsCreated(): void {
+    this.apply(new UserCreatedEvent(this));
   }
 }
 
