@@ -1,5 +1,5 @@
 import { Entity } from '@src/internal/core/entities/entity';
-import { UserCreatedEvent } from '@domain/events';
+import { EntityCreatedEvent } from '@domain/events';
 import { CellPhone } from '../value-objects';
 
 export interface UserProps {
@@ -64,8 +64,12 @@ export class User extends Entity<UserProps> {
     return this.props;
   }
 
+  get hasCellPhone(): boolean {
+    return !this.cellPhone.isNull();
+  }
+
   markAsCreated(): void {
-    this.apply(new UserCreatedEvent(this));
+    this.apply(new EntityCreatedEvent(this));
   }
 }
 

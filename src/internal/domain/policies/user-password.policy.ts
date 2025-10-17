@@ -1,12 +1,15 @@
-import { InvalidOperationException } from '@domain/exceptions';
+import {
+  InvalidOperationException,
+  InvalidOperationExceptionCodes,
+} from '@domain/exceptions';
 
 export class UserPasswordPolicy {
   static ensureSecure(password: string): void {
     const hasMinLength = password.length >= 6;
 
     if (!hasMinLength) {
-      throw new InvalidOperationException(
-        'Password does not meet security policy',
+      throw InvalidOperationException.create(
+        InvalidOperationExceptionCodes.USER_PASSWORD_INVALID,
       );
     }
   }
