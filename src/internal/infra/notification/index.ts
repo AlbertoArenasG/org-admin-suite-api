@@ -1,3 +1,3 @@
 export * from './notification.config';
-export * from './services/ses-email.service';
-export * from './services/sns-sms.service';
+export * from './services/aws-ses-email';
+export * from './services/aws-sns-sms';

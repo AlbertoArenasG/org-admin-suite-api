@@ -1,13 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EnvService } from '@infra/env';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
-import Handlebars from 'handlebars';
 
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import { UserWelcomeEmailDto } from '@application/dto';
-
-type TemplateRegistry = Record<string, Handlebars.TemplateDelegate>;
+import {
+  emailSubjects,
+  emailTemplates,
+  TemplateRegistry,
+} from './ses-email.templates';
 
 @Injectable()
 export class SesEmailService implements IEmailService {
@@ -25,17 +27,8 @@ export class SesEmailService implements IEmailService {
       },
     });
 
-    this.templates = {
-      [NotificationType.WELCOME_USER]: Handlebars.compile(
-        `<h1>Hola {{name}}</h1><p>¡Bienvenido a la plataforma!</p><a>link</a>`,
-      ),
-    };
-
-    this.subjects = {
-      [NotificationType.WELCOME_USER]: Handlebars.compile(
-        'Bienvenido a la plataforma',
-      ),
-    };
+    this.templates = emailTemplates;
+    this.subjects = emailSubjects;
   }
 
   async sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void> {
@@ -45,6 +38,7 @@ export class SesEmailService implements IEmailService {
     const context = {
       name: payload.user.fullName,
       link: payload.url,
+      year: new Date().getFullYear(),
     };
     const html = template(context);
 
