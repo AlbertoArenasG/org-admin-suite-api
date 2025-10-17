@@ -1,14 +1,14 @@
 import { Module, Global } from '@nestjs/common';
 
-import * as useCases from '@application/use-cases';
 import * as services from '@application/services';
+import * as useCases from '@application/use-cases';
 
-const useCaseList = Object.values(useCases);
 const serviceList = Object.values(services);
+const useCaseList = Object.values(useCases);
 
 @Global()
 @Module({
-  providers: [...useCaseList, ...serviceList],
-  exports: [...useCaseList, ...serviceList],
+  providers: [...serviceList, ...useCaseList],
+  exports: [...serviceList, ...useCaseList],
 })
 export class GlobalApplicationModule {}

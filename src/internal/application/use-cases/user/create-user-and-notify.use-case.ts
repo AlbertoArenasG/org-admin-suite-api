@@ -6,7 +6,7 @@ import {
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import { CreateUserDto, CreateUserResultDto } from '@application/dto';
-import { User, UserStatus } from '@domain/entities';
+import { User, UserStatus, NotificationType } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import { UserNotifierService } from '@application/services';
 import { CellPhone } from '@src/internal/domain/value-objects';
@@ -32,7 +32,7 @@ export class CreateUserAndNotifyUseCase {
     const { data: persisted } = await this.userWriteRepo.create(user);
     if (!persisted) throw new Error('USER_NOT_CREATED');
 
-    await this.notifier.welcome(persisted);
+    await this.notifier.notify(persisted, NotificationType.WELCOME_USER);
     persisted.markAsCreated();
 
     return {

@@ -21,7 +21,7 @@ export class CreateUserRequestDto {
   email!: string;
 
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(2)
   password!: string;
 
   @IsNotEmpty()

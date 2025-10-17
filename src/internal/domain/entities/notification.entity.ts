@@ -10,6 +10,25 @@ export interface NotificationProps {
 export class Notification extends Entity<NotificationProps> {
   constructor(props: NotificationProps) {
     super(props);
+  }
+
+  get id(): string {
+    return this.props.id;
+  }
+
+  get type(): NotificationType {
+    return this.props.type;
+  }
+
+  get channels(): NotificationChannel[] {
+    return this.props.channels;
+  }
+
+  get currentState(): NotificationProps {
+    return this.props;
+  }
+
+  markAsCreated(): void {
     this.apply(new EntityCreatedEvent(this));
   }
 }

@@ -1,13 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EnvService } from '@infra/env';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import Handlebars from 'handlebars';
 
-import { ISmsService, SmsPayload } from '@domain/ports/services';
+import { NotificationType } from '@domain/entities';
+import { ISmsService } from '@domain/ports/services';
+import { UserWelcomeSmsDto } from '@application/dto';
+
+type TemplateRegistry = Record<string, Handlebars.TemplateDelegate>;
 
 @Injectable()
 export class SnsSmsService implements ISmsService {
   private readonly logger = new Logger(SnsSmsService.name);
   private readonly sns: SNSClient;
+  private readonly templates: TemplateRegistry;
 
   constructor(private readonly envService: EnvService) {
     this.sns = new SNSClient({
@@ -17,11 +23,28 @@ export class SnsSmsService implements ISmsService {
         secretAccessKey: this.envService.get('AWS_SECRET_ACCESS_KEY'),
       },
     });
+    this.templates = {
+      [NotificationType.WELCOME_USER]: Handlebars.compile(
+        '¡Bienvenido a la plataforma!',
+      ),
+    };
   }
 
-  async send({ to, message }: SmsPayload): Promise<void> {
+  async sendUserWelcome(payload: UserWelcomeSmsDto): Promise<void> {
+    const phoneNumber = payload.user?.cellPhone?.getFullNumber();
+    const template = this.templates[NotificationType.WELCOME_USER];
+    const context = {
+      name: payload.user.fullName,
+      link: payload.url,
+    };
+    const message = template(context);
+
+    await this.send(phoneNumber, message);
+  }
+
+  async send(phoneNumber: string, message: string): Promise<void> {
     const command = new PublishCommand({
-      PhoneNumber: to,
+      PhoneNumber: phoneNumber,
       Message: message,
       MessageAttributes: {
         'AWS.SNS.SMS.SenderID': {
@@ -33,7 +56,7 @@ export class SnsSmsService implements ISmsService {
 
     // await this.sns.send(command);
     this.logger.debug(
-      `SNS SMS sent to ${to} with message ${command.input.Message}`,
+      `SNS SMS sent to ${phoneNumber} with message ${command.input.Message}`,
     );
   }
 }

@@ -68,6 +68,10 @@ export class User extends Entity<UserProps> {
     return !this.cellPhone.isNull();
   }
 
+  get fullName(): string {
+    return `${this.name} ${this.lastname}`;
+  }
+
   markAsCreated(): void {
     this.apply(new EntityCreatedEvent(this));
   }
