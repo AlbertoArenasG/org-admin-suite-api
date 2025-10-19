@@ -1,15 +1,16 @@
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsIn,
   IsNotEmpty,
   MinLength,
   IsString,
-  IsObject,
   IsOptional,
+  ValidateNested,
 } from 'class-validator';
 import { UserRole } from '@domain/entities';
 import { CreateUserDto } from '@src/internal/application/dto';
-import { Phone } from '@src/internal/domain/value-objects';
+import { PhoneRequestDto } from '@infra/api/dto/shared';
 
 export class CreateUserRequestDto {
   @IsNotEmpty()
@@ -24,14 +25,9 @@ export class CreateUserRequestDto {
   email!: string;
 
   @IsOptional()
-  @IsObject()
-  cell_phone?: {
-    country_code: string | null;
-    number: string | null;
-  } = {
-    country_code: null,
-    number: null,
-  };
+  @Type(() => PhoneRequestDto)
+  @ValidateNested()
+  cell_phone?: PhoneRequestDto;
 
   @IsNotEmpty()
   @MinLength(2)
@@ -48,10 +44,10 @@ export class CreateUserRequestDto {
       email: this.email,
       password: this.password,
       role: this.role_id,
-      cellPhone: new Phone({
-        countryCode: this.cell_phone?.country_code,
-        number: this.cell_phone?.number,
-      }),
+      cellPhone: {
+        countryCode: this.cell_phone?.country_code || null,
+        number: this.cell_phone?.number || null,
+      },
     };
   }
 }

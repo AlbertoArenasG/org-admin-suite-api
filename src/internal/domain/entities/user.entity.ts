@@ -10,13 +10,20 @@ export interface UserProps {
   password: string;
   role: UserRole;
   status: UserStatus;
-  cellPhone: Phone;
+  cellPhone: {
+    countryCode: string | null;
+    number: string | null;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export class User extends Entity<UserProps> {
   constructor(props: UserProps) {
+    if (props.cellPhone) {
+      const cellPhone = new Phone(props.cellPhone);
+      props.cellPhone = cellPhone;
+    }
     super(props);
   }
 
@@ -49,7 +56,10 @@ export class User extends Entity<UserProps> {
   }
 
   get cellPhone(): Phone {
-    return this.props.cellPhone;
+    return {
+      countryCode: this.props.cellPhone?.countryCode,
+      number: this.props.cellPhone?.number,
+    } as Phone;
   }
 
   get createdAt(): Date | undefined {
@@ -65,7 +75,7 @@ export class User extends Entity<UserProps> {
   }
 
   get hasCellPhone(): boolean {
-    return !this.cellPhone.isNull();
+    return !this.cellPhone.isNull;
   }
 
   get fullName(): string {
@@ -86,5 +96,5 @@ export enum UserStatus {
 export enum UserRole {
   ADMIN = 'ADMIN',
   STAFF = 'STAFF',
-  CLIENT = 'CLIENT',
+  CLIENT = 'USER',
 }

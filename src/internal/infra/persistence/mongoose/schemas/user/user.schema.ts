@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import { UserRole, UserStatus } from '@domain/entities/user.entity';
+import { PhoneSchema, IPhoneSchema } from '../shared';
 import { genId } from '@src/common/utils';
 
 @Schema({
@@ -52,11 +53,11 @@ export class UserDocument extends Document {
   status: UserStatus;
 
   @Prop({
-    type: { country_code: String, number: String },
+    type: PhoneSchema,
     required: false,
     default: { country_code: null, number: null },
   })
-  cell_phone?: { country_code: string; number: string };
+  cell_phone?: IPhoneSchema;
 
   @Prop()
   createdAt?: Date;

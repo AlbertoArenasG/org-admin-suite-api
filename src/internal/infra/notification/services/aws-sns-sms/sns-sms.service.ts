@@ -31,7 +31,7 @@ export class SnsSmsService implements ISmsService {
   }
 
   async sendUserWelcome(payload: UserWelcomeSmsDto): Promise<void> {
-    const phoneNumber = payload.user?.cellPhone?.getFullNumber();
+    const phoneNumber = payload.user?.cellPhone?.fullNumber;
     const template = this.templates[NotificationType.WELCOME_USER];
     const context = {
       name: payload.user.fullName,

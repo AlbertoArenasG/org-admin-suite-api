@@ -1,15 +1,9 @@
 import { User } from '@domain/entities';
-import { Phone } from '@domain/value-objects';
 import { UserDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserMapper {
   static toDomain(userDocument: UserDocument): User | null {
     if (!userDocument) return null;
-
-    const cellPhone = new Phone({
-      countryCode: userDocument.cell_phone?.country_code || null,
-      number: userDocument.cell_phone?.number || null,
-    });
 
     return new User({
       id: userDocument.user_id,
@@ -19,7 +13,10 @@ export class MongooseUserMapper {
       password: userDocument.password,
       role: userDocument.role,
       status: userDocument.status,
-      cellPhone,
+      cellPhone: {
+        countryCode: userDocument.cell_phone?.country_code || null,
+        number: userDocument.cell_phone?.number || null,
+      },
       createdAt: userDocument.createdAt,
       updatedAt: userDocument.updatedAt,
     });
@@ -34,7 +31,10 @@ export class MongooseUserMapper {
       password: user.password,
       role: user.role,
       status: user.status,
-      cell_phone: user.cellPhone,
+      cell_phone: {
+        country_code: user.cellPhone?.countryCode,
+        number: user.cellPhone?.number,
+      },
     };
   }
 }
