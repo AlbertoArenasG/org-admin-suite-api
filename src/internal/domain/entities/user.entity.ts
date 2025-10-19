@@ -1,6 +1,6 @@
 import { Entity } from '@src/internal/core/entities/entity';
 import { EntityCreatedEvent } from '@domain/events';
-import { CellPhone } from '../value-objects';
+import { Phone } from '../value-objects';
 
 export interface UserProps {
   id?: string;
@@ -10,7 +10,7 @@ export interface UserProps {
   password: string;
   role: UserRole;
   status: UserStatus;
-  cellPhone: CellPhone;
+  cellPhone: Phone;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -48,7 +48,7 @@ export class User extends Entity<UserProps> {
     return this.props.status;
   }
 
-  get cellPhone(): CellPhone {
+  get cellPhone(): Phone {
     return this.props.cellPhone;
   }
 

@@ -1,4 +1,5 @@
 import { UserStatus, UserRole } from '@src/internal/domain/entities';
+import { Phone } from '../../../domain/value-objects/common/cell-phone.value-object';
 
 export interface CreateUserDto {
   name: string;
@@ -6,6 +7,7 @@ export interface CreateUserDto {
   email: string;
   password: string;
   role: UserRole;
+  cellPhone: Phone;
 }
 
 export interface CreateUserResultDto {
@@ -15,5 +17,6 @@ export interface CreateUserResultDto {
   email: string;
   role: UserRole;
   status: UserStatus;
+  cellPhone: Phone;
   createdAt: Date;
 }

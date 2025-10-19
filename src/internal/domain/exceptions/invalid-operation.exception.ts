@@ -1,17 +1,21 @@
 import { DomainException } from './domain.exception';
-import { HttpStatus } from '@nestjs/common';
 
-export enum InvalidOperationExceptionCodes {
-  USER_PASSWORD_INVALID = 'errors.invalidOperation.user_password_invalid',
+export enum InvalidOperationExceptionCode {
+  DEFAULT = 'INVALID_OPERATION',
 }
 
 export class InvalidOperationException extends DomainException {
-  constructor(code: InvalidOperationExceptionCodes) {
-    const errorCode = code || 'errors.invalidOperation.default';
-    super(errorCode, HttpStatus.BAD_REQUEST);
+  constructor(
+    code: InvalidOperationExceptionCode = InvalidOperationExceptionCode.DEFAULT,
+    details: Record<string, any> = {},
+  ) {
+    super(code, details);
   }
 
-  static create(code: InvalidOperationExceptionCodes) {
-    return new InvalidOperationException(code);
+  static create(
+    code = InvalidOperationExceptionCode.DEFAULT,
+    details: Record<string, any> = {},
+  ): InvalidOperationException {
+    return new InvalidOperationException(code, details);
   }
 }

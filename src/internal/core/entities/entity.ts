@@ -1,3 +1,4 @@
+import { recursivelyConvertToPrimitives } from '@src/common/utils';
 import { DomainEvent } from '../events';
 
 export abstract class Entity<Props> {
@@ -16,5 +17,9 @@ export abstract class Entity<Props> {
     const events = [...this.domainEvents];
     this.domainEvents.length = 0;
     return events;
+  }
+
+  public toPrimitives(): unknown {
+    return recursivelyConvertToPrimitives(this.props);
   }
 }

@@ -1,17 +1,21 @@
 import { DomainException } from './domain.exception';
-import { HttpStatus } from '@nestjs/common';
 
-export enum EntityAlreadyExistsExceptionCodes {
+export enum EntityAlreadyExistsExceptionCode {
   USER = 'errors.conflict.user',
 }
 
 export class EntityAlreadyExistsException extends DomainException {
-  constructor(code: EntityAlreadyExistsExceptionCodes) {
-    const errorCode = code || 'errors.conflict.default';
-    super(errorCode, HttpStatus.CONFLICT);
+  constructor(
+    code: EntityAlreadyExistsExceptionCode,
+    details: Record<string, any> = {},
+  ) {
+    super(code, details);
   }
 
-  static create(code: EntityAlreadyExistsExceptionCodes) {
-    return new EntityAlreadyExistsException(code);
+  static create(
+    code: EntityAlreadyExistsExceptionCode,
+    details: Record<string, any> = {},
+  ): EntityAlreadyExistsException {
+    return new EntityAlreadyExistsException(code, details);
   }
 }

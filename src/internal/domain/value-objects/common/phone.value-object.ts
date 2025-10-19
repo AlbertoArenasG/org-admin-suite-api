@@ -1,15 +1,15 @@
 import { ValueObject } from '@src/internal/core/entities/value-object';
 
-export interface CellPhoneProps {
-  countryCode: string;
-  number: string;
+export interface PhoneProps {
+  countryCode: string | null;
+  number: string | null;
 }
 
-export class CellPhone extends ValueObject<CellPhoneProps> {
-  private readonly countryCode: string;
-  private readonly number: string;
+export class Phone extends ValueObject<PhoneProps> {
+  private readonly countryCode: string | null;
+  private readonly number: string | null;
 
-  constructor(props: CellPhoneProps = { countryCode: null, number: null }) {
+  constructor(props: PhoneProps = { countryCode: null, number: null }) {
     super(props);
 
     if (this.countryCode && !/^\+\d{1,4}$/.test(this.countryCode)) {
@@ -37,7 +37,7 @@ export class CellPhone extends ValueObject<CellPhoneProps> {
     return !this.countryCode || !this.number;
   }
 
-  public equals(other: CellPhone): boolean {
+  public equals(other: Phone): boolean {
     return this.getFullNumber() === other.getFullNumber();
   }
 }

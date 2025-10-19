@@ -1,8 +1,14 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-
-export class DomainException extends HttpException {
-  constructor(message: string, status: HttpStatus) {
-    super(message, status);
-    this.name = this.constructor.name;
+export abstract class DomainException extends Error {
+  constructor(
+    public readonly code: string,
+    public readonly details?: Record<string, any>,
+  ) {
+    super(code);
   }
+}
+
+export enum DomainValidationExceptionCodes {
+  INVALID_EMAIL = 'INVALID_EMAIL',
+  USER_PASSWORD_INVALID = 'USER_PASSWORD_INVALID',
+  INVALID_PHONE_NUMBER = 'INVALID_PHONE_NUMBER',
 }

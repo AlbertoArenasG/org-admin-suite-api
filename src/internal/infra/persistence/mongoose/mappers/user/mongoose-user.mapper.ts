@@ -1,12 +1,12 @@
 import { User } from '@domain/entities';
-import { CellPhone } from '@domain/value-objects';
+import { Phone } from '@domain/value-objects';
 import { UserDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserMapper {
   static toDomain(userDocument: UserDocument): User | null {
     if (!userDocument) return null;
 
-    const cellPhone = new CellPhone({
+    const cellPhone = new Phone({
       countryCode: userDocument.cell_phone?.country_code || null,
       number: userDocument.cell_phone?.number || null,
     });

@@ -1,17 +1,21 @@
 import { DomainException } from './domain.exception';
-import { HttpStatus } from '@nestjs/common';
 
-export enum EntityNotFoundExceptionCodes {
-  USER = 'errors.entityNotFound.user',
+export enum EntityNotFoundExceptionCode {
+  'User' = 'USER_NOT_FOUND',
 }
 
 export class EntityNotFoundException extends DomainException {
-  constructor(code: EntityNotFoundExceptionCodes) {
-    const errorCode = code || 'errors.entityNotFound.default';
-    super(errorCode, HttpStatus.NOT_FOUND);
+  constructor(
+    code: EntityNotFoundExceptionCode,
+    details: Record<string, any> = {} as Record<string, any>,
+  ) {
+    super(code, details);
   }
 
-  static create(code: EntityNotFoundExceptionCodes) {
-    return new EntityNotFoundException(code);
+  static create(
+    code: EntityNotFoundExceptionCode,
+    details: Record<string, any> = {},
+  ) {
+    return new EntityNotFoundException(code, details);
   }
 }

@@ -1,6 +1,6 @@
 import {
   InvalidOperationException,
-  InvalidOperationExceptionCodes,
+  InvalidOperationExceptionCode,
 } from '@domain/exceptions';
 
 export class UserPasswordPolicy {
@@ -9,7 +9,7 @@ export class UserPasswordPolicy {
 
     if (!hasMinLength) {
       throw InvalidOperationException.create(
-        InvalidOperationExceptionCodes.USER_PASSWORD_INVALID,
+        InvalidOperationExceptionCode.DEFAULT,
       );
     }
   }

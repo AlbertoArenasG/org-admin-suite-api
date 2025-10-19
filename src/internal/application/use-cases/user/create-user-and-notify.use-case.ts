@@ -9,7 +9,6 @@ import { CreateUserDto, CreateUserResultDto } from '@application/dto';
 import { User, UserStatus, NotificationType } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import { UserNotifierService } from '@application/services';
-import { CellPhone } from '@src/internal/domain/value-objects';
 
 @Injectable()
 export class CreateUserAndNotifyUseCase {
@@ -26,7 +25,6 @@ export class CreateUserAndNotifyUseCase {
       ...input,
       password: await this.hashPassword(input.password),
       status: UserStatus.ACTIVE,
-      cellPhone: new CellPhone({ number: null, countryCode: null }),
     });
 
     const { data: persisted } = await this.userWriteRepo.create(user);
@@ -42,6 +40,7 @@ export class CreateUserAndNotifyUseCase {
       email: persisted.email,
       role: persisted.role,
       status: persisted.status,
+      cellPhone: persisted.cellPhone,
       createdAt: persisted.createdAt ?? new Date(),
     };
   }

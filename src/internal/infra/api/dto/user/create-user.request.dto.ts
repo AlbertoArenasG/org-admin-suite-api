@@ -4,9 +4,12 @@ import {
   IsNotEmpty,
   MinLength,
   IsString,
+  IsObject,
+  IsOptional,
 } from 'class-validator';
 import { UserRole } from '@domain/entities';
 import { CreateUserDto } from '@src/internal/application/dto';
+import { Phone } from '@src/internal/domain/value-objects';
 
 export class CreateUserRequestDto {
   @IsNotEmpty()
@@ -19,6 +22,16 @@ export class CreateUserRequestDto {
 
   @IsEmail()
   email!: string;
+
+  @IsOptional()
+  @IsObject()
+  cell_phone?: {
+    country_code: string | null;
+    number: string | null;
+  } = {
+    country_code: null,
+    number: null,
+  };
 
   @IsNotEmpty()
   @MinLength(2)
@@ -35,6 +48,10 @@ export class CreateUserRequestDto {
       email: this.email,
       password: this.password,
       role: this.role_id,
+      cellPhone: new Phone({
+        countryCode: this.cell_phone?.country_code,
+        number: this.cell_phone?.number,
+      }),
     };
   }
 }
