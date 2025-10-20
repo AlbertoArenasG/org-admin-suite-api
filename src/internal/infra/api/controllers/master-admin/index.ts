@@ -1,1 +1,2 @@
-export * from './master-admin-tenant.controller';
+export * from './tenant';
+export * from './user';

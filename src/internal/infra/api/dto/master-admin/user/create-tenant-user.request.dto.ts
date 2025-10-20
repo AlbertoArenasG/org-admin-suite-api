@@ -14,7 +14,7 @@ import { UserPasswordPolicy } from '@domain/policies';
 import { CreateUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
 
-export class CreateUserRequestDto {
+export class CreateTenantUserForMasterRequestDto {
   @IsNotEmpty()
   @IsString()
   name!: string;

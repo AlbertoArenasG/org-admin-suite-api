@@ -9,6 +9,12 @@
   "ENTITY_ALREADY_EXISTS": {
     "USER": {
       "EMAIL": "Ya existe un usuario con el correo electrónico {email}"
+    },
+    "TENANT": {
+      "SLUG": "Ya existe un tenant con el slug {slug}",
+      "USER": {
+        "EMAIL": "El usuario con el correo electrónico {email} ya está asociado a la cuenta"
+      }
     }
   },
   "AUTHENTICATION": {

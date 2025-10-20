@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import {
@@ -6,16 +6,18 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
+  ITenantUserReadRepository,
+  ITenantUserReadRepositoryToken,
   ITenantUserWriteRepository,
   ITenantUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
-  User,
-  UserStatus,
-  UserRole,
   NotificationType,
   TenantUser,
   TenantUserStatus,
+  User,
+  UserRole,
+  UserStatus,
 } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import {
@@ -32,15 +34,54 @@ export class CreateUserAndNotifyUseCase {
     private readonly userReadRepo: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
+    @Inject(ITenantUserReadRepositoryToken)
+    private readonly tenantUserReadRepo: ITenantUserReadRepository,
     @Inject(ITenantUserWriteRepositoryToken)
     private readonly tenantUserWriteRepo: ITenantUserWriteRepository,
     private readonly notifier: UserNotifierService,
   ) {}
 
   async execute(input: CreateUserDto): Promise<CreateUserResultDto> {
-    UserPasswordPolicy.ensureSecure(input.password);
+    const existingUser = await this.findUserByEmail(input.email);
 
-    await this.ensureUserUnique(input.email);
+    const user = existingUser ?? (await this.createUser(input));
+
+    await this.ensureTenantUserUnique(user.id, input.tenantId, input.email);
+
+    const tenantUser = new TenantUser({
+      tenantId: input.tenantId,
+      userId: user.id,
+      role: input.role,
+      status: TenantUserStatus.ACTIVE,
+    });
+
+    const { data: persistedTenantUser } =
+      await this.tenantUserWriteRepo.create(tenantUser);
+
+    persistedTenantUser.markAsCreated();
+
+    return {
+      id: user.id,
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      role: input.role,
+      status: user.status,
+      cellPhone: {
+        countryCode: user.cellPhone?.countryCode ?? null,
+        number: user.cellPhone?.number ?? null,
+      },
+      createdAt: user.createdAt ?? new Date(),
+    };
+  }
+
+  private async findUserByEmail(email: string): Promise<User | null> {
+    const { data } = await this.userReadRepo.findByEmail(email);
+    return data ?? null;
+  }
+
+  private async createUser(input: CreateUserDto): Promise<User> {
+    UserPasswordPolicy.ensureSecure(input.password);
 
     const hashedPassword = await this.hashPassword(input.password);
 
@@ -54,51 +95,38 @@ export class CreateUserAndNotifyUseCase {
       cellPhone: input.cellPhone,
     });
 
-    const { data: persisted } = await this.userWriteRepo.create(user);
-    if (!persisted) throw new Error('USER_NOT_CREATED');
+    const { data } = await this.userWriteRepo.create(user);
 
-    if (!persisted.id) throw new Error('USER_ID_NOT_AVAILABLE');
+    if (!data || !data.id) {
+      throw new Error('USER_NOT_CREATED');
+    }
 
-    const tenantUser = new TenantUser({
-      tenantId: input.tenantId,
-      userId: persisted.id,
-      role: input.role,
-      status: TenantUserStatus.ACTIVE,
-    });
+    await this.notifier.notify(data, NotificationType.WELCOME_USER);
+    data.markAsCreated();
 
-    const { data: persistedTenantUser } =
-      await this.tenantUserWriteRepo.create(tenantUser);
-
-    if (!persistedTenantUser) throw new Error('TENANT_USER_NOT_CREATED');
-
-    await this.notifier.notify(persisted, NotificationType.WELCOME_USER);
-    persisted.markAsCreated();
-    persistedTenantUser.markAsCreated();
-
-    return {
-      id: persisted.id,
-      name: persisted.name,
-      lastname: persisted.lastname,
-      email: persisted.email,
-      role: input.role,
-      status: persisted.status,
-      cellPhone: persisted.cellPhone,
-      createdAt: persisted.createdAt ?? new Date(),
-    };
-  }
-
-  private async ensureUserUnique(email: string): Promise<User | null> {
-    const { data } = await this.userReadRepo.findByEmail(email);
-
-    if (data)
-      throw EntityAlreadyExistsException.create(
-        EntityAlreadyExistsExceptionCode.USER_EMAIL,
-        { email },
-      );
     return data;
   }
 
-  async hashPassword(password: string): Promise<string> {
+  private async ensureTenantUserUnique(
+    userId: string,
+    tenantId: string,
+    email: string,
+  ): Promise<void> {
+    const { data } = await this.tenantUserReadRepo.findManyByUserId(userId);
+
+    const alreadyExists = data.some(
+      (tenantUser) => tenantUser.tenantId === tenantId && tenantUser.id,
+    );
+
+    if (alreadyExists) {
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.TENANT_USER_EMAIL,
+        { userId, tenantId, email },
+      );
+    }
+  }
+
+  private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
   }

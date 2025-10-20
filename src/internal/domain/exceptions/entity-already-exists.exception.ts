@@ -19,4 +19,5 @@ export class EntityAlreadyExistsException extends DomainException {
 export enum EntityAlreadyExistsExceptionCode {
   USER_EMAIL = 'ENTITY_ALREADY_EXISTS.USER.EMAIL',
   TENANT_SLUG = 'ENTITY_ALREADY_EXISTS.TENANT.SLUG',
+  TENANT_USER_EMAIL = 'ENTITY_ALREADY_EXISTS.TENANT.USER.EMAIL',
 }

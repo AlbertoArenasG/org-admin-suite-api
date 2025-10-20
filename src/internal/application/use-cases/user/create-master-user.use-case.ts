@@ -1,0 +1,90 @@
+import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+
+import {
+  IUserReadRepository,
+  IUserReadRepositoryToken,
+  IUserWriteRepository,
+  IUserWriteRepositoryToken,
+} from '@domain/ports/repositories';
+import { NotificationType, User, UserStatus } from '@domain/entities';
+import { UserPasswordPolicy } from '@domain/policies';
+import {
+  EntityAlreadyExistsException,
+  EntityAlreadyExistsExceptionCode,
+} from '@domain/exceptions';
+import {
+  CreateMasterUserDto,
+  CreateMasterUserResultDto,
+} from '@application/dto';
+import { UserNotifierService } from '@application/services';
+
+@Injectable()
+export class CreateMasterUserUseCase {
+  constructor(
+    @Inject(IUserReadRepositoryToken)
+    private readonly userReadRepo: IUserReadRepository,
+    @Inject(IUserWriteRepositoryToken)
+    private readonly userWriteRepo: IUserWriteRepository,
+    private readonly notifier: UserNotifierService,
+  ) {}
+
+  async execute(
+    input: CreateMasterUserDto,
+  ): Promise<CreateMasterUserResultDto> {
+    await this.ensureUserUnique(input.email);
+
+    UserPasswordPolicy.ensureSecure(input.password);
+
+    const hashedPassword = await this.hashPassword(input.password);
+
+    const user = new User({
+      name: input.name,
+      lastname: input.lastname,
+      email: input.email,
+      password: hashedPassword,
+      role: input.role,
+      status: UserStatus.ACTIVE,
+      cellPhone: input.cellPhone,
+    });
+
+    const { data } = await this.userWriteRepo.create(user);
+
+    if (!data || !data.id) {
+      throw new Error('MASTER_USER_NOT_CREATED');
+    }
+
+    await this.notifier.notify(data, NotificationType.WELCOME_USER);
+    data.markAsCreated();
+
+    return {
+      id: data.id,
+      name: data.name,
+      lastname: data.lastname,
+      email: data.email,
+      role: data.role,
+      status: data.status,
+      cellPhone: {
+        countryCode: data.cellPhone?.countryCode ?? null,
+        number: data.cellPhone?.number ?? null,
+      },
+      createdAt: data.createdAt ?? new Date(),
+    };
+  }
+
+  private async ensureUserUnique(email: string): Promise<void> {
+    const { data } = await this.userReadRepo.findByEmail(email);
+
+    if (data) {
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.USER_EMAIL,
+        { email },
+      );
+    }
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+  }
+}
