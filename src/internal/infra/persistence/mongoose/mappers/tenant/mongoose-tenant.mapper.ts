@@ -1,0 +1,136 @@
+import { Tenant, TenantStatus } from '@domain/entities';
+import { TenantConfigs, TenantConfigsInit } from '@domain/value-objects';
+import {
+  TenantAppearanceConfigDocument,
+  TenantConfigsDocument,
+  TenantDocument,
+  TenantThemeConfigDocument,
+} from '@infra/persistence/mongoose/schemas';
+
+export type TenantAggregateDocuments = {
+  tenant: TenantDocument | null;
+  configs?: TenantConfigsDocument | null;
+  theme?: TenantThemeConfigDocument | null;
+  appearance?: TenantAppearanceConfigDocument | null;
+};
+
+export type TenantMongooseAggregate = {
+  tenant: {
+    tenant_id?: string;
+    name: string;
+    slug: string;
+    status: TenantStatus;
+  };
+  configs: {
+    tenant_id?: string;
+    allow_custom_roles: boolean;
+    feature_flags: Record<string, boolean>;
+  };
+  theme: {
+    tenant_id?: string;
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    surface_color: string;
+  };
+  appearance: {
+    tenant_id?: string;
+    logo_url: string | null;
+    favicon_url: string | null;
+    banner_url: string | null;
+  };
+};
+
+export class MongooseTenantMapper {
+  static toDomain(docs: TenantAggregateDocuments): Tenant | null {
+    if (!docs?.tenant) return null;
+
+    const configsDoc = docs.configs as any;
+    const themeDoc = docs.theme as any;
+    const appearanceDoc = docs.appearance as any;
+
+    const featureFlags = this.mapFeatureFlags(docs.configs);
+
+    const configsInit: TenantConfigsInit = {
+      allowCustomRoles:
+        configsDoc?.allow_custom_roles ?? configsDoc?.allowCustomRoles ?? false,
+      featureFlags,
+      theme: {
+        primaryColor: themeDoc?.primary_color ?? themeDoc?.primaryColor,
+        secondaryColor: themeDoc?.secondary_color ?? themeDoc?.secondaryColor,
+        accentColor: themeDoc?.accent_color ?? themeDoc?.accentColor,
+        surfaceColor: themeDoc?.surface_color ?? themeDoc?.surfaceColor,
+      },
+      appearance: {
+        logoUrl: appearanceDoc?.logo_url ?? appearanceDoc?.logoUrl ?? null,
+        faviconUrl:
+          appearanceDoc?.favicon_url ?? appearanceDoc?.faviconUrl ?? null,
+        bannerUrl:
+          appearanceDoc?.banner_url ?? appearanceDoc?.bannerUrl ?? null,
+      },
+    };
+
+    return new Tenant({
+      id: docs.tenant.tenant_id,
+      name: docs.tenant.name,
+      slug: docs.tenant.slug,
+      status: docs.tenant.status,
+      configs: new TenantConfigs(configsInit),
+      createdAt: docs.tenant.createdAt,
+      updatedAt: docs.tenant.updatedAt,
+    });
+  }
+
+  static toMongoose(tenant: Tenant): TenantMongooseAggregate {
+    const configs = tenant.configs;
+    const theme = configs.theme;
+    const appearance = configs.appearance;
+    const tenantId = tenant.id;
+
+    return {
+      tenant: {
+        ...(tenantId ? { tenant_id: tenantId } : {}),
+        name: tenant.name,
+        slug: tenant.slug,
+        status: tenant.status,
+      },
+      configs: {
+        ...(tenantId ? { tenant_id: tenantId } : {}),
+        allow_custom_roles: configs.allowCustomRoles,
+        feature_flags: { ...configs.featureFlags },
+      },
+      theme: {
+        ...(tenantId ? { tenant_id: tenantId } : {}),
+        primary_color: theme.primaryColor,
+        secondary_color: theme.secondaryColor,
+        accent_color: theme.accentColor,
+        surface_color: theme.surfaceColor,
+      },
+      appearance: {
+        ...(tenantId ? { tenant_id: tenantId } : {}),
+        logo_url: appearance.logoUrl,
+        favicon_url: appearance.faviconUrl,
+        banner_url: appearance.bannerUrl,
+      },
+    };
+  }
+
+  private static mapFeatureFlags(
+    configs?: TenantConfigsDocument | null,
+  ): Record<string, boolean> | undefined {
+    const configsDoc = configs as any;
+    const featureFlagsDoc =
+      configsDoc?.feature_flags ?? configsDoc?.featureFlags ?? undefined;
+    if (!featureFlagsDoc) return undefined;
+
+    if (featureFlagsDoc instanceof Map) {
+      return Object.fromEntries(featureFlagsDoc.entries());
+    }
+
+    if (typeof (featureFlagsDoc as any).toObject === 'function') {
+      return (featureFlagsDoc as any).toObject();
+    }
+
+    return featureFlagsDoc;
+  }
+}
