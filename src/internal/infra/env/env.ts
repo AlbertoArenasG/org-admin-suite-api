@@ -11,6 +11,8 @@ export const envSchema = z.object({
   AWS_SECRET_ACCESS_KEY: z.string(),
   AWS_SES_FROM_EMAIL: z.string(),
   AWS_SNS_SENDER_ID: z.string(),
+  JWT_SECRET: z.string(),
+  JWT_EXPIRATION: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

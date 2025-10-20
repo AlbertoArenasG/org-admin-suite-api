@@ -1,4 +1,5 @@
 export * from './global-application.module';
+export * from './global-auth.module';
 export * from './global-cqrs.module';
 export * from './global-env.module';
 export * from './global-http.module';

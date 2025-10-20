@@ -10,8 +10,10 @@ export class MongooseUserReadRepositoryImpl
   implements IUserReadRepository
 {
   async findByEmail(email: string): Promise<{ data: User | null }> {
+    const document = await this.userModel.findOne({ email });
+
     return {
-      data: await this.userModel.findOne({ email }),
+      data: document ? this.toDomain(document) : null,
     };
   }
 }

@@ -10,5 +10,9 @@
     "USER": {
       "EMAIL": "Ya existe un usuario con el correo electrónico {email}"
     }
+  },
+  "AUTHENTICATION": {
+    "INVALID_CREDENTIALS": "Correo electrónico o contraseña inválidos",
+    "USER_INACTIVE": "La cuenta del usuario está inactiva"
   }
 }

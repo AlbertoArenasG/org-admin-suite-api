@@ -10,5 +10,9 @@
     "USER": {
       "EMAIL": "User with email {email} already exists"
     }
+  },
+  "AUTHENTICATION": {
+    "INVALID_CREDENTIALS": "Invalid email or password",
+    "USER_INACTIVE": "User account is inactive"
   }
 }

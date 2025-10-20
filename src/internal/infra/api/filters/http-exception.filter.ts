@@ -11,6 +11,8 @@ import {
   EntityAlreadyExistsException,
   InvalidValueException,
   InvalidValueExceptionCode,
+  AuthenticationException,
+  AuthenticationExceptionCode,
 } from '@domain/exceptions';
 import { ErrorMessageService } from '@infra/i18n/services';
 import { ApiResponseBuilder } from '../responses/api-response.builder';
@@ -95,6 +97,12 @@ export class HttpExceptionsFilter implements ExceptionFilter {
 
     if (domainException instanceof InvalidValueException) {
       return HttpStatus.BAD_REQUEST;
+    }
+
+    if (domainException instanceof AuthenticationException) {
+      return domainException.code === AuthenticationExceptionCode.USER_INACTIVE
+        ? HttpStatus.FORBIDDEN
+        : HttpStatus.UNAUTHORIZED;
     }
 
     return HttpStatus.INTERNAL_SERVER_ERROR;
