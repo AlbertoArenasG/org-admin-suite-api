@@ -8,7 +8,9 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator';
+
 import { UserRole } from '@domain/entities';
+import { UserPasswordPolicy } from '@domain/policies';
 import { CreateUserDto } from '@src/internal/application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
 
@@ -30,7 +32,7 @@ export class CreateUserRequestDto {
   cell_phone?: PhoneRequestDto;
 
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(UserPasswordPolicy.MIN_PASSWORD_LENGTH)
   password!: string;
 
   @IsNotEmpty()
