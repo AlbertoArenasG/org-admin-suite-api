@@ -1,0 +1,35 @@
+{
+  "USER": {
+    "ROLE": {
+      "MASTER_ADMIN": "Administrador principal",
+      "MASTER_STAFF": "Staff principal",
+      "USER": "Usuario"
+    },
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "DELETED": "Eliminado"
+    }
+  },
+  "TENANT": {
+    "STATUS": {
+      "ACTIVE": "Cuenta activa",
+      "SUSPENDED": "Cuenta suspendida",
+      "ARCHIVED": "Cuenta archivada"
+    },
+    "USER": {
+      "ROLE": {
+        "TENANT_OWNER": "Propietario de cuenta",
+        "TENANT_ADMIN": "Administrador de cuenta",
+        "TENANT_STAFF": "Staff de cuenta",
+        "TENANT_CUSTOMER": "Cliente"
+      },
+      "STATUS": {
+        "ACTIVE": "Activo",
+        "INVITED": "Invited",
+        "INACTIVE": "Inactivo",
+        "DELETED": "Eliminado"
+      }
+    }
+  }
+}

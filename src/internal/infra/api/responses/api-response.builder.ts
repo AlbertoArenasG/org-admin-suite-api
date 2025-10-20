@@ -6,7 +6,8 @@ type ErrorDetails = Record<string, unknown>;
 
 export class ApiResponseBuilder<T> {
   private success = true;
-  private statusCode = HttpStatus.OK;
+  private success_message: string = 'DEFAULT';
+  private status_code = HttpStatus.OK;
   private data?: T;
   private meta?: Meta;
   private pagination?: Pagination;
@@ -21,8 +22,13 @@ export class ApiResponseBuilder<T> {
     return this;
   }
 
+  withSuccessMessage(successMessage: string) {
+    this.success_message = successMessage;
+    return this;
+  }
+
   withStatus(statusCode: number) {
-    this.statusCode = statusCode;
+    this.status_code = statusCode;
     return this;
   }
 
@@ -55,7 +61,8 @@ export class ApiResponseBuilder<T> {
   build() {
     return {
       success: this.success,
-      status_code: this.statusCode,
+      success_message: this.success_message,
+      status_code: this.status_code,
       error_details: this.error_details,
       data: this.data,
       pagination: this.pagination,

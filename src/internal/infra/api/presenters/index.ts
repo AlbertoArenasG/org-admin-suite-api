@@ -1,3 +1,3 @@
 export * from './auth';
-export * from './master-admin';
+export * from './tenant';
 export * from './user';

@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { CreateTenantRequestDto } from '@infra/api/dto/master-admin/tenant';
-import { TenantPresenter } from '@infra/api/presenters/master-admin/tenant';
+import { TenantPresenter } from '@src/internal/infra/api/presenters/tenant';
 import { CreateTenantCmd } from '@infra/cqrs/commands';
 
 @Controller('v1/master-admin/tenants')

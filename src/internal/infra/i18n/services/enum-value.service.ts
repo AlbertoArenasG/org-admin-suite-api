@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
-export class ErrorMessageService {
+export class EnumNameService {
   /**
    * Constructs a new instance of the ErrorMessagesService, injecting the dependencies.
    * @param i18n The i18n service used for translating error messages.
@@ -15,7 +15,7 @@ export class ErrorMessageService {
    * @param identifiers An optional object with identifiers to include in the translated string.
    * @returns The translated error message.
    */
-  public getMsg(key: string, identifiers: object = {}): string {
+  public getEnumName(key: string, identifiers: object = {}): string {
     const options = {
       lang: I18nContext.current().lang,
       ...(Object.keys(identifiers).length && {
@@ -23,6 +23,6 @@ export class ErrorMessageService {
       }),
     };
 
-    return this.i18n.t(`errors.${key}`, options);
+    return this.i18n.t(`enums.${key}`, options);
   }
 }

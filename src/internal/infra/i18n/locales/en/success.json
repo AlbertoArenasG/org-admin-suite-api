@@ -1,7 +1,8 @@
 {
-  "user": {
-    "created": "User created successfully",
-    "updated": "User updated successfully",
-    "deleted": "User deleted successfully"
+  "DEFAULT": "Request received successfully",
+  "USER": {
+    "CREATED": "User created successfully",
+    "UPDATED": "User updated successfully",
+    "DELETED": "User deleted successfully"
   }
 }

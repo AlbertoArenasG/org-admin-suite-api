@@ -1,7 +1,8 @@
 {
-  "user": {
-    "created": "Usuario creado correctamente",
-    "updated": "User actualizado correctamente",
-    "deleted": "Usuario eliminado correctamente"
+  "DEFAULT": "La solicitud se ha procesado correctamente",
+  "USER": {
+    "CREATED": "Usuario creado correctamente",
+    "UPDATED": "User actualizado correctamente",
+    "DELETED": "Usuario eliminado correctamente"
   }
 }

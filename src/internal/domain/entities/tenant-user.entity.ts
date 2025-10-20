@@ -73,9 +73,10 @@ export class TenantUser extends Entity<TenantUserProps> {
 }
 
 export enum TenantUserRole {
+  TENANT_OWNER = 'TENANT_OWNER',
   TENANT_ADMIN = 'TENANT_ADMIN',
   TENANT_STAFF = 'TENANT_STAFF',
-  TENANT_CLIENT = 'TENANT_CLIENT',
+  TENANT_CUSTOMER = 'TENANT_CUSTOMER',
 }
 
 export enum TenantUserStatus {

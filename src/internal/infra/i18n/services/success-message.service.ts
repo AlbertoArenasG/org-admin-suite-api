@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
-export class SuccessMessagesService {
+export class SuccessMessageService {
   /**
    * Constructs a new instance of the SuccessMessagesService, injecting the dependencies.
    * @param i18n The i18n service used for translating success messages.
@@ -16,11 +16,13 @@ export class SuccessMessagesService {
    * @returns The translated success message.
    */
   public getMsg(key: string, identifiers: object = {}): string {
-    return this.i18n.t(`success.${key}`, {
+    const options = {
       lang: I18nContext.current().lang,
       ...(Object.keys(identifiers).length && {
         args: { ...identifiers },
       }),
-    });
+    };
+
+    return this.i18n.t(`success.${key}`, options);
   }
 }

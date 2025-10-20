@@ -92,7 +92,9 @@ export class AuthenticateUserUseCase {
   }
 
   private isMasterUser(user: User): boolean {
-    return user.role === UserRole.ADMIN || user.role === UserRole.STAFF;
+    return (
+      user.role === UserRole.MASTER_ADMIN || user.role === UserRole.MASTER_STAFF
+    );
   }
 
   private async buildMasterAccessToken(
