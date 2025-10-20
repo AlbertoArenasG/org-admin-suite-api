@@ -94,7 +94,7 @@ export enum UserStatus {
 }
 
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
+  ADMIN = 'MASTER_ADMIN',
+  STAFF = 'MASTER_STAFF',
   CLIENT = 'USER',
 }

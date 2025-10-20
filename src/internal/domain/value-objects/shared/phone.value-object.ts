@@ -1,4 +1,8 @@
 import { ValueObject } from '@src/internal/core/entities/value-object';
+import {
+  InvalidValueException,
+  InvalidValueExceptionCode,
+} from '@domain/exceptions';
 
 export interface PhoneProps {
   countryCode: string | null;
@@ -7,12 +11,17 @@ export interface PhoneProps {
 
 export class Phone extends ValueObject<PhoneProps> {
   constructor(props: PhoneProps = { countryCode: null, number: null }) {
-    if (props.countryCode && !/^\+\d{1,4}$/.test(props.countryCode)) {
-      throw new Error('Invalid country code format');
-    }
+    let isValid = true;
 
-    if (props.number && !/^\d{7,15}$/.test(props.number)) {
-      throw new Error('Invalid phone number format');
+    if (props.countryCode && !/^\+\d{1,4}$/.test(props.countryCode))
+      isValid = false;
+
+    if (props.number && !/^\d{7,15}$/.test(props.number)) isValid = false;
+
+    if (!isValid) {
+      throw InvalidValueException.create(InvalidValueExceptionCode.PHONE, {
+        phone: `${props.countryCode} ${props.number}`,
+      });
     }
 
     super(props);

@@ -1,0 +1,14 @@
+{
+  "VALIDATION": {
+    "DEFAULT": "Validation error",
+    "PHONE": "Invalid phone number {phone} format",
+    "USER": {
+      "PASSWORD": "Invalid password format"
+    }
+  },
+  "ENTITY_ALREADY_EXISTS": {
+    "USER": {
+      "EMAIL": "User with email {email} already exists"
+    }
+  }
+}

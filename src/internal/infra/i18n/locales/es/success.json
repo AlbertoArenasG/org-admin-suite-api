@@ -1,0 +1,7 @@
+{
+  "user": {
+    "created": "Usuario creado correctamente",
+    "updated": "User actualizado correctamente",
+    "deleted": "Usuario eliminado correctamente"
+  }
+}

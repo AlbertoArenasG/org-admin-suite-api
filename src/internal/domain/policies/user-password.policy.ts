@@ -1,6 +1,6 @@
 import {
-  InvalidOperationException,
-  InvalidOperationExceptionCode,
+  InvalidValueException,
+  InvalidValueExceptionCode,
 } from '@domain/exceptions';
 
 export class UserPasswordPolicy {
@@ -8,8 +8,8 @@ export class UserPasswordPolicy {
     const hasMinLength = password.length >= 6;
 
     if (!hasMinLength) {
-      throw InvalidOperationException.create(
-        InvalidOperationExceptionCode.DEFAULT,
+      throw InvalidValueException.create(
+        InvalidValueExceptionCode.USER_PASSWORD,
       );
     }
   }

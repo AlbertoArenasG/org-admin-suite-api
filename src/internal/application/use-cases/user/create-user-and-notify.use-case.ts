@@ -2,17 +2,25 @@ import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import {
+  IUserReadRepository,
+  IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import { CreateUserDto, CreateUserResultDto } from '@application/dto';
 import { User, UserStatus, NotificationType } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
+import {
+  EntityAlreadyExistsException,
+  EntityAlreadyExistsExceptionCode,
+} from '@domain/exceptions';
+import { CreateUserDto, CreateUserResultDto } from '@application/dto';
 import { UserNotifierService } from '@application/services';
 
 @Injectable()
 export class CreateUserAndNotifyUseCase {
   constructor(
+    @Inject(IUserReadRepositoryToken)
+    private readonly userReadRepo: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
     private readonly notifier: UserNotifierService,
@@ -20,6 +28,8 @@ export class CreateUserAndNotifyUseCase {
 
   async execute(input: CreateUserDto): Promise<CreateUserResultDto> {
     UserPasswordPolicy.ensureSecure(input.password);
+
+    await this.ensureUserUnique(input.email);
 
     const user = new User({
       ...input,
@@ -43,6 +53,17 @@ export class CreateUserAndNotifyUseCase {
       cellPhone: persisted.cellPhone,
       createdAt: persisted.createdAt ?? new Date(),
     };
+  }
+
+  private async ensureUserUnique(email: string): Promise<User | null> {
+    const { data } = await this.userReadRepo.findByEmail(email);
+
+    if (data)
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.USER_EMAIL,
+        { email },
+      );
+    return data;
   }
 
   async hashPassword(password: string): Promise<string> {

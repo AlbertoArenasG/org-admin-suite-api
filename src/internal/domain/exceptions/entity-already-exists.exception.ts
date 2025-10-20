@@ -1,9 +1,5 @@
 import { DomainException } from './domain.exception';
 
-export enum EntityAlreadyExistsExceptionCode {
-  USER = 'errors.conflict.user',
-}
-
 export class EntityAlreadyExistsException extends DomainException {
   constructor(
     code: EntityAlreadyExistsExceptionCode,
@@ -18,4 +14,8 @@ export class EntityAlreadyExistsException extends DomainException {
   ): EntityAlreadyExistsException {
     return new EntityAlreadyExistsException(code, details);
   }
+}
+
+export enum EntityAlreadyExistsExceptionCode {
+  USER_EMAIL = 'ENTITY_ALREADY_EXISTS.USER.EMAIL',
 }
