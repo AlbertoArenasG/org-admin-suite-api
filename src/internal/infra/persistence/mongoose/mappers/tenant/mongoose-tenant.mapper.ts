@@ -1,5 +1,9 @@
 import { Tenant, TenantStatus } from '@domain/entities';
-import { TenantConfigs, TenantConfigsInit } from '@domain/value-objects';
+import {
+  TenantConfigs,
+  TenantConfigsInit,
+  TenantThemeConfigProps,
+} from '@domain/value-objects';
 import {
   TenantAppearanceConfigDocument,
   TenantConfigsDocument,
@@ -28,10 +32,8 @@ export type TenantMongooseAggregate = {
   };
   theme: {
     tenant_id?: string;
-    primary_color: string;
-    secondary_color: string;
-    accent_color: string;
-    surface_color: string;
+    light: Record<string, string>;
+    dark: Record<string, string>;
   };
   appearance: {
     tenant_id?: string;
@@ -46,7 +48,7 @@ export class MongooseTenantMapper {
     if (!docs?.tenant) return null;
 
     const configsDoc = docs.configs as any;
-    const themeDoc = docs.theme as any;
+    const themeDoc = (docs.theme as any) ?? configsDoc?.theme;
     const appearanceDoc = docs.appearance as any;
 
     const featureFlags = this.mapFeatureFlags(docs.configs);
@@ -55,12 +57,7 @@ export class MongooseTenantMapper {
       allowCustomRoles:
         configsDoc?.allow_custom_roles ?? configsDoc?.allowCustomRoles ?? false,
       featureFlags,
-      theme: {
-        primaryColor: themeDoc?.primary_color ?? themeDoc?.primaryColor,
-        secondaryColor: themeDoc?.secondary_color ?? themeDoc?.secondaryColor,
-        accentColor: themeDoc?.accent_color ?? themeDoc?.accentColor,
-        surfaceColor: themeDoc?.surface_color ?? themeDoc?.surfaceColor,
-      },
+      theme: this.mapTheme(themeDoc),
       appearance: {
         logoUrl: appearanceDoc?.logo_url ?? appearanceDoc?.logoUrl ?? null,
         faviconUrl:
@@ -101,10 +98,8 @@ export class MongooseTenantMapper {
       },
       theme: {
         ...(tenantId ? { tenant_id: tenantId } : {}),
-        primary_color: theme.primaryColor,
-        secondary_color: theme.secondaryColor,
-        accent_color: theme.accentColor,
-        surface_color: theme.surfaceColor,
+        light: { ...theme.light },
+        dark: { ...theme.dark },
       },
       appearance: {
         ...(tenantId ? { tenant_id: tenantId } : {}),
@@ -132,5 +127,36 @@ export class MongooseTenantMapper {
     }
 
     return featureFlagsDoc;
+  }
+
+  private static mapTheme(
+    themeDoc?: TenantThemeConfigDocument | null,
+  ): TenantThemeConfigProps {
+    const theme = themeDoc as any;
+    const normalize = (palette?: any): Record<string, string> | undefined => {
+      if (!palette) return undefined;
+
+      if (palette instanceof Map) {
+        return Object.fromEntries(palette.entries());
+      }
+
+      if (typeof palette.toObject === 'function') {
+        return palette.toObject();
+      }
+
+      if (typeof palette === 'object') {
+        return { ...palette };
+      }
+
+      return undefined;
+    };
+
+    const light = normalize(theme?.light);
+    const dark = normalize(theme?.dark);
+
+    return {
+      ...(light ? { light } : {}),
+      ...(dark ? { dark } : {}),
+    };
   }
 }

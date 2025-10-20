@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-import { TENANT_APPEARANCE_CONFIG_DEFAULTS } from '@domain/value-objects';
+import { TENANT_APPEARANCE_DEFAULTS } from '@domain/value-objects';
 
 @Schema({
   collection: 'tenant_appearance_configs',
@@ -14,14 +14,23 @@ export class TenantAppearanceConfigDocument extends Document {
   @Prop({ type: String })
   tenant_id: string;
 
-  @Prop({ type: String, default: TENANT_APPEARANCE_CONFIG_DEFAULTS.logoUrl })
-  logo_url: string;
+  @Prop({
+    type: String,
+    default: () => TENANT_APPEARANCE_DEFAULTS.logoUrl,
+  })
+  logo_url: string | null;
 
-  @Prop({ type: String, default: TENANT_APPEARANCE_CONFIG_DEFAULTS.faviconUrl })
-  favicon_url: string;
+  @Prop({
+    type: String,
+    default: () => TENANT_APPEARANCE_DEFAULTS.faviconUrl,
+  })
+  favicon_url: string | null;
 
-  @Prop({ type: String, default: TENANT_APPEARANCE_CONFIG_DEFAULTS.bannerUrl })
-  banner_url: string;
+  @Prop({
+    type: String,
+    default: () => TENANT_APPEARANCE_DEFAULTS.bannerUrl,
+  })
+  banner_url: string | null;
 }
 
 const TenantAppearanceConfigSchema = SchemaFactory.createForClass(

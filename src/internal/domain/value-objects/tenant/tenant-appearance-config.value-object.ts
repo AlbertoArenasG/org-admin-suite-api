@@ -1,22 +1,17 @@
 import { ValueObject } from '@src/internal/core/entities/value-object';
 
+import { TENANT_APPEARANCE_DEFAULTS } from './defaults';
+
 export interface TenantAppearanceConfigProps {
   logoUrl?: string | null;
   faviconUrl?: string | null;
   bannerUrl?: string | null;
 }
 
-export const TENANT_APPEARANCE_CONFIG_DEFAULTS: TenantAppearanceConfigProps =
-  Object.freeze({
-    logoUrl: null,
-    faviconUrl: null,
-    bannerUrl: null,
-  });
-
 export class TenantAppearanceConfig extends ValueObject<TenantAppearanceConfigProps> {
   constructor(props: TenantAppearanceConfigProps = {}) {
     const merged: TenantAppearanceConfigProps = {
-      ...TENANT_APPEARANCE_CONFIG_DEFAULTS,
+      ...TENANT_APPEARANCE_DEFAULTS,
       ...props,
     };
 

@@ -1,43 +1,43 @@
 import { ValueObject } from '@src/internal/core/entities/value-object';
 
-export interface TenantThemeConfigProps {
-  primaryColor?: string;
-  secondaryColor?: string;
-  accentColor?: string;
-  surfaceColor?: string;
+import { TENANT_THEME_DEFAULTS } from './defaults';
+
+export interface TenantThemeModeProps {
+  [token: string]: string;
 }
 
-export const TENANT_THEME_CONFIG_DEFAULTS: TenantThemeConfigProps =
-  Object.freeze({
-    primaryColor: '#111827',
-    secondaryColor: '#6366F1',
-    accentColor: '#22C55E',
-    surfaceColor: '#FFFFFF',
-  });
+export interface TenantThemeConfigProps {
+  light?: TenantThemeModeProps;
+  dark?: TenantThemeModeProps;
+}
 
-export class TenantThemeConfig extends ValueObject<TenantThemeConfigProps> {
+type TenantThemeConfigState = {
+  light: TenantThemeModeProps;
+  dark: TenantThemeModeProps;
+};
+
+export class TenantThemeConfig extends ValueObject<TenantThemeConfigState> {
   constructor(props: TenantThemeConfigProps = {}) {
-    const merged: TenantThemeConfigProps = {
-      ...TENANT_THEME_CONFIG_DEFAULTS,
-      ...props,
+    const light = {
+      ...TENANT_THEME_DEFAULTS.light,
+      ...(props.light ?? {}),
+    };
+    const dark = {
+      ...TENANT_THEME_DEFAULTS.dark,
+      ...(props.dark ?? {}),
     };
 
-    super(merged);
+    super({
+      light,
+      dark,
+    });
   }
 
-  get primaryColor(): string {
-    return this.props.primaryColor;
+  get light(): TenantThemeModeProps {
+    return { ...this.props.light };
   }
 
-  get secondaryColor(): string {
-    return this.props.secondaryColor;
-  }
-
-  get accentColor(): string {
-    return this.props.accentColor;
-  }
-
-  get surfaceColor(): string {
-    return this.props.surfaceColor;
+  get dark(): TenantThemeModeProps {
+    return { ...this.props.dark };
   }
 }

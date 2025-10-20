@@ -12,12 +12,10 @@ export class TenantPresenter {
       status: result.status,
       configs: {
         allow_custom_roles: result.configs.allowCustomRoles,
-        feature_flags: result.configs.featureFlags,
+        feature_flags: { ...result.configs.featureFlags },
         theme: {
-          primary_color: result.configs.theme.primaryColor,
-          secondary_color: result.configs.theme.secondaryColor,
-          accent_color: result.configs.theme.accentColor,
-          surface_color: result.configs.theme.surfaceColor,
+          light: { ...result.configs.theme.light },
+          dark: { ...result.configs.theme.dark },
         },
         appearance: {
           logo_url: result.configs.appearance.logoUrl,

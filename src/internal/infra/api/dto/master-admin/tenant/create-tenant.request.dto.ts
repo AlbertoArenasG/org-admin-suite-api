@@ -15,27 +15,30 @@ import { TenantConfigsInit } from '@domain/value-objects';
 
 export class TenantThemeRequestDto {
   @IsOptional()
-  @IsString()
-  primary_color?: string;
+  @IsObject()
+  light?: Record<string, string>;
 
   @IsOptional()
-  @IsString()
-  secondary_color?: string;
-
-  @IsOptional()
-  @IsString()
-  accent_color?: string;
-
-  @IsOptional()
-  @IsString()
-  surface_color?: string;
+  @IsObject()
+  dark?: Record<string, string>;
 
   toDomain(): TenantConfigsInit['theme'] {
+    const sanitize = (palette?: Record<string, any>) =>
+      palette
+        ? Object.entries(palette).reduce<Record<string, string>>(
+            (acc, [key, value]) => {
+              if (typeof value === 'string') {
+                acc[key] = value;
+              }
+              return acc;
+            },
+            {},
+          )
+        : undefined;
+
     return {
-      primaryColor: this.primary_color,
-      secondaryColor: this.secondary_color,
-      accentColor: this.accent_color,
-      surfaceColor: this.surface_color,
+      light: sanitize(this.light),
+      dark: sanitize(this.dark),
     };
   }
 }

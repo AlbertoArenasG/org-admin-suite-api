@@ -71,10 +71,8 @@ export class CreateTenantUseCase {
         allowCustomRoles: configs.allowCustomRoles,
         featureFlags: configs.featureFlags,
         theme: {
-          primaryColor: theme.primaryColor,
-          secondaryColor: theme.secondaryColor,
-          accentColor: theme.accentColor,
-          surfaceColor: theme.surfaceColor,
+          light: { ...theme.light },
+          dark: { ...theme.dark },
         },
         appearance: {
           logoUrl: appearance.logoUrl,

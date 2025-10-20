@@ -12,10 +12,8 @@ export interface TenantConfigsResultDto {
   allowCustomRoles: boolean;
   featureFlags: Record<string, boolean>;
   theme: {
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-    surfaceColor: string;
+    light: Record<string, string>;
+    dark: Record<string, string>;
   };
   appearance: {
     logoUrl: string | null;

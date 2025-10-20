@@ -5,6 +5,7 @@ import {
   TenantAppearanceConfigProps,
   TenantThemeConfig,
   TenantThemeConfigProps,
+  TENANT_CONFIGS_DEFAULTS,
 } from '.';
 
 export interface TenantConfigsProps {
@@ -35,8 +36,12 @@ export class TenantConfigs extends ValueObject<TenantConfigsProps> {
     const props: TenantConfigsProps = {
       theme,
       appearance,
-      allowCustomRoles: init.allowCustomRoles ?? false,
-      featureFlags: init.featureFlags ?? {},
+      allowCustomRoles:
+        init.allowCustomRoles ?? TENANT_CONFIGS_DEFAULTS.allowCustomRoles,
+      featureFlags: {
+        ...TENANT_CONFIGS_DEFAULTS.featureFlags,
+        ...(init.featureFlags ?? {}),
+      },
     };
 
     super(props);
