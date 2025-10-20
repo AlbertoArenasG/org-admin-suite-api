@@ -6,8 +6,17 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
+  ITenantUserWriteRepository,
+  ITenantUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import { User, UserStatus, NotificationType } from '@domain/entities';
+import {
+  User,
+  UserStatus,
+  UserRole,
+  NotificationType,
+  TenantUser,
+  TenantUserStatus,
+} from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
@@ -23,6 +32,8 @@ export class CreateUserAndNotifyUseCase {
     private readonly userReadRepo: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
+    @Inject(ITenantUserWriteRepositoryToken)
+    private readonly tenantUserWriteRepo: ITenantUserWriteRepository,
     private readonly notifier: UserNotifierService,
   ) {}
 
@@ -31,24 +42,45 @@ export class CreateUserAndNotifyUseCase {
 
     await this.ensureUserUnique(input.email);
 
+    const hashedPassword = await this.hashPassword(input.password);
+
     const user = new User({
-      ...input,
-      password: await this.hashPassword(input.password),
+      name: input.name,
+      lastname: input.lastname,
+      email: input.email,
+      password: hashedPassword,
+      role: UserRole.USER,
       status: UserStatus.ACTIVE,
+      cellPhone: input.cellPhone,
     });
 
     const { data: persisted } = await this.userWriteRepo.create(user);
     if (!persisted) throw new Error('USER_NOT_CREATED');
 
+    if (!persisted.id) throw new Error('USER_ID_NOT_AVAILABLE');
+
+    const tenantUser = new TenantUser({
+      tenantId: input.tenantId,
+      userId: persisted.id,
+      role: input.role,
+      status: TenantUserStatus.ACTIVE,
+    });
+
+    const { data: persistedTenantUser } =
+      await this.tenantUserWriteRepo.create(tenantUser);
+
+    if (!persistedTenantUser) throw new Error('TENANT_USER_NOT_CREATED');
+
     await this.notifier.notify(persisted, NotificationType.WELCOME_USER);
     persisted.markAsCreated();
+    persistedTenantUser.markAsCreated();
 
     return {
       id: persisted.id,
       name: persisted.name,
       lastname: persisted.lastname,
       email: persisted.email,
-      role: persisted.role,
+      role: input.role,
       status: persisted.status,
       cellPhone: persisted.cellPhone,
       createdAt: persisted.createdAt ?? new Date(),

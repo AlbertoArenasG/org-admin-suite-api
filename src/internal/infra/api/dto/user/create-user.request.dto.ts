@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { UserRole } from '@domain/entities';
+import { TenantUserRole } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import { CreateUserDto } from '@src/internal/application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
@@ -26,6 +26,10 @@ export class CreateUserRequestDto {
   @IsEmail()
   email!: string;
 
+  @IsNotEmpty()
+  @IsString()
+  tenant_id!: string;
+
   @IsOptional()
   @Type(() => PhoneRequestDto)
   @ValidateNested()
@@ -36,8 +40,8 @@ export class CreateUserRequestDto {
   password!: string;
 
   @IsNotEmpty()
-  @IsIn(Object.values(UserRole))
-  role_id!: UserRole;
+  @IsIn(Object.values(TenantUserRole))
+  role_id!: TenantUserRole;
 
   toDomain(): CreateUserDto {
     return {
@@ -45,6 +49,7 @@ export class CreateUserRequestDto {
       lastname: this.lastname,
       email: this.email,
       password: this.password,
+      tenantId: this.tenant_id,
       role: this.role_id,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,

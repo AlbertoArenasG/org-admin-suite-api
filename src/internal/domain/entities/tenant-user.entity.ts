@@ -1,5 +1,6 @@
 import { Entity } from '@src/internal/core/entities/entity';
 import { EntityCreatedEvent } from '@domain/events';
+import { User, Tenant } from '@domain/entities';
 
 export interface TenantUserProps {
   id?: string;
@@ -7,6 +8,8 @@ export interface TenantUserProps {
   userId: string;
   role: TenantUserRole;
   status: TenantUserStatus;
+  userInfo?: User;
+  tenantInfo?: Tenant;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -34,6 +37,14 @@ export class TenantUser extends Entity<TenantUserProps> {
 
   get status(): TenantUserStatus {
     return this.props.status;
+  }
+
+  get userInfo(): User {
+    return this.props.userInfo;
+  }
+
+  get tenantInfo(): Tenant {
+    return this.props.tenantInfo;
   }
 
   get createdAt(): Date | undefined {

@@ -7,7 +7,7 @@ import { TenantPresenter } from '@infra/api/presenters/master-admin/tenant';
 import { CreateTenantCmd } from '@infra/cqrs/commands';
 
 @Controller('v1/master-admin/tenants')
-export class TenantController {
+export class MasterAdminTenantController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly presenter: TenantPresenter,

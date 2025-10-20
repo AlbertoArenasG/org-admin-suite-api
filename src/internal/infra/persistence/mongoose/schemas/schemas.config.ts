@@ -21,4 +21,8 @@ export const configSchemas = [
     name: schemas.TenantAppearanceConfigDocument.name,
     schema: schemas.TenantAppearanceConfigSchema,
   },
+  {
+    name: schemas.TenantUserDocument.name,
+    schema: schemas.TenantUserSchema,
+  },
 ];
