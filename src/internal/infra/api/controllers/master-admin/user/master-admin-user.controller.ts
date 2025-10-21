@@ -11,7 +11,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { CreateMasterUserRequestDto } from '@infra/api/dto/master-admin/user';
 import { MasterUserPresenter } from '@infra/api/presenters/user/master-user.presenter';
-import { CreateMasterUserCmd } from '@infra/cqrs/commands';
+import { CreateMasterUserCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard, MasterOnlyGuard } from '@src/internal/infra/api/guards';
 
@@ -27,7 +27,7 @@ export class MasterAdminUserController {
   @UseGuards(JwtAuthGuard, MasterOnlyGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() body: CreateMasterUserRequestDto) {
-    const command = CreateMasterUserCmd.create(body.toDomain());
+    const command = CreateMasterUserCommandAdapter.create(body.toDomain());
     const result = await this.commandBus.execute(command);
     const data = await this.presenter.toUserResponse(result);
 

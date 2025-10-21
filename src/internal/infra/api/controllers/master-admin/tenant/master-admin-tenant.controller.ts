@@ -14,7 +14,10 @@ import { CreateTenantRequestDto } from '@infra/api/dto/master-admin/tenant';
 import { CreateTenantUserForMasterRequestDto } from '@infra/api/dto/master-admin/user';
 import { TenantPresenter } from '@infra/api/presenters/tenant';
 import { TenantAccessUserPresenter } from '@infra/api/presenters/user/user.presenter';
-import { CreateTenantCmd, CreateUserAndNotifyCmd } from '@infra/cqrs/commands';
+import {
+  CreateTenantCommandAdapter,
+  CreateUserAndNotifyCommandAdapter,
+} from '@infra/cqrs/commands';
 import { JwtAuthGuard, MasterOnlyGuard } from '@infra/api/guards';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 
@@ -31,7 +34,7 @@ export class MasterAdminTenantController {
   @UseGuards(JwtAuthGuard, MasterOnlyGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() body: CreateTenantRequestDto) {
-    const command = CreateTenantCmd.create(body.toDomain());
+    const command = CreateTenantCommandAdapter.create(body.toDomain());
     const result = await this.commandBus.execute(command);
     const data = await this.tenantPresenter.toTenantResponse(result);
 
@@ -49,7 +52,9 @@ export class MasterAdminTenantController {
     @Param('tenantId') tenantId: string,
     @Body() body: CreateTenantUserForMasterRequestDto,
   ) {
-    const command = CreateUserAndNotifyCmd.create(body.toDomain(tenantId));
+    const command = CreateUserAndNotifyCommandAdapter.create(
+      body.toDomain(tenantId),
+    );
     const result = await this.commandBus.execute(command);
     const data = await this.tenantUserPresenter.toUserResponse(result);
 

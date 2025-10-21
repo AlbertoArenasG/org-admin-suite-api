@@ -1,24 +1,25 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateTenantCommand } from '@application/commands';
 import { CreateTenantUseCase } from '@application/use-cases';
 import { CreateTenantDto, CreateTenantResultDto } from '@application/dto';
 
-export class CreateTenantCmd extends CreateTenantCommand implements ICommand {
-  constructor(public readonly payload: CreateTenantDto) {
-    super(payload);
-  }
+export class CreateTenantCommandAdapter implements ICommand {
+  private constructor(public readonly payload: CreateTenantDto) {}
 
-  static create(payload: CreateTenantDto): CreateTenantCmd {
-    return new CreateTenantCmd(payload);
+  static create(payload: CreateTenantDto) {
+    return new CreateTenantCommandAdapter(payload);
   }
 }
 
-@CommandHandler(CreateTenantCmd)
-export class CreateTenantHandler implements ICommandHandler<CreateTenantCmd> {
+@CommandHandler(CreateTenantCommandAdapter)
+export class CreateTenantHandler
+  implements ICommandHandler<CreateTenantCommandAdapter>
+{
   constructor(private readonly useCase: CreateTenantUseCase) {}
 
-  async execute(command: CreateTenantCmd): Promise<CreateTenantResultDto> {
+  async execute(
+    command: CreateTenantCommandAdapter,
+  ): Promise<CreateTenantResultDto> {
     return this.useCase.execute(command.payload);
   }
 }

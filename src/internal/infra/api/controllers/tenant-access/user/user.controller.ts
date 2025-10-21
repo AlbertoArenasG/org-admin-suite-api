@@ -11,7 +11,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { CreateUserRequestDto } from '@infra/api/dto/user/create-user.request.dto';
 import { TenantAccessUserPresenter } from '@infra/api/presenters/user/user.presenter';
-import { CreateUserAndNotifyCmd } from '@infra/cqrs/commands';
+import { CreateUserAndNotifyCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard, TenantAccessGuard } from '@infra/api/guards';
 import { CurrentTenant } from '@src/common/decorators';
@@ -32,7 +32,7 @@ export class UserController {
     @CurrentTenant() currentTenant: AuthenticatedTenantDto,
     @Body() body: CreateUserRequestDto,
   ) {
-    const command = CreateUserAndNotifyCmd.create(
+    const command = CreateUserAndNotifyCommandAdapter.create(
       body.toDomain(currentTenant.tenantId),
     );
     const result = await this.commandBus.execute(command);

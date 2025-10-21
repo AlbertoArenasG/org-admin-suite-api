@@ -1,33 +1,27 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateMasterUserCommand } from '@application/commands';
 import {
   CreateMasterUserDto,
   CreateMasterUserResultDto,
 } from '@application/dto';
 import { CreateMasterUserUseCase } from '@application/use-cases';
 
-export class CreateMasterUserCmd
-  extends CreateMasterUserCommand
-  implements ICommand
-{
-  constructor(public readonly payload: CreateMasterUserDto) {
-    super(payload);
-  }
+export class CreateMasterUserCommandAdapter implements ICommand {
+  private constructor(public readonly payload: CreateMasterUserDto) {}
 
-  static create(payload: CreateMasterUserDto): CreateMasterUserCmd {
-    return new CreateMasterUserCmd(payload);
+  static create(payload: CreateMasterUserDto) {
+    return new CreateMasterUserCommandAdapter(payload);
   }
 }
 
-@CommandHandler(CreateMasterUserCmd)
+@CommandHandler(CreateMasterUserCommandAdapter)
 export class CreateMasterUserHandler
-  implements ICommandHandler<CreateMasterUserCmd>
+  implements ICommandHandler<CreateMasterUserCommandAdapter>
 {
   constructor(private readonly useCase: CreateMasterUserUseCase) {}
 
   async execute(
-    command: CreateMasterUserCmd,
+    command: CreateMasterUserCommandAdapter,
   ): Promise<CreateMasterUserResultDto> {
     return this.useCase.execute(command.payload);
   }

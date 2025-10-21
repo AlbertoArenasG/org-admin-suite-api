@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import * as path from 'path';
 import {
-  I18nModule,
+  I18nModule as NestI18nModule,
   AcceptLanguageResolver,
   QueryResolver,
   HeaderResolver,
@@ -14,7 +14,7 @@ const services = Object.values(Services);
 @Global()
 @Module({
   imports: [
-    I18nModule.forRootAsync({
+    NestI18nModule.forRootAsync({
       useFactory: () => ({
         fallbackLanguage: 'es',
         loaderOptions: {
@@ -32,4 +32,4 @@ const services = Object.values(Services);
   providers: [...services],
   exports: [...services],
 })
-export class GlobalSharedModule {}
+export class I18nModule {}
