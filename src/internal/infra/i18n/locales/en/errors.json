@@ -19,6 +19,13 @@
   },
   "AUTHENTICATION": {
     "INVALID_CREDENTIALS": "Invalid email or password",
-    "USER_INACTIVE": "User account is inactive"
+    "USER_INACTIVE": "User account is inactive",
+    "TOKEN_MISSING": "Authentication token is missing from the request",
+    "AUTHORIZATION_HEADER_INVALID": "Authorization header is invalid",
+    "TOKEN_INVALID": "Authentication token is invalid",
+    "TOKEN_EXPIRED": "Authentication token has expired",
+    "TOKEN_TYPE_UNRECOGNIZED": "Token type {actualType} is not supported",
+    "TOKEN_PAYLOAD_INVALID": "Token payload is not valid",
+    "TOKEN_ROLE_INVALID": "Token role {role} is not allowed"
   }
 }

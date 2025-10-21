@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
@@ -14,6 +9,7 @@ import {
   AuthenticatedTenantDto,
 } from '@application/dto';
 import { TenantUserRole, UserRole } from '@domain/entities';
+import { AuthenticationException } from '@domain/exceptions';
 
 interface MasterTokenPayload {
   sub: string;
@@ -49,14 +45,35 @@ export class JwtAuthGuard implements CanActivate {
   private extractToken(request: Request): string {
     const authHeader = request.headers['authorization'];
 
-    if (!authHeader || Array.isArray(authHeader)) {
-      throw new UnauthorizedException('Authorization header missing');
+    if (!authHeader) {
+      throw AuthenticationException.tokenMissing();
     }
 
-    const [scheme, token] = authHeader.split(' ');
+    if (Array.isArray(authHeader)) {
+      throw AuthenticationException.authorizationHeaderInvalid({
+        reason: 'multiple_values',
+      });
+    }
 
-    if (scheme !== 'Bearer' || !token) {
-      throw new UnauthorizedException('Invalid authorization header');
+    const parts = authHeader.trim().split(/\s+/);
+
+    if (parts.length !== 2) {
+      throw AuthenticationException.authorizationHeaderInvalid({
+        reason: 'unexpected_format',
+      });
+    }
+
+    const [scheme, token] = parts;
+
+    if (!scheme || scheme.toLowerCase() !== 'bearer') {
+      throw AuthenticationException.authorizationHeaderInvalid({
+        expectedScheme: 'Bearer',
+        actualScheme: scheme,
+      });
+    }
+
+    if (!token) {
+      throw AuthenticationException.tokenMissing();
     }
 
     return token;
@@ -65,8 +82,14 @@ export class JwtAuthGuard implements CanActivate {
   private async verifyToken(token: string): Promise<unknown> {
     try {
       return await this.jwtService.verifyAsync(token);
-    } catch {
-      throw new UnauthorizedException('Invalid token');
+    } catch (error) {
+      if (this.isTokenExpiredError(error)) {
+        throw AuthenticationException.tokenExpired();
+      }
+
+      throw AuthenticationException.tokenInvalid({
+        reason: this.getJwtErrorName(error),
+      });
     }
   }
 
@@ -79,7 +102,9 @@ export class JwtAuthGuard implements CanActivate {
       return this.buildMasterActor(token, payload);
     }
 
-    throw new UnauthorizedException('Unrecognized token payload');
+    throw AuthenticationException.tokenTypeUnrecognized(
+      this.getPayloadType(payload),
+    );
   }
 
   private buildTenantActor(
@@ -87,11 +112,13 @@ export class JwtAuthGuard implements CanActivate {
     payload: TenantTokenPayload,
   ): AuthenticatedTenantDto {
     if (!payload.sub || !payload.tenant_id || !payload.tenant_user_id) {
-      throw new UnauthorizedException('Invalid tenant token payload');
+      throw AuthenticationException.tokenPayloadInvalid({
+        tokenType: AuthenticatedActorType.TENANT,
+      });
     }
 
     if (!Object.values(TenantUserRole).includes(payload.role)) {
-      throw new UnauthorizedException('Invalid tenant role in token');
+      throw AuthenticationException.tokenRoleInvalid(String(payload.role));
     }
 
     return {
@@ -109,11 +136,13 @@ export class JwtAuthGuard implements CanActivate {
     payload: MasterTokenPayload,
   ): AuthenticatedMasterDto {
     if (!payload.sub) {
-      throw new UnauthorizedException('Invalid master token payload');
+      throw AuthenticationException.tokenPayloadInvalid({
+        tokenType: AuthenticatedActorType.MASTER,
+      });
     }
 
     if (!this.isMasterRole(payload.role)) {
-      throw new UnauthorizedException('Invalid master role in token');
+      throw AuthenticationException.tokenRoleInvalid(String(payload.role));
     }
 
     return {
@@ -155,5 +184,38 @@ export class JwtAuthGuard implements CanActivate {
 
   private isMasterRole(role: unknown): role is UserRole {
     return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
+  }
+
+  private isTokenExpiredError(error: unknown): boolean {
+    return (
+      typeof error === 'object' &&
+      error !== null &&
+      'name' in error &&
+      (error as { name: string }).name === 'TokenExpiredError'
+    );
+  }
+
+  private getJwtErrorName(error: unknown): string {
+    if (typeof error === 'object' && error !== null && 'name' in error) {
+      return String((error as { name?: string }).name);
+    }
+
+    return 'Unknown';
+  }
+
+  private getPayloadType(payload: unknown): string {
+    if (!payload || typeof payload !== 'object') {
+      return 'unknown';
+    }
+
+    if ('tenant_id' in (payload as Record<string, unknown>)) {
+      return 'tenant';
+    }
+
+    if ('role' in (payload as Record<string, unknown>)) {
+      return 'master';
+    }
+
+    return 'unknown';
   }
 }

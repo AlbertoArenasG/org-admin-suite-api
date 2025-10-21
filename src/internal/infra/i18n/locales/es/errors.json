@@ -19,6 +19,13 @@
   },
   "AUTHENTICATION": {
     "INVALID_CREDENTIALS": "Correo electrónico o contraseña inválidos",
-    "USER_INACTIVE": "La cuenta del usuario está inactiva"
+    "USER_INACTIVE": "La cuenta del usuario está inactiva",
+    "TOKEN_MISSING": "Token de autenticación no presente en la solicitud",
+    "AUTHORIZATION_HEADER_INVALID": "Encabezado de autorización inválido",
+    "TOKEN_INVALID": "Token de autenticación inválido",
+    "TOKEN_EXPIRED": "Token de autenticación expirado",
+    "TOKEN_TYPE_UNRECOGNIZED": "Tipo de token {actualType} no reconocido",
+    "TOKEN_PAYLOAD_INVALID": "Payload de token inválido",
+    "TOKEN_ROLE_INVALID": "Rol {role} no permitido en el token"
   }
 }
