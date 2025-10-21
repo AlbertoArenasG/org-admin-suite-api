@@ -25,6 +25,7 @@ import {
   EntityAlreadyExistsExceptionCode,
 } from '@domain/exceptions';
 import { CreateUserDto, CreateUserResultDto } from '@application/dto';
+import { UserResultMapper } from '@application/mappers';
 import { UserNotifierService } from '@application/services';
 
 @Injectable()
@@ -58,23 +59,16 @@ export class CreateUserAndNotifyUseCase {
     const { data: persistedTenantUser } =
       await this.tenantUserWriteRepo.create(tenantUser);
 
+    if (!persistedTenantUser || !persistedTenantUser.id) {
+      throw new Error('TENANT_USER_NOT_CREATED');
+    }
+
     persistedTenantUser.markAsCreated();
 
-    return {
-      id: user.id,
-      userTenantId: persistedTenantUser.id,
-      tenantId: persistedTenantUser.tenantId,
-      name: user.name,
-      lastname: user.lastname,
-      email: user.email,
-      role: persistedTenantUser.role,
-      status: persistedTenantUser.status,
-      cellPhone: {
-        countryCode: user.cellPhone?.countryCode ?? null,
-        number: user.cellPhone?.number ?? null,
-      },
-      createdAt: user.createdAt ?? new Date(),
-    };
+    return UserResultMapper.toCreateTenantUserResultDto(
+      user,
+      persistedTenantUser,
+    );
   }
 
   private async findUserByEmail(email: string): Promise<User | null> {

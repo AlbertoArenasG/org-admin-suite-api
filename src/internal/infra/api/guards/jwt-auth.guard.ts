@@ -7,25 +7,13 @@ import {
   AuthenticatedActorType,
   AuthenticatedMasterDto,
   AuthenticatedTenantDto,
+  MasterTokenPayloadDto,
+  TenantAccessTokenPayloadDto,
+  isMasterTokenPayloadDto,
+  isTenantAccessTokenPayloadDto,
 } from '@application/dto';
 import { TenantUserRole, UserRole } from '@domain/entities';
 import { AuthenticationException } from '@domain/exceptions';
-
-interface MasterTokenPayload {
-  sub: string;
-  role: UserRole;
-  iat?: number;
-  exp?: number;
-}
-
-interface TenantTokenPayload {
-  sub: string;
-  tenant_id: string;
-  tenant_user_id: string;
-  role: TenantUserRole;
-  iat?: number;
-  exp?: number;
-}
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -109,7 +97,7 @@ export class JwtAuthGuard implements CanActivate {
 
   private buildTenantActor(
     token: string,
-    payload: TenantTokenPayload,
+    payload: TenantAccessTokenPayloadDto,
   ): AuthenticatedTenantDto {
     if (!payload.sub || !payload.tenant_id || !payload.tenant_user_id) {
       throw AuthenticationException.tokenPayloadInvalid({
@@ -133,7 +121,7 @@ export class JwtAuthGuard implements CanActivate {
 
   private buildMasterActor(
     token: string,
-    payload: MasterTokenPayload,
+    payload: MasterTokenPayloadDto,
   ): AuthenticatedMasterDto {
     if (!payload.sub) {
       throw AuthenticationException.tokenPayloadInvalid({
@@ -153,33 +141,14 @@ export class JwtAuthGuard implements CanActivate {
     };
   }
 
-  private isMasterPayload(payload: unknown): payload is MasterTokenPayload {
-    if (!payload || typeof payload !== 'object') {
-      return false;
-    }
-
-    const candidate = payload as Record<string, unknown>;
-
-    return (
-      typeof candidate.sub === 'string' &&
-      typeof candidate.role === 'string' &&
-      !('tenant_id' in candidate)
-    );
+  private isMasterPayload(payload: unknown): payload is MasterTokenPayloadDto {
+    return isMasterTokenPayloadDto(payload);
   }
 
-  private isTenantPayload(payload: unknown): payload is TenantTokenPayload {
-    if (!payload || typeof payload !== 'object') {
-      return false;
-    }
-
-    const candidate = payload as Record<string, unknown>;
-
-    return (
-      typeof candidate.sub === 'string' &&
-      typeof candidate.role === 'string' &&
-      typeof candidate.tenant_id === 'string' &&
-      typeof candidate.tenant_user_id === 'string'
-    );
+  private isTenantPayload(
+    payload: unknown,
+  ): payload is TenantAccessTokenPayloadDto {
+    return isTenantAccessTokenPayloadDto(payload);
   }
 
   private isMasterRole(role: unknown): role is UserRole {

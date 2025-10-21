@@ -17,13 +17,16 @@ import {
   User,
   UserRole,
   UserStatus,
-  TenantStatus,
 } from '@domain/entities';
 import {
   AuthenticateUserDto,
   AuthenticateUserResultDto,
   AuthenticatedTenantAccessDto,
 } from '@application/dto';
+import {
+  AuthenticateUserResultMapper,
+  AuthTokenMapper,
+} from '@application/mappers';
 
 @Injectable()
 export class AuthenticateUserUseCase {
@@ -48,22 +51,11 @@ export class AuthenticateUserUseCase {
     const masterAccessToken = await this.buildMasterAccessToken(user);
     const tenantAccesses = await this.buildTenantAccesses(user);
 
-    return {
-      user: {
-        id: user.id!,
-        name: user.name,
-        lastname: user.lastname,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-        cellPhone: {
-          countryCode: user.cellPhone?.countryCode ?? null,
-          number: user.cellPhone?.number ?? null,
-        },
-      },
+    return AuthenticateUserResultMapper.toResult(
+      user,
       masterAccessToken,
       tenantAccesses,
-    };
+    );
   }
 
   private async fetchUser(email: string): Promise<User> {
@@ -102,13 +94,9 @@ export class AuthenticateUserUseCase {
   ): Promise<string | undefined> {
     if (!this.isMasterUser(user)) return undefined;
 
-    return this.jwtService.signAsync(
-      {
-        sub: user.id,
-        role: user.role,
-      },
-      { expiresIn: '7d' },
-    );
+    const payload = AuthTokenMapper.toMasterPayload(user);
+
+    return this.jwtService.signAsync(payload, { expiresIn: '7d' });
   }
 
   private async buildTenantAccesses(
@@ -116,9 +104,7 @@ export class AuthenticateUserUseCase {
   ): Promise<AuthenticatedTenantAccessDto[]> {
     const { data } = await this.tenantUserReadRepo.findManyByUserId(user.id!);
 
-    if (!data.length) {
-      return [];
-    }
+    if (!data.length) return [];
 
     const activeTenantUsers = data.filter(
       (tenantUser) =>
@@ -131,44 +117,30 @@ export class AuthenticateUserUseCase {
       ),
     );
 
-    return tenantAccesses.filter((tenantAccess) =>
-      Boolean(tenantAccess?.tenant?.status === TenantStatus.ACTIVE),
+    return tenantAccesses.filter(
+      (tenantAccess): tenantAccess is AuthenticatedTenantAccessDto =>
+        tenantAccess !== null,
     );
   }
 
   private async mapTenantAccess(
     user: User,
     tenantUser: TenantUser,
-  ): Promise<AuthenticatedTenantAccessDto> {
+  ): Promise<AuthenticatedTenantAccessDto | null> {
     const { data: tenant } = await this.tenantReadRepo.findById(
       tenantUser.tenantId,
     );
 
-    const payload = {
-      sub: user.id,
-      tenant_id: tenantUser.tenantId,
-      tenant_user_id: tenantUser.id,
-      role: tenantUser.role,
-    };
+    const payload = AuthTokenMapper.toTenantPayload(user, tenantUser);
 
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '7d',
     });
 
-    return {
-      tenantUserId: tenantUser.id!,
-      tenantId: tenantUser.tenantId,
-      role: tenantUser.role,
-      status: tenantUser.status,
+    return AuthenticateUserResultMapper.toTenantAccessDto({
+      tenantUser,
+      tenant: tenant ?? null,
       accessToken,
-      tenant: tenant
-        ? {
-            id: tenant.id ?? tenant.currentState.id ?? tenant.slug,
-            name: tenant.name,
-            slug: tenant.slug,
-            status: tenant.status,
-          }
-        : null,
-    };
+    });
   }
 }

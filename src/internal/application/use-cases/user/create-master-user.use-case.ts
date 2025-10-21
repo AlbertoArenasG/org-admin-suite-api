@@ -17,6 +17,7 @@ import {
   CreateMasterUserDto,
   CreateMasterUserResultDto,
 } from '@application/dto';
+import { UserResultMapper } from '@application/mappers';
 import { UserNotifierService } from '@application/services';
 
 @Injectable()
@@ -57,19 +58,7 @@ export class CreateMasterUserUseCase {
     await this.notifier.notify(data, NotificationType.WELCOME_USER);
     data.markAsCreated();
 
-    return {
-      id: data.id,
-      name: data.name,
-      lastname: data.lastname,
-      email: data.email,
-      role: data.role,
-      status: data.status,
-      cellPhone: {
-        countryCode: data.cellPhone?.countryCode ?? null,
-        number: data.cellPhone?.number ?? null,
-      },
-      createdAt: data.createdAt ?? new Date(),
-    };
+    return UserResultMapper.toCreateMasterUserResultDto(data);
   }
 
   private async ensureUserUnique(email: string): Promise<void> {
