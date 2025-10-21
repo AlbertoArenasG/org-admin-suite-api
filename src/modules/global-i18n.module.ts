@@ -32,4 +32,4 @@ const services = Object.values(Services);
   providers: [...services],
   exports: [...services],
 })
-export class I18nModule {}
+export class GlobalI18nModule {}

@@ -19,4 +19,4 @@ import { EnvService } from '@infra/env';
     }),
   ],
 })
-export class AuthModule {}
+export class GlobalAuthModule {}

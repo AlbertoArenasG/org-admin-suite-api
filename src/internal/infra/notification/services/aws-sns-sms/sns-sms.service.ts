@@ -6,14 +6,13 @@ import Handlebars from 'handlebars';
 import { NotificationType } from '@domain/entities';
 import { ISmsService } from '@domain/ports/services';
 import { UserWelcomeSmsDto } from '@application/dto';
-
-type TemplateRegistry = Record<string, Handlebars.TemplateDelegate>;
+import { NotificationTemplateRegistry } from '@infra/notification/services/templates';
 
 @Injectable()
 export class SnsSmsService implements ISmsService {
   private readonly logger = new Logger(SnsSmsService.name);
   private readonly sns: SNSClient;
-  private readonly templates: TemplateRegistry;
+  private readonly templates: NotificationTemplateRegistry;
 
   constructor(private readonly envService: EnvService) {
     this.sns = new SNSClient({

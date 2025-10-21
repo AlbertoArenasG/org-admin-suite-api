@@ -21,4 +21,4 @@ import { configSchemas } from '@infra/persistence/mongoose/schemas/schemas.confi
   ],
   exports: [MongooseModule],
 })
-export class DatabaseModule {}
+export class GlobalMongooseModule {}

@@ -1,12 +1,12 @@
 import { IEmailServiceToken, ISmsServiceToken } from '@domain/ports/services';
 
-import { SesEmailService } from './services/aws-ses-email/ses-email.service';
 import { SnsSmsService } from './services/aws-sns-sms/sns-sms.service';
+import { MailerEmailService } from './services/mailer-email/mailer-email.service';
 
 export const NotificationServicesConfig = [
   {
     provide: IEmailServiceToken,
-    useClass: SesEmailService,
+    useClass: MailerEmailService,
   },
   {
     provide: ISmsServiceToken,

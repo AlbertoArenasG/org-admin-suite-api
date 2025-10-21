@@ -1,11 +1,7 @@
 import Handlebars from 'handlebars';
 
 import { NotificationType } from '@domain/entities';
-
-export type TemplateRegistry = Record<
-  NotificationType,
-  Handlebars.TemplateDelegate
->;
+import { NotificationTemplateRegistry } from './notification-template-registry.type';
 
 const welcomeTemplate = Handlebars.compile(
   `<!DOCTYPE html>
@@ -51,11 +47,11 @@ const welcomeTemplate = Handlebars.compile(
 </html>`,
 );
 
-export const emailTemplates: TemplateRegistry = {
+export const emailTemplates: NotificationTemplateRegistry = {
   [NotificationType.WELCOME_USER]: welcomeTemplate,
 };
 
-export const emailSubjects: TemplateRegistry = {
+export const emailSubjects: NotificationTemplateRegistry = {
   [NotificationType.WELCOME_USER]: Handlebars.compile(
     'Bienvenido a la plataforma',
   ),

@@ -13,6 +13,11 @@ export const envSchema = z.object({
   AWS_SNS_SENDER_ID: z.string(),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
+  MAILER_HOST: z.string(),
+  MAILER_PORT: z.string(),
+  MAILER_USER: z.string(),
+  MAILER_PASSWORD: z.string(),
+  MAILER_FROM: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

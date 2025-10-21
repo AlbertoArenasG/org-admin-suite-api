@@ -8,15 +8,15 @@ import { UserWelcomeEmailDto } from '@application/dto';
 import {
   emailSubjects,
   emailTemplates,
-  TemplateRegistry,
-} from './ses-email.templates';
+  NotificationTemplateRegistry,
+} from '@infra/notification/services/templates';
 
 @Injectable()
 export class SesEmailService implements IEmailService {
   private readonly logger = new Logger(SesEmailService.name);
   private readonly ses: SESClient;
-  private readonly templates: TemplateRegistry;
-  private readonly subjects: TemplateRegistry;
+  private readonly templates: NotificationTemplateRegistry;
+  private readonly subjects: NotificationTemplateRegistry;
 
   constructor(private readonly envService: EnvService) {
     this.ses = new SESClient({
