@@ -36,6 +36,7 @@ export class MasterAdminTenantController {
     const data = await this.tenantPresenter.toTenantResponse(result);
 
     return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
       .build();

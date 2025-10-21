@@ -34,7 +34,7 @@ export class ApiResponseBuilder<T> {
 
   withErrorDetails(errorDetails: ErrorDetails) {
     this.error_details = errorDetails;
-    return this.withSuccess(false);
+    return this.withSuccess(false).withSuccessMessage(null);
   }
 
   withData(data: T) {
