@@ -1,4 +1,4 @@
-import { Tenant, TenantStatus, TenantUser, User } from '@domain/entities';
+import { Tenant, TenantUser, User } from '@domain/entities';
 import {
   AuthenticatedTenantAccessDto,
   AuthenticateUserResultDto,
@@ -29,10 +29,6 @@ export class AuthenticateUserResultMapper {
     tenant,
     accessToken,
   }: TenantAccessParams): AuthenticatedTenantAccessDto | null {
-    if (tenant && tenant.status !== TenantStatus.ACTIVE) {
-      return null;
-    }
-
     return {
       tenantUserId: tenantUser.id!,
       tenantId: tenantUser.tenantId,

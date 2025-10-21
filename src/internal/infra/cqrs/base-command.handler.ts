@@ -11,7 +11,7 @@ export abstract class BaseCommandHandler<Command, Result> {
     action: () => Promise<Result>,
   ): Promise<Result> {
     // const startedAt = Date.now();
-    this.logStart(command);
+    // this.logStart(command);
 
     try {
       const result = await action();

@@ -21,7 +21,7 @@ import { UserResultMapper } from '@application/mappers';
 import { UserNotifierService } from '@application/services';
 
 @Injectable()
-export class CreateMasterUserUseCase {
+export class CreateMasterUserAndNotifyUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepo: IUserReadRepository,
@@ -30,6 +30,12 @@ export class CreateMasterUserUseCase {
     private readonly notifier: UserNotifierService,
   ) {}
 
+  /**
+   * Creates a new master user in the database if it doesn't already exist
+   * or updates an existing master user with the given data.
+   * @param input The data to create the master user with
+   * @returns A promise that resolves to the created master user
+   */
   async execute(
     input: CreateMasterUserDto,
   ): Promise<CreateMasterUserResultDto> {
@@ -50,10 +56,6 @@ export class CreateMasterUserUseCase {
     });
 
     const { data } = await this.userWriteRepo.create(user);
-
-    if (!data || !data.id) {
-      throw new Error('MASTER_USER_NOT_CREATED');
-    }
 
     await this.notifier.notify(data, NotificationType.WELCOME_USER);
     data.markAsCreated();

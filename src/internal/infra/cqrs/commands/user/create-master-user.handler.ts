@@ -4,7 +4,7 @@ import {
   CreateMasterUserDto,
   CreateMasterUserResultDto,
 } from '@application/dto';
-import { CreateMasterUserUseCase } from '@application/use-cases';
+import { CreateMasterUserAndNotifyUseCase } from '@application/use-cases';
 import { BaseCommandHandler } from '@infra/cqrs/base-command.handler';
 
 export class CreateMasterUserCommandAdapter implements ICommand {
@@ -20,7 +20,7 @@ export class CreateMasterUserHandler extends BaseCommandHandler<
   CreateMasterUserCommandAdapter,
   CreateMasterUserResultDto
 > {
-  constructor(private readonly useCase: CreateMasterUserUseCase) {
+  constructor(private readonly useCase: CreateMasterUserAndNotifyUseCase) {
     super();
   }
 

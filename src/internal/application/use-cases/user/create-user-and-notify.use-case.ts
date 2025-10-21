@@ -42,6 +42,12 @@ export class CreateUserAndNotifyUseCase {
     private readonly notifier: UserNotifierService,
   ) {}
 
+  /**
+   * Creates a new user in the database if it doesn't already exist
+   * or updates an existing user with the given data.
+   * @param input The data to create the user with
+   * @returns A promise that resolves to the created user
+   */
   async execute(input: CreateUserDto): Promise<CreateUserResultDto> {
     const existingUser = await this.findUserByEmail(input.email);
 
@@ -71,11 +77,11 @@ export class CreateUserAndNotifyUseCase {
     );
   }
 
-  private async findUserByEmail(email: string): Promise<User | null> {
-    const { data } = await this.userReadRepo.findByEmail(email);
-    return data ?? null;
-  }
-
+  /**
+   * Creates a new user in the database
+   * @param input The data to create the user with
+   * @returns A promise that resolves to the created user
+   */
   private async createUser(input: CreateUserDto): Promise<User> {
     UserPasswordPolicy.ensureSecure(input.password);
 
@@ -103,6 +109,13 @@ export class CreateUserAndNotifyUseCase {
     return data;
   }
 
+  /**
+   * Ensures that a tenant user with the given user id and tenant id does not already exist
+   * @param userId The id of the user to check
+   * @param tenantId The id of the tenant to check
+   * @param email The email of the tenant user to check
+   * @throws EntityAlreadyExistsException If a tenant user with the given user id and tenant id already exists
+   */
   private async ensureTenantUserUnique(
     userId: string,
     tenantId: string,
@@ -120,6 +133,11 @@ export class CreateUserAndNotifyUseCase {
         { userId, tenantId, email },
       );
     }
+  }
+
+  private async findUserByEmail(email: string): Promise<User | null> {
+    const { data } = await this.userReadRepo.findByEmail(email);
+    return data ?? null;
   }
 
   private async hashPassword(password: string): Promise<string> {
