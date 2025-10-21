@@ -1,7 +1,8 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommand } from '@nestjs/cqrs';
 
 import { CreateUserAndNotifyUseCase } from '@application/use-cases';
 import { CreateUserDto, CreateUserResultDto } from '@application/dto';
+import { BaseCommandHandler } from '@infra/cqrs/base-command.handler';
 
 export class CreateUserAndNotifyCommandAdapter implements ICommand {
   private constructor(public readonly payload: CreateUserDto) {}
@@ -12,14 +13,17 @@ export class CreateUserAndNotifyCommandAdapter implements ICommand {
 }
 
 @CommandHandler(CreateUserAndNotifyCommandAdapter)
-export class CreateUserAndNotifyHandler
-  implements ICommandHandler<CreateUserAndNotifyCommandAdapter>
-{
-  constructor(private readonly useCase: CreateUserAndNotifyUseCase) {}
+export class CreateUserAndNotifyHandler extends BaseCommandHandler<
+  CreateUserAndNotifyCommandAdapter,
+  CreateUserResultDto
+> {
+  constructor(private readonly useCase: CreateUserAndNotifyUseCase) {
+    super();
+  }
 
   async execute(
     command: CreateUserAndNotifyCommandAdapter,
   ): Promise<CreateUserResultDto> {
-    return this.useCase.execute(command.payload);
+    return this.run(command, () => this.useCase.execute(command.payload));
   }
 }
