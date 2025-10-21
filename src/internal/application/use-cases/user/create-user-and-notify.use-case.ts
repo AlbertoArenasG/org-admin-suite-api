@@ -62,11 +62,13 @@ export class CreateUserAndNotifyUseCase {
 
     return {
       id: user.id,
+      userTenantId: persistedTenantUser.id,
+      tenantId: persistedTenantUser.tenantId,
       name: user.name,
       lastname: user.lastname,
       email: user.email,
-      role: input.role,
-      status: user.status,
+      role: persistedTenantUser.role,
+      status: persistedTenantUser.status,
       cellPhone: {
         countryCode: user.cellPhone?.countryCode ?? null,
         number: user.cellPhone?.number ?? null,
