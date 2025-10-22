@@ -25,4 +25,8 @@ export const configSchemas = [
     name: schemas.TenantUserDocument.name,
     schema: schemas.TenantUserSchema,
   },
+  {
+    name: schemas.UserRegistrationInvitationDocument.name,
+    schema: schemas.UserRegistrationInvitationSchema,
+  },
 ];

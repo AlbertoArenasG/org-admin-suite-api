@@ -4,5 +4,11 @@
     "CREATED": "Usuario creado correctamente",
     "UPDATED": "User actualizado correctamente",
     "DELETED": "Usuario eliminado correctamente"
+  },
+  "USER_REGISTRATION_INVITATION": {
+    "CREATED": "Invitación creada correctamente",
+    "COMPLETED": "Registro completado correctamente",
+    "ACCEPTED": "Invitación aceptada correctamente",
+    "DECLINED": "Invitación rechazada correctamente"
   }
 }

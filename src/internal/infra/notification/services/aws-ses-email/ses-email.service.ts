@@ -3,8 +3,12 @@ import { EnvService } from '@infra/env';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 import { NotificationType } from '@domain/entities';
+import { UserRegistrationInvitationType } from '@domain/ports/repositories';
 import { IEmailService } from '@domain/ports/services';
-import { UserWelcomeEmailDto } from '@application/dto';
+import {
+  UserRegistrationInvitationEmailDto,
+  UserWelcomeEmailDto,
+} from '@application/dto';
 import {
   emailSubjects,
   emailTemplates,
@@ -43,6 +47,28 @@ export class SesEmailService implements IEmailService {
     const html = template(context);
 
     await this.send(payload.user.email, subject(context), html);
+  }
+
+  async sendUserRegistrationInvitation(
+    payload: UserRegistrationInvitationEmailDto,
+  ): Promise<void> {
+    const notificationType =
+      payload.type === UserRegistrationInvitationType.NEW_USER_REGISTRATION
+        ? NotificationType.USER_REGISTRATION_INVITATION
+        : NotificationType.TENANT_USER_INVITATION;
+
+    const template = this.templates[notificationType];
+    const subject = this.subjects[notificationType];
+
+    const context = {
+      name: payload.userData?.name ?? payload.email,
+      link: payload.invitationUrl,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+
+    await this.send(payload.email, subject(context), html);
   }
 
   private async send(

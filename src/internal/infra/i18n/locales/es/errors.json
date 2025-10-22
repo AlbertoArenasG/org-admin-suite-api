@@ -4,6 +4,9 @@
     "PHONE": "Formato del número de teléfono {phone} es inválido",
     "USER": {
       "PASSWORD": "Formato de la contraseña es inválido"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "TOKEN": "El token de invitación es inválido"
     }
   },
   "ENTITY_ALREADY_EXISTS": {
@@ -15,6 +18,9 @@
       "USER": {
         "EMAIL": "El usuario con el correo electrónico {email} ya está asociado a la cuenta"
       }
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "EMAIL": "Ya existe una invitación activa para {email}"
     }
   },
   "AUTHENTICATION": {
@@ -27,5 +33,6 @@
     "TOKEN_TYPE_UNRECOGNIZED": "Tipo de token {actualType} no reconocido",
     "TOKEN_PAYLOAD_INVALID": "Payload de token inválido",
     "TOKEN_ROLE_INVALID": "Rol {role} no permitido en el token"
-  }
+  },
+  "USER_REGISTRATION_INVITATION_NOT_FOUND": "No se encontró la invitación o ya fue utilizada"
 }

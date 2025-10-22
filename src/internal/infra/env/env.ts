@@ -18,6 +18,8 @@ export const envSchema = z.object({
   MAILER_USER: z.string(),
   MAILER_PASSWORD: z.string(),
   MAILER_FROM: z.string(),
+  USER_REGISTRATION_INVITATION_URL: z.string().url().optional(),
+  USER_REGISTRATION_INVITATION_URL_TEMPLATE: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

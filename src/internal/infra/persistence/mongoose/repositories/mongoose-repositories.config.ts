@@ -3,6 +3,8 @@ import {
   MongooseTenantWriteRepositoryImpl,
   MongooseTenantUserReadRepositoryImpl,
   MongooseTenantUserWriteRepositoryImpl,
+  MongooseUserRegistrationInvitationReadRepositoryImpl,
+  MongooseUserRegistrationInvitationWriteRepositoryImpl,
   MongooseUserReadRepositoryImpl,
   MongooseUserWriteRepositoryImpl,
 } from '.';
@@ -12,6 +14,8 @@ import {
   ITenantWriteRepositoryToken,
   ITenantUserReadRepositoryToken,
   ITenantUserWriteRepositoryToken,
+  IUserRegistrationInvitationReadRepositoryToken,
+  IUserRegistrationInvitationWriteRepositoryToken,
   IUserReadRepositoryToken,
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
@@ -41,6 +45,14 @@ export const MongooseRepositoriesConfig = [
     provide: ITenantUserWriteRepositoryToken,
     useClass: MongooseTenantUserWriteRepositoryImpl,
   },
+  {
+    provide: IUserRegistrationInvitationReadRepositoryToken,
+    useClass: MongooseUserRegistrationInvitationReadRepositoryImpl,
+  },
+  {
+    provide: IUserRegistrationInvitationWriteRepositoryToken,
+    useClass: MongooseUserRegistrationInvitationWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -50,4 +62,6 @@ export const MongooseRepositoryTokens = [
   ITenantWriteRepositoryToken,
   ITenantUserReadRepositoryToken,
   ITenantUserWriteRepositoryToken,
+  IUserRegistrationInvitationReadRepositoryToken,
+  IUserRegistrationInvitationWriteRepositoryToken,
 ];

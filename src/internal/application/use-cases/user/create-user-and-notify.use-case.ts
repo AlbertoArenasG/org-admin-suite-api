@@ -65,10 +65,6 @@ export class CreateUserAndNotifyUseCase {
     const { data: persistedTenantUser } =
       await this.tenantUserWriteRepo.create(tenantUser);
 
-    if (!persistedTenantUser || !persistedTenantUser.id) {
-      throw new Error('TENANT_USER_NOT_CREATED');
-    }
-
     persistedTenantUser.markAsCreated();
 
     return UserResultMapper.toCreateTenantUserResultDto(
@@ -98,10 +94,6 @@ export class CreateUserAndNotifyUseCase {
     });
 
     const { data } = await this.userWriteRepo.create(user);
-
-    if (!data || !data.id) {
-      throw new Error('USER_NOT_CREATED');
-    }
 
     await this.notifier.notify(data, NotificationType.WELCOME_USER);
     data.markAsCreated();

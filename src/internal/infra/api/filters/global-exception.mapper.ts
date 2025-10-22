@@ -9,6 +9,7 @@ import {
   EntityAlreadyExistsException,
   InvalidValueException,
   InvalidValueExceptionCode,
+  EntityNotFoundException,
 } from '@domain/exceptions';
 import { ErrorMessageService } from '@infra/i18n/services';
 
@@ -156,6 +157,10 @@ export class GlobalExceptionMapper {
   private mapDomainExceptionToHttpStatus(
     domainException: DomainException,
   ): number {
+    if (domainException instanceof EntityNotFoundException) {
+      return HttpStatus.NOT_FOUND;
+    }
+
     if (domainException instanceof EntityAlreadyExistsException) {
       return HttpStatus.CONFLICT;
     }

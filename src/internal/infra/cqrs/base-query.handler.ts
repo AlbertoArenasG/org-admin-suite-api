@@ -10,15 +10,15 @@ export abstract class BaseQueryHandler<Query, Result> {
     query: Query,
     action: () => Promise<Result>,
   ): Promise<Result> {
-    const startedAt = Date.now();
-    this.logStart(query);
+    // const startedAt = Date.now();
+    // this.logStart(query);
 
     try {
       const result = await action();
-      this.logSuccess(query, startedAt, result);
+      // this.logSuccess(query, startedAt, result);
       return result;
     } catch (error) {
-      this.logError(query, startedAt, error);
+      // this.logError(query, startedAt, error);
       throw error;
     }
   }
