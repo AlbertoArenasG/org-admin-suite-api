@@ -1,27 +1,29 @@
+import { Injectable } from '@nestjs/common';
 import { createHash, randomBytes } from 'crypto';
 
 import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
-
-const DEFAULT_INVITATION_URL_TEMPLATE =
-  'https://example.com/register?token={{token}}';
+import { EnvService } from '@infra/env';
 
 export interface GeneratedInvitationToken {
   token: string;
   tokenHash: string;
 }
 
+@Injectable()
 export class UserRegistrationInvitationTokenService {
-  static generate(): GeneratedInvitationToken {
+  constructor(private readonly envService: EnvService) {}
+
+  generate(): GeneratedInvitationToken {
     const token = this.generateTokenValue(30);
     const tokenHash = this.hash(token);
 
     return { token, tokenHash };
   }
 
-  static hash(token: string): string {
+  hash(token: string): string {
     if (typeof token !== 'string') {
       throw InvalidValueException.create(
         InvalidValueExceptionCode.USER_REGISTRATION_INVITATION_TOKEN,
@@ -41,21 +43,16 @@ export class UserRegistrationInvitationTokenService {
     return createHash('sha256').update(trimmed).digest('hex');
   }
 
-  static buildInvitationUrl(token: string): string {
-    const template =
-      process.env.USER_REGISTRATION_INVITATION_URL_TEMPLATE ||
-      process.env.USER_REGISTRATION_INVITATION_URL ||
-      DEFAULT_INVITATION_URL_TEMPLATE;
+  buildInvitationUrl(token: string): string {
+    const baseUrl = this.envService.get(
+      'USER_REGISTRATION_BASE_INVITATION_URL',
+    );
 
-    if (template.includes('{{token}}')) {
-      return template.replace('{{token}}', token);
-    }
-
-    const separator = template.includes('?') ? '&' : '?';
-    return `${template}${separator}token=${token}`;
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    return `${baseUrl}${separator}token=${token}`;
   }
 
-  private static generateTokenValue(length: number): string {
+  private generateTokenValue(length: number): string {
     let token = '';
 
     while (token.length < length) {

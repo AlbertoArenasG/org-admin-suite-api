@@ -35,6 +35,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
     @Inject(IUserRegistrationInvitationWriteRepositoryToken)
     private readonly invitationWriteRepository: IUserRegistrationInvitationWriteRepository,
     private readonly notifier: UserRegistrationInvitationNotifierService,
+    private readonly tokenService: UserRegistrationInvitationTokenService,
   ) {}
 
   async execute(
@@ -46,8 +47,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
     await this.ensureUserDoesNotExist(input.email);
     await this.ensureInvitationDoesNotExist(input.email);
 
-    const { token, tokenHash } =
-      UserRegistrationInvitationTokenService.generate();
+    const { token, tokenHash } = this.tokenService.generate();
 
     const { data } = await this.invitationWriteRepository.create({
       scope: UserRegistrationInvitationScope.MASTER,
@@ -63,8 +63,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
     await this.notifier.sendInvitation({
       email: input.email,
       token,
-      invitationUrl:
-        UserRegistrationInvitationTokenService.buildInvitationUrl(token),
+      invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.MASTER,
       role: input.role,
       userData: input.userData ?? null,

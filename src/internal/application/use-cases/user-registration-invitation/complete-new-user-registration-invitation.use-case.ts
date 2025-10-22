@@ -46,6 +46,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     private readonly userReadRepository: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
+    private readonly tokenService: UserRegistrationInvitationTokenService,
   ) {}
 
   async execute(
@@ -122,7 +123,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
   private async findValidInvitation(
     token: string,
   ): Promise<UserRegistrationInvitationRecord> {
-    const tokenHash = UserRegistrationInvitationTokenService.hash(token);
+    const tokenHash = this.tokenService.hash(token);
 
     const { data } =
       await this.invitationReadRepository.findByTokenHash(tokenHash);

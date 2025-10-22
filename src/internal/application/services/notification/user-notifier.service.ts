@@ -4,11 +4,13 @@ import { NotificationType, User } from '@domain/entities';
 import { UserWelcomeNotificationPolicy } from '@domain/policies';
 import { MultiChannelNotificationService } from '@application/services/notification';
 import { WelcomeUserNotificationEnvelopeDto } from '@application/dto';
+import { EnvService } from '@infra/env';
 
 @Injectable()
 export class UserNotifierService {
   constructor(
     private readonly notificationService: MultiChannelNotificationService,
+    private readonly envService: EnvService,
   ) {}
 
   async notify(user: User, notificationType: NotificationType): Promise<void> {
@@ -20,10 +22,10 @@ export class UserNotifierService {
   async welcomeUser(user: User): Promise<void> {
     const channels = UserWelcomeNotificationPolicy.getChannelsFor(user);
 
-    const welcomeUrl = 'https://example.com';
+    const baseUrl = this.envService.get('USER_WELCOME_BASE_URL');
     const payload = {
       user,
-      url: welcomeUrl,
+      url: baseUrl,
     };
 
     const envelope: WelcomeUserNotificationEnvelopeDto = {

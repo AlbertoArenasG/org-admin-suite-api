@@ -4,6 +4,9 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'local', 'production'])
     .default('development'),
+  USER_WELCOME_BASE_URL: z.string(),
+  USER_REGISTRATION_BASE_INVITATION_URL: z.string(),
+  USER_PASSWORD_RESET_URL: z.string(),
   PORT: z.string().default('3000'),
   MONGO_URI: z.string().url(),
   AWS_REGION: z.string(),
@@ -18,8 +21,6 @@ export const envSchema = z.object({
   MAILER_USER: z.string(),
   MAILER_PASSWORD: z.string(),
   MAILER_FROM: z.string(),
-  USER_REGISTRATION_INVITATION_URL: z.string().url().optional(),
-  USER_REGISTRATION_INVITATION_URL_TEMPLATE: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

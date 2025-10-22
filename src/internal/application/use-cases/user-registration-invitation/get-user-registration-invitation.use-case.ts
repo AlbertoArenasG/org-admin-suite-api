@@ -19,10 +19,11 @@ export class GetUserRegistrationInvitationUseCase {
   constructor(
     @Inject(IUserRegistrationInvitationReadRepositoryToken)
     private readonly invitationReadRepository: IUserRegistrationInvitationReadRepository,
+    private readonly tokenService: UserRegistrationInvitationTokenService,
   ) {}
 
   async execute(token: string): Promise<UserRegistrationInvitationDto> {
-    const tokenHash = UserRegistrationInvitationTokenService.hash(token);
+    const tokenHash = this.tokenService.hash(token);
 
     const { data } =
       await this.invitationReadRepository.findByTokenHash(tokenHash);

@@ -39,6 +39,7 @@ export class UserRegistrationInvitationPublicController {
     const data = this.presenter.toPublicResponse(invitation);
 
     return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
