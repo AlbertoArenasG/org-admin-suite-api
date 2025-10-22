@@ -1,9 +1,13 @@
-import { AuthenticatedActorDto } from '@application/dto';
+import {
+  AuthenticatedTenantContextDto,
+  AuthenticatedUserContextDto,
+} from '@application/dto';
 
 declare global {
   namespace Express {
     interface Request {
-      authActor?: AuthenticatedActorDto;
+      authContext?: AuthenticatedUserContextDto;
+      activeTenant?: AuthenticatedTenantContextDto | null;
     }
   }
 }

@@ -3,16 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 import {
-  AuthenticatedActorDto,
-  AuthenticatedActorType,
-  AuthenticatedMasterDto,
-  AuthenticatedTenantDto,
-  MasterTokenPayloadDto,
-  TenantAccessTokenPayloadDto,
-  isMasterTokenPayloadDto,
-  isTenantAccessTokenPayloadDto,
+  AuthenticatedUserContextDto,
+  AuthTokenTenantClaimDto,
+  isAuthTokenPayloadDto,
 } from '@application/dto';
-import { TenantUserRole, UserRole } from '@domain/entities';
 import { AuthenticationException } from '@domain/exceptions';
 
 @Injectable()
@@ -23,9 +17,10 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractToken(request);
     const payload = await this.verifyToken(token);
-    const actor = this.buildActor(token, payload);
+    const authContext = this.buildContext(token, payload);
 
-    request.authActor = actor;
+    request.authContext = authContext;
+    request.activeTenant = null;
 
     return true;
   }
@@ -81,78 +76,80 @@ export class JwtAuthGuard implements CanActivate {
     }
   }
 
-  private buildActor(token: string, payload: unknown): AuthenticatedActorDto {
-    if (this.isTenantPayload(payload)) {
-      return this.buildTenantActor(token, payload);
-    }
-
-    if (this.isMasterPayload(payload)) {
-      return this.buildMasterActor(token, payload);
-    }
-
-    throw AuthenticationException.tokenTypeUnrecognized(
-      this.getPayloadType(payload),
-    );
-  }
-
-  private buildTenantActor(
+  private buildContext(
     token: string,
-    payload: TenantAccessTokenPayloadDto,
-  ): AuthenticatedTenantDto {
-    if (!payload.sub || !payload.tenant_id || !payload.tenant_user_id) {
-      throw AuthenticationException.tokenPayloadInvalid({
-        tokenType: AuthenticatedActorType.TENANT,
-      });
-    }
-
-    if (!Object.values(TenantUserRole).includes(payload.role)) {
-      throw AuthenticationException.tokenRoleInvalid(String(payload.role));
-    }
-
-    return {
-      type: AuthenticatedActorType.TENANT,
-      userId: payload.sub,
-      tenantId: payload.tenant_id,
-      tenantUserId: payload.tenant_user_id,
-      role: payload.role,
-      token,
-    };
-  }
-
-  private buildMasterActor(
-    token: string,
-    payload: MasterTokenPayloadDto,
-  ): AuthenticatedMasterDto {
-    if (!payload.sub) {
-      throw AuthenticationException.tokenPayloadInvalid({
-        tokenType: AuthenticatedActorType.MASTER,
-      });
-    }
-
-    if (!this.isMasterRole(payload.role)) {
-      throw AuthenticationException.tokenRoleInvalid(String(payload.role));
-    }
-
-    return {
-      type: AuthenticatedActorType.MASTER,
-      userId: payload.sub,
-      role: payload.role,
-      token,
-    };
-  }
-
-  private isMasterPayload(payload: unknown): payload is MasterTokenPayloadDto {
-    return isMasterTokenPayloadDto(payload);
-  }
-
-  private isTenantPayload(
     payload: unknown,
-  ): payload is TenantAccessTokenPayloadDto {
-    return isTenantAccessTokenPayloadDto(payload);
+  ): AuthenticatedUserContextDto {
+    if (!isAuthTokenPayloadDto(payload)) {
+      throw AuthenticationException.tokenPayloadInvalid({
+        reason: 'unexpected_structure',
+      });
+    }
+
+    const { sub, role, isMaster, tenants, defaultTenantId } = payload;
+
+    if (!sub) {
+      throw AuthenticationException.tokenPayloadInvalid({
+        reason: 'missing_sub',
+      });
+    }
+
+    this.ensureValidTenants(tenants, isMaster);
+    this.ensureValidDefaultTenant(tenants, defaultTenantId, isMaster);
+
+    return {
+      userId: sub,
+      role,
+      isMaster,
+      token,
+      tenants,
+      defaultTenantId: defaultTenantId ?? null,
+    };
   }
 
-  private isMasterRole(role: unknown): role is UserRole {
-    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
+  private ensureValidTenants(
+    tenants: AuthTokenTenantClaimDto[],
+    isMaster: boolean,
+  ): void {
+    if (isMaster) {
+      return;
+    }
+
+    const hasInvalidTenant = tenants.some(
+      (tenant) =>
+        !tenant.tenantId ||
+        !tenant.tenantUserId ||
+        !tenant.role ||
+        typeof tenant.tenantId !== 'string' ||
+        typeof tenant.tenantUserId !== 'string' ||
+        typeof tenant.role !== 'string',
+    );
+
+    if (hasInvalidTenant) {
+      throw AuthenticationException.tokenPayloadInvalid({
+        reason: 'invalid_tenant_claim',
+      });
+    }
+  }
+
+  private ensureValidDefaultTenant(
+    tenants: AuthTokenTenantClaimDto[],
+    defaultTenantId: string | null | undefined,
+    isMaster: boolean,
+  ): void {
+    if (!defaultTenantId) return;
+
+    if (isMaster) return;
+
+    const matchesTenant = tenants.some(
+      (tenant) => tenant.tenantId === defaultTenantId,
+    );
+
+    if (!matchesTenant) {
+      throw AuthenticationException.tokenPayloadInvalid({
+        reason: 'default_tenant_not_found',
+      });
+    }
   }
 
   private isTokenExpiredError(error: unknown): boolean {
@@ -170,21 +167,5 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     return 'Unknown';
-  }
-
-  private getPayloadType(payload: unknown): string {
-    if (!payload || typeof payload !== 'object') {
-      return 'unknown';
-    }
-
-    if ('tenant_id' in (payload as Record<string, unknown>)) {
-      return 'tenant';
-    }
-
-    if ('role' in (payload as Record<string, unknown>)) {
-      return 'master';
-    }
-
-    return 'unknown';
   }
 }

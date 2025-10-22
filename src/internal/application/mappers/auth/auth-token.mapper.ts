@@ -1,26 +1,41 @@
-import { TenantUser, User } from '@domain/entities';
+import { User, UserRole } from '@domain/entities';
 import {
-  MasterTokenPayloadDto,
-  TenantAccessTokenPayloadDto,
+  AuthTokenPayloadDto,
+  AuthTokenTenantClaimDto,
+  AuthenticatedTenantAccessDto,
 } from '@application/dto';
 
+export interface TenantAccessAggregate {
+  tenantAccess: AuthenticatedTenantAccessDto;
+  claim: AuthTokenTenantClaimDto;
+}
+
 export class AuthTokenMapper {
-  static toMasterPayload(user: User): MasterTokenPayloadDto {
+  static toUnifiedPayload(
+    user: User,
+    tenantAccesses: TenantAccessAggregate[],
+    defaultTenantId: string | null,
+  ): AuthTokenPayloadDto {
     return {
       sub: user.id!,
       role: user.role,
+      isMaster: AuthTokenMapper.isMaster(user.role),
+      tenants: tenantAccesses.map(({ claim }) => claim),
+      defaultTenantId,
     };
   }
 
-  static toTenantPayload(
-    user: User,
-    tenantUser: TenantUser,
-  ): TenantAccessTokenPayloadDto {
+  static buildTenantClaim(
+    tenantAccess: AuthenticatedTenantAccessDto,
+  ): AuthTokenTenantClaimDto {
     return {
-      sub: user.id!,
-      tenant_id: tenantUser.tenantId,
-      tenant_user_id: tenantUser.id!,
-      role: tenantUser.role,
+      tenantId: tenantAccess.tenantId,
+      tenantUserId: tenantAccess.tenantUserId,
+      role: tenantAccess.role,
     };
+  }
+
+  private static isMaster(role: UserRole): boolean {
+    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 }

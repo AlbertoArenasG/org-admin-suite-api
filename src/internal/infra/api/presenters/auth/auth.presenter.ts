@@ -6,6 +6,7 @@ import { AuthenticateUserResultDto } from '@application/dto';
 export class AuthPresenter {
   async toLoginResponse(result: AuthenticateUserResultDto) {
     const response: Record<string, any> = {
+      access_token: result.accessToken,
       user: {
         id: result.user.id,
         name: result.user.name,
@@ -18,12 +19,11 @@ export class AuthPresenter {
           number: result.user.cellPhone?.number ?? null,
         },
       },
-      tenants: result.tenantAccesses.map((tenantAccess) => ({
+      tenants: result.tenants.map((tenantAccess) => ({
         tenant_user_id: tenantAccess.tenantUserId,
         tenant_id: tenantAccess.tenantId,
         role: tenantAccess.role,
         status: tenantAccess.status,
-        access_token: tenantAccess.accessToken,
         tenant: tenantAccess.tenant
           ? {
               id: tenantAccess.tenant.id,
@@ -35,8 +35,8 @@ export class AuthPresenter {
       })),
     };
 
-    if (result.masterAccessToken) {
-      response.master_access_token = result.masterAccessToken;
+    if (result.defaultTenantId) {
+      response.default_tenant_id = result.defaultTenantId;
     }
 
     return response;

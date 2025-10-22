@@ -3,6 +3,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import {
   AuthenticationException,
   AuthenticationExceptionCode,
+  AuthorizationException,
+  AuthorizationExceptionCode,
   DomainException,
   EntityAlreadyExistsException,
   InvalidValueException,
@@ -166,6 +168,17 @@ export class GlobalExceptionMapper {
       return domainException.code === AuthenticationExceptionCode.USER_INACTIVE
         ? HttpStatus.FORBIDDEN
         : HttpStatus.UNAUTHORIZED;
+    }
+
+    if (domainException instanceof AuthorizationException) {
+      if (
+        domainException.code ===
+        AuthorizationExceptionCode.TENANT_IDENTIFIER_REQUIRED
+      ) {
+        return HttpStatus.BAD_REQUEST;
+      }
+
+      return HttpStatus.FORBIDDEN;
     }
 
     return HttpStatus.INTERNAL_SERVER_ERROR;

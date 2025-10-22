@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 import {
   ITenantReadRepository,
@@ -8,18 +7,15 @@ import {
   ITenantUserReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
-  AuthenticatedTenantAccessDto,
-  TenantAccessTokenPayloadDto,
-} from '@application/dto';
-import {
   TenantUser,
   TenantUserStatus,
-  User,
   TenantStatus,
+  User,
 } from '@domain/entities';
 import {
   AuthTokenMapper,
   AuthenticateUserResultMapper,
+  TenantAccessAggregate,
 } from '@application/mappers';
 
 @Injectable()
@@ -29,10 +25,9 @@ export class TenantAccessService {
     private readonly tenantUserReadRepo: ITenantUserReadRepository,
     @Inject(ITenantReadRepositoryToken)
     private readonly tenantReadRepo: ITenantReadRepository,
-    private readonly jwtService: JwtService,
   ) {}
 
-  async generateFor(user: User): Promise<AuthenticatedTenantAccessDto[]> {
+  async generateFor(user: User): Promise<TenantAccessAggregate[]> {
     const { data } = await this.tenantUserReadRepo.findManyByUserId(user.id!);
 
     if (!data.length) return [];
@@ -44,20 +39,19 @@ export class TenantAccessService {
 
     const tenantAccesses = await Promise.all(
       activeTenantUsers.map((tenantUser) =>
-        this.createTenantAccess(user, tenantUser),
+        this.createTenantAccess(tenantUser),
       ),
     );
 
     return tenantAccesses.filter(
-      (tenantAccess): tenantAccess is AuthenticatedTenantAccessDto =>
+      (tenantAccess): tenantAccess is TenantAccessAggregate =>
         tenantAccess !== null,
     );
   }
 
   private async createTenantAccess(
-    user: User,
     tenantUser: TenantUser,
-  ): Promise<AuthenticatedTenantAccessDto | null> {
+  ): Promise<TenantAccessAggregate | null> {
     const { data: tenant } = await this.tenantReadRepo.findById(
       tenantUser.tenantId,
     );
@@ -66,17 +60,16 @@ export class TenantAccessService {
 
     if (!isTenantActive) return null;
 
-    const payload: TenantAccessTokenPayloadDto =
-      AuthTokenMapper.toTenantPayload(user, tenantUser);
-
-    const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '7d',
-    });
-
-    return AuthenticateUserResultMapper.toTenantAccessDto({
+    const tenantAccess = AuthenticateUserResultMapper.toTenantAccessDto(
       tenantUser,
-      tenant: tenant ?? null,
-      accessToken,
-    });
+      tenant ?? null,
+    );
+
+    if (!tenantAccess) return null;
+
+    return {
+      tenantAccess,
+      claim: AuthTokenMapper.buildTenantClaim(tenantAccess),
+    };
   }
 }

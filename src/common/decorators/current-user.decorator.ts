@@ -1,18 +1,20 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import { AuthenticatedActorDto } from '@application/dto';
+import { AuthenticatedUserContextDto } from '@application/dto';
 
 export const CurrentUser = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext): AuthenticatedActorDto => {
+  (_data: unknown, ctx: ExecutionContext): AuthenticatedUserContextDto => {
     const request = ctx.switchToHttp().getRequest();
-    const actor = request.authActor;
+    const authContext = request.authContext as
+      | AuthenticatedUserContextDto
+      | undefined;
 
-    if (!actor) {
+    if (!authContext) {
       throw new Error(
-        'CurrentUser decorator used without an authenticated actor context',
+        'CurrentUser decorator used without an authenticated context',
       );
     }
 
-    return actor;
+    return authContext;
   },
 );

@@ -1,35 +1,30 @@
 import { TenantUserRole, UserRole } from '@domain/entities';
 
-export enum AuthenticatedActorType {
-  MASTER = 'MASTER',
-  TENANT = 'TENANT',
+import { AuthTokenTenantClaimDto } from './token-payload.dto';
+
+export interface AuthenticatedTenantContextDto {
+  tenantId: string;
+  tenantUserId: string | null;
+  role: TenantUserRole | null;
 }
 
-export interface AuthenticatedMasterDto {
-  type: AuthenticatedActorType.MASTER;
+export interface AuthenticatedUserContextDto {
   userId: string;
   role: UserRole;
+  isMaster: boolean;
   token: string;
+  tenants: AuthTokenTenantClaimDto[];
+  defaultTenantId: string | null;
 }
 
-export interface AuthenticatedTenantDto {
-  type: AuthenticatedActorType.TENANT;
-  userId: string;
-  tenantId: string;
-  tenantUserId: string;
-  role: TenantUserRole;
-  token: string;
-}
-
-export type AuthenticatedActorDto =
-  | AuthenticatedMasterDto
-  | AuthenticatedTenantDto;
-
-export const AuthenticatedActor = {
-  isMaster(actor: AuthenticatedActorDto): actor is AuthenticatedMasterDto {
-    return actor.type === AuthenticatedActorType.MASTER;
+export const AuthenticatedUserContext = {
+  findTenant(
+    context: AuthenticatedUserContextDto,
+    tenantId: string,
+  ): AuthTokenTenantClaimDto | undefined {
+    return context.tenants.find((tenant) => tenant.tenantId === tenantId);
   },
-  isTenant(actor: AuthenticatedActorDto): actor is AuthenticatedTenantDto {
-    return actor.type === AuthenticatedActorType.TENANT;
+  hasTenants(context: AuthenticatedUserContextDto): boolean {
+    return context.tenants.length > 0;
   },
 };

@@ -27,7 +27,6 @@ export interface AuthenticatedTenantAccessDto {
   tenantId: string;
   role: TenantUserRole;
   status: TenantUserStatus;
-  accessToken: string;
   tenant?: {
     id: string;
     name: string;
@@ -38,6 +37,7 @@ export interface AuthenticatedTenantAccessDto {
 
 export interface AuthenticateUserResultDto {
   user: AuthenticatedUserDto;
-  masterAccessToken?: string;
-  tenantAccesses: AuthenticatedTenantAccessDto[];
+  accessToken: string;
+  tenants: AuthenticatedTenantAccessDto[];
+  defaultTenantId?: string | null;
 }

@@ -13,7 +13,8 @@ import { CreateMasterUserRequestDto } from '@infra/api/dto/master-admin/user';
 import { MasterUserPresenter } from '@infra/api/presenters/user/master-user.presenter';
 import { CreateMasterUserCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard, MasterOnlyGuard } from '@src/internal/infra/api/guards';
+import { JwtAuthGuard, MasterScopeGuard } from '@src/internal/infra/api/guards';
+import { MASTER_SCOPE, Scopes } from '@src/common/decorators';
 
 @Controller('v1/master-admin/users')
 export class MasterAdminUserController {
@@ -24,7 +25,8 @@ export class MasterAdminUserController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, MasterOnlyGuard)
+  @Scopes(MASTER_SCOPE)
+  @UseGuards(JwtAuthGuard, MasterScopeGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() body: CreateMasterUserRequestDto) {
     const command = CreateMasterUserCommandAdapter.create(body.toDomain());

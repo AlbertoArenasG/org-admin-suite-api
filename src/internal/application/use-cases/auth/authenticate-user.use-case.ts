@@ -6,23 +6,23 @@ import {
   IUserReadRepositoryToken,
 } from '@domain/ports/repositories';
 import { AuthenticationException } from '@domain/exceptions';
-import { User, UserStatus } from '@domain/entities';
+import { User, UserRole, UserStatus } from '@domain/entities';
 import {
   AuthenticateUserDto,
   AuthenticateUserResultDto,
 } from '@application/dto';
-import { AuthenticateUserResultMapper } from '@application/mappers';
 import {
-  MasterAccessTokenService,
-  TenantAccessService,
-} from '@application/services';
+  AuthenticateUserResultMapper,
+  TenantAccessAggregate,
+} from '@application/mappers';
+import { AuthTokenService, TenantAccessService } from '@application/services';
 
 @Injectable()
 export class AuthenticateUserUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepo: IUserReadRepository,
-    private readonly masterAccessTokenService: MasterAccessTokenService,
+    private readonly authTokenService: AuthTokenService,
     private readonly tenantAccessService: TenantAccessService,
   ) {}
 
@@ -34,14 +34,23 @@ export class AuthenticateUserUseCase {
     await this.ensurePasswordMatches(input.password, user);
     this.ensureUserActive(user);
 
-    const masterAccessToken =
-      await this.masterAccessTokenService.generate(user);
     const tenantAccesses = await this.tenantAccessService.generateFor(user);
+    const tenants = tenantAccesses.map(({ tenantAccess }) => tenantAccess);
+    const defaultTenantId = this.resolveDefaultTenantId(
+      tenantAccesses,
+      user.role,
+    );
+    const accessToken = await this.authTokenService.generate(
+      user,
+      tenantAccesses,
+      defaultTenantId,
+    );
 
     return AuthenticateUserResultMapper.toResult(
       user,
-      masterAccessToken,
-      tenantAccesses,
+      accessToken,
+      tenants,
+      defaultTenantId,
     );
   }
 
@@ -66,5 +75,24 @@ export class AuthenticateUserUseCase {
     if (user.status !== UserStatus.ACTIVE) {
       throw AuthenticationException.userInactive(user.status);
     }
+  }
+
+  private resolveDefaultTenantId(
+    tenantAccesses: TenantAccessAggregate[],
+    role: UserRole,
+  ): string | null {
+    if (!tenantAccesses.length) {
+      return null;
+    }
+
+    if (this.isMasterRole(role)) {
+      return null;
+    }
+
+    return tenantAccesses[0]?.tenantAccess.tenantId ?? null;
+  }
+
+  private isMasterRole(role: UserRole): boolean {
+    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 }

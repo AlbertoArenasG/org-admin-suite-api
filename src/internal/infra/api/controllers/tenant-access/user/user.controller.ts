@@ -13,9 +13,9 @@ import { CreateUserRequestDto } from '@infra/api/dto/user/create-user.request.dt
 import { TenantAccessUserPresenter } from '@infra/api/presenters/user/user.presenter';
 import { CreateUserAndNotifyCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard, TenantAccessGuard } from '@infra/api/guards';
-import { CurrentTenant } from '@src/common/decorators';
-import { AuthenticatedTenantDto } from '@application/dto';
+import { JwtAuthGuard, TenantScopeGuard } from '@infra/api/guards';
+import { ActiveTenant } from '@src/common/decorators';
+import { AuthenticatedTenantContextDto } from '@application/dto';
 
 @Controller('v1/users')
 export class UserController {
@@ -26,10 +26,10 @@ export class UserController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, TenantAccessGuard)
+  @UseGuards(JwtAuthGuard, TenantScopeGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(
-    @CurrentTenant() currentTenant: AuthenticatedTenantDto,
+    @ActiveTenant() currentTenant: AuthenticatedTenantContextDto,
     @Body() body: CreateUserRequestDto,
   ) {
     const command = CreateUserAndNotifyCommandAdapter.create(

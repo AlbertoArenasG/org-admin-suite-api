@@ -1,46 +1,51 @@
 import { TenantUserRole, UserRole } from '@domain/entities';
 
-export interface MasterTokenPayloadDto {
+export interface AuthTokenTenantClaimDto {
+  tenantId: string;
+  tenantUserId: string;
+  role: TenantUserRole;
+}
+
+export interface AuthTokenPayloadDto {
   sub: string;
   role: UserRole;
+  isMaster: boolean;
+  tenants: AuthTokenTenantClaimDto[];
+  defaultTenantId?: string | null;
   iat?: number;
   exp?: number;
 }
 
-export interface TenantAccessTokenPayloadDto {
-  sub: string;
-  tenant_id: string;
-  tenant_user_id: string;
-  role: TenantUserRole;
-  iat?: number;
-  exp?: number;
-}
-
-export function isMasterTokenPayloadDto(
+export function isAuthTokenPayloadDto(
   payload: unknown,
-): payload is MasterTokenPayloadDto {
-  if (!payload || typeof payload !== 'object') return false;
+): payload is AuthTokenPayloadDto {
+  if (!payload || typeof payload !== 'object' || payload === null) return false;
 
   const candidate = payload as Record<string, unknown>;
+  const tenants = candidate.tenants;
 
   return (
     typeof candidate.sub === 'string' &&
     typeof candidate.role === 'string' &&
-    !('tenant_id' in candidate)
+    typeof candidate.isMaster === 'boolean' &&
+    Array.isArray(tenants) &&
+    tenants.every((tenant) => isAuthTokenTenantClaimDto(tenant)) &&
+    (candidate.defaultTenantId === undefined ||
+      candidate.defaultTenantId === null ||
+      typeof candidate.defaultTenantId === 'string')
   );
 }
 
-export function isTenantAccessTokenPayloadDto(
+function isAuthTokenTenantClaimDto(
   payload: unknown,
-): payload is TenantAccessTokenPayloadDto {
-  if (!payload || typeof payload !== 'object') return false;
+): payload is AuthTokenTenantClaimDto {
+  if (!payload || typeof payload !== 'object' || payload === null) return false;
 
   const candidate = payload as Record<string, unknown>;
 
   return (
-    typeof candidate.sub === 'string' &&
-    typeof candidate.role === 'string' &&
-    typeof candidate.tenant_id === 'string' &&
-    typeof candidate.tenant_user_id === 'string'
+    typeof candidate.tenantId === 'string' &&
+    typeof candidate.tenantUserId === 'string' &&
+    typeof candidate.role === 'string'
   );
 }

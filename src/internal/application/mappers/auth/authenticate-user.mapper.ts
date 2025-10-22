@@ -5,36 +5,30 @@ import {
 } from '@application/dto';
 import { UserResultMapper } from '@application/mappers/user/user-result.mapper';
 
-interface TenantAccessParams {
-  tenantUser: TenantUser;
-  tenant: Tenant | null;
-  accessToken: string;
-}
-
 export class AuthenticateUserResultMapper {
   static toResult(
     user: User,
-    masterAccessToken: string | undefined,
-    tenantAccesses: AuthenticatedTenantAccessDto[],
+    accessToken: string,
+    tenants: AuthenticatedTenantAccessDto[],
+    defaultTenantId: string | null,
   ): AuthenticateUserResultDto {
     return {
       user: UserResultMapper.toAuthenticatedUserDto(user),
-      masterAccessToken,
-      tenantAccesses,
+      accessToken,
+      tenants,
+      defaultTenantId,
     };
   }
 
-  static toTenantAccessDto({
-    tenantUser,
-    tenant,
-    accessToken,
-  }: TenantAccessParams): AuthenticatedTenantAccessDto | null {
+  static toTenantAccessDto(
+    tenantUser: TenantUser,
+    tenant: Tenant | null,
+  ): AuthenticatedTenantAccessDto | null {
     return {
       tenantUserId: tenantUser.id!,
       tenantId: tenantUser.tenantId,
       role: tenantUser.role,
       status: tenantUser.status,
-      accessToken,
       tenant: tenant
         ? {
             id: tenant.id ?? tenant.currentState.id ?? tenant.slug,
