@@ -6,7 +6,7 @@ export class AuthTokenMapper {
     return {
       sub: user.id!,
       role: user.role,
-      isMaster: AuthTokenMapper.isMaster(user.role),
+      isMaster: this.isMaster(user.role),
     };
   }
 

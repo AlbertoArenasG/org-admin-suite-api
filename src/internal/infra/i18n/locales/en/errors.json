@@ -28,5 +28,13 @@
     "TOKEN_PAYLOAD_INVALID": "Token payload is not valid",
     "TOKEN_ROLE_INVALID": "Token role {role} is not allowed"
   },
-  "USER_REGISTRATION_INVITATION_NOT_FOUND": "Invitation not found or already used"
+  "AUTHORIZATION": {
+    "CONTEXT_MISSING": "Authorization context is missing",
+    "MASTER_PRIVILEGES_REQUIRED": "Master privileges are required",
+    "ROLE_PRIVILEGES_INSUFFICIENT": "User role {role} does not have the required privileges"
+  },
+  "ENTITY_NOT_FOUND": {
+    "USER": "User not found",
+    "USER_REGISTRATION_INVITATION": "Invitation not found or already used"
+  }
 }

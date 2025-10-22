@@ -6,9 +6,3 @@ export abstract class DomainException extends Error {
     super(code);
   }
 }
-
-export enum ExceptionCode {
-  INVALID_EMAIL = 'INVALID_EMAIL',
-  USER_PASSWORD_INVALID = 'USER_PASSWORD_INVALID',
-  INVALID_PHONE_NUMBER = 'INVALID_PHONE_NUMBER',
-}

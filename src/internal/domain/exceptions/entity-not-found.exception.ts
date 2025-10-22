@@ -1,8 +1,8 @@
 import { DomainException } from './domain.exception';
 
 export enum EntityNotFoundExceptionCode {
-  'User' = 'USER_NOT_FOUND',
-  'UserRegistrationInvitation' = 'USER_REGISTRATION_INVITATION_NOT_FOUND',
+  USER = 'ENTITY_NOT_FOUND.USER',
+  USER_REGISTRATION_INVITATION = 'ENTITY_NOT_FOUND.USER_REGISTRATION_INVITATION',
 }
 
 export class EntityNotFoundException extends DomainException {

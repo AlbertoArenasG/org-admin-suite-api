@@ -29,7 +29,7 @@ export class GetUserRegistrationInvitationUseCase {
 
     if (!data) {
       throw EntityNotFoundException.create(
-        EntityNotFoundExceptionCode.UserRegistrationInvitation,
+        EntityNotFoundExceptionCode.USER_REGISTRATION_INVITATION,
         {},
       );
     }
