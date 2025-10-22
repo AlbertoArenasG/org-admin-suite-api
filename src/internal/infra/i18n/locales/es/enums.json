@@ -1,0 +1,16 @@
+{
+  "USER": {
+    "ROLE": {
+      "MASTER_ADMIN": "Administrador principal",
+      "MASTER_STAFF": "Staff principal",
+      "ADMIN": "Administrador",
+      "STAFF": "Staff",
+      "CUSTOMER": "Cliente"
+    },
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "DELETED": "Eliminado"
+    }
+  }
+}

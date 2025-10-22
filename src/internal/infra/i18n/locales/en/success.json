@@ -1,0 +1,14 @@
+{
+  "DEFAULT": "Request received successfully",
+  "USER": {
+    "CREATED": "User created successfully",
+    "UPDATED": "User updated successfully",
+    "DELETED": "User deleted successfully"
+  },
+  "USER_REGISTRATION_INVITATION": {
+    "CREATED": "Invitation created successfully",
+    "COMPLETED": "Registration completed successfully",
+    "ACCEPTED": "Invitation accepted successfully",
+    "DECLINED": "Invitation declined successfully"
+  }
+}

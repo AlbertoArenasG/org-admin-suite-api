@@ -22,8 +22,7 @@
       "@application/*": ["src/internal/application/*"],
       "@domain/*": ["src/internal/domain/*"],
       "@infra/*": ["src/internal/infra/*"],
-      "@modules/*": ["src/modules/*"],
-      "@cqrs/*": ["src/internal/application/cqrs/*"],
+      "@modules/*": ["src/modules/*"]
     }
   }
 }

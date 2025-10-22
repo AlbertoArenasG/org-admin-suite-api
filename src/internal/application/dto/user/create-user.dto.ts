@@ -1,0 +1,22 @@
+import { UserRole, UserStatus } from '@domain/entities';
+import { PhoneDto } from '@application/dto/shared';
+
+export interface CreateUserDto {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  cellPhone: PhoneDto;
+}
+
+export interface CreateUserResultDto {
+  id: string;
+  name: string;
+  lastname: string;
+  email: string;
+  role: UserRole;
+  status: UserStatus;
+  cellPhone: PhoneDto;
+  createdAt: Date;
+}

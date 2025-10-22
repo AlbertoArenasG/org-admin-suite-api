@@ -4,15 +4,15 @@ import { AppModule } from './app.module';
 import { corsConfig } from '@src/config';
 import { EnvService } from '@infra/env';
 
-process.on('uncaughtException', (err) => {
-  console.error('❌ Uncaught Exception:', err);
-  process.exit(1);
-});
+// process.on('uncaughtException', (err) => {
+//   console.error('❌ Uncaught Exception:', err);
+//   process.exit(1);
+// });
 
-process.on('unhandledRejection', (reason) => {
-  console.error('⚠️ Unhandled Rejection:', reason);
-  process.exit(1);
-});
+// process.on('unhandledRejection', (reason) => {
+//   console.error('⚠️ Unhandled Rejection:', reason);
+//   process.exit(1);
+// });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

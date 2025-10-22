@@ -1,0 +1,40 @@
+{
+  "VALIDATION": {
+    "DEFAULT": "Error de validación",
+    "PHONE": "Formato del número de teléfono {phone} es inválido",
+    "USER": {
+      "PASSWORD": "Formato de la contraseña es inválido"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "TOKEN": "El token de invitación es inválido"
+    }
+  },
+  "ENTITY_ALREADY_EXISTS": {
+    "USER": {
+      "EMAIL": "Ya existe un usuario con el correo electrónico {email}"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "EMAIL": "Ya existe una invitación activa para {email}"
+    }
+  },
+  "AUTHENTICATION": {
+    "INVALID_CREDENTIALS": "Correo electrónico o contraseña inválidos",
+    "USER_INACTIVE": "La cuenta del usuario está inactiva",
+    "TOKEN_MISSING": "Token de autenticación no presente en la solicitud",
+    "AUTHORIZATION_HEADER_INVALID": "Encabezado de autorización inválido",
+    "TOKEN_INVALID": "Token de autenticación inválido",
+    "TOKEN_EXPIRED": "Token de autenticación expirado",
+    "TOKEN_TYPE_UNRECOGNIZED": "Tipo de token {actualType} no reconocido",
+    "TOKEN_PAYLOAD_INVALID": "Payload de token inválido",
+    "TOKEN_ROLE_INVALID": "Rol {role} no permitido en el token"
+  },
+  "AUTHORIZATION": {
+    "CONTEXT_MISSING": "Contexto de autorización ausente",
+    "MASTER_PRIVILEGES_REQUIRED": "Privilegios maestros requeridos",
+    "ROLE_PRIVILEGES_INSUFFICIENT": "El rol {role} no tiene los privilegios necesarios"
+  },
+  "ENTITY_NOT_FOUND": {
+    "USER": "No se encontró el usuario",
+    "USER_REGISTRATION_INVITATION": "No se encontró la invitación o ya fue utilizada"
+  }
+}
