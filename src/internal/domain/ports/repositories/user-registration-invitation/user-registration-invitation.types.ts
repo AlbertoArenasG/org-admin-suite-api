@@ -1,21 +1,16 @@
 export enum UserRegistrationInvitationScope {
-  TENANT = 'TENANT',
+  APPLICATION = 'APPLICATION',
   MASTER = 'MASTER',
 }
 
 export enum UserRegistrationInvitationType {
   NEW_USER_REGISTRATION = 'NEW_USER_REGISTRATION',
-  EXISTING_USER_TENANT_LINK = 'EXISTING_USER_TENANT_LINK',
 }
 
 export enum UserRegistrationInvitationStatus {
   PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  DECLINED = 'DECLINED',
   CONSUMED = 'CONSUMED',
 }
-
-export type UserRegistrationInvitationDecision = 'ACCEPTED' | 'DECLINED';
 
 export interface UserRegistrationInvitationUserData {
   name?: string | null;
@@ -33,9 +28,7 @@ export interface CreateUserRegistrationInvitationRecord {
   status: UserRegistrationInvitationStatus;
   email: string;
   role: string;
-  tenantId?: string | null;
   invitedByUserId: string;
-  existingUserId?: string | null;
   tokenHash: string;
   userData?: UserRegistrationInvitationUserData | null;
 }
@@ -45,8 +38,6 @@ export interface UserRegistrationInvitationRecord
   id: string;
   invitationId: string;
   consumedAt?: Date | null;
-  respondedAt?: Date | null;
-  responseDecision?: UserRegistrationInvitationDecision | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;
 }

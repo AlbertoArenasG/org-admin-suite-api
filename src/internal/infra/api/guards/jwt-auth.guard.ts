@@ -8,8 +8,6 @@ import {
 } from '@application/dto';
 import { AuthenticationException } from '@domain/exceptions';
 import {
-  ensureValidDefaultTenant,
-  ensureValidTenantClaims,
   extractBearerToken,
   getJwtErrorName,
   isTokenExpiredError,
@@ -26,7 +24,6 @@ export class JwtAuthGuard implements CanActivate {
     const authContext = this.buildContext(token, payload);
 
     request.authContext = authContext;
-    request.activeTenant = null;
 
     return true;
   }
@@ -55,7 +52,7 @@ export class JwtAuthGuard implements CanActivate {
       });
     }
 
-    const { sub, role, isMaster, tenants, defaultTenantId } = payload;
+    const { sub, role, isMaster } = payload;
 
     if (!sub) {
       throw AuthenticationException.tokenPayloadInvalid({
@@ -63,16 +60,11 @@ export class JwtAuthGuard implements CanActivate {
       });
     }
 
-    ensureValidTenantClaims(tenants, isMaster);
-    ensureValidDefaultTenant(tenants, defaultTenantId, isMaster);
-
     return {
       userId: sub,
       role,
       isMaster,
       token,
-      tenants,
-      defaultTenantId: defaultTenantId ?? null,
     };
   }
 }

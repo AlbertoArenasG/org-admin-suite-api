@@ -4,14 +4,18 @@ import {
   CreateMasterUserDto,
   CreateMasterUserResultDto,
 } from '@application/dto';
+import { UserRole } from '@domain/entities';
 import { CreateMasterUserAndNotifyUseCase } from '@application/use-cases';
 import { BaseCommandHandler } from '@infra/cqrs/base-command.handler';
 
 export class CreateMasterUserCommandAdapter implements ICommand {
-  private constructor(public readonly payload: CreateMasterUserDto) {}
+  private constructor(
+    public readonly payload: CreateMasterUserDto,
+    public readonly actorRole: UserRole,
+  ) {}
 
-  static create(payload: CreateMasterUserDto) {
-    return new CreateMasterUserCommandAdapter(payload);
+  static create(payload: CreateMasterUserDto, actorRole: UserRole) {
+    return new CreateMasterUserCommandAdapter(payload, actorRole);
   }
 }
 
@@ -27,6 +31,8 @@ export class CreateMasterUserHandler extends BaseCommandHandler<
   async execute(
     command: CreateMasterUserCommandAdapter,
   ): Promise<CreateMasterUserResultDto> {
-    return this.run(command, () => this.useCase.execute(command.payload));
+    return this.run(command, () =>
+      this.useCase.execute(command.payload, command.actorRole),
+    );
   }
 }

@@ -10,8 +10,6 @@ import {
   IUserRegistrationInvitationWriteRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
-  ITenantUserWriteRepository,
-  ITenantUserWriteRepositoryToken,
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationScope,
   UserRegistrationInvitationStatus,
@@ -26,14 +24,7 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
-import {
-  TenantUser,
-  TenantUserRole,
-  TenantUserStatus,
-  User,
-  UserRole,
-  UserStatus,
-} from '@domain/entities';
+import { User, UserRole, UserStatus } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import {
   CompleteNewUserRegistrationInvitationDto,
@@ -55,8 +46,6 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     private readonly userReadRepository: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
-    @Inject(ITenantUserWriteRepositoryToken)
-    private readonly tenantUserWriteRepository: ITenantUserWriteRepository,
   ) {}
 
   async execute(
@@ -102,10 +91,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
       lastname: mergedUserData.lastname,
       email: invitation.email,
       password: hashedPassword,
-      role:
-        invitation.scope === UserRegistrationInvitationScope.MASTER
-          ? (invitation.role as UserRole)
-          : UserRole.USER,
+      role: invitation.role as UserRole,
       status: UserStatus.ACTIVE,
       cellPhone: {
         countryCode: mergedUserData.cellPhone?.countryCode ?? null,
@@ -117,13 +103,10 @@ export class CompleteNewUserRegistrationInvitationUseCase {
 
     createdUser.markAsCreated();
 
-    let result: CreateUserResultDto | CreateMasterUserResultDto;
-
-    if (invitation.scope === UserRegistrationInvitationScope.TENANT) {
-      result = await this.completeTenantInvitation(invitation, createdUser);
-    } else {
-      result = this.completeMasterInvitation(createdUser);
-    }
+    const result =
+      invitation.scope === UserRegistrationInvitationScope.MASTER
+        ? this.completeMasterInvitation(createdUser)
+        : this.completeApplicationInvitation(createdUser);
 
     await this.invitationWriteRepository.markAsConsumed(
       invitation.invitationId,
@@ -179,38 +162,16 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     return merged;
   }
 
-  private async completeTenantInvitation(
-    invitation: UserRegistrationInvitationRecord,
-    createdUser: User,
-  ): Promise<CreateUserResultDto> {
-    if (!invitation.tenantId) {
-      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
-        reason: 'Tenant id is required for tenant invitations',
-      });
-    }
-
-    const tenantUser = new TenantUser({
-      tenantId: invitation.tenantId,
-      userId: createdUser.id!,
-      role: invitation.role as TenantUserRole,
-      status: TenantUserStatus.ACTIVE,
-    });
-
-    const { data: persistedTenantUser } =
-      await this.tenantUserWriteRepository.create(tenantUser);
-
-    persistedTenantUser.markAsCreated();
-
-    return UserResultMapper.toCreateTenantUserResultDto(
-      createdUser,
-      persistedTenantUser,
-    );
-  }
-
   private completeMasterInvitation(
     createdUser: User,
   ): CreateMasterUserResultDto {
     return UserResultMapper.toCreateMasterUserResultDto(createdUser);
+  }
+
+  private completeApplicationInvitation(
+    createdUser: User,
+  ): CreateUserResultDto {
+    return UserResultMapper.toCreateUserResultDto(createdUser);
   }
 
   private async ensureUserDoesNotExist(email: string): Promise<void> {

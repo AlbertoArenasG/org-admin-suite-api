@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateUserRegistrationInvitationRecord,
   IUserRegistrationInvitationWriteRepository,
-  UserRegistrationInvitationDecision,
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationStatus,
 } from '@domain/ports/repositories';
@@ -36,37 +35,6 @@ export class MongooseUserRegistrationInvitationWriteRepositoryImpl
         consumed_at: consumedAt,
         status: UserRegistrationInvitationStatus.CONSUMED,
       },
-      { new: true },
-    );
-
-    return {
-      data: this.toDomain(updated),
-    };
-  }
-
-  async updateStatus(
-    invitationId: string,
-    status: UserRegistrationInvitationStatus,
-    options: {
-      respondedAt?: Date;
-      decision?: UserRegistrationInvitationDecision | null;
-    } = {},
-  ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
-    const updatePayload: Record<string, any> = {
-      status,
-    };
-
-    if (options.respondedAt !== undefined) {
-      updatePayload.responded_at = options.respondedAt;
-    }
-
-    if (options.decision !== undefined) {
-      updatePayload.response_decision = options.decision;
-    }
-
-    const updated = await this.invitationModel.findOneAndUpdate(
-      { invitation_id: invitationId },
-      updatePayload,
       { new: true },
     );
 

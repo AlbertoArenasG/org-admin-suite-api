@@ -6,16 +6,24 @@ import {
   CreateMasterUserRegistrationInvitationDto,
   UserRegistrationInvitationDto,
 } from '@application/dto';
+import { UserRole } from '@domain/entities';
 
 export class CreateMasterUserRegistrationInvitationCommandAdapter
   implements ICommand
 {
   private constructor(
     public readonly payload: CreateMasterUserRegistrationInvitationDto,
+    public readonly actorRole: UserRole,
   ) {}
 
-  static create(payload: CreateMasterUserRegistrationInvitationDto) {
-    return new CreateMasterUserRegistrationInvitationCommandAdapter(payload);
+  static create(
+    payload: CreateMasterUserRegistrationInvitationDto,
+    actorRole: UserRole,
+  ) {
+    return new CreateMasterUserRegistrationInvitationCommandAdapter(
+      payload,
+      actorRole,
+    );
   }
 }
 
@@ -33,6 +41,8 @@ export class CreateMasterUserRegistrationInvitationHandler extends BaseCommandHa
   async execute(
     command: CreateMasterUserRegistrationInvitationCommandAdapter,
   ): Promise<UserRegistrationInvitationDto> {
-    return this.run(command, () => this.useCase.execute(command.payload));
+    return this.run(command, () =>
+      this.useCase.execute(command.payload, command.actorRole),
+    );
   }
 }

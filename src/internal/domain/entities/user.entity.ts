@@ -85,6 +85,10 @@ export class User extends Entity<UserProps> {
   markAsCreated(): void {
     this.apply(new EntityCreatedEvent(this));
   }
+
+  updateRole(role: UserRole): void {
+    this.props.role = role;
+  }
 }
 
 export enum UserStatus {
@@ -96,5 +100,7 @@ export enum UserStatus {
 export enum UserRole {
   MASTER_ADMIN = 'MASTER_ADMIN',
   MASTER_STAFF = 'MASTER_STAFF',
-  USER = 'USER',
+  ADMIN = 'ADMIN',
+  STAFF = 'STAFF',
+  CUSTOMER = 'CUSTOMER',
 }

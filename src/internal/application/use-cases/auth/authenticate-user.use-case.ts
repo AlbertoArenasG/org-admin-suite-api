@@ -6,16 +6,13 @@ import {
   IUserReadRepositoryToken,
 } from '@domain/ports/repositories';
 import { AuthenticationException } from '@domain/exceptions';
-import { User, UserRole, UserStatus } from '@domain/entities';
+import { User, UserStatus } from '@domain/entities';
 import {
   AuthenticateUserDto,
   AuthenticateUserResultDto,
 } from '@application/dto';
-import {
-  AuthenticateUserResultMapper,
-  TenantAccessAggregate,
-} from '@application/mappers';
-import { AuthTokenService, TenantAccessService } from '@application/services';
+import { AuthenticateUserResultMapper } from '@application/mappers';
+import { AuthTokenService } from '@application/services';
 
 @Injectable()
 export class AuthenticateUserUseCase {
@@ -23,7 +20,6 @@ export class AuthenticateUserUseCase {
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepo: IUserReadRepository,
     private readonly authTokenService: AuthTokenService,
-    private readonly tenantAccessService: TenantAccessService,
   ) {}
 
   async execute(
@@ -34,24 +30,9 @@ export class AuthenticateUserUseCase {
     await this.ensurePasswordMatches(input.password, user);
     this.ensureUserActive(user);
 
-    const tenantAccesses = await this.tenantAccessService.generateFor(user);
-    const tenants = tenantAccesses.map(({ tenantAccess }) => tenantAccess);
-    const defaultTenantId = this.resolveDefaultTenantId(
-      tenantAccesses,
-      user.role,
-    );
-    const accessToken = await this.authTokenService.generate(
-      user,
-      tenantAccesses,
-      defaultTenantId,
-    );
+    const accessToken = await this.authTokenService.generate(user);
 
-    return AuthenticateUserResultMapper.toResult(
-      user,
-      accessToken,
-      tenants,
-      defaultTenantId,
-    );
+    return AuthenticateUserResultMapper.toResult(user, accessToken);
   }
 
   private async fetchUser(email: string): Promise<User> {
@@ -75,24 +56,5 @@ export class AuthenticateUserUseCase {
     if (user.status !== UserStatus.ACTIVE) {
       throw AuthenticationException.userInactive(user.status);
     }
-  }
-
-  private resolveDefaultTenantId(
-    tenantAccesses: TenantAccessAggregate[],
-    role: UserRole,
-  ): string | null {
-    if (!tenantAccesses.length) {
-      return null;
-    }
-
-    if (this.isMasterRole(role)) {
-      return null;
-    }
-
-    return tenantAccesses[0]?.tenantAccess.tenantId ?? null;
-  }
-
-  private isMasterRole(role: UserRole): boolean {
-    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 }

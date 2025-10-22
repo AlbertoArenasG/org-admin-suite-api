@@ -36,7 +36,6 @@ export class Notification extends Entity<NotificationProps> {
 export enum NotificationType {
   WELCOME_USER = 'WELCOME_USER',
   USER_REGISTRATION_INVITATION = 'USER_REGISTRATION_INVITATION',
-  TENANT_USER_INVITATION = 'TENANT_USER_INVITATION',
 }
 
 export enum NotificationChannel {

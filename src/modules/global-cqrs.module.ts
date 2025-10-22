@@ -6,22 +6,18 @@ import {
   CompleteNewUserRegistrationInvitationHandler,
   CreateMasterUserHandler,
   CreateMasterUserRegistrationInvitationHandler,
-  CreateTenantHandler,
-  CreateTenantUserRegistrationInvitationHandler,
+  CreateUserRegistrationInvitationHandler,
   CreateUserAndNotifyHandler,
-  RespondUserRegistrationInvitationHandler,
 } from '@infra/cqrs/commands';
 import { GetUserRegistrationInvitationHandler } from '@infra/cqrs/queries';
 
 const providers = [
   AuthenticateUserHandler,
-  CreateTenantHandler,
   CreateUserAndNotifyHandler,
   CreateMasterUserHandler,
-  CreateTenantUserRegistrationInvitationHandler,
+  CreateUserRegistrationInvitationHandler,
   CreateMasterUserRegistrationInvitationHandler,
   CompleteNewUserRegistrationInvitationHandler,
-  RespondUserRegistrationInvitationHandler,
   GetUserRegistrationInvitationHandler,
 ];
 

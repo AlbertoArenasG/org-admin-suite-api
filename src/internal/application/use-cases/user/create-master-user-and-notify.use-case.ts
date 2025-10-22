@@ -7,8 +7,8 @@ import {
   IUserWriteRepository,
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import { NotificationType, User, UserStatus } from '@domain/entities';
-import { UserPasswordPolicy } from '@domain/policies';
+import { NotificationType, User, UserStatus, UserRole } from '@domain/entities';
+import { UserPasswordPolicy, UserRolePolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
@@ -38,7 +38,10 @@ export class CreateMasterUserAndNotifyUseCase {
    */
   async execute(
     input: CreateMasterUserDto,
+    actorRole: UserRole,
   ): Promise<CreateMasterUserResultDto> {
+    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+
     await this.ensureUserUnique(input.email);
 
     UserPasswordPolicy.ensureSecure(input.password);

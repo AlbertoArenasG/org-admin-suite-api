@@ -37,14 +37,10 @@ export class MongooseUserRegistrationInvitationMapper {
       status: document.status,
       email: document.email,
       role: document.role,
-      tenantId: document.tenant_id ?? null,
       invitedByUserId: document.invited_by_user_id,
-      existingUserId: document.existing_user_id ?? null,
       tokenHash: document.token_hash,
       userData,
       consumedAt: document.consumed_at ?? null,
-      respondedAt: document.responded_at ?? null,
-      responseDecision: document.response_decision ?? null,
       createdAt: document.createdAt,
       updatedAt: document.updatedAt,
     };
@@ -64,9 +60,7 @@ export class MongooseUserRegistrationInvitationMapper {
       status: record.status,
       email: record.email,
       role: record.role,
-      tenant_id: record.tenantId ?? null,
       invited_by_user_id: record.invitedByUserId,
-      existing_user_id: record.existingUserId ?? null,
       token_hash: record.tokenHash,
       user_data: {
         name: record.userData?.name ?? null,
@@ -80,8 +74,6 @@ export class MongooseUserRegistrationInvitationMapper {
         additional: additionalData,
       },
       consumed_at: null,
-      responded_at: null,
-      response_decision: null,
     };
   }
 }

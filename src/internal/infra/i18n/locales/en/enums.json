@@ -3,33 +3,14 @@
     "ROLE": {
       "MASTER_ADMIN": "Master admin",
       "MASTER_STAFF": "Master staff",
-      "USER": "User"
+      "ADMIN": "Administrator",
+      "STAFF": "Staff",
+      "CUSTOMER": "Customer"
     },
     "STATUS": {
       "ACTIVE": "Active user",
       "INACTIVE": "Inactive user",
       "DELETED": "Deleted user"
-    }
-  },
-  "TENANT": {
-    "STATUS": {
-      "ACTIVE": "Active Account",
-      "SUSPENDED": "Suspended Account",
-      "ARCHIVED": "Archived Account"
-    },
-    "USER": {
-      "ROLE": {
-        "TENANT_OWNER": "Owner",
-        "TENANT_ADMIN": "Admin",
-        "TENANT_STAFF": "Staff",
-        "TENANT_CUSTOMER": "Customer"
-      },
-      "STATUS": {
-        "ACTIVE": "Active user",
-        "INVITED": "Invited user",
-        "INACTIVE": "Inactive user",
-        "DELETED": "Deleted user"
-      }
     }
   }
 }

@@ -13,12 +13,6 @@
     "USER": {
       "EMAIL": "User with email {email} already exists"
     },
-    "TENANT": {
-      "SLUG": "Tenant with slug {slug} already exists",
-      "USER": {
-        "EMAIL": "User with email {email} is already associated with the account"
-      }
-    },
     "USER_REGISTRATION_INVITATION": {
       "EMAIL": "An invitation for {email} already exists"
     }

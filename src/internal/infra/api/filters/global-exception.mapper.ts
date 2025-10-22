@@ -176,14 +176,9 @@ export class GlobalExceptionMapper {
     }
 
     if (domainException instanceof AuthorizationException) {
-      if (
-        domainException.code ===
-        AuthorizationExceptionCode.TENANT_IDENTIFIER_REQUIRED
-      ) {
-        return HttpStatus.BAD_REQUEST;
-      }
-
-      return HttpStatus.FORBIDDEN;
+      return domainException.code === AuthorizationExceptionCode.CONTEXT_MISSING
+        ? HttpStatus.UNAUTHORIZED
+        : HttpStatus.FORBIDDEN;
     }
 
     return HttpStatus.INTERNAL_SERVER_ERROR;

@@ -19,22 +19,6 @@ export type CompleteNewUserRegistrationInvitationResultDto =
       user: CreateMasterUserResultDto;
     }
   | {
-      scope: UserRegistrationInvitationScope.TENANT;
+      scope: UserRegistrationInvitationScope.APPLICATION;
       user: CreateUserResultDto;
-    };
-
-export type RespondUserRegistrationInvitationDecision = 'ACCEPT' | 'DECLINE';
-
-export interface RespondUserRegistrationInvitationDto {
-  token: string;
-  decision: RespondUserRegistrationInvitationDecision;
-}
-
-export type RespondUserRegistrationInvitationResultDto =
-  | {
-      status: 'ACCEPTED';
-      user: CreateUserResultDto;
-    }
-  | {
-      status: 'DECLINED';
     };

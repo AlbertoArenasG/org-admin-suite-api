@@ -6,26 +6,6 @@ export const configSchemas = [
     schema: schemas.UserSchema,
   },
   {
-    name: schemas.TenantDocument.name,
-    schema: schemas.TenantSchema,
-  },
-  {
-    name: schemas.TenantConfigsDocument.name,
-    schema: schemas.TenantConfigsSchema,
-  },
-  {
-    name: schemas.TenantThemeConfigDocument.name,
-    schema: schemas.TenantThemeConfigSchema,
-  },
-  {
-    name: schemas.TenantAppearanceConfigDocument.name,
-    schema: schemas.TenantAppearanceConfigSchema,
-  },
-  {
-    name: schemas.TenantUserDocument.name,
-    schema: schemas.TenantUserSchema,
-  },
-  {
     name: schemas.UserRegistrationInvitationDocument.name,
     schema: schemas.UserRegistrationInvitationSchema,
   },

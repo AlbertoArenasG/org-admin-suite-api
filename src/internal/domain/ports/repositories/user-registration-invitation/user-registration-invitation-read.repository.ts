@@ -7,7 +7,6 @@ export interface IUserRegistrationInvitationReadRepository {
   findActiveByEmail(
     email: string,
     scope: UserRegistrationInvitationScope,
-    tenantId?: string | null,
   ): Promise<{ data: UserRegistrationInvitationRecord | null }>;
 
   findByTokenHash(

@@ -6,20 +6,9 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
-  ITenantUserReadRepository,
-  ITenantUserReadRepositoryToken,
-  ITenantUserWriteRepository,
-  ITenantUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import {
-  NotificationType,
-  TenantUser,
-  TenantUserStatus,
-  User,
-  UserRole,
-  UserStatus,
-} from '@domain/entities';
-import { UserPasswordPolicy } from '@domain/policies';
+import { NotificationType, User, UserStatus, UserRole } from '@domain/entities';
+import { UserPasswordPolicy, UserRolePolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
@@ -35,10 +24,6 @@ export class CreateUserAndNotifyUseCase {
     private readonly userReadRepo: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
-    @Inject(ITenantUserReadRepositoryToken)
-    private readonly tenantUserReadRepo: ITenantUserReadRepository,
-    @Inject(ITenantUserWriteRepositoryToken)
-    private readonly tenantUserWriteRepo: ITenantUserWriteRepository,
     private readonly notifier: UserNotifierService,
   ) {}
 
@@ -48,29 +33,24 @@ export class CreateUserAndNotifyUseCase {
    * @param input The data to create the user with
    * @returns A promise that resolves to the created user
    */
-  async execute(input: CreateUserDto): Promise<CreateUserResultDto> {
+  async execute(
+    input: CreateUserDto,
+    actorRole: UserRole,
+  ): Promise<CreateUserResultDto> {
+    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+
     const existingUser = await this.findUserByEmail(input.email);
 
-    const user = existingUser ?? (await this.createUser(input));
+    if (existingUser) {
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.USER_EMAIL,
+        { email: input.email },
+      );
+    }
 
-    await this.ensureTenantUserUnique(user.id, input.tenantId, input.email);
+    const user = await this.createUser(input);
 
-    const tenantUser = new TenantUser({
-      tenantId: input.tenantId,
-      userId: user.id,
-      role: input.role,
-      status: TenantUserStatus.ACTIVE,
-    });
-
-    const { data: persistedTenantUser } =
-      await this.tenantUserWriteRepo.create(tenantUser);
-
-    persistedTenantUser.markAsCreated();
-
-    return UserResultMapper.toCreateTenantUserResultDto(
-      user,
-      persistedTenantUser,
-    );
+    return UserResultMapper.toCreateUserResultDto(user);
   }
 
   /**
@@ -88,7 +68,7 @@ export class CreateUserAndNotifyUseCase {
       lastname: input.lastname,
       email: input.email,
       password: hashedPassword,
-      role: UserRole.USER,
+      role: input.role,
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,
     });
@@ -99,32 +79,6 @@ export class CreateUserAndNotifyUseCase {
     data.markAsCreated();
 
     return data;
-  }
-
-  /**
-   * Ensures that a tenant user with the given user id and tenant id does not already exist
-   * @param userId The id of the user to check
-   * @param tenantId The id of the tenant to check
-   * @param email The email of the tenant user to check
-   * @throws EntityAlreadyExistsException If a tenant user with the given user id and tenant id already exists
-   */
-  private async ensureTenantUserUnique(
-    userId: string,
-    tenantId: string,
-    email: string,
-  ): Promise<void> {
-    const { data } = await this.tenantUserReadRepo.findManyByUserId(userId);
-
-    const alreadyExists = data.some(
-      (tenantUser) => tenantUser.tenantId === tenantId && tenantUser.id,
-    );
-
-    if (alreadyExists) {
-      throw EntityAlreadyExistsException.create(
-        EntityAlreadyExistsExceptionCode.TENANT_USER_EMAIL,
-        { userId, tenantId, email },
-      );
-    }
   }
 
   private async findUserByEmail(email: string): Promise<User | null> {

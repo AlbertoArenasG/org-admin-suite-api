@@ -10,25 +10,13 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import {
-  CompleteNewUserRegistrationInvitationRequestDto,
-  RespondUserRegistrationInvitationRequestDto,
-} from '@infra/api/dto';
-import {
-  CompleteNewUserRegistrationInvitationCommandAdapter,
-  RespondUserRegistrationInvitationCommandAdapter,
-} from '@infra/cqrs/commands';
+import { CompleteNewUserRegistrationInvitationRequestDto } from '@infra/api/dto';
+import { CompleteNewUserRegistrationInvitationCommandAdapter } from '@infra/cqrs/commands';
 import { GetUserRegistrationInvitationQuery } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { UserRegistrationInvitationPresenter } from '@infra/api/presenters';
-import {
-  MasterUserPresenter,
-  TenantAccessUserPresenter,
-} from '@infra/api/presenters/user';
-import {
-  CompleteNewUserRegistrationInvitationResultDto,
-  RespondUserRegistrationInvitationResultDto,
-} from '@application/dto';
+import { MasterUserPresenter, UserPresenter } from '@infra/api/presenters/user';
+import { CompleteNewUserRegistrationInvitationResultDto } from '@application/dto';
 import { UserRegistrationInvitationScope } from '@domain/ports/repositories';
 
 @Controller('v1/user-registration-invitations')
@@ -37,7 +25,7 @@ export class UserRegistrationInvitationPublicController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly presenter: UserRegistrationInvitationPresenter,
-    private readonly tenantUserPresenter: TenantAccessUserPresenter,
+    private readonly userPresenter: UserPresenter,
     private readonly masterUserPresenter: MasterUserPresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
@@ -78,54 +66,13 @@ export class UserRegistrationInvitationPublicController {
       .build();
   }
 
-  @Post(':token/respond')
-  @HttpCode(HttpStatus.OK)
-  async respondInvitation(
-    @Param('token') token: string,
-    @Body() body: RespondUserRegistrationInvitationRequestDto,
-  ) {
-    const command = RespondUserRegistrationInvitationCommandAdapter.create(
-      body.toDomain(token),
-    );
-
-    const result = await this.commandBus.execute(command);
-
-    const response = await this.presentResponse(result);
-
-    return ApiResponseBuilder.create()
-      .withSuccessMessage(
-        this.successMsgService.getMsg(
-          result.status === 'ACCEPTED'
-            ? 'USER_REGISTRATION_INVITATION.ACCEPTED'
-            : 'USER_REGISTRATION_INVITATION.DECLINED',
-        ),
-      )
-      .withData(response)
-      .withStatus(HttpStatus.OK)
-      .build();
-  }
-
   private async presentRegistrationCompletion(
     result: CompleteNewUserRegistrationInvitationResultDto,
   ) {
-    if (result.scope === UserRegistrationInvitationScope.TENANT) {
-      return this.tenantUserPresenter.toUserResponse(result.user);
+    if (result.scope === UserRegistrationInvitationScope.APPLICATION) {
+      return this.userPresenter.toUserResponse(result.user);
     }
 
     return this.masterUserPresenter.toUserResponse(result.user);
-  }
-
-  private async presentResponse(
-    result: RespondUserRegistrationInvitationResultDto,
-  ) {
-    if (result.status === 'ACCEPTED') {
-      const user = await this.tenantUserPresenter.toUserResponse(result.user);
-      return {
-        status: result.status,
-        user,
-      };
-    }
-
-    return { status: result.status };
   }
 }

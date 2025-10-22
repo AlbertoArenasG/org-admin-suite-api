@@ -22,6 +22,8 @@ import {
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
 import { UserRegistrationInvitationTokenService } from '@application/services';
+import { UserRole } from '@domain/entities';
+import { UserRolePolicy } from '@domain/policies';
 
 @Injectable()
 export class CreateMasterUserRegistrationInvitationUseCase {
@@ -37,7 +39,10 @@ export class CreateMasterUserRegistrationInvitationUseCase {
 
   async execute(
     input: CreateMasterUserRegistrationInvitationDto,
+    actorRole: UserRole,
   ): Promise<UserRegistrationInvitationDto> {
+    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+
     await this.ensureUserDoesNotExist(input.email);
     await this.ensureInvitationDoesNotExist(input.email);
 
@@ -51,7 +56,6 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       email: input.email,
       role: input.role,
       invitedByUserId: input.invitedByUserId,
-      existingUserId: null,
       tokenHash,
       userData: input.userData ?? null,
     });
@@ -63,9 +67,6 @@ export class CreateMasterUserRegistrationInvitationUseCase {
         UserRegistrationInvitationTokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.MASTER,
       role: input.role,
-      type: UserRegistrationInvitationType.NEW_USER_REGISTRATION,
-      tenantId: null,
-      existingUserId: null,
       userData: input.userData ?? null,
     });
 

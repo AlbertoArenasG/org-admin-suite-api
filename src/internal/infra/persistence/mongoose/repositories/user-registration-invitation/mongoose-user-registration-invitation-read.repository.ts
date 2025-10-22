@@ -18,7 +18,6 @@ export class MongooseUserRegistrationInvitationReadRepositoryImpl
   async findActiveByEmail(
     email: string,
     scope: UserRegistrationInvitationScope,
-    tenantId?: string | null,
   ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
     const query: FilterQuery<UserRegistrationInvitationDocument> = {
       email,
@@ -26,12 +25,6 @@ export class MongooseUserRegistrationInvitationReadRepositoryImpl
       consumed_at: null,
       status: UserRegistrationInvitationStatus.PENDING,
     };
-
-    if (scope === UserRegistrationInvitationScope.TENANT) {
-      query.tenant_id = tenantId ?? null;
-    } else {
-      query.tenant_id = null;
-    }
 
     const document = await this.invitationModel.findOne(query);
 

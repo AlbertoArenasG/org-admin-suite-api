@@ -17,4 +17,16 @@ export class MongooseUserWriteRepositoryImpl
       data: this.toDomain(entity),
     };
   }
+
+  async update(user: User): Promise<{ data: User | null }> {
+    const data = this.toMongoose(user);
+
+    const updated = await this.userModel
+      .findOneAndUpdate({ user_id: user.id }, data, { new: true })
+      .exec();
+
+    return {
+      data: updated ? this.toDomain(updated) : null,
+    };
+  }
 }

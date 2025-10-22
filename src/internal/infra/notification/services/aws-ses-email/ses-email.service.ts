@@ -3,7 +3,6 @@ import { EnvService } from '@infra/env';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 import { NotificationType } from '@domain/entities';
-import { UserRegistrationInvitationType } from '@domain/ports/repositories';
 import { IEmailService } from '@domain/ports/services';
 import {
   UserRegistrationInvitationEmailDto,
@@ -52,13 +51,10 @@ export class SesEmailService implements IEmailService {
   async sendUserRegistrationInvitation(
     payload: UserRegistrationInvitationEmailDto,
   ): Promise<void> {
-    const notificationType =
-      payload.type === UserRegistrationInvitationType.NEW_USER_REGISTRATION
-        ? NotificationType.USER_REGISTRATION_INVITATION
-        : NotificationType.TENANT_USER_INVITATION;
-
-    const template = this.templates[notificationType];
-    const subject = this.subjects[notificationType];
+    const template =
+      this.templates[NotificationType.USER_REGISTRATION_INVITATION];
+    const subject =
+      this.subjects[NotificationType.USER_REGISTRATION_INVITATION];
 
     const context = {
       name: payload.userData?.name ?? payload.email,

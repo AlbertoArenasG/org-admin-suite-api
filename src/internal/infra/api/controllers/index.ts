@@ -1,5 +1,6 @@
 export * from './health';
 export * from './auth';
 export * from './master-admin';
-export * from './tenant-access';
 export * from './public';
+export * from './user';
+export * from './user-registration-invitation';

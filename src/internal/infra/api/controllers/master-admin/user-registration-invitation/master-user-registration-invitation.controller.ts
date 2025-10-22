@@ -35,6 +35,7 @@ export class MasterUserRegistrationInvitationController {
   ) {
     const command = CreateMasterUserRegistrationInvitationCommandAdapter.create(
       body.toDomain(currentUser.userId),
+      currentUser.role,
     );
 
     const result = await this.commandBus.execute(command);

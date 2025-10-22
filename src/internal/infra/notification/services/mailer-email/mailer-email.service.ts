@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { NotificationType } from '@domain/entities';
-import { UserRegistrationInvitationType } from '@domain/ports/repositories';
 import { IEmailService } from '@domain/ports/services';
 import {
   UserRegistrationInvitationEmailDto,
@@ -51,13 +50,10 @@ export class MailerEmailService implements IEmailService {
   async sendUserRegistrationInvitation(
     payload: UserRegistrationInvitationEmailDto,
   ): Promise<void> {
-    const notificationType =
-      payload.type === UserRegistrationInvitationType.NEW_USER_REGISTRATION
-        ? NotificationType.USER_REGISTRATION_INVITATION
-        : NotificationType.TENANT_USER_INVITATION;
-
-    const template = this.templates[notificationType];
-    const subjectTemplate = this.subjects[notificationType];
+    const template =
+      this.templates[NotificationType.USER_REGISTRATION_INVITATION];
+    const subjectTemplate =
+      this.subjects[NotificationType.USER_REGISTRATION_INVITATION];
 
     const recipientName = payload.userData?.name || payload.email;
 

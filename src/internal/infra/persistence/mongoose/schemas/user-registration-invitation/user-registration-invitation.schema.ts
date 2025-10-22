@@ -57,14 +57,8 @@ export class UserRegistrationInvitationDocument extends Document {
   @Prop({ type: String, required: true })
   role: string;
 
-  @Prop({ type: String, default: null, index: true })
-  tenant_id?: string | null;
-
   @Prop({ type: String, required: true, index: true })
   invited_by_user_id: string;
-
-  @Prop({ type: String, default: null, index: true })
-  existing_user_id?: string | null;
 
   @Prop({ type: String, required: true, unique: true })
   token_hash: string;
@@ -88,16 +82,6 @@ export class UserRegistrationInvitationDocument extends Document {
 
   @Prop({ type: Date, default: null })
   consumed_at?: Date | null;
-
-  @Prop({ type: Date, default: null })
-  responded_at?: Date | null;
-
-  @Prop({
-    type: String,
-    enum: ['ACCEPTED', 'DECLINED'],
-    default: null,
-  })
-  response_decision?: 'ACCEPTED' | 'DECLINED' | null;
 
   @Prop()
   createdAt?: Date;

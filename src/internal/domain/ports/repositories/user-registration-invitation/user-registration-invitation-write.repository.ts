@@ -1,8 +1,6 @@
 import {
   CreateUserRegistrationInvitationRecord,
-  UserRegistrationInvitationDecision,
   UserRegistrationInvitationRecord,
-  UserRegistrationInvitationStatus,
 } from './user-registration-invitation.types';
 
 export interface IUserRegistrationInvitationWriteRepository {
@@ -13,15 +11,6 @@ export interface IUserRegistrationInvitationWriteRepository {
   markAsConsumed(
     invitationId: string,
     consumedAt: Date,
-  ): Promise<{ data: UserRegistrationInvitationRecord | null }>;
-
-  updateStatus(
-    invitationId: string,
-    status: UserRegistrationInvitationStatus,
-    options?: {
-      respondedAt?: Date;
-      decision?: UserRegistrationInvitationDecision | null;
-    },
   ): Promise<{ data: UserRegistrationInvitationRecord | null }>;
 }
 

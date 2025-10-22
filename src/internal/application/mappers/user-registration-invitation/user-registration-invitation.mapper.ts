@@ -14,13 +14,9 @@ export class UserRegistrationInvitationMapper {
       type: record.type,
       status: record.status,
       role: record.role,
-      tenantId: record.tenantId ?? null,
       invitedByUserId: record.invitedByUserId,
-      existingUserId: record.existingUserId ?? null,
       userData: record.userData ?? null,
       consumedAt: record.consumedAt ?? null,
-      respondedAt: record.respondedAt ?? null,
-      responseDecision: record.responseDecision ?? null,
       createdAt: record.createdAt ?? null,
       updatedAt: record.updatedAt ?? null,
     };

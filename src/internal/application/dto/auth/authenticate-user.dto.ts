@@ -1,10 +1,4 @@
-import {
-  TenantStatus,
-  TenantUserRole,
-  TenantUserStatus,
-  UserRole,
-  UserStatus,
-} from '@domain/entities';
+import { UserRole, UserStatus } from '@domain/entities';
 import { PhoneDto } from '@application/dto/shared';
 
 export interface AuthenticateUserDto {
@@ -22,22 +16,7 @@ export interface AuthenticatedUserDto {
   cellPhone: PhoneDto;
 }
 
-export interface AuthenticatedTenantAccessDto {
-  tenantUserId: string;
-  tenantId: string;
-  role: TenantUserRole;
-  status: TenantUserStatus;
-  tenant?: {
-    id: string;
-    name: string;
-    slug: string;
-    status: TenantStatus;
-  } | null;
-}
-
 export interface AuthenticateUserResultDto {
   user: AuthenticatedUserDto;
   accessToken: string;
-  tenants: AuthenticatedTenantAccessDto[];
-  defaultTenantId?: string | null;
 }

@@ -1,10 +1,9 @@
-import { TenantUserRole, UserRole } from '@domain/entities';
+import { UserRole } from '@domain/entities';
 import {
   UserRegistrationInvitationScope,
   UserRegistrationInvitationStatus,
   UserRegistrationInvitationType,
   UserRegistrationInvitationUserData,
-  UserRegistrationInvitationDecision,
 } from '@domain/ports/repositories';
 
 export interface BaseCreateUserRegistrationInvitationDto {
@@ -13,11 +12,10 @@ export interface BaseCreateUserRegistrationInvitationDto {
   userData?: UserRegistrationInvitationUserData | null;
 }
 
-export interface CreateTenantUserRegistrationInvitationDto
+export interface CreateApplicationUserRegistrationInvitationDto
   extends BaseCreateUserRegistrationInvitationDto {
-  scope: UserRegistrationInvitationScope.TENANT;
-  tenantId: string;
-  role: TenantUserRole;
+  scope: UserRegistrationInvitationScope.APPLICATION;
+  role: UserRole;
 }
 
 export interface CreateMasterUserRegistrationInvitationDto
@@ -27,7 +25,7 @@ export interface CreateMasterUserRegistrationInvitationDto
 }
 
 export type CreateUserRegistrationInvitationDto =
-  | CreateTenantUserRegistrationInvitationDto
+  | CreateApplicationUserRegistrationInvitationDto
   | CreateMasterUserRegistrationInvitationDto;
 
 export interface UserRegistrationInvitationDto {
@@ -37,13 +35,9 @@ export interface UserRegistrationInvitationDto {
   type: UserRegistrationInvitationType;
   status: UserRegistrationInvitationStatus;
   role: string;
-  tenantId?: string | null;
   invitedByUserId: string;
-  existingUserId?: string | null;
   userData?: UserRegistrationInvitationUserData | null;
   consumedAt?: Date | null;
-  respondedAt?: Date | null;
-  responseDecision?: UserRegistrationInvitationDecision | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;
 }

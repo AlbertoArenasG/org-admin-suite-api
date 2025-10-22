@@ -1,4 +1,4 @@
-import { TenantUser, User } from '@domain/entities';
+import { User } from '@domain/entities';
 import {
   AuthenticatedUserDto,
   CreateMasterUserResultDto,
@@ -38,19 +38,14 @@ export class UserResultMapper {
     };
   }
 
-  static toCreateTenantUserResultDto(
-    user: User,
-    tenantUser: TenantUser,
-  ): CreateUserResultDto {
+  static toCreateUserResultDto(user: User): CreateUserResultDto {
     return {
       id: user.id!,
-      userTenantId: tenantUser.id!,
-      tenantId: tenantUser.tenantId,
       name: user.name,
       lastname: user.lastname,
       email: user.email,
-      role: tenantUser.role,
-      status: tenantUser.status,
+      role: user.role,
+      status: user.status,
       cellPhone: toCellPhoneDto(user),
       createdAt: user.createdAt ?? new Date(),
     };

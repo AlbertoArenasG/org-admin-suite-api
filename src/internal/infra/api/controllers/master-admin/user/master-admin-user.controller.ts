@@ -14,7 +14,8 @@ import { MasterUserPresenter } from '@infra/api/presenters/user/master-user.pres
 import { CreateMasterUserCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard, MasterScopeGuard } from '@src/internal/infra/api/guards';
-import { MASTER_SCOPE, Scopes } from '@src/common/decorators';
+import { MASTER_SCOPE, Scopes, CurrentUser } from '@src/common/decorators';
+import { AuthenticatedUserContextDto } from '@application/dto';
 
 @Controller('v1/master-admin/users')
 export class MasterAdminUserController {
@@ -28,8 +29,14 @@ export class MasterAdminUserController {
   @Scopes(MASTER_SCOPE)
   @UseGuards(JwtAuthGuard, MasterScopeGuard)
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() body: CreateMasterUserRequestDto) {
-    const command = CreateMasterUserCommandAdapter.create(body.toDomain());
+  async create(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Body() body: CreateMasterUserRequestDto,
+  ) {
+    const command = CreateMasterUserCommandAdapter.create(
+      body.toDomain(),
+      currentUser.role,
+    );
     const result = await this.commandBus.execute(command);
     const data = await this.presenter.toUserResponse(result);
 

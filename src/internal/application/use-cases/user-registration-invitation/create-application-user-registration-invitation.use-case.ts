@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  ITenantUserReadRepository,
-  ITenantUserReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
   IUserRegistrationInvitationReadRepository,
@@ -18,16 +16,17 @@ import {
   EntityAlreadyExistsExceptionCode,
 } from '@domain/exceptions';
 import {
-  CreateTenantUserRegistrationInvitationDto,
+  CreateApplicationUserRegistrationInvitationDto,
   UserRegistrationInvitationDto,
 } from '@application/dto';
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import { UserRegistrationInvitationTokenService } from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
-import { User } from '@domain/entities';
+import { User, UserRole } from '@domain/entities';
+import { UserRolePolicy } from '@domain/policies';
 
 @Injectable()
-export class CreateTenantUserRegistrationInvitationUseCase {
+export class CreateApplicationUserRegistrationInvitationUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
@@ -35,41 +34,38 @@ export class CreateTenantUserRegistrationInvitationUseCase {
     private readonly invitationReadRepository: IUserRegistrationInvitationReadRepository,
     @Inject(IUserRegistrationInvitationWriteRepositoryToken)
     private readonly invitationWriteRepository: IUserRegistrationInvitationWriteRepository,
-    @Inject(ITenantUserReadRepositoryToken)
-    private readonly tenantUserReadRepository: ITenantUserReadRepository,
     private readonly notifier: UserRegistrationInvitationNotifierService,
   ) {}
 
   async execute(
-    input: CreateTenantUserRegistrationInvitationDto,
+    input: CreateApplicationUserRegistrationInvitationDto,
+    actorRole: UserRole,
   ): Promise<UserRegistrationInvitationDto> {
-    await this.ensureInvitationDoesNotExist(input.email, input.tenantId);
+    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+
+    await this.ensureInvitationDoesNotExist(input.email);
 
     const existingUser = await this.findExistingUser(input.email);
 
     if (existingUser) {
-      await this.ensureTenantMembershipDoesNotExist(
-        existingUser.id!,
-        input.tenantId,
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.USER_EMAIL,
+        { email: input.email },
       );
     }
 
     const { token, tokenHash } =
       UserRegistrationInvitationTokenService.generate();
 
-    const invitationType = existingUser
-      ? UserRegistrationInvitationType.EXISTING_USER_TENANT_LINK
-      : UserRegistrationInvitationType.NEW_USER_REGISTRATION;
+    const invitationType = UserRegistrationInvitationType.NEW_USER_REGISTRATION;
 
     const { data } = await this.invitationWriteRepository.create({
-      scope: UserRegistrationInvitationScope.TENANT,
+      scope: UserRegistrationInvitationScope.APPLICATION,
       type: invitationType,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
       role: input.role,
-      tenantId: input.tenantId,
       invitedByUserId: input.invitedByUserId,
-      existingUserId: existingUser?.id ?? null,
       tokenHash,
       userData: input.userData ?? null,
     });
@@ -79,11 +75,8 @@ export class CreateTenantUserRegistrationInvitationUseCase {
       token,
       invitationUrl:
         UserRegistrationInvitationTokenService.buildInvitationUrl(token),
-      scope: UserRegistrationInvitationScope.TENANT,
+      scope: UserRegistrationInvitationScope.APPLICATION,
       role: input.role,
-      tenantId: input.tenantId,
-      type: invitationType,
-      existingUserId: existingUser?.id ?? null,
       userData: input.userData ?? null,
     });
 
@@ -97,39 +90,16 @@ export class CreateTenantUserRegistrationInvitationUseCase {
     return data ?? null;
   }
 
-  private async ensureInvitationDoesNotExist(
-    email: string,
-    tenantId: string,
-  ): Promise<void> {
+  private async ensureInvitationDoesNotExist(email: string): Promise<void> {
     const { data } = await this.invitationReadRepository.findActiveByEmail(
       email,
-      UserRegistrationInvitationScope.TENANT,
-      tenantId,
+      UserRegistrationInvitationScope.APPLICATION,
     );
 
     if (data) {
       throw EntityAlreadyExistsException.create(
         EntityAlreadyExistsExceptionCode.USER_REGISTRATION_INVITATION_EMAIL,
-        { email, scope: UserRegistrationInvitationScope.TENANT, tenantId },
-      );
-    }
-  }
-
-  private async ensureTenantMembershipDoesNotExist(
-    userId: string,
-    tenantId: string,
-  ): Promise<void> {
-    const { data } =
-      await this.tenantUserReadRepository.findManyByUserId(userId);
-
-    const alreadyMember = data.some(
-      (tenantUser) => tenantUser.tenantId === tenantId,
-    );
-
-    if (alreadyMember) {
-      throw EntityAlreadyExistsException.create(
-        EntityAlreadyExistsExceptionCode.TENANT_USER_EMAIL,
-        { userId, tenantId },
+        { email, scope: UserRegistrationInvitationScope.APPLICATION },
       );
     }
   }
