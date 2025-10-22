@@ -35,11 +35,6 @@ export class CreateTenantUseCase {
     });
 
     const { data: persisted } = await this.tenantWriteRepo.create(tenant);
-    if (!persisted) throw new Error('TENANT_NOT_CREATED');
-
-    if (!persisted.id) {
-      throw new Error('TENANT_ID_NOT_AVAILABLE');
-    }
 
     persisted.markAsCreated();
 

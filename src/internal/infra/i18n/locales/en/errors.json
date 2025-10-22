@@ -4,6 +4,9 @@
     "PHONE": "Invalid phone number {phone} format",
     "USER": {
       "PASSWORD": "Invalid password format"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "TOKEN": "Invitation token is invalid"
     }
   },
   "ENTITY_ALREADY_EXISTS": {
@@ -15,6 +18,9 @@
       "USER": {
         "EMAIL": "User with email {email} is already associated with the account"
       }
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "EMAIL": "An invitation for {email} already exists"
     }
   },
   "AUTHENTICATION": {
@@ -27,5 +33,6 @@
     "TOKEN_TYPE_UNRECOGNIZED": "Token type {actualType} is not supported",
     "TOKEN_PAYLOAD_INVALID": "Token payload is not valid",
     "TOKEN_ROLE_INVALID": "Token role {role} is not allowed"
-  }
+  },
+  "USER_REGISTRATION_INVITATION_NOT_FOUND": "Invitation not found or already used"
 }

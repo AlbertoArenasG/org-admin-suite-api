@@ -26,6 +26,12 @@ export class SnsSmsService implements ISmsService {
       [NotificationType.WELCOME_USER]: Handlebars.compile(
         '¡Bienvenido a la plataforma!',
       ),
+      [NotificationType.USER_REGISTRATION_INVITATION]: Handlebars.compile(
+        'Completa tu registro en la plataforma: {{link}}',
+      ),
+      [NotificationType.TENANT_USER_INVITATION]: Handlebars.compile(
+        'Has sido invitado a un nuevo tenant: {{link}}',
+      ),
     };
   }
 

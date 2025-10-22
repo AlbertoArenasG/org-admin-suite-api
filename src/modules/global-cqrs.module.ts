@@ -3,19 +3,31 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 import {
   AuthenticateUserHandler,
+  CompleteNewUserRegistrationInvitationHandler,
   CreateMasterUserHandler,
+  CreateMasterUserRegistrationInvitationHandler,
+  CreateTenantHandler,
+  CreateTenantUserRegistrationInvitationHandler,
+  CreateUserAndNotifyHandler,
+  RespondUserRegistrationInvitationHandler,
+} from '@infra/cqrs/commands';
+import { GetUserRegistrationInvitationHandler } from '@infra/cqrs/queries';
+
+const providers = [
+  AuthenticateUserHandler,
   CreateTenantHandler,
   CreateUserAndNotifyHandler,
-} from '@infra/cqrs/commands';
+  CreateMasterUserHandler,
+  CreateTenantUserRegistrationInvitationHandler,
+  CreateMasterUserRegistrationInvitationHandler,
+  CompleteNewUserRegistrationInvitationHandler,
+  RespondUserRegistrationInvitationHandler,
+  GetUserRegistrationInvitationHandler,
+];
 
 @Global()
 @Module({
   imports: [CqrsModule],
-  providers: [
-    AuthenticateUserHandler,
-    CreateTenantHandler,
-    CreateUserAndNotifyHandler,
-    CreateMasterUserHandler,
-  ],
+  providers,
 })
 export class GlobalCqrsModule {}
