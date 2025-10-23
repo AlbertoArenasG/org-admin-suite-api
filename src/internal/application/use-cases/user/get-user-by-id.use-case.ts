@@ -9,7 +9,7 @@ import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
-import { User } from '@domain/entities';
+import { User, UserStatus } from '@domain/entities';
 import { UserViewDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 
@@ -23,7 +23,7 @@ export class GetUserByIdUseCase {
   async execute(userId: string, actorIsMaster: boolean): Promise<UserViewDto> {
     const { data } = await this.userReadRepository.findById(userId);
 
-    if (!data) {
+    if (!data || data.status === UserStatus.DELETED) {
       throw EntityNotFoundException.create(EntityNotFoundExceptionCode.USER, {
         userId,
       });

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { User, UserRole } from '@domain/entities/user.entity';
+import { User, UserRole, UserStatus } from '@domain/entities/user.entity';
 import {
   FindUsersParams,
   FindUsersResult,
@@ -39,6 +39,10 @@ export class MongooseUserReadRepositoryImpl
             $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
           },
         };
+    const filter = {
+      status: { $ne: UserStatus.DELETED },
+      ...roleFilter,
+    };
     const primaryField = sortBy === 'name' ? 'name' : 'lastname';
     const secondaryField = sortBy === 'name' ? 'lastname' : 'name';
     const direction = sortDirection === 'desc' ? -1 : 1;
@@ -49,12 +53,12 @@ export class MongooseUserReadRepositoryImpl
 
     const [documents, total] = await Promise.all([
       this.userModel
-        .find(roleFilter)
+        .find(filter)
         .sort(sortCriteria)
         .skip(skip)
         .limit(perPage)
         .exec(),
-      this.userModel.countDocuments(roleFilter).exec(),
+      this.userModel.countDocuments(filter).exec(),
     ]);
 
     return {

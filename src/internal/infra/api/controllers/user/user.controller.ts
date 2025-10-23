@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -12,9 +14,19 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import { CreateUserRequestDto, GetUsersRequestDto } from '@infra/api/dto/user';
+import {
+  CreateUserRequestDto,
+  GetUsersRequestDto,
+  UpdateMyProfileRequestDto,
+  UpdateUserRequestDto,
+} from '@infra/api/dto/user';
 import { UserPresenter } from '@infra/api/presenters/user/user.presenter';
-import { CreateUserAndNotifyCommandAdapter } from '@infra/cqrs/commands';
+import {
+  CreateUserAndNotifyCommandAdapter,
+  DeleteUserCommandAdapter,
+  UpdateMyProfileCommandAdapter,
+  UpdateUserCommandAdapter,
+} from '@infra/cqrs/commands';
 import { GetUserByIdQuery, GetUsersQuery } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
@@ -48,6 +60,26 @@ export class UserController {
       .withSuccessMessage(this.successMsgService.getMsg('USER.CREATED'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Body() body: UpdateMyProfileRequestDto,
+  ) {
+    const command = UpdateMyProfileCommandAdapter.create(
+      body.toDomain(currentUser.userId),
+    );
+    const result = await this.commandBus.execute(command);
+    const data = await this.presenter.toUserResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('USER.UPDATED'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
       .build();
   }
 
@@ -87,6 +119,47 @@ export class UserController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Patch(':userId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('userId') userId: string,
+    @Body() body: UpdateUserRequestDto,
+  ) {
+    const command = UpdateUserCommandAdapter.create(
+      body.toDomain(userId, currentUser.role),
+    );
+    const result = await this.commandBus.execute(command);
+    const data = await this.presenter.toUserResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('USER.UPDATED'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Delete(':userId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async delete(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('userId') userId: string,
+  ) {
+    const command = DeleteUserCommandAdapter.create({
+      userId,
+      actorRole: currentUser.role,
+    });
+
+    await this.commandBus.execute(command);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('USER.DELETED'))
       .withStatus(HttpStatus.OK)
       .build();
   }

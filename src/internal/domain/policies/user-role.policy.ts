@@ -27,4 +27,9 @@ export const UserRolePolicy = {
       throw AuthorizationException.rolePrivilegesInsufficient(actorRole);
     }
   },
+  ensureHasHigherPrivileges(actorRole: UserRole, targetRole: UserRole): void {
+    if (ROLE_RANK[actorRole] >= ROLE_RANK[targetRole]) {
+      throw AuthorizationException.rolePrivilegesInsufficient(actorRole);
+    }
+  },
 };

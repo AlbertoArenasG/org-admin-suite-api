@@ -86,6 +86,10 @@ export class User extends Entity<UserProps> {
     this.apply(new EntityCreatedEvent(this));
   }
 
+  private touch(): void {
+    this.props.updatedAt = new Date();
+  }
+
   get isMaster(): boolean {
     return User.isMasterRole(this.role);
   }
@@ -94,8 +98,56 @@ export class User extends Entity<UserProps> {
     return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 
+  updateDetails(details: {
+    name?: string;
+    lastname?: string;
+    email?: string;
+    cellPhone?: {
+      countryCode: string | null;
+      number: string | null;
+    } | null;
+  }): void {
+    if (details.name !== undefined) {
+      this.props.name = details.name;
+    }
+
+    if (details.lastname !== undefined) {
+      this.props.lastname = details.lastname;
+    }
+
+    if (details.email !== undefined) {
+      this.props.email = details.email;
+    }
+
+    if (details.cellPhone !== undefined) {
+      const phone =
+        details.cellPhone !== null
+          ? new Phone(details.cellPhone)
+          : new Phone({ countryCode: null, number: null });
+      this.props.cellPhone = phone;
+    }
+
+    this.touch();
+  }
+
   updateRole(role: UserRole): void {
     this.props.role = role;
+    this.touch();
+  }
+
+  updateStatus(status: UserStatus): void {
+    this.props.status = status;
+    this.touch();
+  }
+
+  updatePassword(password: string): void {
+    this.props.password = password;
+    this.touch();
+  }
+
+  markAsDeleted(): void {
+    this.props.status = UserStatus.DELETED;
+    this.touch();
   }
 }
 

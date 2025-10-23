@@ -8,6 +8,9 @@ import {
   CreateMasterUserRegistrationInvitationHandler,
   CreateUserRegistrationInvitationHandler,
   CreateUserAndNotifyHandler,
+  UpdateUserHandler,
+  UpdateMyProfileHandler,
+  DeleteUserHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -25,6 +28,9 @@ const providers = [
   GetUserRegistrationInvitationHandler,
   GetUsersHandler,
   GetUserByIdHandler,
+  UpdateUserHandler,
+  UpdateMyProfileHandler,
+  DeleteUserHandler,
 ];
 
 @Global()
