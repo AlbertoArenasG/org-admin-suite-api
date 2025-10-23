@@ -86,6 +86,14 @@ export class User extends Entity<UserProps> {
     this.apply(new EntityCreatedEvent(this));
   }
 
+  get isMaster(): boolean {
+    return User.isMasterRole(this.role);
+  }
+
+  static isMasterRole(role: UserRole): boolean {
+    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
+  }
+
   updateRole(role: UserRole): void {
     this.props.role = role;
   }

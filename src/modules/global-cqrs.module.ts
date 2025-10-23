@@ -9,7 +9,11 @@ import {
   CreateUserRegistrationInvitationHandler,
   CreateUserAndNotifyHandler,
 } from '@infra/cqrs/commands';
-import { GetUserRegistrationInvitationHandler } from '@infra/cqrs/queries';
+import {
+  GetUserByIdHandler,
+  GetUserRegistrationInvitationHandler,
+  GetUsersHandler,
+} from '@infra/cqrs/queries';
 
 const providers = [
   AuthenticateUserHandler,
@@ -19,6 +23,8 @@ const providers = [
   CreateMasterUserRegistrationInvitationHandler,
   CompleteNewUserRegistrationInvitationHandler,
   GetUserRegistrationInvitationHandler,
+  GetUsersHandler,
+  GetUserByIdHandler,
 ];
 
 @Global()

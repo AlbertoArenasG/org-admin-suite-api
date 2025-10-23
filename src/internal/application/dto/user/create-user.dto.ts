@@ -10,7 +10,7 @@ export interface CreateUserDto {
   cellPhone: PhoneDto;
 }
 
-export interface CreateUserResultDto {
+export interface UserViewDto {
   id: string;
   name: string;
   lastname: string;
@@ -20,3 +20,5 @@ export interface CreateUserResultDto {
   cellPhone: PhoneDto;
   createdAt: Date;
 }
+
+export type CreateUserResultDto = UserViewDto;
