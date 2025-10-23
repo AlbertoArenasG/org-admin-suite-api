@@ -1,4 +1,4 @@
-import { User, UserRole } from '@domain/entities';
+import { User } from '@domain/entities';
 import { AuthTokenPayloadDto } from '@application/dto';
 
 export class AuthTokenMapper {
@@ -6,11 +6,7 @@ export class AuthTokenMapper {
     return {
       sub: user.id!,
       role: user.role,
-      isMaster: this.isMaster(user.role),
+      isMaster: user.isMaster,
     };
-  }
-
-  private static isMaster(role: UserRole): boolean {
-    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateUserResultDto } from '@application/dto';
+import { UserViewDto } from '@application/dto';
 import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class UserPresenter {
   constructor(private readonly enumNameService: EnumNameService) {}
-  async toUserResponse(result: CreateUserResultDto) {
+  async toUserResponse(result: UserViewDto) {
     return {
       id: result.id,
       name: result.name,
@@ -24,5 +24,9 @@ export class UserPresenter {
       },
       created_at: result.createdAt,
     };
+  }
+
+  async toUsersResponse(results: UserViewDto[]) {
+    return Promise.all(results.map((result) => this.toUserResponse(result)));
   }
 }
