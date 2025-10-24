@@ -5,6 +5,9 @@
     "UPDATED": "User updated successfully",
     "DELETED": "User deleted successfully"
   },
+  "FILE": {
+    "UPLOADED": "Files uploaded successfully"
+  },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitation created successfully",
     "COMPLETED": "Registration completed successfully",

@@ -9,4 +9,8 @@ export const configSchemas = [
     name: schemas.UserRegistrationInvitationDocument.name,
     schema: schemas.UserRegistrationInvitationSchema,
   },
+  {
+    name: schemas.FileDocument.name,
+    schema: schemas.FileSchema,
+  },
 ];
