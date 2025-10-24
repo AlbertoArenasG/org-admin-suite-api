@@ -30,7 +30,7 @@ export class MongooseUserReadRepositoryImpl
   }
 
   async findAll(params: FindUsersParams): Promise<FindUsersResult> {
-    const { page, perPage, includeMasterUsers, sortBy, sortDirection } = params;
+    const { page, perPage, includeMasterUsers, sorts, search } = params;
     const skip = (page - 1) * perPage;
     const roleFilter = includeMasterUsers
       ? {}
@@ -39,17 +39,22 @@ export class MongooseUserReadRepositoryImpl
             $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
           },
         };
+    const searchFilter =
+      search && search.trim().length > 0
+        ? {
+            $or: [
+              { full_name: { $regex: escapeRegex(search), $options: 'i' } },
+              { email: { $regex: escapeRegex(search), $options: 'i' } },
+            ],
+          }
+        : {};
+
     const filter = {
       status: { $ne: UserStatus.DELETED },
       ...roleFilter,
+      ...searchFilter,
     };
-    const primaryField = sortBy === 'name' ? 'name' : 'lastname';
-    const secondaryField = sortBy === 'name' ? 'lastname' : 'name';
-    const direction = sortDirection === 'desc' ? -1 : 1;
-    const sortCriteria: Record<string, 1 | -1> = {
-      [primaryField]: direction,
-      [secondaryField]: direction,
-    };
+    const sortCriteria = this.buildSortCriteria(sorts);
 
     const [documents, total] = await Promise.all([
       this.userModel
@@ -66,4 +71,45 @@ export class MongooseUserReadRepositoryImpl
       total,
     };
   }
+
+  private buildSortCriteria(
+    sorts: Array<{
+      field: FindUsersParams['sorts'][number]['field'];
+      direction: FindUsersParams['sorts'][number]['direction'];
+    }>,
+  ): Record<string, 1 | -1> {
+    if (!sorts || sorts.length === 0) {
+      return { lastname: 1, name: 1, createdAt: 1 };
+    }
+
+    const criteria: Record<string, 1 | -1> = {};
+
+    for (const sort of sorts) {
+      const field = this.mapField(sort.field);
+      criteria[field] = sort.direction === 'desc' ? -1 : 1;
+    }
+
+    if (!criteria.createdAt) {
+      criteria.createdAt = 1;
+    }
+
+    return criteria;
+  }
+
+  private mapField(field: FindUsersParams['sorts'][number]['field']): string {
+    const mapping: Record<string, string> = {
+      name: 'name',
+      lastname: 'lastname',
+      email: 'email',
+      status: 'status',
+      role: 'role',
+      created_at: 'createdAt',
+    };
+
+    return mapping[field] ?? 'lastname';
+  }
+}
+
+function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

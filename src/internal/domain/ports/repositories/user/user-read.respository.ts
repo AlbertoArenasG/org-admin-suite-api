@@ -1,14 +1,20 @@
 import { User } from '@domain/entities/user.entity';
 
-export type UserSortField = 'name' | 'lastname';
+export type UserSortField =
+  | 'name'
+  | 'lastname'
+  | 'email'
+  | 'status'
+  | 'role'
+  | 'created_at';
 export type SortDirection = 'asc' | 'desc';
 
 export interface FindUsersParams {
   page: number;
   perPage: number;
   includeMasterUsers: boolean;
-  sortBy: UserSortField;
-  sortDirection: SortDirection;
+  sorts: Array<{ field: UserSortField; direction: SortDirection }>;
+  search: string | null;
 }
 
 export interface FindUsersResult {

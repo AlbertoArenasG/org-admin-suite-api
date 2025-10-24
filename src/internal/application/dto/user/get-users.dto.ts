@@ -7,8 +7,8 @@ import { UserViewDto } from './create-user.dto';
 
 export interface GetUsersDto extends PaginationParamsDto {
   includeMasterUsers: boolean;
-  sortBy: UserSortField;
-  sortDirection: SortDirection;
+  sorts: Array<{ field: UserSortField; direction: SortDirection }>;
+  search: string | null;
 }
 
 export type GetUsersResultDto = PaginatedResultDto<UserViewDto>;
