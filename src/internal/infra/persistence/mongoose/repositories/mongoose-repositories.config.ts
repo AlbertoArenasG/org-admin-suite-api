@@ -4,6 +4,7 @@ import {
   MongooseUserReadRepositoryImpl,
   MongooseUserWriteRepositoryImpl,
   MongooseFileRepositoryImpl,
+  MongooseServiceEntryRepositoryImpl,
 } from '.';
 
 import {
@@ -12,6 +13,7 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepositoryToken,
   IFileRepositoryToken,
+  IServiceEntryRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -35,6 +37,10 @@ export const MongooseRepositoriesConfig = [
     provide: IFileRepositoryToken,
     useClass: MongooseFileRepositoryImpl,
   },
+  {
+    provide: IServiceEntryRepositoryToken,
+    useClass: MongooseServiceEntryRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -43,4 +49,5 @@ export const MongooseRepositoryTokens = [
   IUserRegistrationInvitationReadRepositoryToken,
   IUserRegistrationInvitationWriteRepositoryToken,
   IFileRepositoryToken,
+  IServiceEntryRepositoryToken,
 ];

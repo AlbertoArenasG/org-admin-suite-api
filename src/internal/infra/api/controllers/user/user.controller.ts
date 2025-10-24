@@ -20,14 +20,18 @@ import {
   UpdateMyProfileRequestDto,
   UpdateUserRequestDto,
 } from '@infra/api/dto/user';
-import { UserPresenter } from '@infra/api/presenters/user/user.presenter';
+import { UserPresenter, UserRolePresenter } from '@infra/api/presenters/user';
 import {
   CreateUserAndNotifyCommandAdapter,
   DeleteUserCommandAdapter,
   UpdateMyProfileCommandAdapter,
   UpdateUserCommandAdapter,
 } from '@infra/cqrs/commands';
-import { GetUserByIdQuery, GetUsersQuery } from '@infra/cqrs/queries';
+import {
+  GetUserByIdQuery,
+  GetUserRolesQuery,
+  GetUsersQuery,
+} from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
 import { CurrentUser } from '@src/common/decorators';
@@ -39,6 +43,7 @@ export class UserController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly presenter: UserPresenter,
+    private readonly rolePresenter: UserRolePresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
 
@@ -83,6 +88,22 @@ export class UserController {
       .build();
   }
 
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getProfile(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
+    const result = await this.queryBus.execute(
+      GetUserByIdQuery.create(currentUser.userId, true),
+    );
+    const data = await this.presenter.toUserResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -100,6 +121,23 @@ export class UserController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('roles')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
+    const result = await this.queryBus.execute(
+      GetUserRolesQuery.create({ actorRole: currentUser.role }),
+    );
+
+    const data = this.rolePresenter.toResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }

@@ -15,6 +15,9 @@
     },
     "USER_REGISTRATION_INVITATION": {
       "EMAIL": "An invitation for {email} already exists"
+    },
+    "SERVICE_ENTRY": {
+      "ORDER": "A service entry with order {serviceOrderIdentifier} already exists"
     }
   },
   "AUTHENTICATION": {

@@ -15,6 +15,9 @@
     },
     "USER_REGISTRATION_INVITATION": {
       "EMAIL": "Ya existe una invitación activa para {email}"
+    },
+    "SERVICE_ENTRY": {
+      "ORDER": "Ya existe un servicio con la orden {serviceOrderIdentifier}"
     }
   },
   "AUTHENTICATION": {

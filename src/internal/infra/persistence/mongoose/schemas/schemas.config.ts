@@ -13,4 +13,8 @@ export const configSchemas = [
     name: schemas.FileDocument.name,
     schema: schemas.FileSchema,
   },
+  {
+    name: schemas.ServiceEntryDocument.name,
+    schema: schemas.ServiceEntrySchema,
+  },
 ];

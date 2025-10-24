@@ -8,6 +8,9 @@
   "FILE": {
     "UPLOADED": "Files uploaded successfully"
   },
+  "SERVICE_ENTRY": {
+    "CREATED": "Service entry created successfully"
+  },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitation created successfully",
     "COMPLETED": "Registration completed successfully",
