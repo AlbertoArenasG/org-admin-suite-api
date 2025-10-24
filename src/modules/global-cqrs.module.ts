@@ -11,11 +11,16 @@ import {
   UpdateUserHandler,
   UpdateMyProfileHandler,
   DeleteUserHandler,
+  UploadFilesHandler,
+  CreateServiceEntryHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
   GetUserRegistrationInvitationHandler,
   GetUsersHandler,
+  GetFileByIdHandler,
+  DownloadFileHandler,
+  GetUserRolesHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -31,6 +36,11 @@ const providers = [
   UpdateUserHandler,
   UpdateMyProfileHandler,
   DeleteUserHandler,
+  UploadFilesHandler,
+  CreateServiceEntryHandler,
+  GetFileByIdHandler,
+  DownloadFileHandler,
+  GetUserRolesHandler,
 ];
 
 @Global()

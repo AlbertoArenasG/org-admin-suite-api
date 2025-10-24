@@ -7,3 +7,4 @@ export * from './global-i18n.module';
 export * from './global-mongoose-repositories.module';
 export * from './global-mongoose.module';
 export * from './global-notification.module';
+export * from './global-file-storage.module';

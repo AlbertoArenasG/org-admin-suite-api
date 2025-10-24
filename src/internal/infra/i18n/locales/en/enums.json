@@ -12,5 +12,17 @@
       "INACTIVE": "Inactive user",
       "DELETED": "Deleted user"
     }
+  },
+  "SERVICE_ENTRY": {
+    "CATEGORY": {
+      "ANALYSIS": "Analysis",
+      "CALIBRATION": "Calibration",
+      "EQUIPMENT_DELIVERY": "Equipment delivery",
+      "MACHINING": "Machining",
+      "CORRECTIVE_MAINTENANCE": "Corrective maintenance",
+      "PREVENTIVE_MAINTENANCE": "Preventive maintenance",
+      "CALIBRATION_COLLECTION": "Calibration collection",
+      "ON_SITE_SERVICE": "On-site service"
+    }
   }
 }
