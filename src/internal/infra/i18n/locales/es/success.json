@@ -9,7 +9,9 @@
     "UPLOADED": "Archivos subidos correctamente"
   },
   "SERVICE_ENTRY": {
-    "CREATED": "Servicio registrado correctamente"
+    "CREATED": "Servicio registrado correctamente",
+    "UPDATED": "Servicio actualizado correctamente",
+    "DELETED": "Servicio eliminado correctamente"
   },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitación creada correctamente",

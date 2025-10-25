@@ -13,6 +13,9 @@ import {
   DeleteUserHandler,
   UploadFilesHandler,
   CreateServiceEntryHandler,
+  UpdateServiceEntryHandler,
+  DeleteServiceEntryHandler,
+  SubmitServiceEntrySurveyHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -21,6 +24,9 @@ import {
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
+  GetServiceEntriesHandler,
+  GetServiceEntryByIdHandler,
+  GetServiceEntryByTokenHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -38,9 +44,15 @@ const providers = [
   DeleteUserHandler,
   UploadFilesHandler,
   CreateServiceEntryHandler,
+  UpdateServiceEntryHandler,
+  DeleteServiceEntryHandler,
+  SubmitServiceEntrySurveyHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
+  GetServiceEntriesHandler,
+  GetServiceEntryByIdHandler,
+  GetServiceEntryByTokenHandler,
 ];
 
 @Global()

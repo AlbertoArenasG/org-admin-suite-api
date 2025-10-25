@@ -4,6 +4,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
+  ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserWelcomeEmailDto,
 } from '@application/dto';
@@ -74,6 +75,35 @@ export class MailerEmailService implements IEmailService {
 
     this.logger.debug(
       `Invitation email sent to ${payload.email} for scope ${payload.scope}`,
+    );
+  }
+
+  async sendServiceEntryCreated(
+    payload: ServiceEntryCreatedNotificationDto,
+  ): Promise<void> {
+    const template = this.templates[NotificationType.SERVICE_ENTRY_CREATED];
+    const subjectTemplate =
+      this.subjects[NotificationType.SERVICE_ENTRY_CREATED];
+
+    const context = {
+      companyName: payload.companyName,
+      contactName: payload.contactName,
+      serviceOrderIdentifier: payload.serviceOrderIdentifier,
+      publicUrl: payload.publicUrl,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+    const subject = subjectTemplate(context);
+
+    await this.mailerService.sendMail({
+      to: payload.contactEmail,
+      subject,
+      html,
+    });
+
+    this.logger.debug(
+      `Service entry email sent to ${payload.contactEmail} for order ${payload.serviceOrderIdentifier}`,
     );
   }
 }

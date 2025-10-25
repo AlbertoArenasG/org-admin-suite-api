@@ -1,4 +1,4 @@
-import { ServiceEntryCategory } from '@domain/entities';
+import { ServiceEntryCategory, ServiceEntryStatus } from '@domain/entities';
 
 export interface CreateServiceEntryDto {
   companyName: string;
@@ -19,5 +19,8 @@ export interface CreateServiceEntryResultDto {
   category: ServiceEntryCategory;
   calibrationCertificateFileId: string;
   attachmentFileIds: string[];
+  status: ServiceEntryStatus;
+  publicAccessToken: string;
+  surveyAccessId: string | null;
   createdAt: Date;
 }

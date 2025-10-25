@@ -5,7 +5,10 @@ import Handlebars from 'handlebars';
 
 import { NotificationType } from '@domain/entities';
 import { ISmsService } from '@domain/ports/services';
-import { UserWelcomeSmsDto } from '@application/dto';
+import {
+  ServiceEntryCreatedNotificationDto,
+  UserWelcomeSmsDto,
+} from '@application/dto';
 import { NotificationTemplateRegistry } from '@infra/notification/services/templates';
 
 @Injectable()
@@ -29,6 +32,9 @@ export class SnsSmsService implements ISmsService {
       [NotificationType.USER_REGISTRATION_INVITATION]: Handlebars.compile(
         'Completa tu registro en la plataforma: {{link}}',
       ),
+      [NotificationType.SERVICE_ENTRY_CREATED]: Handlebars.compile(
+        'Se registró un nuevo servicio: {{serviceOrderIdentifier}}',
+      ),
     };
   }
 
@@ -40,6 +46,27 @@ export class SnsSmsService implements ISmsService {
       link: payload.url,
     };
     const message = template(context);
+
+    await this.send(phoneNumber, message);
+  }
+
+  async sendServiceEntryCreated(
+    payload: ServiceEntryCreatedNotificationDto,
+  ): Promise<void> {
+    const template = this.templates[NotificationType.SERVICE_ENTRY_CREATED];
+    const context = {
+      serviceOrderIdentifier: payload.serviceOrderIdentifier,
+      publicUrl: payload.publicUrl,
+    };
+    const message = template(context);
+
+    const phoneNumber = payload.contactPhone ?? null;
+    if (!phoneNumber) {
+      this.logger.debug(
+        `SMS skipped for service entry ${payload.serviceOrderIdentifier} due to missing phone`,
+      );
+      return;
+    }
 
     await this.send(phoneNumber, message);
   }

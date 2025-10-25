@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-import { ServiceEntryCategory } from '@domain/entities';
+import { ServiceEntryCategory, ServiceEntryStatus } from '@domain/entities';
 import { genId } from '@src/common/utils';
 
 @Schema({
@@ -44,6 +44,17 @@ export class ServiceEntryDocument extends Document {
 
   @Prop({ type: [String], default: [] })
   attachment_file_ids: string[];
+
+  @Prop({
+    type: String,
+    enum: Object.values(ServiceEntryStatus),
+    default: ServiceEntryStatus.ACTIVE,
+    index: true,
+  })
+  status: ServiceEntryStatus;
+
+  @Prop({ type: String, required: false, default: null })
+  survey_access_id?: string | null;
 
   @Prop()
   createdAt?: Date;

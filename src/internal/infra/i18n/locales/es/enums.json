@@ -23,6 +23,10 @@
       "PREVENTIVE_MAINTENANCE": "Mantenimiento preventivo",
       "CALIBRATION_COLLECTION": "Recolección de calibración",
       "ON_SITE_SERVICE": "Servicio en sitio"
+    },
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "DELETED": "Eliminado"
     }
   }
 }

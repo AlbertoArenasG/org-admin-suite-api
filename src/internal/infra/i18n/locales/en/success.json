@@ -9,7 +9,9 @@
     "UPLOADED": "Files uploaded successfully"
   },
   "SERVICE_ENTRY": {
-    "CREATED": "Service entry created successfully"
+    "CREATED": "Service entry created successfully",
+    "UPDATED": "Service entry updated successfully",
+    "DELETED": "Service entry deleted successfully"
   },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitation created successfully",

@@ -4,6 +4,7 @@ export enum EntityNotFoundExceptionCode {
   USER = 'ENTITY_NOT_FOUND.USER',
   USER_REGISTRATION_INVITATION = 'ENTITY_NOT_FOUND.USER_REGISTRATION_INVITATION',
   FILE = 'ENTITY_NOT_FOUND.FILE',
+  SERVICE_ENTRY = 'ENTITY_NOT_FOUND.SERVICE_ENTRY',
 }
 
 export class EntityNotFoundException extends DomainException {

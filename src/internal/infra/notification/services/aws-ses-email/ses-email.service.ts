@@ -5,6 +5,7 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
+  ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserWelcomeEmailDto,
 } from '@application/dto';
@@ -67,6 +68,25 @@ export class SesEmailService implements IEmailService {
     await this.send(payload.email, subject(context), html);
   }
 
+  async sendServiceEntryCreated(
+    payload: ServiceEntryCreatedNotificationDto,
+  ): Promise<void> {
+    const template = this.templates[NotificationType.SERVICE_ENTRY_CREATED];
+    const subject = this.subjects[NotificationType.SERVICE_ENTRY_CREATED];
+
+    const context = {
+      companyName: payload.companyName,
+      contactName: payload.contactName,
+      serviceOrderIdentifier: payload.serviceOrderIdentifier,
+      publicUrl: payload.publicUrl,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+
+    await this.send(payload.contactEmail, subject(context), html);
+  }
+
   private async send(
     emailReceipt: string,
     subject: string,
@@ -75,9 +95,7 @@ export class SesEmailService implements IEmailService {
     const command = new SendEmailCommand({
       Source: this.envService.get('AWS_SES_FROM_EMAIL'),
       Destination: {
-        // TODO: Add email address from payload when mailing service for production is ready
-        // ToAddresses: [payload.to],
-        ToAddresses: [this.envService.get('AWS_SES_FROM_EMAIL')],
+        ToAddresses: [emailReceipt],
       },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },

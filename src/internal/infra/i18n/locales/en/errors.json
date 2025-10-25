@@ -39,6 +39,7 @@
   "ENTITY_NOT_FOUND": {
     "USER": "User not found",
     "USER_REGISTRATION_INVITATION": "Invitation not found or already used",
-    "FILE": "File not found"
+    "FILE": "File not found",
+    "SERVICE_ENTRY": "Service entry not found"
   }
 }
