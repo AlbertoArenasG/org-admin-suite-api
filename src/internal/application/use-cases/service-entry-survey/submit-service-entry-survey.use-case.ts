@@ -6,12 +6,16 @@ import {
   ServiceEntrySurveyViewDto,
 } from '@application/dto';
 import {
-  IServiceEntryAccessRepository,
-  IServiceEntryAccessRepositoryToken,
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
-  IServiceEntrySurveyRepository,
-  IServiceEntrySurveyRepositoryToken,
+  IServiceEntryAccessReadRepository,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
+  IServiceEntrySurveyWriteRepository,
+  IServiceEntrySurveyWriteRepositoryToken,
+  IServiceEntrySurveyTemplateReadRepository,
+  IServiceEntrySurveyTemplateReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
@@ -19,17 +23,28 @@ import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
 } from '@domain/exceptions';
-import { ServiceEntrySurvey } from '@domain/entities';
+import {
+  ServiceEntry,
+  ServiceEntrySurvey,
+  ServiceEntrySurveyAnswer,
+  ServiceEntrySurveyQuestion,
+  ServiceEntrySurveyQuestionType,
+  ServiceEntrySurveyTemplate,
+} from '@domain/entities';
 
 @Injectable()
 export class SubmitServiceEntrySurveyUseCase {
   constructor(
-    @Inject(IServiceEntryAccessRepositoryToken)
-    private readonly accessRepository: IServiceEntryAccessRepository,
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly entryRepository: IServiceEntryRepository,
-    @Inject(IServiceEntrySurveyRepositoryToken)
-    private readonly surveyRepository: IServiceEntrySurveyRepository,
+    @Inject(IServiceEntryAccessReadRepositoryToken)
+    private readonly accessReadRepository: IServiceEntryAccessReadRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
+    @Inject(IServiceEntrySurveyWriteRepositoryToken)
+    private readonly surveyWriteRepository: IServiceEntrySurveyWriteRepository,
+    @Inject(IServiceEntrySurveyTemplateReadRepositoryToken)
+    private readonly templateReadRepository: IServiceEntrySurveyTemplateReadRepository,
   ) {}
 
   async execute(
@@ -37,18 +52,8 @@ export class SubmitServiceEntrySurveyUseCase {
   ): Promise<ServiceEntrySurveyViewDto> {
     const tokenHash = createHash('sha256').update(input.token).digest('hex');
 
-    const { data: existingSurvey } =
-      await this.surveyRepository.findByTokenHash(tokenHash);
-
-    if (existingSurvey) {
-      throw EntityAlreadyExistsException.create(
-        EntityAlreadyExistsExceptionCode.SERVICE_ENTRY_SURVEY,
-        { token: input.token },
-      );
-    }
-
     const { data: access } =
-      await this.accessRepository.findByTokenHash(tokenHash);
+      await this.accessReadRepository.findByTokenHash(tokenHash);
 
     if (!access) {
       throw EntityNotFoundException.create(
@@ -57,7 +62,17 @@ export class SubmitServiceEntrySurveyUseCase {
       );
     }
 
-    const { data: entry } = await this.entryRepository.findById(
+    const { data: existingSurvey } =
+      await this.surveyReadRepository.findByAccessId(access.id);
+
+    if (existingSurvey) {
+      throw EntityAlreadyExistsException.create(
+        EntityAlreadyExistsExceptionCode.SERVICE_ENTRY_SURVEY,
+        { token: input.token },
+      );
+    }
+
+    const { data: entry } = await this.serviceEntryReadRepository.findById(
       access.serviceEntryId,
     );
 
@@ -68,18 +83,21 @@ export class SubmitServiceEntrySurveyUseCase {
       );
     }
 
+    const template = await this.resolveTemplate(entry);
+
+    const answers = this.validateAnswers(template, input.answers);
+
     const survey = new ServiceEntrySurvey({
       serviceEntryId: entry.id,
       accessId: access.id,
       tokenHash,
-      staffTreatment: input.staffTreatment,
-      responseTime: input.responseTime,
-      appearanceAttitude: input.appearanceAttitude,
-      documentationDelivery: input.documentationDelivery,
+      templateId: template.id,
+      templateVersion: template.version,
+      answers,
       observations: input.observations ?? null,
     });
 
-    const { data } = await this.surveyRepository.create(survey);
+    const { data } = await this.surveyWriteRepository.create(survey);
 
     if (!data) {
       throw new Error('Failed to create survey');
@@ -89,12 +107,132 @@ export class SubmitServiceEntrySurveyUseCase {
       id: data.id,
       serviceEntryId: data.serviceEntryId,
       accessId: data.accessId,
-      staffTreatment: data.staffTreatment,
-      responseTime: data.responseTime,
-      appearanceAttitude: data.appearanceAttitude,
-      documentationDelivery: data.documentationDelivery,
+      templateId: data.templateId,
+      templateVersion: data.templateVersion,
+      answers: data.answers,
       observations: data.observations,
       submittedAt: data.submittedAt,
     };
+  }
+
+  private async resolveTemplate(
+    entry: ServiceEntry,
+  ): Promise<ServiceEntrySurveyTemplate> {
+    if (!entry.surveyTemplateId || entry.surveyTemplateVersion === null) {
+      throw EntityNotFoundException.create(
+        EntityNotFoundExceptionCode.SERVICE_ENTRY,
+        { id: entry.id, reason: 'survey template missing' },
+      );
+    }
+
+    const { data } = await this.templateReadRepository.findByIdAndVersion(
+      entry.surveyTemplateId,
+      entry.surveyTemplateVersion,
+    );
+
+    if (!data) {
+      throw EntityNotFoundException.create(
+        EntityNotFoundExceptionCode.SERVICE_ENTRY,
+        { id: entry.id, reason: 'survey template not found' },
+      );
+    }
+
+    return data;
+  }
+
+  private validateAnswers(
+    template: ServiceEntrySurveyTemplate,
+    answers: SubmitServiceEntrySurveyDto['answers'],
+  ): ServiceEntrySurveyAnswer[] {
+    const questionMap = new Map(
+      template.questions.map((question) => [question.id, question]),
+    );
+
+    const normalizedAnswers: ServiceEntrySurveyAnswer[] = [];
+
+    for (const answer of answers) {
+      const question = questionMap.get(answer.questionId);
+      if (!question) {
+        continue;
+      }
+
+      if (answer.type !== question.type) {
+        throw new Error(`Invalid answer type for question ${question.id}`);
+      }
+
+      const isEmptyValue =
+        answer.value === undefined ||
+        answer.value === null ||
+        (typeof answer.value === 'string' && answer.value.trim().length === 0);
+
+      if (question.required && isEmptyValue) {
+        throw new Error(`Answer required for question ${question.id}`);
+      }
+
+      this.ensureAnswerValueValid(question, answer.value);
+
+      normalizedAnswers.push({
+        questionId: question.id,
+        type: question.type,
+        value: answer.value ?? null,
+      });
+    }
+
+    template.questions
+      .filter((question) => question.required)
+      .forEach((question) => {
+        const exists = normalizedAnswers.some(
+          (answer) => answer.questionId === question.id,
+        );
+        if (!exists) {
+          throw new Error(`Missing answer for question ${question.id}`);
+        }
+      });
+
+    return normalizedAnswers;
+  }
+
+  private ensureAnswerValueValid(
+    question: ServiceEntrySurveyQuestion,
+    value: string | number | boolean | null | undefined,
+  ): void {
+    if (value === undefined || value === null) {
+      return;
+    }
+
+    switch (question.type) {
+      case ServiceEntrySurveyQuestionType.RATING: {
+        if (typeof value !== 'string') {
+          throw new Error(`Invalid rating value for question ${question.id}`);
+        }
+
+        const allowed = question.options ?? [];
+        if (allowed.length > 0) {
+          const match = allowed.some(
+            (option) => option.toString() === value.toString(),
+          );
+          if (!match) {
+            throw new Error(
+              `Invalid rating option for question ${question.id}`,
+            );
+          }
+        }
+        break;
+      }
+      case ServiceEntrySurveyQuestionType.TEXT: {
+        if (typeof value !== 'string') {
+          throw new Error(`Invalid text value for question ${question.id}`);
+        }
+        break;
+      }
+      default: {
+        const validTypes = ['string', 'number', 'boolean'];
+        if (!validTypes.includes(typeof value)) {
+          throw new Error(
+            `Unsupported answer type for question ${question.id}`,
+          );
+        }
+      }
+    }
   }
 }

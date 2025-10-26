@@ -19,9 +19,7 @@ export interface FindServiceEntriesResult {
   total: number;
 }
 
-export interface IServiceEntryRepository {
-  create(entry: ServiceEntry): Promise<{ data: ServiceEntry | null }>;
-  update(entry: ServiceEntry): Promise<{ data: ServiceEntry | null }>;
+export interface IServiceEntryReadRepository {
   findById(id: string): Promise<{ data: ServiceEntry | null }>;
   findAll(params: FindServiceEntriesParams): Promise<FindServiceEntriesResult>;
   findByServiceOrderIdentifier(
@@ -29,4 +27,6 @@ export interface IServiceEntryRepository {
   ): Promise<{ data: ServiceEntry | null }>;
 }
 
-export const IServiceEntryRepositoryToken = Symbol('IServiceEntryRepository');
+export const IServiceEntryReadRepositoryToken = Symbol(
+  'IServiceEntryReadRepository',
+);

@@ -4,23 +4,28 @@ import { ServiceEntryMapper } from '@application/mappers';
 import { ServiceEntryStatus } from '@domain/entities';
 import { ServiceEntryViewDto } from '@application/dto';
 import {
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IFileReadRepository,
+  IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
+import { buildFilesMetadataForEntry } from '@application/utils';
 
 @Injectable()
 export class GetServiceEntryByIdUseCase {
   constructor(
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly repository: IServiceEntryRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IFileReadRepositoryToken)
+    private readonly fileReadRepository: IFileReadRepository,
   ) {}
 
   async execute(id: string): Promise<ServiceEntryViewDto> {
-    const { data } = await this.repository.findById(id);
+    const { data } = await this.serviceEntryReadRepository.findById(id);
 
     if (!data) {
       throw EntityNotFoundException.create(
@@ -36,6 +41,11 @@ export class GetServiceEntryByIdUseCase {
       );
     }
 
-    return ServiceEntryMapper.toViewDto(data);
+    const filesMetadata = await buildFilesMetadataForEntry({
+      entry: data,
+      fileReadRepository: this.fileReadRepository,
+    });
+
+    return ServiceEntryMapper.toViewDto(data, filesMetadata);
   }
 }

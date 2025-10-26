@@ -56,6 +56,12 @@ export class ServiceEntryDocument extends Document {
   @Prop({ type: String, required: false, default: null })
   survey_access_id?: string | null;
 
+  @Prop({ type: String, required: false, default: null })
+  survey_template_id?: string | null;
+
+  @Prop({ type: Number, required: false, default: null })
+  survey_template_version?: number | null;
+
   @Prop()
   createdAt?: Date;
 

@@ -1,4 +1,8 @@
-import { ServiceEntrySurvey } from '@domain/entities';
+import {
+  ServiceEntrySurvey,
+  ServiceEntrySurveyAnswer,
+  ServiceEntrySurveyQuestionType,
+} from '@domain/entities';
 import { ServiceEntrySurveyDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseServiceEntrySurveyMapper {
@@ -7,15 +11,22 @@ export class MongooseServiceEntrySurveyMapper {
   ): ServiceEntrySurvey | null {
     if (!document) return null;
 
+    const answers: ServiceEntrySurveyAnswer[] = document.answers.map(
+      (answer) => ({
+        questionId: answer.question_id,
+        type: answer.type,
+        value: answer.value ?? null,
+      }),
+    );
+
     return new ServiceEntrySurvey({
       id: document.service_entry_survey_id,
       serviceEntryId: document.service_entry_id,
       accessId: document.access_id,
       tokenHash: document.token_hash,
-      staffTreatment: document.staff_treatment,
-      responseTime: document.response_time,
-      appearanceAttitude: document.appearance_attitude,
-      documentationDelivery: document.documentation_delivery,
+      templateId: document.template_id,
+      templateVersion: document.template_version,
+      answers,
       observations: document.observations ?? null,
       submittedAt: document.createdAt ?? undefined,
       updatedAt: document.updatedAt ?? undefined,
@@ -28,10 +39,13 @@ export class MongooseServiceEntrySurveyMapper {
       service_entry_id: survey.serviceEntryId,
       access_id: survey.accessId,
       token_hash: survey.tokenHash,
-      staff_treatment: survey.staffTreatment,
-      response_time: survey.responseTime,
-      appearance_attitude: survey.appearanceAttitude,
-      documentation_delivery: survey.documentationDelivery,
+      template_id: survey.templateId,
+      template_version: survey.templateVersion,
+      answers: survey.answers.map((answer) => ({
+        question_id: answer.questionId,
+        value: answer.value ?? null,
+        type: answer.type as ServiceEntrySurveyQuestionType,
+      })),
       observations: survey.observations,
     };
   }

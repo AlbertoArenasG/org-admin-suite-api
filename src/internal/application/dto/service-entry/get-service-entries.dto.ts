@@ -4,6 +4,17 @@ import {
 } from '@application/dto/shared';
 import { ServiceEntryCategory, ServiceEntryStatus } from '@domain/entities';
 
+export interface ServiceEntryFileDescriptorDto {
+  fileId: string;
+  originalName: string;
+  extension: string;
+}
+
+export interface ServiceEntryFilesMetadataDto {
+  calibrationCertificate: ServiceEntryFileDescriptorDto | null;
+  attachments: ServiceEntryFileDescriptorDto[];
+}
+
 export interface ServiceEntryViewDto {
   id: string;
   companyName: string;
@@ -15,8 +26,11 @@ export interface ServiceEntryViewDto {
   attachmentFileIds: string[];
   status: ServiceEntryStatus;
   surveyAccessId: string | null;
+  surveyTemplateId: string | null;
+  surveyTemplateVersion: number | null;
   createdAt: Date;
   updatedAt?: Date;
+  filesMetadata: ServiceEntryFilesMetadataDto;
 }
 
 export interface GetServiceEntriesDto extends PaginationParamsDto {

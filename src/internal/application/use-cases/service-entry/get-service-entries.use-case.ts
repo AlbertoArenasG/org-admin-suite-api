@@ -6,16 +6,21 @@ import {
 } from '@application/dto';
 import {
   FindServiceEntriesParams,
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IFileReadRepository,
+  IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
 import { ServiceEntryMapper } from '@application/mappers';
+import { buildFilesMetadataForEntries } from '@application/utils';
 
 @Injectable()
 export class GetServiceEntriesUseCase {
   constructor(
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly repository: IServiceEntryRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IFileReadRepositoryToken)
+    private readonly fileReadRepository: IFileReadRepository,
   ) {}
 
   async execute(
@@ -28,10 +33,16 @@ export class GetServiceEntriesUseCase {
       sorts: input.sorts,
     };
 
-    const { data, total } = await this.repository.findAll(params);
+    const { data, total } =
+      await this.serviceEntryReadRepository.findAll(params);
+
+    const metadataMap = await buildFilesMetadataForEntries({
+      entries: data,
+      fileReadRepository: this.fileReadRepository,
+    });
 
     return {
-      items: ServiceEntryMapper.toCollection(data),
+      items: ServiceEntryMapper.toCollection(data, metadataMap),
       total,
       page: input.page,
       perPage: input.perPage,

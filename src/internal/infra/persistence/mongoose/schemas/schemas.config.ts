@@ -25,4 +25,8 @@ export const configSchemas = [
     name: schemas.ServiceEntrySurveyDocument.name,
     schema: schemas.ServiceEntrySurveySchema,
   },
+  {
+    name: schemas.ServiceEntrySurveyTemplateDocument.name,
+    schema: schemas.ServiceEntrySurveyTemplateSchema,
+  },
 ];

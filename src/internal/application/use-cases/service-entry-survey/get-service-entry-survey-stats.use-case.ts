@@ -5,74 +5,175 @@ import {
   ServiceEntrySurveyStatsViewDto,
 } from '@application/dto';
 import {
-  IServiceEntrySurveyRepository,
-  IServiceEntrySurveyRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
+  IServiceEntrySurveyTemplateReadRepository,
+  IServiceEntrySurveyTemplateReadRepositoryToken,
 } from '@domain/ports/repositories';
-import { ServiceEntrySurveyRating } from '@domain/entities';
-
-const ratingWeights: Record<ServiceEntrySurveyRating, number> = {
-  [ServiceEntrySurveyRating.EXCELLENT]: 5,
-  [ServiceEntrySurveyRating.VERY_GOOD]: 4,
-  [ServiceEntrySurveyRating.GOOD]: 3,
-  [ServiceEntrySurveyRating.REGULAR]: 2,
-  [ServiceEntrySurveyRating.BAD]: 1,
-};
+import {
+  ServiceEntrySurveyQuestionType,
+  ServiceEntrySurveyTemplate,
+} from '@domain/entities';
 
 @Injectable()
 export class GetServiceEntrySurveyStatsUseCase {
   constructor(
-    @Inject(IServiceEntrySurveyRepositoryToken)
-    private readonly surveyRepository: IServiceEntrySurveyRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
+    @Inject(IServiceEntrySurveyTemplateReadRepositoryToken)
+    private readonly templateReadRepository: IServiceEntrySurveyTemplateReadRepository,
   ) {}
 
   async execute(
     input: GetServiceEntrySurveyStatsDto,
   ): Promise<ServiceEntrySurveyStatsViewDto> {
-    const { data } = await this.surveyRepository.findAll({
+    const { data } = await this.surveyReadRepository.findAll({
       from: input.from ?? null,
       to: input.to ?? null,
       serviceEntryIds: input.serviceEntryIds,
     });
 
-    const ratingDistribution: Record<ServiceEntrySurveyRating, number> = {
-      [ServiceEntrySurveyRating.EXCELLENT]: 0,
-      [ServiceEntrySurveyRating.VERY_GOOD]: 0,
-      [ServiceEntrySurveyRating.GOOD]: 0,
-      [ServiceEntrySurveyRating.REGULAR]: 0,
-      [ServiceEntrySurveyRating.BAD]: 0,
-    };
-
-    let staffTotal = 0;
-    let responseTotal = 0;
-    let appearanceTotal = 0;
-    let documentationTotal = 0;
-
-    for (const survey of data) {
-      staffTotal += ratingWeights[survey.staffTreatment];
-      responseTotal += ratingWeights[survey.responseTime];
-      appearanceTotal += ratingWeights[survey.appearanceAttitude];
-      documentationTotal += ratingWeights[survey.documentationDelivery];
-
-      ratingDistribution[survey.staffTreatment] += 1;
-      ratingDistribution[survey.responseTime] += 1;
-      ratingDistribution[survey.appearanceAttitude] += 1;
-      ratingDistribution[survey.documentationDelivery] += 1;
-    }
-
     const totalResponses = data.length;
 
-    const safeAverage = (total: number) =>
-      totalResponses > 0 ? Number((total / totalResponses).toFixed(2)) : null;
+    const templateCache = new Map<string, ServiceEntrySurveyTemplate | null>();
+    const templateKeys = Array.from(
+      new Set(
+        data
+          .filter(
+            (survey) => !!survey.templateId && survey.templateVersion !== null,
+          )
+          .map((survey) => `${survey.templateId}:${survey.templateVersion}`),
+      ),
+    );
+
+    await Promise.all(
+      templateKeys.map(async (key) => {
+        if (templateCache.has(key)) return;
+        const [templateId, rawVersion] = key.split(':');
+        const version = Number(rawVersion);
+        const { data: template } =
+          await this.templateReadRepository.findByIdAndVersion(
+            templateId,
+            version,
+          );
+        templateCache.set(key, template);
+      }),
+    );
+
+    const questionStats = new Map<
+      string,
+      {
+        templateId: string;
+        templateVersion: number;
+        questionId: string;
+        questionText: string;
+        type: ServiceEntrySurveyQuestionType;
+        responseCount: number;
+        ratingTotal?: number;
+        ratingCount?: number;
+        ratingDistribution?: Record<string, number>;
+        textResponses?: Array<string | number | boolean | null>;
+      }
+    >();
+
+    for (const survey of data) {
+      if (!survey.templateId || survey.templateVersion === null) {
+        continue;
+      }
+
+      const templateKey = `${survey.templateId}:${survey.templateVersion}`;
+      const template = templateCache.get(templateKey);
+      if (!template) continue;
+
+      const questionMap = new Map(
+        template.questions.map((question) => [question.id, question]),
+      );
+
+      for (const answer of survey.answers) {
+        const question = questionMap.get(answer.questionId);
+        if (!question) continue;
+
+        const statKey = `${template.id}:${template.version}:${question.id}`;
+        let stats = questionStats.get(statKey);
+
+        if (!stats) {
+          stats = {
+            templateId: template.id,
+            templateVersion: template.version,
+            questionId: question.id,
+            questionText: question.text,
+            type: question.type,
+            responseCount: 0,
+          };
+          questionStats.set(statKey, stats);
+        }
+
+        stats.responseCount += 1;
+
+        if (question.type === ServiceEntrySurveyQuestionType.RATING) {
+          if (!stats.ratingDistribution) {
+            stats.ratingDistribution = {};
+          }
+
+          const value = typeof answer.value === 'string' ? answer.value : null;
+
+          if (!value) continue;
+
+          stats.ratingDistribution[value] =
+            (stats.ratingDistribution[value] ?? 0) + 1;
+
+          const optionIndex = question.options
+            ? question.options.findIndex(
+                (option) => option.toString() === value.toString(),
+              )
+            : -1;
+
+          if (optionIndex >= 0) {
+            const numericValue = optionIndex + 1;
+            stats.ratingTotal = (stats.ratingTotal ?? 0) + numericValue;
+            stats.ratingCount = (stats.ratingCount ?? 0) + 1;
+          }
+        } else if (question.type === ServiceEntrySurveyQuestionType.TEXT) {
+          if (!stats.textResponses) {
+            stats.textResponses = [];
+          }
+          stats.textResponses.push(answer.value ?? null);
+        } else {
+          if (!stats.textResponses) {
+            stats.textResponses = [];
+          }
+          stats.textResponses.push(answer.value ?? null);
+        }
+      }
+    }
+
+    const questionStatsArray = Array.from(questionStats.values()).map(
+      (stats) => ({
+        templateId: stats.templateId,
+        templateVersion: stats.templateVersion,
+        questionId: stats.questionId,
+        questionText: stats.questionText,
+        type: stats.type,
+        responseCount: stats.responseCount,
+        averageRating:
+          stats.type === ServiceEntrySurveyQuestionType.RATING &&
+          stats.ratingCount
+            ? Number(((stats.ratingTotal ?? 0) / stats.ratingCount).toFixed(2))
+            : undefined,
+        ratingDistribution:
+          stats.type === ServiceEntrySurveyQuestionType.RATING
+            ? (stats.ratingDistribution ?? {})
+            : undefined,
+        responses:
+          stats.type !== ServiceEntrySurveyQuestionType.RATING
+            ? (stats.textResponses ?? [])
+            : undefined,
+      }),
+    );
 
     return {
       totalResponses,
-      averageRatings: {
-        staffTreatment: safeAverage(staffTotal),
-        responseTime: safeAverage(responseTotal),
-        appearanceAttitude: safeAverage(appearanceTotal),
-        documentationDelivery: safeAverage(documentationTotal),
-      },
-      ratingDistribution,
+      questionStats: questionStatsArray,
     };
   }
 }

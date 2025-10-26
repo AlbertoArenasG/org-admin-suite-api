@@ -18,6 +18,8 @@ export class MongooseServiceEntryMapper {
       attachmentFileIds: document.attachment_file_ids ?? [],
       status: document.status ?? ServiceEntryStatus.ACTIVE,
       surveyAccessId: document.survey_access_id ?? null,
+      surveyTemplateId: document.survey_template_id ?? null,
+      surveyTemplateVersion: document.survey_template_version ?? null,
       createdAt: document.createdAt ?? undefined,
       updatedAt: document.updatedAt ?? undefined,
     });
@@ -35,6 +37,8 @@ export class MongooseServiceEntryMapper {
       attachment_file_ids: entry.attachmentFileIds,
       status: entry.status,
       survey_access_id: entry.surveyAccessId,
+      survey_template_id: entry.surveyTemplateId,
+      survey_template_version: entry.surveyTemplateVersion,
     };
   }
 }

@@ -60,6 +60,14 @@ export class ServiceEntryAccess extends Entity<ServiceEntryAccessProps> {
     this.touch();
   }
 
+  updateTokenHash(tokenHash: string): void {
+    this.props.tokenHash = tokenHash;
+    this.props.lastViewedAt = null;
+    this.props.downloadedAt = null;
+    this.props.downloadCount = 0;
+    this.touch();
+  }
+
   private touch(): void {
     this.props.updatedAt = new Date();
   }

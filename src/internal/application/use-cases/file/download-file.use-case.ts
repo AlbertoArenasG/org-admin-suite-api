@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { DownloadFileDto, DownloadFileResultDto } from '@application/dto';
 import {
-  IFileRepository,
-  IFileRepositoryToken,
+  IFileReadRepository,
+  IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   IFileStorageService,
@@ -17,14 +17,14 @@ import {
 @Injectable()
 export class DownloadFileUseCase {
   constructor(
-    @Inject(IFileRepositoryToken)
-    private readonly fileRepository: IFileRepository,
+    @Inject(IFileReadRepositoryToken)
+    private readonly fileReadRepository: IFileReadRepository,
     @Inject(IFileStorageServiceToken)
     private readonly fileStorageService: IFileStorageService,
   ) {}
 
   async execute(input: DownloadFileDto): Promise<DownloadFileResultDto> {
-    const { data } = await this.fileRepository.findById(input.fileId);
+    const { data } = await this.fileReadRepository.findById(input.fileId);
 
     if (!data) {
       throw EntityNotFoundException.create(EntityNotFoundExceptionCode.FILE, {

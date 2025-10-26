@@ -4,3 +4,4 @@ export * from './file.entity';
 export * from './service-entry.entity';
 export * from './service-entry-access.entity';
 export * from './service-entry-survey.entity';
+export * from './service-entry-survey-template.entity';

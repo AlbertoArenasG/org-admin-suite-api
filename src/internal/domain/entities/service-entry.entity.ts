@@ -23,6 +23,8 @@ export interface ServiceEntryProps {
   attachmentFileIds: string[];
   status?: ServiceEntryStatus;
   surveyAccessId?: string | null;
+  surveyTemplateId?: string | null;
+  surveyTemplateVersion?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -40,6 +42,10 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     if (!props.status) {
       props.status = ServiceEntryStatus.ACTIVE;
     }
+
+    props.surveyAccessId = props.surveyAccessId ?? null;
+    props.surveyTemplateId = props.surveyTemplateId ?? null;
+    props.surveyTemplateVersion = props.surveyTemplateVersion ?? null;
 
     super(props);
   }
@@ -92,6 +98,14 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     return this.props.updatedAt;
   }
 
+  get surveyTemplateId(): string | null {
+    return this.props.surveyTemplateId ?? null;
+  }
+
+  get surveyTemplateVersion(): number | null {
+    return this.props.surveyTemplateVersion ?? null;
+  }
+
   updateDetails(details: {
     companyName?: string;
     contactName?: string;
@@ -101,6 +115,8 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     calibrationCertificateFileId?: string;
     attachmentFileIds?: string[];
     surveyAccessId?: string | null;
+    surveyTemplateId?: string | null;
+    surveyTemplateVersion?: number | null;
   }): void {
     if (details.companyName !== undefined) {
       this.props.companyName = details.companyName;
@@ -131,8 +147,16 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
       this.props.attachmentFileIds = details.attachmentFileIds;
     }
 
-    if ('surveyAccessId' in details) {
+    if (details.surveyAccessId !== undefined) {
       this.props.surveyAccessId = details.surveyAccessId ?? null;
+    }
+
+    if (details.surveyTemplateId !== undefined) {
+      this.props.surveyTemplateId = details.surveyTemplateId ?? null;
+    }
+
+    if (details.surveyTemplateVersion !== undefined) {
+      this.props.surveyTemplateVersion = details.surveyTemplateVersion ?? null;
     }
 
     this.touch();

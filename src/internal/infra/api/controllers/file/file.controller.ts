@@ -100,7 +100,7 @@ export class FileController {
   }
 
   @Get(':fileId/download')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async download(
     @Param('fileId') fileId: string,

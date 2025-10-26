@@ -1,20 +1,33 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsIn,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { SubmitServiceEntrySurveyDto } from '@application/dto';
-import { ServiceEntrySurveyRating } from '@domain/entities';
+import { ServiceEntrySurveyQuestionType } from '@domain/entities';
+
+class SurveyAnswerRequestDto {
+  @IsString()
+  question_id!: string;
+
+  @IsIn(Object.values(ServiceEntrySurveyQuestionType))
+  type!: ServiceEntrySurveyQuestionType;
+
+  @IsOptional()
+  value?: string | number | boolean | null;
+}
 
 export class SubmitServiceEntrySurveyRequestDto {
-  @IsEnum(ServiceEntrySurveyRating)
-  staff_treatment!: ServiceEntrySurveyRating;
-
-  @IsEnum(ServiceEntrySurveyRating)
-  response_time!: ServiceEntrySurveyRating;
-
-  @IsEnum(ServiceEntrySurveyRating)
-  appearance_attitude!: ServiceEntrySurveyRating;
-
-  @IsEnum(ServiceEntrySurveyRating)
-  documentation_delivery!: ServiceEntrySurveyRating;
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => SurveyAnswerRequestDto)
+  answers!: SurveyAnswerRequestDto[];
 
   @IsOptional()
   @IsString()
@@ -23,10 +36,11 @@ export class SubmitServiceEntrySurveyRequestDto {
   toDomain(token: string): SubmitServiceEntrySurveyDto {
     return {
       token,
-      staffTreatment: this.staff_treatment,
-      responseTime: this.response_time,
-      appearanceAttitude: this.appearance_attitude,
-      documentationDelivery: this.documentation_delivery,
+      answers: this.answers.map((answer) => ({
+        questionId: answer.question_id,
+        type: answer.type,
+        value: answer.value ?? null,
+      })),
       observations: this.observations ?? null,
     };
   }

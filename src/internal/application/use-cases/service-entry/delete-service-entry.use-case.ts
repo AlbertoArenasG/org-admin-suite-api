@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntryWriteRepository,
+  IServiceEntryWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
@@ -13,12 +15,14 @@ import { ServiceEntryStatus } from '@domain/entities';
 @Injectable()
 export class DeleteServiceEntryUseCase {
   constructor(
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly repository: IServiceEntryRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IServiceEntryWriteRepositoryToken)
+    private readonly serviceEntryWriteRepository: IServiceEntryWriteRepository,
   ) {}
 
   async execute(id: string): Promise<void> {
-    const { data } = await this.repository.findById(id);
+    const { data } = await this.serviceEntryReadRepository.findById(id);
 
     if (!data || data.status === ServiceEntryStatus.DELETED) {
       throw EntityNotFoundException.create(
@@ -29,6 +33,6 @@ export class DeleteServiceEntryUseCase {
 
     data.markAsDeleted();
 
-    await this.repository.update(data);
+    await this.serviceEntryWriteRepository.update(data);
   }
 }

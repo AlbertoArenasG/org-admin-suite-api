@@ -6,4 +6,3 @@ export * from './user';
 export * from './user-registration-invitation';
 export * from './file';
 export * from './service-entry';
-export * from './service-entry-survey';

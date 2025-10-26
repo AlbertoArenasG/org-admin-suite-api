@@ -1,11 +1,12 @@
-import { ServiceEntrySurveyRating } from '@domain/entities';
+import { ServiceEntrySurveyQuestionType } from '@domain/entities';
 
 export interface SubmitServiceEntrySurveyDto {
   token: string;
-  staffTreatment: ServiceEntrySurveyRating;
-  responseTime: ServiceEntrySurveyRating;
-  appearanceAttitude: ServiceEntrySurveyRating;
-  documentationDelivery: ServiceEntrySurveyRating;
+  answers: Array<{
+    questionId: string;
+    type: ServiceEntrySurveyQuestionType;
+    value: string | number | boolean | null;
+  }>;
   observations?: string | null;
 }
 
@@ -13,10 +14,13 @@ export interface ServiceEntrySurveyViewDto {
   id: string;
   serviceEntryId: string;
   accessId: string;
-  staffTreatment: ServiceEntrySurveyRating;
-  responseTime: ServiceEntrySurveyRating;
-  appearanceAttitude: ServiceEntrySurveyRating;
-  documentationDelivery: ServiceEntrySurveyRating;
+  templateId: string;
+  templateVersion: number;
+  answers: Array<{
+    questionId: string;
+    type: ServiceEntrySurveyQuestionType;
+    value: string | number | boolean | null;
+  }>;
   observations: string | null;
   submittedAt: Date;
 }
@@ -27,13 +31,19 @@ export interface GetServiceEntrySurveyStatsDto {
   serviceEntryIds?: string[];
 }
 
+export interface ServiceEntrySurveyQuestionStatsViewDto {
+  templateId: string;
+  templateVersion: number;
+  questionId: string;
+  questionText: string;
+  type: ServiceEntrySurveyQuestionType;
+  responseCount: number;
+  averageRating?: number | null;
+  ratingDistribution?: Record<string, number>;
+  responses?: Array<string | number | boolean | null>;
+}
+
 export interface ServiceEntrySurveyStatsViewDto {
   totalResponses: number;
-  averageRatings: {
-    staffTreatment: number | null;
-    responseTime: number | null;
-    appearanceAttitude: number | null;
-    documentationDelivery: number | null;
-  };
-  ratingDistribution: Record<ServiceEntrySurveyRating, number>;
+  questionStats: ServiceEntrySurveyQuestionStatsViewDto[];
 }

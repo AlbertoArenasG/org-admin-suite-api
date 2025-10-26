@@ -1,12 +1,11 @@
 import { Entity } from '@src/internal/core/entities/entity';
 import { genId } from '@src/common/utils';
+import { ServiceEntrySurveyQuestionType } from './service-entry-survey-template.entity';
 
-export enum ServiceEntrySurveyRating {
-  EXCELLENT = 'EXCELLENT',
-  VERY_GOOD = 'VERY_GOOD',
-  GOOD = 'GOOD',
-  REGULAR = 'REGULAR',
-  BAD = 'BAD',
+export interface ServiceEntrySurveyAnswer {
+  questionId: string;
+  type: ServiceEntrySurveyQuestionType;
+  value: string | number | boolean | null;
 }
 
 export interface ServiceEntrySurveyProps {
@@ -14,10 +13,9 @@ export interface ServiceEntrySurveyProps {
   serviceEntryId: string;
   accessId: string;
   tokenHash: string;
-  staffTreatment: ServiceEntrySurveyRating;
-  responseTime: ServiceEntrySurveyRating;
-  appearanceAttitude: ServiceEntrySurveyRating;
-  documentationDelivery: ServiceEntrySurveyRating;
+  templateId: string;
+  templateVersion: number;
+  answers: ServiceEntrySurveyAnswer[];
   observations?: string | null;
   submittedAt?: Date;
   updatedAt?: Date;
@@ -51,20 +49,16 @@ export class ServiceEntrySurvey extends Entity<ServiceEntrySurveyProps> {
     return this.props.tokenHash;
   }
 
-  get staffTreatment(): ServiceEntrySurveyRating {
-    return this.props.staffTreatment;
+  get templateId(): string {
+    return this.props.templateId;
   }
 
-  get responseTime(): ServiceEntrySurveyRating {
-    return this.props.responseTime;
+  get templateVersion(): number {
+    return this.props.templateVersion;
   }
 
-  get appearanceAttitude(): ServiceEntrySurveyRating {
-    return this.props.appearanceAttitude;
-  }
-
-  get documentationDelivery(): ServiceEntrySurveyRating {
-    return this.props.documentationDelivery;
+  get answers(): ServiceEntrySurveyAnswer[] {
+    return this.props.answers;
   }
 
   get observations(): string | null {

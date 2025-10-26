@@ -9,6 +9,7 @@ export const envSchema = z.object({
   USER_REGISTRATION_BASE_INVITATION_URL: z.string(),
   USER_PASSWORD_RESET_URL: z.string(),
   SERVICE_ENTRY_PUBLIC_BASE_URL: z.string(),
+  API_BASE_URL: z.string(),
   MONGO_URI: z.string().url(),
   AWS_REGION: z.string(),
   AWS_ACCESS_KEY_ID: z.string(),

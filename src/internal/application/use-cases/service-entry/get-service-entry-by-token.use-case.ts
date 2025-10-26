@@ -3,10 +3,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ServiceEntryMapper } from '@application/mappers';
 import { ServiceEntryViewDto } from '@application/dto';
 import {
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
-  IServiceEntryAccessRepository,
-  IServiceEntryAccessRepositoryToken,
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntryAccessReadRepository,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntryAccessWriteRepository,
+  IServiceEntryAccessWriteRepositoryToken,
+  IFileReadRepository,
+  IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
@@ -14,20 +18,25 @@ import {
 } from '@domain/exceptions';
 import { ServiceEntryStatus } from '@domain/entities';
 import { createHash } from 'crypto';
+import { buildFilesMetadataForEntry } from '@application/utils';
 
 @Injectable()
 export class GetServiceEntryByTokenUseCase {
   constructor(
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly repository: IServiceEntryRepository,
-    @Inject(IServiceEntryAccessRepositoryToken)
-    private readonly accessRepository: IServiceEntryAccessRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IServiceEntryAccessReadRepositoryToken)
+    private readonly accessReadRepository: IServiceEntryAccessReadRepository,
+    @Inject(IServiceEntryAccessWriteRepositoryToken)
+    private readonly accessWriteRepository: IServiceEntryAccessWriteRepository,
+    @Inject(IFileReadRepositoryToken)
+    private readonly fileReadRepository: IFileReadRepository,
   ) {}
 
   async execute(token: string): Promise<ServiceEntryViewDto> {
     const tokenHash = createHash('sha256').update(token).digest('hex');
     const { data: access } =
-      await this.accessRepository.findByTokenHash(tokenHash);
+      await this.accessReadRepository.findByTokenHash(tokenHash);
 
     if (!access) {
       throw EntityNotFoundException.create(
@@ -36,7 +45,7 @@ export class GetServiceEntryByTokenUseCase {
       );
     }
 
-    const { data: entry } = await this.repository.findById(
+    const { data: entry } = await this.serviceEntryReadRepository.findById(
       access.serviceEntryId,
     );
 
@@ -48,8 +57,13 @@ export class GetServiceEntryByTokenUseCase {
     }
 
     access.markViewed();
-    await this.accessRepository.update(access);
+    await this.accessWriteRepository.update(access);
 
-    return ServiceEntryMapper.toViewDto(entry);
+    const filesMetadata = await buildFilesMetadataForEntry({
+      entry,
+      fileReadRepository: this.fileReadRepository,
+    });
+
+    return ServiceEntryMapper.toViewDto(entry, filesMetadata);
   }
 }

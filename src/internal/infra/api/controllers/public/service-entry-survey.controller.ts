@@ -12,12 +12,14 @@ import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { SubmitServiceEntrySurveyRequestDto } from '@infra/api/dto/service-entry-survey';
 import { SubmitServiceEntrySurveyCommandAdapter } from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
+import { ServiceEntrySurveyPresenter } from '@infra/api/presenters/service-entry';
 
 @Controller('v1/public/service-entry')
 export class ServiceEntrySurveyPublicController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly successMsgService: SuccessMessageService,
+    private readonly presenter: ServiceEntrySurveyPresenter,
   ) {}
 
   @Post(':token/survey')
@@ -30,10 +32,11 @@ export class ServiceEntrySurveyPublicController {
       body.toDomain(token),
     );
     const result = await this.commandBus.execute(command);
+    const data = this.presenter.toSurveyResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
-      .withData(result)
+      .withData(data)
       .withStatus(HttpStatus.CREATED)
       .build();
   }

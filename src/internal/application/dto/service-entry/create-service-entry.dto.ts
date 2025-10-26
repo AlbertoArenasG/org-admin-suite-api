@@ -1,4 +1,5 @@
 import { ServiceEntryCategory, ServiceEntryStatus } from '@domain/entities';
+import { ServiceEntryFilesMetadataDto } from './get-service-entries.dto';
 
 export interface CreateServiceEntryDto {
   companyName: string;
@@ -22,5 +23,8 @@ export interface CreateServiceEntryResultDto {
   status: ServiceEntryStatus;
   publicAccessToken: string;
   surveyAccessId: string | null;
+  surveyTemplateId: string | null;
+  surveyTemplateVersion: number | null;
   createdAt: Date;
+  filesMetadata: ServiceEntryFilesMetadataDto;
 }

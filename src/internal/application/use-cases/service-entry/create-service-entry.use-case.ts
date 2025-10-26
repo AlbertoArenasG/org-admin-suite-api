@@ -5,12 +5,22 @@ import {
   CreateServiceEntryDto,
   CreateServiceEntryResultDto,
 } from '@application/dto';
-import { ServiceEntry, ServiceEntryAccess } from '@domain/entities';
 import {
-  IServiceEntryRepository,
-  IServiceEntryRepositoryToken,
-  IServiceEntryAccessRepository,
-  IServiceEntryAccessRepositoryToken,
+  ServiceEntry,
+  ServiceEntryAccess,
+  ServiceEntrySurveyTemplate,
+} from '@domain/entities';
+import {
+  IServiceEntryReadRepository,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntryWriteRepository,
+  IServiceEntryWriteRepositoryToken,
+  IServiceEntryAccessWriteRepository,
+  IServiceEntryAccessWriteRepositoryToken,
+  IServiceEntrySurveyTemplateReadRepository,
+  IServiceEntrySurveyTemplateReadRepositoryToken,
+  IFileReadRepository,
+  IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityAlreadyExistsException,
@@ -20,14 +30,21 @@ import { ServiceEntryMapper } from '@application/mappers';
 import { genId } from '@src/common/utils';
 import { ServiceEntryNotifierService } from '@application/services/notification';
 import { EnvService } from '@infra/env';
+import { buildFilesMetadataForEntry } from '@application/utils';
 
 @Injectable()
 export class CreateServiceEntryUseCase {
   constructor(
-    @Inject(IServiceEntryRepositoryToken)
-    private readonly repository: IServiceEntryRepository,
-    @Inject(IServiceEntryAccessRepositoryToken)
-    private readonly accessRepository: IServiceEntryAccessRepository,
+    @Inject(IServiceEntryReadRepositoryToken)
+    private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
+    @Inject(IServiceEntryWriteRepositoryToken)
+    private readonly serviceEntryWriteRepository: IServiceEntryWriteRepository,
+    @Inject(IServiceEntryAccessWriteRepositoryToken)
+    private readonly serviceEntryAccessWriteRepository: IServiceEntryAccessWriteRepository,
+    @Inject(IServiceEntrySurveyTemplateReadRepositoryToken)
+    private readonly templateReadRepository: IServiceEntrySurveyTemplateReadRepository,
+    @Inject(IFileReadRepositoryToken)
+    private readonly fileReadRepository: IFileReadRepository,
     private readonly notifier: ServiceEntryNotifierService,
     private readonly envService: EnvService,
   ) {}
@@ -37,6 +54,8 @@ export class CreateServiceEntryUseCase {
   ): Promise<CreateServiceEntryResultDto> {
     await this.ensureOrderIdentifierUnique(input.serviceOrderIdentifier);
 
+    const template = await this.resolveTemplate(input.category);
+
     const entry = new ServiceEntry({
       companyName: input.companyName,
       contactName: input.contactName,
@@ -45,10 +64,12 @@ export class CreateServiceEntryUseCase {
       category: input.category,
       calibrationCertificateFileId: input.calibrationCertificateFileId,
       attachmentFileIds: input.attachmentFileIds ?? [],
+      surveyTemplateId: template?.id ?? null,
+      surveyTemplateVersion: template?.version ?? null,
       createdAt: new Date(),
     });
 
-    const { data } = await this.repository.create(entry);
+    const { data } = await this.serviceEntryWriteRepository.create(entry);
 
     if (!data) {
       throw new Error('Failed to create service entry');
@@ -63,22 +84,33 @@ export class CreateServiceEntryUseCase {
       createdAt: new Date(),
     });
 
-    const accessResult = await this.accessRepository.create(access);
+    const accessResult =
+      await this.serviceEntryAccessWriteRepository.create(access);
     const publicToken = rawToken;
     data.updateDetails({
       surveyAccessId: accessResult.data?.id ?? access.id,
     });
-    await this.repository.update(data);
+    await this.serviceEntryWriteRepository.update(data);
 
     await this.notifyServiceEntryCreated(data, publicToken);
 
-    return ServiceEntryMapper.toCreateResultDto(data, publicToken);
+    const filesMetadata = await buildFilesMetadataForEntry({
+      entry: data,
+      fileReadRepository: this.fileReadRepository,
+    });
+
+    return ServiceEntryMapper.toCreateResultDto(
+      data,
+      publicToken,
+      filesMetadata,
+    );
   }
 
   private async ensureOrderIdentifierUnique(serviceOrderIdentifier: string) {
-    const { data } = await this.repository.findByServiceOrderIdentifier(
-      serviceOrderIdentifier,
-    );
+    const { data } =
+      await this.serviceEntryReadRepository.findByServiceOrderIdentifier(
+        serviceOrderIdentifier,
+      );
 
     if (data) {
       throw EntityAlreadyExistsException.create(
@@ -111,5 +143,14 @@ export class CreateServiceEntryUseCase {
       serviceOrderIdentifier: entry.serviceOrderIdentifier,
       publicUrl,
     });
+  }
+
+  private async resolveTemplate(
+    category: string,
+  ): Promise<ServiceEntrySurveyTemplate | null> {
+    const { data } = await this.templateReadRepository.findActiveByCategory(
+      category ?? null,
+    );
+    return data;
   }
 }
