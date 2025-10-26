@@ -14,11 +14,7 @@ export class GetUserRolesUseCase {
   }
 
   private resolveRoles(actorRole: UserRole): UserRole[] {
-    const baseRoles: UserRole[] = [
-      UserRole.ADMIN,
-      UserRole.STAFF,
-      UserRole.CUSTOMER,
-    ];
+    const baseRoles: UserRole[] = [UserRole.ADMIN, UserRole.STAFF];
 
     if (this.isMasterRole(actorRole)) {
       return [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF, ...baseRoles];

@@ -22,6 +22,7 @@ import {
 import {
   ServiceEntryPresenter,
   ServiceEntrySurveyPresenter,
+  ServiceEntryCategoryPresenter,
 } from '@infra/api/presenters/service-entry';
 import {
   CreateServiceEntryCommandAdapter,
@@ -52,6 +53,7 @@ export class ServiceEntryController {
     private readonly queryBus: QueryBus,
     private readonly presenter: ServiceEntryPresenter,
     private readonly surveyPresenter: ServiceEntrySurveyPresenter,
+    private readonly categoryPresenter: ServiceEntryCategoryPresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
 
@@ -109,6 +111,23 @@ export class ServiceEntryController {
       GetServiceEntrySurveyStatsQuery.create(query.toDomain()),
     );
     const data = this.surveyPresenter.toSurveyStatsResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('categories')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getCategories(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
+    this.ensureAuthorized(currentUser.role);
+    const result = await this.queryBus.execute(
+      GetServiceCategoriesQuery.create(),
+    );
+    const data = this.categoryPresenter.toResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
