@@ -1,1 +1,2 @@
-export * from './file.repository';
+export * from './file-read.repository';
+export * from './file-write.repository';

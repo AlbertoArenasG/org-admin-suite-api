@@ -21,6 +21,10 @@ export interface ServiceEntryProps {
   category: ServiceEntryCategory;
   calibrationCertificateFileId: string;
   attachmentFileIds: string[];
+  status?: ServiceEntryStatus;
+  surveyAccessId?: string | null;
+  surveyTemplateId?: string | null;
+  surveyTemplateVersion?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -34,6 +38,14 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     if (!props.attachmentFileIds) {
       props.attachmentFileIds = [];
     }
+
+    if (!props.status) {
+      props.status = ServiceEntryStatus.ACTIVE;
+    }
+
+    props.surveyAccessId = props.surveyAccessId ?? null;
+    props.surveyTemplateId = props.surveyTemplateId ?? null;
+    props.surveyTemplateVersion = props.surveyTemplateVersion ?? null;
 
     super(props);
   }
@@ -70,6 +82,14 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     return this.props.attachmentFileIds;
   }
 
+  get status(): ServiceEntryStatus {
+    return this.props.status ?? ServiceEntryStatus.ACTIVE;
+  }
+
+  get surveyAccessId(): string | null {
+    return this.props.surveyAccessId ?? null;
+  }
+
   get createdAt(): Date | undefined {
     return this.props.createdAt;
   }
@@ -77,4 +97,82 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
   get updatedAt(): Date | undefined {
     return this.props.updatedAt;
   }
+
+  get surveyTemplateId(): string | null {
+    return this.props.surveyTemplateId ?? null;
+  }
+
+  get surveyTemplateVersion(): number | null {
+    return this.props.surveyTemplateVersion ?? null;
+  }
+
+  updateDetails(details: {
+    companyName?: string;
+    contactName?: string;
+    contactEmail?: string;
+    serviceOrderIdentifier?: string;
+    category?: ServiceEntryCategory;
+    calibrationCertificateFileId?: string;
+    attachmentFileIds?: string[];
+    surveyAccessId?: string | null;
+    surveyTemplateId?: string | null;
+    surveyTemplateVersion?: number | null;
+  }): void {
+    if (details.companyName !== undefined) {
+      this.props.companyName = details.companyName;
+    }
+
+    if (details.contactName !== undefined) {
+      this.props.contactName = details.contactName;
+    }
+
+    if (details.contactEmail !== undefined) {
+      this.props.contactEmail = details.contactEmail;
+    }
+
+    if (details.serviceOrderIdentifier !== undefined) {
+      this.props.serviceOrderIdentifier = details.serviceOrderIdentifier;
+    }
+
+    if (details.category !== undefined) {
+      this.props.category = details.category;
+    }
+
+    if (details.calibrationCertificateFileId !== undefined) {
+      this.props.calibrationCertificateFileId =
+        details.calibrationCertificateFileId;
+    }
+
+    if (details.attachmentFileIds !== undefined) {
+      this.props.attachmentFileIds = details.attachmentFileIds;
+    }
+
+    if (details.surveyAccessId !== undefined) {
+      this.props.surveyAccessId = details.surveyAccessId ?? null;
+    }
+
+    if (details.surveyTemplateId !== undefined) {
+      this.props.surveyTemplateId = details.surveyTemplateId ?? null;
+    }
+
+    if (details.surveyTemplateVersion !== undefined) {
+      this.props.surveyTemplateVersion = details.surveyTemplateVersion ?? null;
+    }
+
+    this.touch();
+  }
+
+  markAsDeleted(): void {
+    this.props.status = ServiceEntryStatus.DELETED;
+    this.touch();
+  }
+
+  private touch(): void {
+    this.props.updatedAt = new Date();
+  }
+}
+
+export enum ServiceEntryStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
 }

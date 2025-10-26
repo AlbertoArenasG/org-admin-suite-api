@@ -1,4 +1,4 @@
-import { ServiceEntry } from '@domain/entities';
+import { ServiceEntry, ServiceEntryStatus } from '@domain/entities';
 import { ServiceEntryDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseServiceEntryMapper {
@@ -16,6 +16,10 @@ export class MongooseServiceEntryMapper {
       category: document.category,
       calibrationCertificateFileId: document.calibration_certificate_file_id,
       attachmentFileIds: document.attachment_file_ids ?? [],
+      status: document.status ?? ServiceEntryStatus.ACTIVE,
+      surveyAccessId: document.survey_access_id ?? null,
+      surveyTemplateId: document.survey_template_id ?? null,
+      surveyTemplateVersion: document.survey_template_version ?? null,
       createdAt: document.createdAt ?? undefined,
       updatedAt: document.updatedAt ?? undefined,
     });
@@ -31,6 +35,10 @@ export class MongooseServiceEntryMapper {
       category: entry.category,
       calibration_certificate_file_id: entry.calibrationCertificateFileId,
       attachment_file_ids: entry.attachmentFileIds,
+      status: entry.status,
+      survey_access_id: entry.surveyAccessId,
+      survey_template_id: entry.surveyTemplateId,
+      survey_template_version: entry.surveyTemplateVersion,
     };
   }
 }

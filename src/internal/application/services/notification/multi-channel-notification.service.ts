@@ -7,7 +7,10 @@ import {
   ISmsServiceToken,
 } from '@domain/ports/services';
 import { NotificationChannel } from '@src/internal/domain/entities';
-import { WelcomeUserNotificationEnvelopeDto } from '@application/dto/notification';
+import {
+  ServiceEntryCreatedNotificationDto,
+  WelcomeUserNotificationEnvelopeDto,
+} from '@application/dto/notification';
 
 @Injectable()
 export class MultiChannelNotificationService {
@@ -29,6 +32,17 @@ export class MultiChannelNotificationService {
     if (channels.includes(NotificationChannel.EMAIL)) tasks.push(sendEmailTask);
 
     if (channels.includes(NotificationChannel.SMS)) tasks.push(sendSmsTask);
+
+    await Promise.all(tasks);
+  }
+
+  async sendServiceEntryCreated(
+    payload: ServiceEntryCreatedNotificationDto,
+  ): Promise<void> {
+    const tasks: Promise<unknown>[] = [];
+
+    tasks.push(this.emailService.sendServiceEntryCreated(payload));
+    tasks.push(this.smsService.sendServiceEntryCreated(payload));
 
     await Promise.all(tasks);
   }

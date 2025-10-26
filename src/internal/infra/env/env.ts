@@ -4,10 +4,12 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'local', 'production'])
     .default('development'),
+  PORT: z.string().default('3000'),
   USER_WELCOME_BASE_URL: z.string(),
   USER_REGISTRATION_BASE_INVITATION_URL: z.string(),
   USER_PASSWORD_RESET_URL: z.string(),
-  PORT: z.string().default('3000'),
+  SERVICE_ENTRY_PUBLIC_BASE_URL: z.string(),
+  API_BASE_URL: z.string(),
   MONGO_URI: z.string().url(),
   AWS_REGION: z.string(),
   AWS_ACCESS_KEY_ID: z.string(),

@@ -39,6 +39,7 @@
   "ENTITY_NOT_FOUND": {
     "USER": "No se encontró el usuario",
     "USER_REGISTRATION_INVITATION": "No se encontró la invitación o ya fue utilizada",
-    "FILE": "No se encontró el archivo"
+    "FILE": "No se encontró el archivo",
+    "SERVICE_ENTRY": "No se encontró el servicio"
   }
 }

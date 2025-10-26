@@ -4,8 +4,8 @@ import { extname } from 'path';
 import { UploadFilesDto, UploadFilesResultDto } from '@application/dto';
 import { File } from '@domain/entities';
 import {
-  IFileRepository,
-  IFileRepositoryToken,
+  IFileWriteRepository,
+  IFileWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   IFileStorageService,
@@ -17,8 +17,8 @@ import { genId } from '@src/common/utils';
 @Injectable()
 export class UploadFilesUseCase {
   constructor(
-    @Inject(IFileRepositoryToken)
-    private readonly fileRepository: IFileRepository,
+    @Inject(IFileWriteRepositoryToken)
+    private readonly fileWriteRepository: IFileWriteRepository,
     @Inject(IFileStorageServiceToken)
     private readonly fileStorage: IFileStorageService,
   ) {}
@@ -52,7 +52,7 @@ export class UploadFilesUseCase {
         createdAt: new Date(),
       });
 
-      const { data } = await this.fileRepository.create(fileEntity);
+      const { data } = await this.fileWriteRepository.create(fileEntity);
       if (data) {
         uploadedFiles.push(data);
       }

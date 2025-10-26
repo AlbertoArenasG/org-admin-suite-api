@@ -3,8 +3,15 @@ import {
   MongooseUserRegistrationInvitationWriteRepositoryImpl,
   MongooseUserReadRepositoryImpl,
   MongooseUserWriteRepositoryImpl,
-  MongooseFileRepositoryImpl,
-  MongooseServiceEntryRepositoryImpl,
+  MongooseFileReadRepositoryImpl,
+  MongooseFileWriteRepositoryImpl,
+  MongooseServiceEntryReadRepositoryImpl,
+  MongooseServiceEntryWriteRepositoryImpl,
+  MongooseServiceEntryAccessReadRepositoryImpl,
+  MongooseServiceEntryAccessWriteRepositoryImpl,
+  MongooseServiceEntrySurveyReadRepositoryImpl,
+  MongooseServiceEntrySurveyWriteRepositoryImpl,
+  MongooseServiceEntrySurveyTemplateReadRepositoryImpl,
 } from '.';
 
 import {
@@ -12,8 +19,15 @@ import {
   IUserRegistrationInvitationWriteRepositoryToken,
   IUserReadRepositoryToken,
   IUserWriteRepositoryToken,
-  IFileRepositoryToken,
-  IServiceEntryRepositoryToken,
+  IFileReadRepositoryToken,
+  IFileWriteRepositoryToken,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntryWriteRepositoryToken,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntryAccessWriteRepositoryToken,
+  IServiceEntrySurveyReadRepositoryToken,
+  IServiceEntrySurveyWriteRepositoryToken,
+  IServiceEntrySurveyTemplateReadRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -34,12 +48,40 @@ export const MongooseRepositoriesConfig = [
     useClass: MongooseUserRegistrationInvitationWriteRepositoryImpl,
   },
   {
-    provide: IFileRepositoryToken,
-    useClass: MongooseFileRepositoryImpl,
+    provide: IFileReadRepositoryToken,
+    useClass: MongooseFileReadRepositoryImpl,
   },
   {
-    provide: IServiceEntryRepositoryToken,
-    useClass: MongooseServiceEntryRepositoryImpl,
+    provide: IFileWriteRepositoryToken,
+    useClass: MongooseFileWriteRepositoryImpl,
+  },
+  {
+    provide: IServiceEntryReadRepositoryToken,
+    useClass: MongooseServiceEntryReadRepositoryImpl,
+  },
+  {
+    provide: IServiceEntryWriteRepositoryToken,
+    useClass: MongooseServiceEntryWriteRepositoryImpl,
+  },
+  {
+    provide: IServiceEntryAccessReadRepositoryToken,
+    useClass: MongooseServiceEntryAccessReadRepositoryImpl,
+  },
+  {
+    provide: IServiceEntryAccessWriteRepositoryToken,
+    useClass: MongooseServiceEntryAccessWriteRepositoryImpl,
+  },
+  {
+    provide: IServiceEntrySurveyReadRepositoryToken,
+    useClass: MongooseServiceEntrySurveyReadRepositoryImpl,
+  },
+  {
+    provide: IServiceEntrySurveyWriteRepositoryToken,
+    useClass: MongooseServiceEntrySurveyWriteRepositoryImpl,
+  },
+  {
+    provide: IServiceEntrySurveyTemplateReadRepositoryToken,
+    useClass: MongooseServiceEntrySurveyTemplateReadRepositoryImpl,
   },
 ];
 
@@ -48,6 +90,13 @@ export const MongooseRepositoryTokens = [
   IUserWriteRepositoryToken,
   IUserRegistrationInvitationReadRepositoryToken,
   IUserRegistrationInvitationWriteRepositoryToken,
-  IFileRepositoryToken,
-  IServiceEntryRepositoryToken,
+  IFileReadRepositoryToken,
+  IFileWriteRepositoryToken,
+  IServiceEntryReadRepositoryToken,
+  IServiceEntryWriteRepositoryToken,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntryAccessWriteRepositoryToken,
+  IServiceEntrySurveyReadRepositoryToken,
+  IServiceEntrySurveyWriteRepositoryToken,
+  IServiceEntrySurveyTemplateReadRepositoryToken,
 ];

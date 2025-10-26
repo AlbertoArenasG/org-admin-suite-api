@@ -5,6 +5,7 @@ import { UserViewDto } from './create-user.dto';
 export interface UpdateUserDto {
   userId: string;
   actorRole: UserRole;
+  actorUserId: string;
   payload: {
     name?: string;
     lastname?: string;

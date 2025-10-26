@@ -1,1 +1,2 @@
-export * from './service-entry.repository';
+export * from './service-entry-read.repository';
+export * from './service-entry-write.repository';
