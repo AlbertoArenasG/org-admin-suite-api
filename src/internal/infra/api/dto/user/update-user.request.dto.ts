@@ -39,7 +39,11 @@ export class UpdateUserRequestDto {
   @IsIn(ALLOWED_STATUSES)
   status_id?: UserStatus;
 
-  toDomain(userId: string, actorRole: UserRole): UpdateUserDto {
+  toDomain(
+    userId: string,
+    actorRole: UserRole,
+    actorUserId: string,
+  ): UpdateUserDto {
     const payload: UpdateUserDto['payload'] = {};
 
     if (this.name !== undefined) {
@@ -74,6 +78,7 @@ export class UpdateUserRequestDto {
     return {
       userId,
       actorRole,
+      actorUserId,
       payload,
     };
   }

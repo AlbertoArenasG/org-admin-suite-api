@@ -29,7 +29,7 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
-    const { userId, actorRole, payload } = input;
+    const { userId, actorRole, actorUserId, payload } = input;
 
     const { data: user } = await this.userReadRepository.findById(userId);
 
@@ -39,14 +39,29 @@ export class UpdateUserUseCase {
       });
     }
 
-    UserRolePolicy.ensureHasHigherPrivileges(actorRole, user.role);
+    const isSelfUpdate = actorUserId === userId;
+
+    if (!isSelfUpdate) {
+      UserRolePolicy.ensureHasHigherPrivileges(actorRole, user.role);
+    }
 
     if (payload.role !== undefined) {
+      if (isSelfUpdate && payload.role !== user.role) {
+        throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+          field: 'role',
+        });
+      }
+
       UserRolePolicy.ensureCanManageRole(actorRole, payload.role);
       user.updateRole(payload.role);
     }
 
     if (payload.status !== undefined) {
+      if (isSelfUpdate && payload.status !== user.status) {
+        throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+          field: 'status',
+        });
+      }
       if (payload.status === UserStatus.DELETED) {
         throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
           field: 'status',
