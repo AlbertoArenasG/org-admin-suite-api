@@ -55,6 +55,17 @@ export class MongooseServiceEntrySurveyReadRepositoryImpl
       filter.service_entry_id = { $in: params.serviceEntryIds };
     }
 
+    if (params.templateId) {
+      filter.template_id = params.templateId;
+    }
+
+    if (
+      params.templateVersion !== undefined &&
+      params.templateVersion !== null
+    ) {
+      filter.template_version = params.templateVersion;
+    }
+
     const documents = await this.surveyModel.find(filter).exec();
 
     return {

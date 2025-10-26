@@ -19,7 +19,10 @@ import {
   GetServiceEntriesRequestDto,
   UpdateServiceEntryRequestDto,
 } from '@infra/api/dto/service-entry';
-import { ServiceEntryPresenter } from '@infra/api/presenters/service-entry';
+import {
+  ServiceEntryPresenter,
+  ServiceEntrySurveyPresenter,
+} from '@infra/api/presenters/service-entry';
 import {
   CreateServiceEntryCommandAdapter,
   UpdateServiceEntryCommandAdapter,
@@ -28,6 +31,7 @@ import {
 import {
   GetServiceEntriesQuery,
   GetServiceEntryByIdQuery,
+  GetServiceEntrySurveyStatsQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
@@ -35,6 +39,7 @@ import { CurrentUser } from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import { UserRole } from '@domain/entities';
 import { AuthorizationException } from '@domain/exceptions';
+import { GetServiceEntrySurveyStatsRequestDto } from '@infra/api/dto/service-entry-survey';
 
 @Controller('v1/services/service-entry')
 export class ServiceEntryController {
@@ -42,6 +47,7 @@ export class ServiceEntryController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly presenter: ServiceEntryPresenter,
+    private readonly surveyPresenter: ServiceEntrySurveyPresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
 
@@ -83,6 +89,26 @@ export class ServiceEntryController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('surveys/stats')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getSurveyStats(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Query() query: GetServiceEntrySurveyStatsRequestDto,
+  ) {
+    this.ensureAuthorized(currentUser.role);
+    const result = await this.queryBus.execute(
+      GetServiceEntrySurveyStatsQuery.create(query.toDomain()),
+    );
+    const data = this.surveyPresenter.toSurveyStatsResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }

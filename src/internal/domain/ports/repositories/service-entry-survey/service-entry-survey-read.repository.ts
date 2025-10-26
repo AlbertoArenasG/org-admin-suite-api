@@ -4,6 +4,8 @@ export interface FindServiceEntrySurveysParams {
   from?: Date | null;
   to?: Date | null;
   serviceEntryIds?: string[];
+  templateId?: string | null;
+  templateVersion?: number | null;
 }
 
 export interface IServiceEntrySurveyReadRepository {

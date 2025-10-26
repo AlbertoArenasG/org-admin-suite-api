@@ -11,6 +11,7 @@ import {
   IServiceEntrySurveyTemplateReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
+  ServiceEntrySurvey,
   ServiceEntrySurveyQuestionType,
   ServiceEntrySurveyTemplate,
 } from '@domain/entities';
@@ -31,43 +32,80 @@ export class GetServiceEntrySurveyStatsUseCase {
       from: input.from ?? null,
       to: input.to ?? null,
       serviceEntryIds: input.serviceEntryIds,
+      templateId: input.templateId ?? null,
+      templateVersion: input.templateVersion ?? null,
     });
 
     const totalResponses = data.length;
 
-    const templateCache = new Map<string, ServiceEntrySurveyTemplate | null>();
-    const templateKeys = Array.from(
-      new Set(
-        data
-          .filter(
-            (survey) => !!survey.templateId && survey.templateVersion !== null,
-          )
-          .map((survey) => `${survey.templateId}:${survey.templateVersion}`),
-      ),
-    );
+    const templateGroups = await this.groupSurveysByTemplate(data);
 
-    await Promise.all(
-      templateKeys.map(async (key) => {
-        if (templateCache.has(key)) return;
-        const [templateId, rawVersion] = key.split(':');
-        const version = Number(rawVersion);
+    const templateStats = Array.from(templateGroups.values()).map((group) => ({
+      templateId: group.template.id,
+      templateVersion: group.template.version,
+      templateName: group.template.name,
+      category: group.template.category,
+      totalResponses: group.surveys.length,
+      questionStats: this.calculateQuestionStats(group.template, group.surveys),
+    }));
+
+    return {
+      totalResponses,
+      range: {
+        from: input.from ?? null,
+        to: input.to ?? null,
+      },
+      templates: templateStats,
+    };
+  }
+
+  private async groupSurveysByTemplate(data: ServiceEntrySurvey[]) {
+    const groups = new Map<
+      string,
+      { template: ServiceEntrySurveyTemplate; surveys: ServiceEntrySurvey[] }
+    >();
+
+    for (const survey of data) {
+      if (!survey.templateId || survey.templateVersion === null) {
+        continue;
+      }
+
+      const groupKey = `${survey.templateId}:${survey.templateVersion}`;
+      let group = groups.get(groupKey);
+
+      if (!group) {
         const { data: template } =
           await this.templateReadRepository.findByIdAndVersion(
-            templateId,
-            version,
+            survey.templateId,
+            survey.templateVersion,
           );
-        templateCache.set(key, template);
-      }),
+
+        if (!template) {
+          continue;
+        }
+
+        group = { template, surveys: [] };
+        groups.set(groupKey, group);
+      }
+
+      group.surveys.push(survey);
+    }
+
+    return groups;
+  }
+
+  private calculateQuestionStats(
+    template: ServiceEntrySurveyTemplate,
+    surveys: ServiceEntrySurvey[],
+  ) {
+    const questionMap = new Map(
+      template.questions.map((question) => [question.id, question]),
     );
 
     const questionStats = new Map<
       string,
       {
-        templateId: string;
-        templateVersion: number;
-        questionId: string;
-        questionText: string;
-        type: ServiceEntrySurveyQuestionType;
+        question: (typeof template.questions)[number];
         responseCount: number;
         ratingTotal?: number;
         ratingCount?: number;
@@ -76,36 +114,19 @@ export class GetServiceEntrySurveyStatsUseCase {
       }
     >();
 
-    for (const survey of data) {
-      if (!survey.templateId || survey.templateVersion === null) {
-        continue;
-      }
-
-      const templateKey = `${survey.templateId}:${survey.templateVersion}`;
-      const template = templateCache.get(templateKey);
-      if (!template) continue;
-
-      const questionMap = new Map(
-        template.questions.map((question) => [question.id, question]),
-      );
-
+    for (const survey of surveys) {
       for (const answer of survey.answers) {
         const question = questionMap.get(answer.questionId);
         if (!question) continue;
 
-        const statKey = `${template.id}:${template.version}:${question.id}`;
-        let stats = questionStats.get(statKey);
+        let stats = questionStats.get(question.id);
 
         if (!stats) {
           stats = {
-            templateId: template.id,
-            templateVersion: template.version,
-            questionId: question.id,
-            questionText: question.text,
-            type: question.type,
+            question,
             responseCount: 0,
           };
-          questionStats.set(statKey, stats);
+          questionStats.set(question.id, stats);
         }
 
         stats.responseCount += 1;
@@ -147,33 +168,26 @@ export class GetServiceEntrySurveyStatsUseCase {
       }
     }
 
-    const questionStatsArray = Array.from(questionStats.values()).map(
-      (stats) => ({
-        templateId: stats.templateId,
-        templateVersion: stats.templateVersion,
-        questionId: stats.questionId,
-        questionText: stats.questionText,
-        type: stats.type,
-        responseCount: stats.responseCount,
-        averageRating:
-          stats.type === ServiceEntrySurveyQuestionType.RATING &&
-          stats.ratingCount
-            ? Number(((stats.ratingTotal ?? 0) / stats.ratingCount).toFixed(2))
-            : undefined,
-        ratingDistribution:
-          stats.type === ServiceEntrySurveyQuestionType.RATING
-            ? (stats.ratingDistribution ?? {})
-            : undefined,
-        responses:
-          stats.type !== ServiceEntrySurveyQuestionType.RATING
-            ? (stats.textResponses ?? [])
-            : undefined,
-      }),
-    );
-
-    return {
-      totalResponses,
-      questionStats: questionStatsArray,
-    };
+    return Array.from(questionStats.values()).map((stats) => ({
+      templateId: template.id,
+      templateVersion: template.version,
+      questionId: stats.question.id,
+      questionText: stats.question.text,
+      type: stats.question.type,
+      responseCount: stats.responseCount,
+      averageRating:
+        stats.question.type === ServiceEntrySurveyQuestionType.RATING &&
+        stats.ratingCount
+          ? Number(((stats.ratingTotal ?? 0) / stats.ratingCount).toFixed(2))
+          : undefined,
+      ratingDistribution:
+        stats.question.type === ServiceEntrySurveyQuestionType.RATING
+          ? (stats.ratingDistribution ?? {})
+          : undefined,
+      responses:
+        stats.question.type !== ServiceEntrySurveyQuestionType.RATING
+          ? (stats.textResponses ?? [])
+          : undefined,
+    }));
   }
 }
