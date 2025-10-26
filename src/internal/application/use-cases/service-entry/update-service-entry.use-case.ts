@@ -13,6 +13,8 @@ import {
   IServiceEntryAccessWriteRepositoryToken,
   IServiceEntrySurveyTemplateReadRepository,
   IServiceEntrySurveyTemplateReadRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
   IFileReadRepository,
   IFileReadRepositoryToken,
 } from '@domain/ports/repositories';
@@ -32,7 +34,10 @@ import {
 import { ServiceEntryNotifierService } from '@application/services/notification';
 import { EnvService } from '@infra/env';
 import { genId } from '@src/common/utils';
-import { buildFilesMetadataForEntry } from '@application/utils';
+import {
+  buildFilesMetadataForEntry,
+  buildInteractionStatusForEntry,
+} from '@application/utils';
 
 @Injectable()
 export class UpdateServiceEntryUseCase {
@@ -47,6 +52,8 @@ export class UpdateServiceEntryUseCase {
     private readonly accessWriteRepository: IServiceEntryAccessWriteRepository,
     @Inject(IServiceEntrySurveyTemplateReadRepositoryToken)
     private readonly templateReadRepository: IServiceEntrySurveyTemplateReadRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
     private readonly notifier: ServiceEntryNotifierService,
@@ -113,12 +120,23 @@ export class UpdateServiceEntryUseCase {
       await this.refreshAccessTokenAndNotify(updated);
     }
 
-    const filesMetadata = await buildFilesMetadataForEntry({
-      entry: updated,
-      fileReadRepository: this.fileReadRepository,
-    });
+    const [filesMetadata, interactionStatus] = await Promise.all([
+      buildFilesMetadataForEntry({
+        entry: updated,
+        fileReadRepository: this.fileReadRepository,
+      }),
+      buildInteractionStatusForEntry({
+        entry: updated,
+        accessReadRepository: this.accessReadRepository,
+        surveyReadRepository: this.surveyReadRepository,
+      }),
+    ]);
 
-    return ServiceEntryMapper.toViewDto(updated, filesMetadata);
+    return ServiceEntryMapper.toViewDto(
+      updated,
+      filesMetadata,
+      interactionStatus,
+    );
   }
 
   private async refreshAccessTokenAndNotify(

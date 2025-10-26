@@ -32,4 +32,22 @@ export class MongooseServiceEntryAccessReadRepositoryImpl
       data: document ? this.toDomain(document) : null,
     };
   }
+
+  async findByServiceEntryIds(
+    serviceEntryIds: string[],
+  ): Promise<{ data: ServiceEntryAccess[] }> {
+    if (!serviceEntryIds || serviceEntryIds.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.accessModel
+      .find({ service_entry_id: { $in: serviceEntryIds } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((access): access is ServiceEntryAccess => access !== null),
+    };
+  }
 }

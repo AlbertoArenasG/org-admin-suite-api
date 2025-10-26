@@ -11,6 +11,8 @@ import {
   IServiceEntryAccessWriteRepositoryToken,
   IFileReadRepository,
   IFileReadRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
@@ -18,7 +20,10 @@ import {
 } from '@domain/exceptions';
 import { ServiceEntryStatus } from '@domain/entities';
 import { createHash } from 'crypto';
-import { buildFilesMetadataForEntry } from '@application/utils';
+import {
+  buildFilesMetadataForEntry,
+  buildInteractionStatusForEntry,
+} from '@application/utils';
 
 @Injectable()
 export class GetServiceEntryByTokenUseCase {
@@ -31,6 +36,8 @@ export class GetServiceEntryByTokenUseCase {
     private readonly accessWriteRepository: IServiceEntryAccessWriteRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
   ) {}
 
   async execute(token: string): Promise<ServiceEntryViewDto> {
@@ -59,11 +66,22 @@ export class GetServiceEntryByTokenUseCase {
     access.markViewed();
     await this.accessWriteRepository.update(access);
 
-    const filesMetadata = await buildFilesMetadataForEntry({
-      entry,
-      fileReadRepository: this.fileReadRepository,
-    });
+    const [filesMetadata, interactionStatus] = await Promise.all([
+      buildFilesMetadataForEntry({
+        entry,
+        fileReadRepository: this.fileReadRepository,
+      }),
+      buildInteractionStatusForEntry({
+        entry,
+        accessReadRepository: this.accessReadRepository,
+        surveyReadRepository: this.surveyReadRepository,
+      }),
+    ]);
 
-    return ServiceEntryMapper.toViewDto(entry, filesMetadata);
+    return ServiceEntryMapper.toViewDto(
+      entry,
+      filesMetadata,
+      interactionStatus,
+    );
   }
 }

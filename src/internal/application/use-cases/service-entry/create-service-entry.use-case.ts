@@ -30,7 +30,10 @@ import { ServiceEntryMapper } from '@application/mappers';
 import { genId } from '@src/common/utils';
 import { ServiceEntryNotifierService } from '@application/services/notification';
 import { EnvService } from '@infra/env';
-import { buildFilesMetadataForEntry } from '@application/utils';
+import {
+  buildFilesMetadataForEntry,
+  createEmptyServiceEntryInteractionStatus,
+} from '@application/utils';
 
 @Injectable()
 export class CreateServiceEntryUseCase {
@@ -103,6 +106,7 @@ export class CreateServiceEntryUseCase {
       data,
       publicToken,
       filesMetadata,
+      createEmptyServiceEntryInteractionStatus(),
     );
   }
 

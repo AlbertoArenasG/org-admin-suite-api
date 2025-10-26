@@ -7,6 +7,9 @@ export interface IServiceEntryAccessReadRepository {
   findByServiceEntryId(
     serviceEntryId: string,
   ): Promise<{ data: ServiceEntryAccess | null }>;
+  findByServiceEntryIds(
+    serviceEntryIds: string[],
+  ): Promise<{ data: ServiceEntryAccess[] }>;
 }
 
 export const IServiceEntryAccessReadRepositoryToken = Symbol(

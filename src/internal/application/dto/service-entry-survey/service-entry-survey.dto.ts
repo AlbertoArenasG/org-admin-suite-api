@@ -29,6 +29,8 @@ export interface GetServiceEntrySurveyStatsDto {
   from?: Date | null;
   to?: Date | null;
   serviceEntryIds?: string[];
+  templateId?: string | null;
+  templateVersion?: number | null;
 }
 
 export interface ServiceEntrySurveyQuestionStatsViewDto {
@@ -43,7 +45,20 @@ export interface ServiceEntrySurveyQuestionStatsViewDto {
   responses?: Array<string | number | boolean | null>;
 }
 
-export interface ServiceEntrySurveyStatsViewDto {
+export interface ServiceEntrySurveyTemplateStatsViewDto {
+  templateId: string;
+  templateVersion: number;
+  templateName: string;
+  category: string | null;
   totalResponses: number;
   questionStats: ServiceEntrySurveyQuestionStatsViewDto[];
+}
+
+export interface ServiceEntrySurveyStatsViewDto {
+  totalResponses: number;
+  range: {
+    from: Date | null;
+    to: Date | null;
+  };
+  templates: ServiceEntrySurveyTemplateStatsViewDto[];
 }

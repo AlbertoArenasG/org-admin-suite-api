@@ -12,6 +12,7 @@ import {
   StreamableFile,
   Res,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -104,10 +105,14 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   async download(
     @Param('fileId') fileId: string,
+    @Query('service_entry_id') serviceEntryId: string | undefined,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.queryBus.execute(
-      DownloadFileQuery.create({ fileId }),
+      DownloadFileQuery.create({
+        fileId,
+        serviceEntryId: serviceEntryId ?? null,
+      }),
     );
 
     res.set({

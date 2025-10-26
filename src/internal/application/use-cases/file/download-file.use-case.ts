@@ -4,6 +4,10 @@ import { DownloadFileDto, DownloadFileResultDto } from '@application/dto';
 import {
   IFileReadRepository,
   IFileReadRepositoryToken,
+  IServiceEntryAccessReadRepository,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntryAccessWriteRepository,
+  IServiceEntryAccessWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   IFileStorageService,
@@ -21,6 +25,10 @@ export class DownloadFileUseCase {
     private readonly fileReadRepository: IFileReadRepository,
     @Inject(IFileStorageServiceToken)
     private readonly fileStorageService: IFileStorageService,
+    @Inject(IServiceEntryAccessReadRepositoryToken)
+    private readonly accessReadRepository: IServiceEntryAccessReadRepository,
+    @Inject(IServiceEntryAccessWriteRepositoryToken)
+    private readonly accessWriteRepository: IServiceEntryAccessWriteRepository,
   ) {}
 
   async execute(input: DownloadFileDto): Promise<DownloadFileResultDto> {
@@ -34,11 +42,29 @@ export class DownloadFileUseCase {
 
     const object = await this.fileStorageService.getObject(data.storageKey);
 
+    if (input.serviceEntryId) {
+      await this.markServiceEntryDownload(input.serviceEntryId);
+    }
+
     return {
       stream: object.stream,
       filename: data.originalName,
       mimeType: object.contentType ?? data.mimeType,
       size: object.contentLength ?? data.size,
     };
+  }
+
+  private async markServiceEntryDownload(
+    serviceEntryId: string,
+  ): Promise<void> {
+    const { data: access } =
+      await this.accessReadRepository.findByServiceEntryId(serviceEntryId);
+
+    if (!access) {
+      return;
+    }
+
+    access.markDownloaded();
+    await this.accessWriteRepository.update(access);
   }
 }

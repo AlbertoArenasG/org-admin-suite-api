@@ -8,12 +8,19 @@ import {
   IServiceEntryReadRepositoryToken,
   IFileReadRepository,
   IFileReadRepositoryToken,
+  IServiceEntryAccessReadRepository,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
-import { buildFilesMetadataForEntry } from '@application/utils';
+import {
+  buildFilesMetadataForEntry,
+  buildInteractionStatusForEntry,
+} from '@application/utils';
 
 @Injectable()
 export class GetServiceEntryByIdUseCase {
@@ -22,6 +29,10 @@ export class GetServiceEntryByIdUseCase {
     private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    @Inject(IServiceEntryAccessReadRepositoryToken)
+    private readonly accessReadRepository: IServiceEntryAccessReadRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
   ) {}
 
   async execute(id: string): Promise<ServiceEntryViewDto> {
@@ -41,11 +52,18 @@ export class GetServiceEntryByIdUseCase {
       );
     }
 
-    const filesMetadata = await buildFilesMetadataForEntry({
-      entry: data,
-      fileReadRepository: this.fileReadRepository,
-    });
+    const [filesMetadata, interactionStatus] = await Promise.all([
+      buildFilesMetadataForEntry({
+        entry: data,
+        fileReadRepository: this.fileReadRepository,
+      }),
+      buildInteractionStatusForEntry({
+        entry: data,
+        accessReadRepository: this.accessReadRepository,
+        surveyReadRepository: this.surveyReadRepository,
+      }),
+    ]);
 
-    return ServiceEntryMapper.toViewDto(data, filesMetadata);
+    return ServiceEntryMapper.toViewDto(data, filesMetadata, interactionStatus);
   }
 }

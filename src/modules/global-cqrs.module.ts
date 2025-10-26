@@ -27,6 +27,8 @@ import {
   GetServiceEntriesHandler,
   GetServiceEntryByIdHandler,
   GetServiceEntryByTokenHandler,
+  GetServiceEntrySurveyStatsHandler,
+  GetServiceEntrySurveyResponsesHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -53,6 +55,8 @@ const providers = [
   GetServiceEntriesHandler,
   GetServiceEntryByIdHandler,
   GetServiceEntryByTokenHandler,
+  GetServiceEntrySurveyStatsHandler,
+  GetServiceEntrySurveyResponsesHandler,
 ];
 
 @Global()
