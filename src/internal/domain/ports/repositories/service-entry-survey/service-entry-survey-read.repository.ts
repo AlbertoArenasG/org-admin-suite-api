@@ -6,6 +6,8 @@ export interface FindServiceEntrySurveysParams {
   serviceEntryIds?: string[];
   templateId?: string | null;
   templateVersion?: number | null;
+  page?: number | null;
+  perPage?: number | null;
 }
 
 export interface IServiceEntrySurveyReadRepository {
@@ -15,9 +17,12 @@ export interface IServiceEntrySurveyReadRepository {
   findByServiceEntryId(
     serviceEntryId: string,
   ): Promise<{ data: ServiceEntrySurvey | null }>;
+  findByServiceEntryIds(
+    serviceEntryIds: string[],
+  ): Promise<{ data: ServiceEntrySurvey[] }>;
   findAll(
     params: FindServiceEntrySurveysParams,
-  ): Promise<{ data: ServiceEntrySurvey[] }>;
+  ): Promise<{ data: ServiceEntrySurvey[]; total: number }>;
 }
 
 export const IServiceEntrySurveyReadRepositoryToken = Symbol(

@@ -4,6 +4,7 @@ import {
   CreateServiceEntryResultDto,
   ServiceEntryViewDto,
   ServiceEntryFilesMetadataDto,
+  ServiceEntryInteractionStatusDto,
 } from '@application/dto';
 import { EnumNameService } from '@infra/i18n/services';
 import { EnvService } from '@infra/env';
@@ -37,6 +38,7 @@ export class ServiceEntryPresenter {
       createdAt: entry.createdAt,
       updatedAt: entry.createdAt,
       filesMetadata: entry.filesMetadata,
+      interactionStatus: entry.interactionStatus,
     });
 
     return {
@@ -47,6 +49,7 @@ export class ServiceEntryPresenter {
 
   toViewResponse(entry: ServiceEntryViewDto) {
     const filesMetadata = entry.filesMetadata;
+    const interactionStatus = entry.interactionStatus;
 
     return {
       service_entry_id: entry.id,
@@ -73,7 +76,13 @@ export class ServiceEntryPresenter {
         : null,
       created_at: entry.createdAt,
       updated_at: entry.updatedAt ?? null,
-      files_metadata: this.toFilesMetadataResponse(filesMetadata),
+      files_metadata: this.toFilesMetadataResponse(filesMetadata, entry.id),
+      survey_status: this.toSurveyStatusResponse(
+        interactionStatus.surveyStatus,
+      ),
+      download_status: this.toDownloadStatusResponse(
+        interactionStatus.downloadStatus,
+      ),
     };
   }
 
@@ -81,31 +90,60 @@ export class ServiceEntryPresenter {
     return entries.map((entry) => this.toViewResponse(entry));
   }
 
-  private toFilesMetadataResponse(metadata: ServiceEntryFilesMetadataDto) {
+  private toFilesMetadataResponse(
+    metadata: ServiceEntryFilesMetadataDto,
+    serviceEntryId: string,
+  ) {
     return {
       calibration_certificate: metadata.calibrationCertificate
-        ? this.toFileDescriptorResponse(metadata.calibrationCertificate)
+        ? this.toFileDescriptorResponse(
+            metadata.calibrationCertificate,
+            serviceEntryId,
+          )
         : null,
       attachments: metadata.attachments.map((attachment) =>
-        this.toFileDescriptorResponse(attachment),
+        this.toFileDescriptorResponse(attachment, serviceEntryId),
       ),
     };
   }
 
-  private toFileDescriptorResponse(descriptor: {
-    fileId: string;
-    originalName: string;
-    extension: string;
-  }) {
+  private toFileDescriptorResponse(
+    descriptor: {
+      fileId: string;
+      originalName: string;
+      extension: string;
+    },
+    serviceEntryId: string,
+  ) {
     return {
       file_id: descriptor.fileId,
       original_name: descriptor.originalName,
       extension: descriptor.extension,
-      download_url: this.buildDownloadUrl(descriptor.fileId),
+      download_url: this.buildDownloadUrl(descriptor.fileId, serviceEntryId),
     };
   }
 
-  private buildDownloadUrl(fileId: string): string {
-    return `${this.apiBaseUrl}/v1/files/${fileId}/download`;
+  private buildDownloadUrl(fileId: string, serviceEntryId: string): string {
+    const url = `${this.apiBaseUrl}/v1/files/${fileId}/download`;
+    return `${url}?service_entry_id=${encodeURIComponent(serviceEntryId)}`;
+  }
+
+  private toSurveyStatusResponse(
+    status: ServiceEntryInteractionStatusDto['surveyStatus'],
+  ) {
+    return {
+      completed: status.completed,
+      submitted_at: status.submittedAt ?? null,
+    };
+  }
+
+  private toDownloadStatusResponse(
+    status: ServiceEntryInteractionStatusDto['downloadStatus'],
+  ) {
+    return {
+      has_download: status.hasDownload,
+      last_downloaded_at: status.lastDownloadedAt ?? null,
+      download_count: status.downloadCount,
+    };
   }
 }

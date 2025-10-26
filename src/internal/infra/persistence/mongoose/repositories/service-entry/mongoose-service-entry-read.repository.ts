@@ -83,6 +83,22 @@ export class MongooseServiceEntryReadRepositoryImpl
     };
   }
 
+  async findByIds(ids: string[]): Promise<{ data: ServiceEntry[] }> {
+    if (!ids || ids.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.serviceEntryModel
+      .find({ service_entry_id: { $in: ids } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((entry): entry is ServiceEntry => entry !== null),
+    };
+  }
+
   private buildSortCriteria(
     sorts: FindServiceEntriesParams['sorts'],
   ): Record<string, 1 | -1> {

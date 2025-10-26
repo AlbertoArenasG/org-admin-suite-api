@@ -8,6 +8,7 @@ export type GetFileByIdResultDto = FileViewDto;
 
 export interface DownloadFileDto {
   fileId: string;
+  serviceEntryId?: string | null;
 }
 
 export interface DownloadFileResultDto {

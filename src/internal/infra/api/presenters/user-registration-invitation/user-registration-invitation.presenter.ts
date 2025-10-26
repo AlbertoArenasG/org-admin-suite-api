@@ -52,6 +52,9 @@ export class UserRegistrationInvitationPresenter {
       status: invitation.status,
       email: invitation.email,
       role: invitation.role,
+      role_name: this.enumNameService.getEnumName(
+        `USER.ROLE.${invitation.role}`,
+      ),
       user_data: this.mapUserData(invitation.userData),
       created_at: invitation.createdAt ?? null,
     };

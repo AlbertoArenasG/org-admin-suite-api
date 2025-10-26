@@ -10,9 +10,16 @@ import {
   IServiceEntryReadRepositoryToken,
   IFileReadRepository,
   IFileReadRepositoryToken,
+  IServiceEntryAccessReadRepository,
+  IServiceEntryAccessReadRepositoryToken,
+  IServiceEntrySurveyReadRepository,
+  IServiceEntrySurveyReadRepositoryToken,
 } from '@domain/ports/repositories';
 import { ServiceEntryMapper } from '@application/mappers';
-import { buildFilesMetadataForEntries } from '@application/utils';
+import {
+  buildFilesMetadataForEntries,
+  buildInteractionStatusForEntries,
+} from '@application/utils';
 
 @Injectable()
 export class GetServiceEntriesUseCase {
@@ -21,6 +28,10 @@ export class GetServiceEntriesUseCase {
     private readonly serviceEntryReadRepository: IServiceEntryReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    @Inject(IServiceEntryAccessReadRepositoryToken)
+    private readonly accessReadRepository: IServiceEntryAccessReadRepository,
+    @Inject(IServiceEntrySurveyReadRepositoryToken)
+    private readonly surveyReadRepository: IServiceEntrySurveyReadRepository,
   ) {}
 
   async execute(
@@ -40,9 +51,14 @@ export class GetServiceEntriesUseCase {
       entries: data,
       fileReadRepository: this.fileReadRepository,
     });
+    const statusMap = await buildInteractionStatusForEntries({
+      entries: data,
+      accessReadRepository: this.accessReadRepository,
+      surveyReadRepository: this.surveyReadRepository,
+    });
 
     return {
-      items: ServiceEntryMapper.toCollection(data, metadataMap),
+      items: ServiceEntryMapper.toCollection(data, metadataMap, statusMap),
       total,
       page: input.page,
       perPage: input.perPage,

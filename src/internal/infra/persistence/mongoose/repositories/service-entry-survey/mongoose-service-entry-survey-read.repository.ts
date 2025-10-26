@@ -36,9 +36,27 @@ export class MongooseServiceEntrySurveyReadRepositoryImpl
     };
   }
 
+  async findByServiceEntryIds(
+    serviceEntryIds: string[],
+  ): Promise<{ data: ServiceEntrySurvey[] }> {
+    if (!serviceEntryIds || serviceEntryIds.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.surveyModel
+      .find({ service_entry_id: { $in: serviceEntryIds } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((survey): survey is ServiceEntrySurvey => survey !== null),
+    };
+  }
+
   async findAll(
     params: FindServiceEntrySurveysParams,
-  ): Promise<{ data: ServiceEntrySurvey[] }> {
+  ): Promise<{ data: ServiceEntrySurvey[]; total: number }> {
     const filter: Record<string, unknown> = {};
 
     if (params.from || params.to) {
@@ -66,12 +84,21 @@ export class MongooseServiceEntrySurveyReadRepositoryImpl
       filter.template_version = params.templateVersion;
     }
 
-    const documents = await this.surveyModel.find(filter).exec();
+    let query = this.surveyModel.find(filter);
+    const total = await this.surveyModel.countDocuments(filter).exec();
+
+    if (params.page && params.perPage) {
+      const skip = (params.page - 1) * params.perPage;
+      query = query.skip(skip).limit(params.perPage);
+    }
+
+    const documents = await query.exec();
 
     return {
       data: documents
         .map((document) => this.toDomain(document))
         .filter((survey): survey is ServiceEntrySurvey => survey !== null),
+      total,
     };
   }
 }

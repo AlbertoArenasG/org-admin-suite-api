@@ -15,6 +15,22 @@ export interface ServiceEntryFilesMetadataDto {
   attachments: ServiceEntryFileDescriptorDto[];
 }
 
+export interface ServiceEntrySurveyStatusDto {
+  completed: boolean;
+  submittedAt: Date | null;
+}
+
+export interface ServiceEntryDownloadStatusDto {
+  hasDownload: boolean;
+  lastDownloadedAt: Date | null;
+  downloadCount: number;
+}
+
+export interface ServiceEntryInteractionStatusDto {
+  surveyStatus: ServiceEntrySurveyStatusDto;
+  downloadStatus: ServiceEntryDownloadStatusDto;
+}
+
 export interface ServiceEntryViewDto {
   id: string;
   companyName: string;
@@ -31,6 +47,7 @@ export interface ServiceEntryViewDto {
   createdAt: Date;
   updatedAt?: Date;
   filesMetadata: ServiceEntryFilesMetadataDto;
+  interactionStatus: ServiceEntryInteractionStatusDto;
 }
 
 export interface GetServiceEntriesDto extends PaginationParamsDto {

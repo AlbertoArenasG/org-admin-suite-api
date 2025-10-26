@@ -32,6 +32,7 @@ import {
   GetServiceEntriesQuery,
   GetServiceEntryByIdQuery,
   GetServiceEntrySurveyStatsQuery,
+  GetServiceEntrySurveyResponsesQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
@@ -39,7 +40,10 @@ import { CurrentUser } from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import { UserRole } from '@domain/entities';
 import { AuthorizationException } from '@domain/exceptions';
-import { GetServiceEntrySurveyStatsRequestDto } from '@infra/api/dto/service-entry-survey';
+import {
+  GetServiceEntrySurveyStatsRequestDto,
+  GetServiceEntrySurveyResponsesRequestDto,
+} from '@infra/api/dto/service-entry-survey';
 
 @Controller('v1/services/service-entry')
 export class ServiceEntryController {
@@ -109,6 +113,31 @@ export class ServiceEntryController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('surveys')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getSurveyResponses(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Query() query: GetServiceEntrySurveyResponsesRequestDto,
+  ) {
+    this.ensureAuthorized(currentUser.role);
+    const result = await this.queryBus.execute(
+      GetServiceEntrySurveyResponsesQuery.create(query.toDomain()),
+    );
+
+    const data = result.items.map((item) => ({
+      survey: this.surveyPresenter.toSurveyResponse(item.survey),
+      service_entry: this.presenter.toViewResponse(item.serviceEntry),
+    }));
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withPagination(result.page, result.perPage, result.total)
       .withStatus(HttpStatus.OK)
       .build();
   }

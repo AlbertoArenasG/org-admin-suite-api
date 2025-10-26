@@ -34,6 +34,8 @@ export class GetServiceEntrySurveyStatsUseCase {
       serviceEntryIds: input.serviceEntryIds,
       templateId: input.templateId ?? null,
       templateVersion: input.templateVersion ?? null,
+      page: null,
+      perPage: null,
     });
 
     const totalResponses = data.length;
