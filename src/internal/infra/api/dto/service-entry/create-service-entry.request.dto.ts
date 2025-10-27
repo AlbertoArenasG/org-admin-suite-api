@@ -32,9 +32,9 @@ export class CreateServiceEntryRequestDto {
   @IsEnum(ServiceEntryCategory)
   category_id!: ServiceEntryCategory;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  calibration_certificate_file_id!: string;
+  calibration_certificate_file_id?: string;
 
   @IsOptional()
   @IsArray()
@@ -49,7 +49,8 @@ export class CreateServiceEntryRequestDto {
       contactEmail: this.contact_email,
       serviceOrderIdentifier: this.service_order_identifier,
       category: this.category_id,
-      calibrationCertificateFileId: this.calibration_certificate_file_id,
+      calibrationCertificateFileId:
+        this.calibration_certificate_file_id ?? null,
       attachmentFileIds: this.attachment_file_ids ?? [],
     };
   }

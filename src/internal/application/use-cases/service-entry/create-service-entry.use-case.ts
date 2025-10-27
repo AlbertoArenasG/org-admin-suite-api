@@ -25,6 +25,8 @@ import {
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
+  InvalidValueException,
+  InvalidValueExceptionCode,
 } from '@domain/exceptions';
 import { ServiceEntryMapper } from '@application/mappers';
 import { genId } from '@src/common/utils';
@@ -59,13 +61,26 @@ export class CreateServiceEntryUseCase {
 
     const template = await this.resolveTemplate(input.category);
 
+    if (
+      input.category === ServiceEntryCategory.CALIBRATION &&
+      (!input.calibrationCertificateFileId ||
+        input.calibrationCertificateFileId.length === 0)
+    ) {
+      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+        field: 'calibration_certificate_file_id',
+      });
+    }
+
     const entry = new ServiceEntry({
       companyName: input.companyName,
       contactName: input.contactName,
       contactEmail: input.contactEmail,
       serviceOrderIdentifier: input.serviceOrderIdentifier,
       category: input.category,
-      calibrationCertificateFileId: input.calibrationCertificateFileId,
+      calibrationCertificateFileId:
+        input.category === ServiceEntryCategory.CALIBRATION
+          ? (input.calibrationCertificateFileId ?? null)
+          : (input.calibrationCertificateFileId ?? null),
       attachmentFileIds: input.attachmentFileIds ?? [],
       surveyTemplateId: template?.id ?? null,
       surveyTemplateVersion: template?.version ?? null,
@@ -158,3 +173,4 @@ export class CreateServiceEntryUseCase {
     return data;
   }
 }
+import { ServiceEntryCategory } from '@domain/entities';

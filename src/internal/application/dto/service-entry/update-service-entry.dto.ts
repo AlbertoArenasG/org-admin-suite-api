@@ -7,7 +7,7 @@ export interface UpdateServiceEntryDto {
   contactEmail?: string;
   serviceOrderIdentifier?: string;
   category?: ServiceEntryCategory;
-  calibrationCertificateFileId?: string;
+  calibrationCertificateFileId?: string | null;
   attachmentFileIds?: string[];
 }
 

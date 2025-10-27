@@ -23,6 +23,8 @@ import {
   EntityNotFoundExceptionCode,
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
+  InvalidValueException,
+  InvalidValueExceptionCode,
 } from '@domain/exceptions';
 import { ServiceEntryMapper } from '@application/mappers';
 import {
@@ -30,6 +32,7 @@ import {
   ServiceEntryAccess,
   ServiceEntryStatus,
   ServiceEntrySurveyTemplate,
+  ServiceEntryCategory,
 } from '@domain/entities';
 import { ServiceEntryNotifierService } from '@application/services/notification';
 import { EnvService } from '@infra/env';
@@ -93,21 +96,47 @@ export class UpdateServiceEntryUseCase {
 
     const templateResolution = await this.resolveTemplateForUpdate(data, input);
 
-    data.updateDetails({
+    const targetCategory = input.category ?? data.category;
+
+    let calibrationCertificateFileId =
+      input.calibrationCertificateFileId !== undefined
+        ? input.calibrationCertificateFileId
+        : data.calibrationCertificateFileId;
+
+    if (
+      targetCategory === ServiceEntryCategory.CALIBRATION &&
+      (!calibrationCertificateFileId ||
+        calibrationCertificateFileId.length === 0)
+    ) {
+      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+        field: 'calibration_certificate_file_id',
+      });
+    }
+
+    if (
+      targetCategory !== ServiceEntryCategory.CALIBRATION &&
+      input.calibrationCertificateFileId === undefined
+    ) {
+      calibrationCertificateFileId = null;
+    }
+
+    const details: Parameters<ServiceEntry['updateDetails']>[0] = {
       companyName: input.companyName,
       contactName: input.contactName,
       contactEmail: input.contactEmail,
       serviceOrderIdentifier: input.serviceOrderIdentifier,
       category: input.category,
-      calibrationCertificateFileId: input.calibrationCertificateFileId,
       attachmentFileIds: input.attachmentFileIds,
+      calibrationCertificateFileId: calibrationCertificateFileId ?? null,
       ...(templateResolution.resolved
         ? {
             surveyTemplateId: templateResolution.template?.id ?? null,
             surveyTemplateVersion: templateResolution.template?.version ?? null,
           }
         : {}),
-    });
+    };
+
+    data.updateDetails(details);
 
     const { data: updated } =
       await this.serviceEntryWriteRepository.update(data);

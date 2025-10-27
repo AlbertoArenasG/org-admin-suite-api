@@ -10,7 +10,7 @@ export interface CreateServiceEntryDto {
   contactEmail: string;
   serviceOrderIdentifier: string;
   category: ServiceEntryCategory;
-  calibrationCertificateFileId: string;
+  calibrationCertificateFileId: string | null;
   attachmentFileIds: string[];
 }
 
@@ -21,7 +21,7 @@ export interface CreateServiceEntryResultDto {
   contactEmail: string;
   serviceOrderIdentifier: string;
   category: ServiceEntryCategory;
-  calibrationCertificateFileId: string;
+  calibrationCertificateFileId: string | null;
   attachmentFileIds: string[];
   status: ServiceEntryStatus;
   publicAccessToken: string;

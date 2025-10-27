@@ -99,6 +99,36 @@ export class MongooseServiceEntryReadRepositoryImpl
     };
   }
 
+  async searchIds(search: string): Promise<string[]> {
+    if (!search || search.trim().length === 0) {
+      return [];
+    }
+
+    const searchFilter = {
+      $or: [
+        { company_name: { $regex: escapeRegex(search), $options: 'i' } },
+        { contact_name: { $regex: escapeRegex(search), $options: 'i' } },
+        { contact_email: { $regex: escapeRegex(search), $options: 'i' } },
+        {
+          service_order_identifier: {
+            $regex: escapeRegex(search),
+            $options: 'i',
+          },
+        },
+      ],
+    };
+
+    const documents = await this.serviceEntryModel
+      .find({
+        status: { $ne: ServiceEntryStatus.DELETED },
+        ...searchFilter,
+      })
+      .select({ service_entry_id: 1 })
+      .exec();
+
+    return documents.map((document) => document.service_entry_id);
+  }
+
   private buildSortCriteria(
     sorts: FindServiceEntriesParams['sorts'],
   ): Record<string, 1 | -1> {

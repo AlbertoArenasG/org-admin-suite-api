@@ -28,6 +28,10 @@ export class GetServiceEntrySurveyResponsesRequestDto extends PaginationRequestD
   @IsString({ each: true })
   service_entry_ids?: string[];
 
+  @IsOptional()
+  @IsString()
+  search?: string;
+
   toDomain(): GetServiceEntrySurveyResponsesDto {
     const parseDate = (value?: string) =>
       value && !Number.isNaN(new Date(value).getTime())
@@ -46,6 +50,7 @@ export class GetServiceEntrySurveyResponsesRequestDto extends PaginationRequestD
           ? this.template_version
           : null,
       serviceEntryIds: this.service_entry_ids,
+      search: this.search ?? null,
     };
   }
 }

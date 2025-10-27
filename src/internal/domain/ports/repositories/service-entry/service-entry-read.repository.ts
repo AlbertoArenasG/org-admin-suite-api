@@ -26,6 +26,7 @@ export interface IServiceEntryReadRepository {
     serviceOrderIdentifier: string,
   ): Promise<{ data: ServiceEntry | null }>;
   findByIds(ids: string[]): Promise<{ data: ServiceEntry[] }>;
+  searchIds(search: string): Promise<string[]>;
 }
 
 export const IServiceEntryReadRepositoryToken = Symbol(

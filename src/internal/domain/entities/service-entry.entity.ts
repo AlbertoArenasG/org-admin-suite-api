@@ -19,7 +19,7 @@ export interface ServiceEntryProps {
   contactEmail: string;
   serviceOrderIdentifier: string;
   category: ServiceEntryCategory;
-  calibrationCertificateFileId: string;
+  calibrationCertificateFileId: string | null;
   attachmentFileIds: string[];
   status?: ServiceEntryStatus;
   surveyAccessId?: string | null;
@@ -46,6 +46,8 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     props.surveyAccessId = props.surveyAccessId ?? null;
     props.surveyTemplateId = props.surveyTemplateId ?? null;
     props.surveyTemplateVersion = props.surveyTemplateVersion ?? null;
+    props.calibrationCertificateFileId =
+      props.calibrationCertificateFileId ?? null;
 
     super(props);
   }
@@ -74,8 +76,8 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     return this.props.category;
   }
 
-  get calibrationCertificateFileId(): string {
-    return this.props.calibrationCertificateFileId;
+  get calibrationCertificateFileId(): string | null {
+    return this.props.calibrationCertificateFileId ?? null;
   }
 
   get attachmentFileIds(): string[] {
@@ -112,7 +114,7 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
     contactEmail?: string;
     serviceOrderIdentifier?: string;
     category?: ServiceEntryCategory;
-    calibrationCertificateFileId?: string;
+    calibrationCertificateFileId?: string | null;
     attachmentFileIds?: string[];
     surveyAccessId?: string | null;
     surveyTemplateId?: string | null;
@@ -140,7 +142,7 @@ export class ServiceEntry extends Entity<ServiceEntryProps> {
 
     if (details.calibrationCertificateFileId !== undefined) {
       this.props.calibrationCertificateFileId =
-        details.calibrationCertificateFileId;
+        details.calibrationCertificateFileId ?? null;
     }
 
     if (details.attachmentFileIds !== undefined) {

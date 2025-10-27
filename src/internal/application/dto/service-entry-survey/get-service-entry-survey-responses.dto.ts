@@ -11,6 +11,7 @@ export interface GetServiceEntrySurveyResponsesDto extends PaginationParamsDto {
   serviceEntryIds?: string[];
   templateId?: string | null;
   templateVersion?: number | null;
+  search?: string | null;
 }
 
 export interface ServiceEntrySurveyListItemDto {

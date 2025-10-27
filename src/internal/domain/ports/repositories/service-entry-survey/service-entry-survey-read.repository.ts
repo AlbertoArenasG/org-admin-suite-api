@@ -8,6 +8,7 @@ export interface FindServiceEntrySurveysParams {
   templateVersion?: number | null;
   page?: number | null;
   perPage?: number | null;
+  search?: string | null;
 }
 
 export interface IServiceEntrySurveyReadRepository {

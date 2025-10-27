@@ -38,10 +38,21 @@ export class GetServiceEntrySurveyResponsesUseCase {
   async execute(
     input: GetServiceEntrySurveyResponsesDto,
   ): Promise<GetServiceEntrySurveyResponsesResultDto> {
+    const filteredServiceEntryIds = await this.resolveServiceEntryIds(input);
+
+    if (filteredServiceEntryIds && filteredServiceEntryIds.length === 0) {
+      return {
+        items: [],
+        page: input.page,
+        perPage: input.perPage,
+        total: 0,
+      };
+    }
+
     const { data: surveys, total } = await this.surveyReadRepository.findAll({
       from: input.from ?? null,
       to: input.to ?? null,
-      serviceEntryIds: input.serviceEntryIds,
+      serviceEntryIds: filteredServiceEntryIds,
       templateId: input.templateId ?? null,
       templateVersion: input.templateVersion ?? null,
       page: input.page,
@@ -116,5 +127,30 @@ export class GetServiceEntrySurveyResponsesUseCase {
       perPage: input.perPage,
       total,
     };
+  }
+
+  private async resolveServiceEntryIds(
+    input: GetServiceEntrySurveyResponsesDto,
+  ): Promise<string[] | undefined> {
+    let ids = input.serviceEntryIds ? [...input.serviceEntryIds] : undefined;
+
+    if (input.search && input.search.trim().length > 0) {
+      const matchedIds = await this.serviceEntryReadRepository.searchIds(
+        input.search.trim(),
+      );
+
+      if (matchedIds.length === 0) {
+        return [];
+      }
+
+      if (ids && ids.length > 0) {
+        const matchedSet = new Set(matchedIds);
+        ids = ids.filter((id) => matchedSet.has(id));
+      } else {
+        ids = matchedIds;
+      }
+    }
+
+    return ids;
   }
 }

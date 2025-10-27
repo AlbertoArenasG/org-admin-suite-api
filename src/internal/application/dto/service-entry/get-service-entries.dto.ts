@@ -38,7 +38,7 @@ export interface ServiceEntryViewDto {
   contactEmail: string;
   serviceOrderIdentifier: string;
   category: ServiceEntryCategory;
-  calibrationCertificateFileId: string;
+  calibrationCertificateFileId: string | null;
   attachmentFileIds: string[];
   status: ServiceEntryStatus;
   surveyAccessId: string | null;
