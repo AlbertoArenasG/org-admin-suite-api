@@ -22,7 +22,9 @@ export class GetServiceCategoriesHandler
     super();
   }
 
-  async execute(): Promise<ServiceEntryCategoryViewDto[]> {
-    return this.run(null, () => this.useCase.execute());
+  async execute(
+    query: GetServiceCategoriesQuery,
+  ): Promise<ServiceEntryCategoryViewDto[]> {
+    return this.run(query, () => Promise.resolve(this.useCase.execute()));
   }
 }

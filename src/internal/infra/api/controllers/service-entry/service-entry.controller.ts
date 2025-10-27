@@ -34,6 +34,7 @@ import {
   GetServiceEntryByIdQuery,
   GetServiceEntrySurveyStatsQuery,
   GetServiceEntrySurveyResponsesQuery,
+  GetServiceCategoriesQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
