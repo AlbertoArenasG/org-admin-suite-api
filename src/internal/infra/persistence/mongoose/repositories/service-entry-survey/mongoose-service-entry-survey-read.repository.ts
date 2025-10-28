@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { PipelineStage } from 'mongoose';
 
 import {
   IServiceEntrySurveyReadRepository,
   FindServiceEntrySurveysParams,
 } from '@domain/ports/repositories';
-import { ServiceEntrySurvey } from '@domain/entities';
+import { ServiceEntrySurvey, ServiceEntryStatus } from '@domain/entities';
+import { ServiceEntrySurveyDocument } from '@infra/persistence/mongoose/schemas';
 import { MongooseServiceEntrySurveyBaseRepository } from './mongoose-service-entry-survey-base.repository';
 
 @Injectable()
@@ -84,19 +86,46 @@ export class MongooseServiceEntrySurveyReadRepositoryImpl
       filter.template_version = params.templateVersion;
     }
 
-    let query = this.surveyModel.find(filter);
-    const total = await this.surveyModel.countDocuments(filter).exec();
+    const pipeline: PipelineStage[] = [
+      { $match: filter },
+      {
+        $lookup: {
+          from: 'service_entries',
+          localField: 'service_entry_id',
+          foreignField: 'service_entry_id',
+          as: 'service_entry',
+        },
+      },
+      { $unwind: '$service_entry' },
+      {
+        $match: {
+          'service_entry.status': { $ne: ServiceEntryStatus.DELETED },
+        },
+      },
+    ];
+
+    const [totalResult] = await this.surveyModel
+      .aggregate([...pipeline, { $count: 'count' }])
+      .exec();
+
+    const total = totalResult?.count ?? 0;
+
+    const dataPipeline: PipelineStage[] = [...pipeline];
 
     if (params.page && params.perPage) {
       const skip = (params.page - 1) * params.perPage;
-      query = query.skip(skip).limit(params.perPage);
+      dataPipeline.push({ $skip: skip }, { $limit: params.perPage });
     }
 
-    const documents = await query.exec();
+    dataPipeline.push({ $project: { service_entry: 0 } });
+
+    const documents = await this.surveyModel.aggregate(dataPipeline).exec();
 
     return {
       data: documents
-        .map((document) => this.toDomain(document))
+        .map((document) =>
+          this.toDomain(document as unknown as ServiceEntrySurveyDocument),
+        )
         .filter((survey): survey is ServiceEntrySurvey => survey !== null),
       total,
     };
