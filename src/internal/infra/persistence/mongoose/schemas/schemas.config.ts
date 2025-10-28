@@ -6,6 +6,10 @@ export const configSchemas = [
     schema: schemas.UserSchema,
   },
   {
+    name: schemas.UserPasswordResetTokenDocument.name,
+    schema: schemas.UserPasswordResetTokenSchema,
+  },
+  {
     name: schemas.UserRegistrationInvitationDocument.name,
     schema: schemas.UserRegistrationInvitationSchema,
   },

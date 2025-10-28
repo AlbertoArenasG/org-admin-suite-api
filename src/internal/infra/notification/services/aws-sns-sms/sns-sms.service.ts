@@ -32,6 +32,9 @@ export class SnsSmsService implements ISmsService {
       [NotificationType.USER_REGISTRATION_INVITATION]: Handlebars.compile(
         'Completa tu registro en la plataforma: {{link}}',
       ),
+      [NotificationType.USER_PASSWORD_RESET]: Handlebars.compile(
+        'Restablece tu contraseña aquí: {{link}}',
+      ),
       [NotificationType.SERVICE_ENTRY_CREATED]: Handlebars.compile(
         'Se registró un nuevo servicio: {{serviceOrderIdentifier}}',
       ),

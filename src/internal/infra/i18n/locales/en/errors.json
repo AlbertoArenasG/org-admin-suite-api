@@ -5,6 +5,9 @@
     "USER": {
       "PASSWORD": "Invalid password format"
     },
+    "USER_PASSWORD_RESET": {
+      "TOKEN": "Password reset token is invalid"
+    },
     "USER_REGISTRATION_INVITATION": {
       "TOKEN": "Invitation token is invalid"
     }
@@ -39,6 +42,7 @@
   "ENTITY_NOT_FOUND": {
     "USER": "User not found",
     "USER_REGISTRATION_INVITATION": "Invitation not found or already used",
+    "USER_PASSWORD_RESET_TOKEN": "Password reset token not found",
     "FILE": "File not found",
     "SERVICE_ENTRY": "Service entry not found"
   }

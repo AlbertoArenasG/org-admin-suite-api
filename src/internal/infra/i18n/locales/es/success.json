@@ -13,6 +13,10 @@
     "UPDATED": "Servicio actualizado correctamente",
     "DELETED": "Servicio eliminado correctamente"
   },
+  "AUTH": {
+    "PASSWORD_RESET_REQUESTED": "Si el correo existe, enviaremos un enlace para restablecer tu contraseña",
+    "PASSWORD_RESET_COMPLETED": "Tu contraseña se actualizó correctamente"
+  },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitación creada correctamente",
     "COMPLETED": "Registro completado correctamente",

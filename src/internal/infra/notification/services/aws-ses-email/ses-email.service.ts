@@ -7,6 +7,7 @@ import { IEmailService } from '@domain/ports/services';
 import {
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
+  UserPasswordResetEmailDto,
   UserWelcomeEmailDto,
 } from '@application/dto';
 import {
@@ -85,6 +86,23 @@ export class SesEmailService implements IEmailService {
     const html = template(context);
 
     await this.send(payload.contactEmail, subject(context), html);
+  }
+
+  async sendUserPasswordReset(
+    payload: UserPasswordResetEmailDto,
+  ): Promise<void> {
+    const template = this.templates[NotificationType.USER_PASSWORD_RESET];
+    const subject = this.subjects[NotificationType.USER_PASSWORD_RESET];
+
+    const context = {
+      name: payload.fullName,
+      link: payload.resetUrl,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+
+    await this.send(payload.email, subject(context), html);
   }
 
   private async send(

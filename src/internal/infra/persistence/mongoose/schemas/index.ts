@@ -1,5 +1,6 @@
 export * from './user';
 export * from './user-registration-invitation';
+export * from './user-password-reset';
 export * from './file/file.schema';
 export * from './service-entry/service-entry.schema';
 export * from './service-entry/service-entry-access.schema';

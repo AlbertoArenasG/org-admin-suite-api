@@ -3,6 +3,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 import {
   AuthenticateUserHandler,
+  RequestPasswordResetHandler,
+  ResetUserPasswordHandler,
   CompleteNewUserRegistrationInvitationHandler,
   CreateMasterUserHandler,
   CreateMasterUserRegistrationInvitationHandler,
@@ -34,6 +36,8 @@ import {
 
 const providers = [
   AuthenticateUserHandler,
+  RequestPasswordResetHandler,
+  ResetUserPasswordHandler,
   CreateUserAndNotifyHandler,
   CreateMasterUserHandler,
   CreateUserRegistrationInvitationHandler,

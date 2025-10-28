@@ -6,6 +6,7 @@ import { IEmailService } from '@domain/ports/services';
 import {
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
+  UserPasswordResetEmailDto,
   UserWelcomeEmailDto,
 } from '@application/dto';
 
@@ -105,5 +106,29 @@ export class MailerEmailService implements IEmailService {
     this.logger.debug(
       `Service entry email sent to ${payload.contactEmail} for order ${payload.serviceOrderIdentifier}`,
     );
+  }
+
+  async sendUserPasswordReset(
+    payload: UserPasswordResetEmailDto,
+  ): Promise<void> {
+    const template = this.templates[NotificationType.USER_PASSWORD_RESET];
+    const subjectTemplate = this.subjects[NotificationType.USER_PASSWORD_RESET];
+
+    const context = {
+      name: payload.fullName,
+      link: payload.resetUrl,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+    const subject = subjectTemplate(context);
+
+    await this.mailerService.sendMail({
+      to: payload.email,
+      subject,
+      html,
+    });
+
+    this.logger.debug(`Password reset email sent to ${payload.email}`);
   }
 }

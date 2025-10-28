@@ -13,6 +13,10 @@
     "UPDATED": "Service entry updated successfully",
     "DELETED": "Service entry deleted successfully"
   },
+  "AUTH": {
+    "PASSWORD_RESET_REQUESTED": "If the email exists, we've sent a link to reset your password",
+    "PASSWORD_RESET_COMPLETED": "Your password was updated successfully"
+  },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitation created successfully",
     "COMPLETED": "Registration completed successfully",

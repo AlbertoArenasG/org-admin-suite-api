@@ -3,6 +3,8 @@ import {
   MongooseUserRegistrationInvitationWriteRepositoryImpl,
   MongooseUserReadRepositoryImpl,
   MongooseUserWriteRepositoryImpl,
+  MongooseUserPasswordResetTokenReadRepositoryImpl,
+  MongooseUserPasswordResetTokenWriteRepositoryImpl,
   MongooseFileReadRepositoryImpl,
   MongooseFileWriteRepositoryImpl,
   MongooseServiceEntryReadRepositoryImpl,
@@ -19,6 +21,8 @@ import {
   IUserRegistrationInvitationWriteRepositoryToken,
   IUserReadRepositoryToken,
   IUserWriteRepositoryToken,
+  IUserPasswordResetTokenReadRepositoryToken,
+  IUserPasswordResetTokenWriteRepositoryToken,
   IFileReadRepositoryToken,
   IFileWriteRepositoryToken,
   IServiceEntryReadRepositoryToken,
@@ -46,6 +50,14 @@ export const MongooseRepositoriesConfig = [
   {
     provide: IUserRegistrationInvitationWriteRepositoryToken,
     useClass: MongooseUserRegistrationInvitationWriteRepositoryImpl,
+  },
+  {
+    provide: IUserPasswordResetTokenReadRepositoryToken,
+    useClass: MongooseUserPasswordResetTokenReadRepositoryImpl,
+  },
+  {
+    provide: IUserPasswordResetTokenWriteRepositoryToken,
+    useClass: MongooseUserPasswordResetTokenWriteRepositoryImpl,
   },
   {
     provide: IFileReadRepositoryToken,
@@ -90,6 +102,8 @@ export const MongooseRepositoryTokens = [
   IUserWriteRepositoryToken,
   IUserRegistrationInvitationReadRepositoryToken,
   IUserRegistrationInvitationWriteRepositoryToken,
+  IUserPasswordResetTokenReadRepositoryToken,
+  IUserPasswordResetTokenWriteRepositoryToken,
   IFileReadRepositoryToken,
   IFileWriteRepositoryToken,
   IServiceEntryReadRepositoryToken,

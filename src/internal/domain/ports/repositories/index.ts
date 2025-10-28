@@ -5,3 +5,4 @@ export * from './service-entry-access';
 export * from './service-entry-survey';
 export * from './service-entry-survey-template';
 export * from './file';
+export * from './user-password-reset';

@@ -2,9 +2,17 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import { LoginRequestDto } from '@infra/api/dto/auth';
+import {
+  LoginRequestDto,
+  RequestPasswordResetRequestDto,
+  ResetPasswordRequestDto,
+} from '@infra/api/dto/auth';
 import { AuthPresenter } from '@infra/api/presenters/auth';
-import { AuthenticateUserCommandAdapter } from '@infra/cqrs/commands';
+import {
+  AuthenticateUserCommandAdapter,
+  RequestPasswordResetCommandAdapter,
+  ResetUserPasswordCommandAdapter,
+} from '@infra/cqrs/commands';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 
 @Controller('v1/auth')
@@ -25,6 +33,36 @@ export class AuthController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Post('password-reset/request')
+  @HttpCode(HttpStatus.OK)
+  async requestPasswordReset(@Body() body: RequestPasswordResetRequestDto) {
+    const command = RequestPasswordResetCommandAdapter.create(body.toDomain());
+
+    await this.commandBus.execute(command);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(
+        this.successMsgService.getMsg('AUTH.PASSWORD_RESET_REQUESTED'),
+      )
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Post('password-reset/confirm')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() body: ResetPasswordRequestDto) {
+    const command = ResetUserPasswordCommandAdapter.create(body.toDomain());
+
+    await this.commandBus.execute(command);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(
+        this.successMsgService.getMsg('AUTH.PASSWORD_RESET_COMPLETED'),
+      )
       .withStatus(HttpStatus.OK)
       .build();
   }

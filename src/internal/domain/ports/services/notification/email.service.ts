@@ -1,6 +1,7 @@
 import {
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
+  UserPasswordResetEmailDto,
   UserWelcomeEmailDto,
 } from '@application/dto/notification';
 
@@ -12,6 +13,7 @@ export interface IEmailService {
   sendServiceEntryCreated(
     payload: ServiceEntryCreatedNotificationDto,
   ): Promise<void>;
+  sendUserPasswordReset(payload: UserPasswordResetEmailDto): Promise<void>;
 }
 
 export const IEmailServiceToken = Symbol('IEmailService');
