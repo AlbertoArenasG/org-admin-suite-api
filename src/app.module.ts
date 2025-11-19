@@ -1,10 +1,26 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE, APP_INTERCEPTOR } from '@nestjs/core';
+
+import { GlobalExceptionFilter } from '@src/internal/infra/api/filters/global-exception.filter';
+import { LoggingInterceptor } from '@infra/api/interceptors/global-logging.interceptor';
+import * as modules from '@modules/index';
+
+const modulesList = Object.values(modules);
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [...modulesList],
+  controllers: [],
+  providers: [
+    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    { provide: APP_FILTER, useClass: GlobalExceptionFilter },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: false,
+        transform: true,
+      }),
+    },
+  ],
 })
 export class AppModule {}

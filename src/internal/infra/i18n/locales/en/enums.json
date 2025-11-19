@@ -1,0 +1,45 @@
+{
+  "USER": {
+    "ROLE": {
+      "MASTER_ADMIN": "Master admin",
+      "MASTER_STAFF": "Master staff",
+      "ADMIN": "Administrator",
+      "STAFF": "Staff",
+      "CUSTOMER": "Customer"
+    },
+    "STATUS": {
+      "ACTIVE": "Active user",
+      "INACTIVE": "Inactive user",
+      "DELETED": "Deleted user"
+    }
+  },
+  "SERVICE_ENTRY": {
+    "CATEGORY": {
+      "ANALYSIS": "Analysis",
+      "CALIBRATION": "Calibration",
+      "EQUIPMENT_DELIVERY": "Equipment delivery",
+      "MACHINING": "Machining",
+      "CORRECTIVE_MAINTENANCE": "Corrective maintenance",
+      "PREVENTIVE_MAINTENANCE": "Preventive maintenance",
+      "CALIBRATION_COLLECTION": "Calibration collection",
+      "ON_SITE_SERVICE": "On-site service"
+    },
+    "STATUS": {
+      "ACTIVE": "Active",
+      "DELETED": "Deleted"
+    }
+  },
+  "CUSTOMER_FISCAL_PROFILE": {
+    "STATUS": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed"
+    }
+  },
+  "CUSTOMER": {
+    "STATUS": {
+      "ACTIVE": "Active customer",
+      "INACTIVE": "Inactive customer",
+      "DELETED": "Deleted customer"
+    }
+  }
+}

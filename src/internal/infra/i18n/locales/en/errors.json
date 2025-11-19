@@ -1,0 +1,55 @@
+{
+  "VALIDATION": {
+    "DEFAULT": "Validation error",
+    "PHONE": "Invalid phone number {phone} format",
+    "USER": {
+      "PASSWORD": "Invalid password format"
+    },
+    "USER_PASSWORD_RESET": {
+      "TOKEN": "Password reset token is invalid"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "TOKEN": "Invitation token is invalid"
+    }
+  },
+  "ENTITY_ALREADY_EXISTS": {
+    "USER": {
+      "EMAIL": "User with email {email} already exists"
+    },
+    "USER_REGISTRATION_INVITATION": {
+      "EMAIL": "An invitation for {email} already exists"
+    },
+    "SERVICE_ENTRY": {
+      "ORDER": "A service entry with order {serviceOrderIdentifier} already exists"
+    },
+    "CUSTOMER_FISCAL_PROFILE": {
+      "CLIENT_CODE": "A customer fiscal profile with code {clientCode} already exists",
+      "FORM": "Customer fiscal information has already been submitted"
+    }
+  },
+  "AUTHENTICATION": {
+    "INVALID_CREDENTIALS": "Invalid email or password",
+    "USER_INACTIVE": "User account is inactive",
+    "TOKEN_MISSING": "Authentication token is missing from the request",
+    "AUTHORIZATION_HEADER_INVALID": "Authorization header is invalid",
+    "TOKEN_INVALID": "Authentication token is invalid",
+    "TOKEN_EXPIRED": "Authentication token has expired",
+    "TOKEN_TYPE_UNRECOGNIZED": "Token type {actualType} is not supported",
+    "TOKEN_PAYLOAD_INVALID": "Token payload is not valid",
+    "TOKEN_ROLE_INVALID": "Token role {role} is not allowed"
+  },
+  "AUTHORIZATION": {
+    "CONTEXT_MISSING": "Authorization context is missing",
+    "MASTER_PRIVILEGES_REQUIRED": "Master privileges are required",
+    "ROLE_PRIVILEGES_INSUFFICIENT": "User role {role} does not have the required privileges"
+  },
+  "ENTITY_NOT_FOUND": {
+    "USER": "User not found",
+    "USER_REGISTRATION_INVITATION": "Invitation not found or already used",
+    "USER_PASSWORD_RESET_TOKEN": "Password reset token not found",
+    "FILE": "File not found",
+    "SERVICE_ENTRY": "Service entry not found",
+    "CUSTOMER": "Customer not found",
+    "CUSTOMER_FISCAL_PROFILE": "Customer fiscal profile not found"
+  }
+}

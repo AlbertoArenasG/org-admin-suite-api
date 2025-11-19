@@ -1,0 +1,35 @@
+{
+  "DEFAULT": "La solicitud se ha procesado correctamente",
+  "USER": {
+    "CREATED": "Usuario creado correctamente",
+    "UPDATED": "User actualizado correctamente",
+    "DELETED": "Usuario eliminado correctamente"
+  },
+  "FILE": {
+    "UPLOADED": "Archivos subidos correctamente"
+  },
+  "SERVICE_ENTRY": {
+    "CREATED": "Servicio registrado correctamente",
+    "UPDATED": "Servicio actualizado correctamente",
+    "DELETED": "Servicio eliminado correctamente"
+  },
+  "CUSTOMER_FISCAL_PROFILE": {
+    "CREATED": "Perfil fiscal del cliente creado correctamente",
+    "SUBMITTED": "Información fiscal del cliente enviada correctamente"
+  },
+  "CUSTOMER": {
+    "CREATED": "Cliente creado correctamente",
+    "UPDATED": "Cliente actualizado correctamente",
+    "DELETED": "Cliente eliminado correctamente"
+  },
+  "AUTH": {
+    "PASSWORD_RESET_REQUESTED": "Si el correo existe, enviaremos un enlace para restablecer tu contraseña",
+    "PASSWORD_RESET_COMPLETED": "Tu contraseña se actualizó correctamente"
+  },
+  "USER_REGISTRATION_INVITATION": {
+    "CREATED": "Invitación creada correctamente",
+    "COMPLETED": "Registro completado correctamente",
+    "ACCEPTED": "Invitación aceptada correctamente",
+    "DECLINED": "Invitación rechazada correctamente"
+  }
+}

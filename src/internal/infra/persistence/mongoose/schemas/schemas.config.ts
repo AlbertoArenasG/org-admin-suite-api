@@ -1,0 +1,44 @@
+import * as schemas from './index';
+
+export const configSchemas = [
+  {
+    name: schemas.UserDocument.name,
+    schema: schemas.UserSchema,
+  },
+  {
+    name: schemas.UserPasswordResetTokenDocument.name,
+    schema: schemas.UserPasswordResetTokenSchema,
+  },
+  {
+    name: schemas.UserRegistrationInvitationDocument.name,
+    schema: schemas.UserRegistrationInvitationSchema,
+  },
+  {
+    name: schemas.FileDocument.name,
+    schema: schemas.FileSchema,
+  },
+  {
+    name: schemas.ServiceEntryDocument.name,
+    schema: schemas.ServiceEntrySchema,
+  },
+  {
+    name: schemas.ServiceEntryAccessDocument.name,
+    schema: schemas.ServiceEntryAccessSchema,
+  },
+  {
+    name: schemas.ServiceEntrySurveyDocument.name,
+    schema: schemas.ServiceEntrySurveySchema,
+  },
+  {
+    name: schemas.ServiceEntrySurveyTemplateDocument.name,
+    schema: schemas.ServiceEntrySurveyTemplateSchema,
+  },
+  {
+    name: schemas.CustomerFiscalProfileDocument.name,
+    schema: schemas.CustomerFiscalProfileSchema,
+  },
+  {
+    name: schemas.CustomerDocument.name,
+    schema: schemas.CustomerSchema,
+  },
+];
