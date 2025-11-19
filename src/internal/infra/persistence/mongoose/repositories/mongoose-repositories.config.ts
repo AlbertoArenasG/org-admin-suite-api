@@ -14,6 +14,10 @@ import {
   MongooseServiceEntrySurveyReadRepositoryImpl,
   MongooseServiceEntrySurveyWriteRepositoryImpl,
   MongooseServiceEntrySurveyTemplateReadRepositoryImpl,
+  MongooseCustomerFiscalProfileReadRepositoryImpl,
+  MongooseCustomerFiscalProfileWriteRepositoryImpl,
+  MongooseCustomerReadRepositoryImpl,
+  MongooseCustomerWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -32,6 +36,10 @@ import {
   IServiceEntrySurveyReadRepositoryToken,
   IServiceEntrySurveyWriteRepositoryToken,
   IServiceEntrySurveyTemplateReadRepositoryToken,
+  ICustomerFiscalProfileReadRepositoryToken,
+  ICustomerFiscalProfileWriteRepositoryToken,
+  ICustomerReadRepositoryToken,
+  ICustomerWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -95,6 +103,22 @@ export const MongooseRepositoriesConfig = [
     provide: IServiceEntrySurveyTemplateReadRepositoryToken,
     useClass: MongooseServiceEntrySurveyTemplateReadRepositoryImpl,
   },
+  {
+    provide: ICustomerFiscalProfileReadRepositoryToken,
+    useClass: MongooseCustomerFiscalProfileReadRepositoryImpl,
+  },
+  {
+    provide: ICustomerFiscalProfileWriteRepositoryToken,
+    useClass: MongooseCustomerFiscalProfileWriteRepositoryImpl,
+  },
+  {
+    provide: ICustomerReadRepositoryToken,
+    useClass: MongooseCustomerReadRepositoryImpl,
+  },
+  {
+    provide: ICustomerWriteRepositoryToken,
+    useClass: MongooseCustomerWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -113,4 +137,8 @@ export const MongooseRepositoryTokens = [
   IServiceEntrySurveyReadRepositoryToken,
   IServiceEntrySurveyWriteRepositoryToken,
   IServiceEntrySurveyTemplateReadRepositoryToken,
+  ICustomerFiscalProfileReadRepositoryToken,
+  ICustomerFiscalProfileWriteRepositoryToken,
+  ICustomerReadRepositoryToken,
+  ICustomerWriteRepositoryToken,
 ];

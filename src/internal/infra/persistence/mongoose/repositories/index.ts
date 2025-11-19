@@ -6,3 +6,5 @@ export * from './service-entry';
 export * from './service-entry-access';
 export * from './service-entry-survey';
 export * from './service-entry-survey-template';
+export * from './customer-fiscal-profile';
+export * from './customer';

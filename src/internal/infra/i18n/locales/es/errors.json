@@ -21,6 +21,10 @@
     },
     "SERVICE_ENTRY": {
       "ORDER": "Ya existe un servicio con la orden {serviceOrderIdentifier}"
+    },
+    "CUSTOMER_FISCAL_PROFILE": {
+      "CLIENT_CODE": "Ya existe un perfil fiscal con el código {clientCode}",
+      "FORM": "La información fiscal del cliente ya fue registrada"
     }
   },
   "AUTHENTICATION": {
@@ -44,6 +48,8 @@
     "USER_REGISTRATION_INVITATION": "No se encontró la invitación o ya fue utilizada",
     "USER_PASSWORD_RESET_TOKEN": "No se encontró el token para restablecer contraseña",
     "FILE": "No se encontró el archivo",
-    "SERVICE_ENTRY": "No se encontró el servicio"
+    "SERVICE_ENTRY": "No se encontró el servicio",
+    "CUSTOMER": "No se encontró el cliente",
+    "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente"
   }
 }

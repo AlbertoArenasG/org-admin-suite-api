@@ -13,6 +13,15 @@
     "UPDATED": "Servicio actualizado correctamente",
     "DELETED": "Servicio eliminado correctamente"
   },
+  "CUSTOMER_FISCAL_PROFILE": {
+    "CREATED": "Perfil fiscal del cliente creado correctamente",
+    "SUBMITTED": "Información fiscal del cliente enviada correctamente"
+  },
+  "CUSTOMER": {
+    "CREATED": "Cliente creado correctamente",
+    "UPDATED": "Cliente actualizado correctamente",
+    "DELETED": "Cliente eliminado correctamente"
+  },
   "AUTH": {
     "PASSWORD_RESET_REQUESTED": "Si el correo existe, enviaremos un enlace para restablecer tu contraseña",
     "PASSWORD_RESET_COMPLETED": "Tu contraseña se actualizó correctamente"

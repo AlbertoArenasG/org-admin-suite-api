@@ -1,0 +1,23 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { Customer } from '@domain/entities';
+import { CustomerDocument } from '@infra/persistence/mongoose/schemas';
+import { MongooseCustomerMapper } from '@infra/persistence/mongoose/mappers';
+
+@Injectable()
+export class MongooseCustomerBaseRepository {
+  constructor(
+    @InjectModel(CustomerDocument.name)
+    protected readonly customerModel: Model<CustomerDocument>,
+  ) {}
+
+  protected toDomain(document: CustomerDocument): Customer | null {
+    return MongooseCustomerMapper.toDomain(document);
+  }
+
+  protected toMongoose(customer: Customer) {
+    return MongooseCustomerMapper.toMongoose(customer);
+  }
+}

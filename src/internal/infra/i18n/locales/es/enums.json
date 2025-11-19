@@ -28,5 +28,18 @@
       "ACTIVE": "Activo",
       "DELETED": "Eliminado"
     }
+  },
+  "CUSTOMER_FISCAL_PROFILE": {
+    "STATUS": {
+      "PENDING": "Pendiente",
+      "COMPLETED": "Completado"
+    }
+  },
+  "CUSTOMER": {
+    "STATUS": {
+      "ACTIVE": "Cliente activo",
+      "INACTIVE": "Cliente inactivo",
+      "DELETED": "Cliente eliminado"
+    }
   }
 }

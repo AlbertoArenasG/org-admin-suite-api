@@ -56,6 +56,39 @@ export class FileController {
       buffer: Buffer;
     }>,
   ) {
+    return this.handleUpload(body, files, currentUser?.userId ?? null);
+  }
+
+  @Post('public')
+  @UseInterceptors(
+    FilesInterceptor('files', 10, {
+      storage: memoryStorage(),
+    }),
+  )
+  @HttpCode(HttpStatus.CREATED)
+  async publicUpload(
+    @Body() body: Record<string, any>,
+    @UploadedFiles()
+    files: Array<{
+      originalname: string;
+      mimetype: string;
+      size: number;
+      buffer: Buffer;
+    }>,
+  ) {
+    return this.handleUpload(body, files, null);
+  }
+
+  private async handleUpload(
+    body: Record<string, any>,
+    files: Array<{
+      originalname: string;
+      mimetype: string;
+      size: number;
+      buffer: Buffer;
+    }>,
+    uploadedBy: string | null,
+  ) {
     if (!files || files.length === 0) {
       throw new BadRequestException('No files uploaded');
     }
@@ -70,7 +103,7 @@ export class FileController {
         buffer: file.buffer,
         metadata: metadataList[index] ?? {},
       })),
-      uploadedBy: currentUser?.userId ?? null,
+      uploadedBy,
     });
 
     const result = await this.commandBus.execute(command);

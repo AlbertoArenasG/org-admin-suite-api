@@ -13,6 +13,15 @@
     "UPDATED": "Service entry updated successfully",
     "DELETED": "Service entry deleted successfully"
   },
+  "CUSTOMER_FISCAL_PROFILE": {
+    "CREATED": "Customer fiscal profile created successfully",
+    "SUBMITTED": "Customer fiscal information submitted successfully"
+  },
+  "CUSTOMER": {
+    "CREATED": "Customer created successfully",
+    "UPDATED": "Customer updated successfully",
+    "DELETED": "Customer deleted successfully"
+  },
   "AUTH": {
     "PASSWORD_RESET_REQUESTED": "If the email exists, we've sent a link to reset your password",
     "PASSWORD_RESET_COMPLETED": "Your password was updated successfully"

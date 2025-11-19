@@ -33,4 +33,12 @@ export const configSchemas = [
     name: schemas.ServiceEntrySurveyTemplateDocument.name,
     schema: schemas.ServiceEntrySurveyTemplateSchema,
   },
+  {
+    name: schemas.CustomerFiscalProfileDocument.name,
+    schema: schemas.CustomerFiscalProfileSchema,
+  },
+  {
+    name: schemas.CustomerDocument.name,
+    schema: schemas.CustomerSchema,
+  },
 ];

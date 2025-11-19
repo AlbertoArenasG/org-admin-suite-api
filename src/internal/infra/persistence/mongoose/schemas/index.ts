@@ -6,3 +6,5 @@ export * from './service-entry/service-entry.schema';
 export * from './service-entry/service-entry-access.schema';
 export * from './service-entry-survey/service-entry-survey.schema';
 export * from './service-entry-survey-template/service-entry-survey-template.schema';
+export * from './customer-fiscal-profile/customer-fiscal-profile.schema';
+export * from './customer/customer.schema';

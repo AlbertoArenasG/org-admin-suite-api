@@ -21,6 +21,10 @@
     },
     "SERVICE_ENTRY": {
       "ORDER": "A service entry with order {serviceOrderIdentifier} already exists"
+    },
+    "CUSTOMER_FISCAL_PROFILE": {
+      "CLIENT_CODE": "A customer fiscal profile with code {clientCode} already exists",
+      "FORM": "Customer fiscal information has already been submitted"
     }
   },
   "AUTHENTICATION": {
@@ -44,6 +48,8 @@
     "USER_REGISTRATION_INVITATION": "Invitation not found or already used",
     "USER_PASSWORD_RESET_TOKEN": "Password reset token not found",
     "FILE": "File not found",
-    "SERVICE_ENTRY": "Service entry not found"
+    "SERVICE_ENTRY": "Service entry not found",
+    "CUSTOMER": "Customer not found",
+    "CUSTOMER_FISCAL_PROFILE": "Customer fiscal profile not found"
   }
 }
