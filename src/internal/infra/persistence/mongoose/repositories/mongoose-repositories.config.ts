@@ -18,6 +18,8 @@ import {
   MongooseCustomerFiscalProfileWriteRepositoryImpl,
   MongooseCustomerReadRepositoryImpl,
   MongooseCustomerWriteRepositoryImpl,
+  MongooseServicePackageRecordWriteRepositoryImpl,
+  MongooseServicePackageRecordReadRepositoryImpl,
 } from '.';
 
 import {
@@ -40,6 +42,8 @@ import {
   ICustomerFiscalProfileWriteRepositoryToken,
   ICustomerReadRepositoryToken,
   ICustomerWriteRepositoryToken,
+  IServicePackageRecordWriteRepositoryToken,
+  IServicePackageRecordReadRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -119,6 +123,14 @@ export const MongooseRepositoriesConfig = [
     provide: ICustomerWriteRepositoryToken,
     useClass: MongooseCustomerWriteRepositoryImpl,
   },
+  {
+    provide: IServicePackageRecordWriteRepositoryToken,
+    useClass: MongooseServicePackageRecordWriteRepositoryImpl,
+  },
+  {
+    provide: IServicePackageRecordReadRepositoryToken,
+    useClass: MongooseServicePackageRecordReadRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -141,4 +153,6 @@ export const MongooseRepositoryTokens = [
   ICustomerFiscalProfileWriteRepositoryToken,
   ICustomerReadRepositoryToken,
   ICustomerWriteRepositoryToken,
+  IServicePackageRecordWriteRepositoryToken,
+  IServicePackageRecordReadRepositoryToken,
 ];

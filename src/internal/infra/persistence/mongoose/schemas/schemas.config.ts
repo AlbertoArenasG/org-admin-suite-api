@@ -41,4 +41,8 @@ export const configSchemas = [
     name: schemas.CustomerDocument.name,
     schema: schemas.CustomerSchema,
   },
+  {
+    name: schemas.ServicePackageRecordDocument.name,
+    schema: schemas.ServicePackageRecordSchema,
+  },
 ];

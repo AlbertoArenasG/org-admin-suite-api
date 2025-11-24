@@ -8,3 +8,4 @@ export * from './service-entry-survey';
 export * from './service-entry-survey-template';
 export * from './customer-fiscal-profile';
 export * from './customer';
+export * from './service-package';

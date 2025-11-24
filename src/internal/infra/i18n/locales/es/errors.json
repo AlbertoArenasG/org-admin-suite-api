@@ -10,6 +10,10 @@
     },
     "USER_REGISTRATION_INVITATION": {
       "TOKEN": "El token de invitación es inválido"
+    },
+    "SERVICE_PACKAGE": {
+      "ARCHIVE": "El archivo ZIP no contiene servicios válidos",
+      "DETAILS": "El archivo details.json del servicio está incompleto o es inválido"
     }
   },
   "ENTITY_ALREADY_EXISTS": {
@@ -50,6 +54,7 @@
     "FILE": "No se encontró el archivo",
     "SERVICE_ENTRY": "No se encontró el servicio",
     "CUSTOMER": "No se encontró el cliente",
-    "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente"
+    "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente",
+    "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio"
   }
 }

@@ -22,6 +22,10 @@
     "UPDATED": "Cliente actualizado correctamente",
     "DELETED": "Cliente eliminado correctamente"
   },
+  "SERVICE_PACKAGE": {
+    "UPLOADED": "Paquete de servicios procesado correctamente",
+    "DELETED": "Registro de servicio eliminado correctamente"
+  },
   "AUTH": {
     "PASSWORD_RESET_REQUESTED": "Si el correo existe, enviaremos un enlace para restablecer tu contraseña",
     "PASSWORD_RESET_COMPLETED": "Tu contraseña se actualizó correctamente"
