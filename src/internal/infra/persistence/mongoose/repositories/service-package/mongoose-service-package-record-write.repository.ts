@@ -27,4 +27,19 @@ export class MongooseServicePackageRecordWriteRepositoryImpl
       data: MongooseServicePackageRecordMapper.toDomain(document),
     };
   }
+
+  async update(
+    record: ServicePackageRecord,
+  ): Promise<{ data: ServicePackageRecord | null }> {
+    const data = MongooseServicePackageRecordMapper.toMongoose(record);
+    const document = await this.model
+      .findOneAndUpdate({ service_package_record_id: record.id }, data, {
+        new: true,
+      })
+      .exec();
+
+    return {
+      data: MongooseServicePackageRecordMapper.toDomain(document ?? null),
+    };
+  }
 }

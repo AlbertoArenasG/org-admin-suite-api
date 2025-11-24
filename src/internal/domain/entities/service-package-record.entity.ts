@@ -27,8 +27,14 @@ export interface ServicePackageRecordProps {
   serviceType?: string | null;
   purpose?: string | null;
   files: ServicePackageRecordFileProps[];
+  status?: ServicePackageRecordStatus;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export enum ServicePackageRecordStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
 }
 
 export class ServicePackageRecord extends Entity<ServicePackageRecordProps> {
@@ -45,6 +51,7 @@ export class ServicePackageRecord extends Entity<ServicePackageRecordProps> {
     props.serviceType = props.serviceType ?? null;
     props.purpose = props.purpose ?? null;
     props.files = props.files ?? [];
+    props.status = props.status ?? ServicePackageRecordStatus.ACTIVE;
     super(props);
   }
 
@@ -112,11 +119,24 @@ export class ServicePackageRecord extends Entity<ServicePackageRecordProps> {
     return this.props.files;
   }
 
+  get status(): ServicePackageRecordStatus {
+    return this.props.status ?? ServicePackageRecordStatus.ACTIVE;
+  }
+
   get createdAt(): Date | undefined {
     return this.props.createdAt;
   }
 
   get updatedAt(): Date | undefined {
     return this.props.updatedAt;
+  }
+
+  markAsDeleted() {
+    this.props.status = ServicePackageRecordStatus.DELETED;
+    this.touch();
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date();
   }
 }

@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import { genId } from '@src/common/utils';
+import { ServicePackageRecordStatus } from '@domain/entities';
 
 export interface IServicePackageRecordFileSchema {
   file_id: string;
@@ -84,6 +85,14 @@ export class ServicePackageRecordDocument extends Document {
     default: [],
   })
   files: IServicePackageRecordFileSchema[];
+
+  @Prop({
+    type: String,
+    enum: Object.values(ServicePackageRecordStatus),
+    default: ServicePackageRecordStatus.ACTIVE,
+    index: true,
+  })
+  status?: ServicePackageRecordStatus;
 
   @Prop()
   createdAt?: Date;

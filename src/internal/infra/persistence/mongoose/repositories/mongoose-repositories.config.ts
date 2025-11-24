@@ -19,6 +19,7 @@ import {
   MongooseCustomerReadRepositoryImpl,
   MongooseCustomerWriteRepositoryImpl,
   MongooseServicePackageRecordWriteRepositoryImpl,
+  MongooseServicePackageRecordReadRepositoryImpl,
 } from '.';
 
 import {
@@ -42,6 +43,7 @@ import {
   ICustomerReadRepositoryToken,
   ICustomerWriteRepositoryToken,
   IServicePackageRecordWriteRepositoryToken,
+  IServicePackageRecordReadRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -125,6 +127,10 @@ export const MongooseRepositoriesConfig = [
     provide: IServicePackageRecordWriteRepositoryToken,
     useClass: MongooseServicePackageRecordWriteRepositoryImpl,
   },
+  {
+    provide: IServicePackageRecordReadRepositoryToken,
+    useClass: MongooseServicePackageRecordReadRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -148,4 +154,5 @@ export const MongooseRepositoryTokens = [
   ICustomerReadRepositoryToken,
   ICustomerWriteRepositoryToken,
   IServicePackageRecordWriteRepositoryToken,
+  IServicePackageRecordReadRepositoryToken,
 ];

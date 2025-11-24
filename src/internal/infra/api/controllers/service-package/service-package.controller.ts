@@ -1,25 +1,40 @@
 import {
   BadRequestException,
   Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer, memoryStorage } from 'multer';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import { IngestServicePackageCommandAdapter } from '@infra/cqrs/commands';
+import {
+  DeleteServicePackageRecordCommandAdapter,
+  IngestServicePackageCommandAdapter,
+} from '@infra/cqrs/commands';
 import { ServicePackagePresenter } from '@infra/api/presenters/service-package';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
+import {
+  GetServicePackageRecordsQuery,
+  GetServicePackageRecordByIdQuery,
+} from '@infra/cqrs/queries';
+import { GetServicePackageRecordsRequestDto } from '@infra/api/dto';
+import { JwtAuthGuard } from '@infra/api/guards';
 
 @Controller('v1/service-packages')
 export class ServicePackageController {
   constructor(
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
     private readonly presenter: ServicePackagePresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
@@ -36,14 +51,6 @@ export class ServicePackageController {
       throw new BadRequestException('No package file uploaded');
     }
 
-    console.log('\n\n\n\n\n\n\n');
-    console.log('uploadedFile.originalname =>');
-    console.log(uploadedFile.originalname);
-    console.log('\n');
-    console.log('uploadedFile.buffer =>');
-    console.log(uploadedFile.buffer);
-    console.log('\n\n\n\n\n\n\n');
-
     const command = IngestServicePackageCommandAdapter.create({
       filename: uploadedFile.originalname ?? null,
       buffer: uploadedFile.buffer,
@@ -58,6 +65,58 @@ export class ServicePackageController {
       )
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Get('records')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async findAll(@Query() query: GetServicePackageRecordsRequestDto) {
+    const result = await this.queryBus.execute(
+      GetServicePackageRecordsQuery.create(query.toDomain()),
+    );
+    const data = this.presenter.toCollection(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('records/:recordId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('recordId') recordId: string) {
+    const result = await this.queryBus.execute(
+      GetServicePackageRecordByIdQuery.create(recordId),
+    );
+    const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Delete('records/:recordId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param('recordId') recordId: string) {
+    const command = DeleteServicePackageRecordCommandAdapter.create({
+      recordId,
+    });
+    const result = await this.commandBus.execute(command);
+    const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(
+        this.successMsgService.getMsg('SERVICE_PACKAGE.DELETED'),
+      )
+      .withData(data)
+      .withStatus(HttpStatus.OK)
       .build();
   }
 }

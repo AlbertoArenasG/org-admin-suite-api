@@ -54,6 +54,7 @@
     "FILE": "No se encontró el archivo",
     "SERVICE_ENTRY": "No se encontró el servicio",
     "CUSTOMER": "No se encontró el cliente",
-    "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente"
+    "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente",
+    "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio"
   }
 }

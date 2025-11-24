@@ -23,7 +23,8 @@
     "DELETED": "Customer deleted successfully"
   },
   "SERVICE_PACKAGE": {
-    "UPLOADED": "Service package processed successfully"
+    "UPLOADED": "Service package processed successfully",
+    "DELETED": "Service package record deleted successfully"
   },
   "AUTH": {
     "PASSWORD_RESET_REQUESTED": "If the email exists, we've sent a link to reset your password",

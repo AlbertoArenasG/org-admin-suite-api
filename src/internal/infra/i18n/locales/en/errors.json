@@ -54,6 +54,7 @@
     "FILE": "File not found",
     "SERVICE_ENTRY": "Service entry not found",
     "CUSTOMER": "Customer not found",
-    "CUSTOMER_FISCAL_PROFILE": "Customer fiscal profile not found"
+    "CUSTOMER_FISCAL_PROFILE": "Customer fiscal profile not found",
+    "SERVICE_PACKAGE_RECORD": "Service package record not found"
   }
 }
