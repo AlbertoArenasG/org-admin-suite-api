@@ -10,6 +10,10 @@
     },
     "USER_REGISTRATION_INVITATION": {
       "TOKEN": "Invitation token is invalid"
+    },
+    "SERVICE_PACKAGE": {
+      "ARCHIVE": "The ZIP file does not contain any valid services",
+      "DETAILS": "The details.json file is missing or invalid"
     }
   },
   "ENTITY_ALREADY_EXISTS": {

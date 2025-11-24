@@ -8,3 +8,4 @@ export * from './file';
 export * from './user-password-reset';
 export * from './customer-fiscal-profile';
 export * from './customer';
+export * from './service-package-record';

@@ -7,3 +7,4 @@ export * from './user-registration-invitation';
 export * from './file';
 export * from './service-entry';
 export * from './customer';
+export * from './service-package';

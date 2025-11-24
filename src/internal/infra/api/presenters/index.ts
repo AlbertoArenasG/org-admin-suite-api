@@ -4,3 +4,4 @@ export * from './user-registration-invitation';
 export * from './file';
 export * from './service-entry';
 export * from './customer-fiscal-profile';
+export * from './service-package';

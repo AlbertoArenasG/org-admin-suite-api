@@ -10,6 +10,10 @@
     },
     "USER_REGISTRATION_INVITATION": {
       "TOKEN": "El token de invitación es inválido"
+    },
+    "SERVICE_PACKAGE": {
+      "ARCHIVE": "El archivo ZIP no contiene servicios válidos",
+      "DETAILS": "El archivo details.json del servicio está incompleto o es inválido"
     }
   },
   "ENTITY_ALREADY_EXISTS": {

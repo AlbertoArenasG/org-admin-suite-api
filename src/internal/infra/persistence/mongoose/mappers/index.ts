@@ -8,3 +8,4 @@ export * from './service-entry-survey/mongoose-service-entry-survey.mapper';
 export * from './service-entry-survey-template/mongoose-service-entry-survey-template.mapper';
 export * from './customer-fiscal-profile/mongoose-customer-fiscal-profile.mapper';
 export * from './customer/mongoose-customer.mapper';
+export * from './service-package/mongoose-service-package-record.mapper';
