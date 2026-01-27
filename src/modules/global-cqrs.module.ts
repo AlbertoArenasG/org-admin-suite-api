@@ -27,6 +27,7 @@ import {
   CreateProviderHandler,
   UpdateProviderHandler,
   DeleteProviderHandler,
+  SubmitProviderProfileHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -48,6 +49,7 @@ import {
   GetServicePackageRecordByIdHandler,
   GetProvidersHandler,
   GetProviderByIdHandler,
+  GetProviderByTokenHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -79,6 +81,7 @@ const providers = [
   CreateProviderHandler,
   UpdateProviderHandler,
   DeleteProviderHandler,
+  SubmitProviderProfileHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -95,6 +98,7 @@ const providers = [
   GetServicePackageRecordByIdHandler,
   GetProvidersHandler,
   GetProviderByIdHandler,
+  GetProviderByTokenHandler,
 ];
 
 @Global()
