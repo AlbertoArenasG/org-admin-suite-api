@@ -44,6 +44,8 @@ import {
   GetCustomerFiscalProfileByTokenHandler,
   GetServicePackageRecordsHandler,
   GetServicePackageRecordByIdHandler,
+  GetProvidersHandler,
+  GetProviderByIdHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -87,6 +89,8 @@ const providers = [
   GetCustomerFiscalProfileByTokenHandler,
   GetServicePackageRecordsHandler,
   GetServicePackageRecordByIdHandler,
+  GetProvidersHandler,
+  GetProviderByIdHandler,
 ];
 
 @Global()

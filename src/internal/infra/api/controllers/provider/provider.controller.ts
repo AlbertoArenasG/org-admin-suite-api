@@ -1,19 +1,26 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import { CreateProviderRequestDto } from '@infra/api/dto/provider';
+import {
+  CreateProviderRequestDto,
+  GetProvidersRequestDto,
+} from '@infra/api/dto/provider';
 import { JwtAuthGuard } from '@infra/api/guards';
 import { ProviderPresenter } from '@infra/api/presenters/provider';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { CreateProviderCommandAdapter } from '@infra/cqrs/commands';
+import { GetProvidersQuery, GetProviderByIdQuery } from '@infra/cqrs/queries';
 import { CurrentUser } from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import { AuthorizationException } from '@domain/exceptions';
@@ -23,6 +30,7 @@ import { UserRole } from '@domain/entities';
 export class ProviderController {
   constructor(
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
     private readonly presenter: ProviderPresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
@@ -44,6 +52,49 @@ export class ProviderController {
       .withSuccessMessage(this.successMsgService.getMsg('PROVIDER.CREATED'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async findAll(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Query() query: GetProvidersRequestDto,
+  ) {
+    this.ensureAuthorized(currentUser.role);
+
+    const result = await this.queryBus.execute(
+      GetProvidersQuery.create(query.toDomain()),
+    );
+    const data = this.presenter.toCollection(result.items);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get(':providerId')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async findOne(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('providerId') providerId: string,
+  ) {
+    this.ensureAuthorized(currentUser.role);
+
+    const result = await this.queryBus.execute(
+      GetProviderByIdQuery.create(providerId),
+    );
+    const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
       .build();
   }
 

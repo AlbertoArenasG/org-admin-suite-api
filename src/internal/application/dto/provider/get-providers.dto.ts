@@ -5,6 +5,10 @@ import {
   ProviderFiscalProfileFormData,
   ProviderBankingInfoFormData,
 } from '@domain/entities';
+import {
+  PaginatedResultDto,
+  PaginationParamsDto,
+} from '@application/dto/shared';
 
 export interface ProviderFileDescriptorDto {
   fileId: string;
@@ -58,3 +62,22 @@ export interface ProviderViewDto {
   fiscalProfile: ProviderFiscalProfileDetailsDto | null;
   bankingInfo: ProviderBankingInfoDetailsDto | null;
 }
+
+export interface GetProvidersDto extends PaginationParamsDto {
+  search?: string | null;
+  status?: ProviderStatus | null;
+  fiscalProfileStatus?: ProviderFiscalProfileStatus | null;
+  bankingInfoStatus?: ProviderBankingInfoStatus | null;
+  sorts: Array<{
+    field:
+      | 'company_name'
+      | 'provider_code'
+      | 'provider_status'
+      | 'fiscal_profile_status'
+      | 'banking_info_status'
+      | 'created_at';
+    direction: 'asc' | 'desc';
+  }>;
+}
+
+export type GetProvidersResultDto = PaginatedResultDto<ProviderViewDto>;

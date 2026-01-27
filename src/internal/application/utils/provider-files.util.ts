@@ -1,4 +1,4 @@
-import { extname } from 'path';
+import { extname } from 'node:path';
 
 import { ProviderFiscalProfile, ProviderBankingInfo } from '@domain/entities';
 import { File } from '@domain/entities/file.entity';
@@ -23,7 +23,7 @@ export function createEmptyProviderBankingInfoFilesMetadata(): ProviderBankingIn
   };
 }
 
-export async function buildFiscalProfileFilesMetadata(params: {
+export async function buildFilesMetadataForProviderFiscalProfiles(params: {
   profiles: ProviderFiscalProfile[];
   fileReadRepository: IFileReadRepository;
 }): Promise<Map<string, ProviderFiscalProfileFilesMetadataDto>> {
@@ -37,12 +37,11 @@ export async function buildFiscalProfileFilesMetadata(params: {
   const fileIds = Array.from(
     new Set(
       profiles
-        .map((profile) => [
+        .flatMap((profile) => [
           profile.taxStatusCertificateFileId,
           profile.taxComplianceOpinionFileId,
           profile.addressProofFileId,
         ])
-        .flat()
         .filter((fileId): fileId is string => !!fileId),
     ),
   );
@@ -78,7 +77,7 @@ export async function buildFiscalProfileFilesMetadata(params: {
   return metadata;
 }
 
-export async function buildBankingInfoFilesMetadata(params: {
+export async function buildFilesMetadataForProviderBankingInfos(params: {
   bankingInfos: ProviderBankingInfo[];
   fileReadRepository: IFileReadRepository;
 }): Promise<Map<string, ProviderBankingInfoFilesMetadataDto>> {
@@ -116,36 +115,6 @@ export async function buildBankingInfoFilesMetadata(params: {
   });
 
   return metadata;
-}
-
-export async function buildFiscalProfileFilesMetadataForSingle(params: {
-  profile: ProviderFiscalProfile;
-  fileReadRepository: IFileReadRepository;
-}): Promise<ProviderFiscalProfileFilesMetadataDto> {
-  const map = await buildFiscalProfileFilesMetadata({
-    profiles: [params.profile],
-    fileReadRepository: params.fileReadRepository,
-  });
-
-  return (
-    map.get(params.profile.id) ??
-    createEmptyProviderFiscalProfileFilesMetadata()
-  );
-}
-
-export async function buildBankingInfoFilesMetadataForSingle(params: {
-  bankingInfo: ProviderBankingInfo;
-  fileReadRepository: IFileReadRepository;
-}): Promise<ProviderBankingInfoFilesMetadataDto> {
-  const map = await buildBankingInfoFilesMetadata({
-    bankingInfos: [params.bankingInfo],
-    fileReadRepository: params.fileReadRepository,
-  });
-
-  return (
-    map.get(params.bankingInfo.id) ??
-    createEmptyProviderBankingInfoFilesMetadata()
-  );
 }
 
 function toDescriptor(file: File): ProviderFileDescriptorDto {
