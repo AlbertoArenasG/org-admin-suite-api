@@ -22,6 +22,14 @@
     "UPDATED": "Cliente actualizado correctamente",
     "DELETED": "Cliente eliminado correctamente"
   },
+  "PROVIDER": {
+    "CREATED": "Proveedor creado correctamente",
+    "UPDATED": "Proveedor actualizado correctamente",
+    "DELETED": "Proveedor eliminado correctamente"
+  },
+  "PROVIDER_PROFILE": {
+    "SUBMITTED": "Información del proveedor enviada correctamente"
+  },
   "SERVICE_PACKAGE": {
     "UPLOADED": "Paquete de servicios procesado correctamente",
     "DELETED": "Registro de servicio eliminado correctamente"

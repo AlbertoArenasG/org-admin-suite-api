@@ -41,5 +41,24 @@
       "INACTIVE": "Inactive customer",
       "DELETED": "Deleted customer"
     }
+  },
+  "PROVIDER": {
+    "STATUS": {
+      "ACTIVE": "Active provider",
+      "INACTIVE": "Inactive provider",
+      "DELETED": "Deleted provider"
+    }
+  },
+  "PROVIDER_FISCAL_PROFILE": {
+    "STATUS": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed"
+    }
+  },
+  "PROVIDER_BANKING_INFO": {
+    "STATUS": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed"
+    }
   }
 }

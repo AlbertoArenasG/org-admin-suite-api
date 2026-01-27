@@ -22,6 +22,14 @@
     "UPDATED": "Customer updated successfully",
     "DELETED": "Customer deleted successfully"
   },
+  "PROVIDER": {
+    "CREATED": "Provider created successfully",
+    "UPDATED": "Provider updated successfully",
+    "DELETED": "Provider deleted successfully"
+  },
+  "PROVIDER_PROFILE": {
+    "SUBMITTED": "Provider information submitted successfully"
+  },
   "SERVICE_PACKAGE": {
     "UPLOADED": "Service package processed successfully",
     "DELETED": "Service package record deleted successfully"

@@ -48,10 +48,6 @@ export class CreateCustomerFiscalProfileUseCase {
     const { data: createdCustomer } =
       await this.customerWriteRepository.create(customer);
 
-    if (!createdCustomer) {
-      throw new Error('Failed to create customer');
-    }
-
     const profile = new CustomerFiscalProfile({
       customerId: createdCustomer.id,
       createdAt: new Date(),
@@ -59,10 +55,6 @@ export class CreateCustomerFiscalProfileUseCase {
 
     const { data: createdProfile } =
       await this.profileWriteRepository.create(profile);
-
-    if (!createdProfile) {
-      throw new Error('Failed to create fiscal profile');
-    }
 
     return CustomerFiscalProfileMapper.toCreateResultDto(
       createdCustomer,

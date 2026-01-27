@@ -24,6 +24,7 @@ import {
   SubmitCustomerFiscalProfileHandler,
   UpdateCustomerHandler,
   DeleteCustomerHandler,
+  CreateProviderHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -71,6 +72,7 @@ const providers = [
   SubmitCustomerFiscalProfileHandler,
   UpdateCustomerHandler,
   DeleteCustomerHandler,
+  CreateProviderHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
