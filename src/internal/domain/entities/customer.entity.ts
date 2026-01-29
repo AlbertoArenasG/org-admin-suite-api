@@ -6,6 +6,8 @@ export interface CustomerProps {
   clientCode: string;
   accessToken: string;
   status?: CustomerStatus;
+  createdBy?: string | null;
+  updatedBy?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -54,6 +56,14 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.updatedAt;
   }
 
+  get createdBy(): string | null {
+    return this.props.createdBy ?? null;
+  }
+
+  get updatedBy(): string | null {
+    return this.props.updatedBy ?? null;
+  }
+
   activate(): void {
     this.props.status = CustomerStatus.ACTIVE;
     this.touch();
@@ -74,13 +84,20 @@ export class Customer extends Entity<CustomerProps> {
     this.touch();
   }
 
-  updateDetails(details: { companyName?: string; clientCode?: string }): void {
+  updateDetails(
+    details: { companyName?: string; clientCode?: string },
+    updatedBy?: string | null,
+  ): void {
     if (details.companyName !== undefined) {
       this.props.companyName = details.companyName;
     }
 
     if (details.clientCode !== undefined) {
       this.props.clientCode = details.clientCode;
+    }
+
+    if (updatedBy !== undefined) {
+      this.props.updatedBy = updatedBy;
     }
 
     this.touch();

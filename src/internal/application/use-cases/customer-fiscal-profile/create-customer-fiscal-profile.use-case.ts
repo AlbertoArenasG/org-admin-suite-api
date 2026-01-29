@@ -19,6 +19,7 @@ import {
 import { Customer, CustomerFiscalProfile } from '@domain/entities';
 import { CustomerFiscalProfileMapper } from '@application/mappers';
 import { genId } from '@src/common/utils';
+import { AuditUserFetcherService } from '@application/services';
 
 @Injectable()
 export class CreateCustomerFiscalProfileUseCase {
@@ -29,6 +30,7 @@ export class CreateCustomerFiscalProfileUseCase {
     private readonly customerReadRepository: ICustomerReadRepository,
     @Inject(ICustomerWriteRepositoryToken)
     private readonly customerWriteRepository: ICustomerWriteRepository,
+    private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
   async execute(
@@ -42,6 +44,7 @@ export class CreateCustomerFiscalProfileUseCase {
       companyName: input.companyName,
       clientCode: input.clientCode,
       accessToken: token,
+      createdBy: input.userId,
       createdAt: new Date(),
     });
 
@@ -56,9 +59,15 @@ export class CreateCustomerFiscalProfileUseCase {
     const { data: createdProfile } =
       await this.profileWriteRepository.create(profile);
 
+    const createdByUser = await this.auditUserFetcher.fetchAuditUser(
+      input.userId,
+    );
+
     return CustomerFiscalProfileMapper.toCreateResultDto(
       createdCustomer,
       createdProfile,
+      undefined,
+      createdByUser,
     );
   }
 

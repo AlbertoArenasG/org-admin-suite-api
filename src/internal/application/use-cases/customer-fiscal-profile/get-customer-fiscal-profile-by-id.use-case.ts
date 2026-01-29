@@ -16,6 +16,7 @@ import {
 import { CustomerFiscalProfileMapper } from '@application/mappers';
 import { buildFilesMetadataForProfile } from '@application/utils';
 import { CustomerStatus } from '@domain/entities';
+import { AuditUserFetcherService } from '@application/services';
 
 @Injectable()
 export class GetCustomerFiscalProfileByIdUseCase {
@@ -26,6 +27,7 @@ export class GetCustomerFiscalProfileByIdUseCase {
     private readonly customerReadRepository: ICustomerReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
   async execute(customerId: string): Promise<CustomerFiscalProfileViewDto> {
@@ -55,10 +57,18 @@ export class GetCustomerFiscalProfileByIdUseCase {
       fileReadRepository: this.fileReadRepository,
     });
 
+    const { createdByUser, updatedByUser } =
+      await this.auditUserFetcher.fetchAuditUsers({
+        createdBy: customer.createdBy,
+        updatedBy: customer.updatedBy,
+      });
+
     return CustomerFiscalProfileMapper.toViewDto(
       customer,
       profile,
       filesMetadata,
+      createdByUser,
+      updatedByUser,
     );
   }
 }

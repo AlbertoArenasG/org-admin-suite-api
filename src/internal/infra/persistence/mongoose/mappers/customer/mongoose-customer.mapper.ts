@@ -13,6 +13,8 @@ export class MongooseCustomerMapper {
       clientCode: document.client_code,
       accessToken: document.access_token,
       status: document.status ?? CustomerStatus.ACTIVE,
+      createdBy: document.created_by ?? null,
+      updatedBy: document.updated_by ?? null,
       createdAt: document.createdAt ?? undefined,
       updatedAt: document.updatedAt ?? undefined,
     });
@@ -25,6 +27,8 @@ export class MongooseCustomerMapper {
       client_code: customer.clientCode,
       access_token: customer.accessToken ?? null,
       status: customer.status,
+      created_by: customer.createdBy,
+      updated_by: customer.updatedBy,
     };
   }
 }

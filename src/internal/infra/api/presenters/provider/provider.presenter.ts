@@ -47,6 +47,20 @@ export class ProviderPresenter {
         phone: provider.contact.phone,
         email: provider.contact.email,
       },
+      created_by: provider.createdBy
+        ? {
+            user_id: provider.createdBy.userId,
+            name: provider.createdBy.name,
+            email: provider.createdBy.email,
+          }
+        : null,
+      updated_by: provider.updatedBy
+        ? {
+            user_id: provider.updatedBy.userId,
+            name: provider.updatedBy.name,
+            email: provider.updatedBy.email,
+          }
+        : null,
       created_at: provider.createdAt,
       updated_at: provider.updatedAt ?? null,
       fiscal_profile: provider.fiscalProfile

@@ -11,10 +11,11 @@ export class CreateProviderRequestDto {
   @IsString()
   provider_code!: string;
 
-  toDomain(): CreateProviderDto {
+  toDomain(userId: string): CreateProviderDto {
     return {
       companyName: this.company_name,
       providerCode: this.provider_code,
+      userId,
     };
   }
 }

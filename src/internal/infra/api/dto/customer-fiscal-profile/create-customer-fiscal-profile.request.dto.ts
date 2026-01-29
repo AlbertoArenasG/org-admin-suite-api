@@ -11,10 +11,11 @@ export class CreateCustomerFiscalProfileRequestDto {
   @IsString()
   client_code!: string;
 
-  toDomain(): CreateCustomerFiscalProfileDto {
+  toDomain(userId: string): CreateCustomerFiscalProfileDto {
     return {
       companyName: this.company_name,
       clientCode: this.client_code,
+      userId,
     };
   }
 }

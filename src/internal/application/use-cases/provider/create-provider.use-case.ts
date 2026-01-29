@@ -22,6 +22,7 @@ import {
 } from '@domain/entities';
 import { ProviderMapper } from '@application/mappers';
 import { genId } from '@src/common/utils';
+import { AuditUserFetcherService } from '@application/services';
 
 @Injectable()
 export class CreateProviderUseCase {
@@ -34,6 +35,7 @@ export class CreateProviderUseCase {
     private readonly fiscalProfileWriteRepository: IProviderFiscalProfileWriteRepository,
     @Inject(IProviderBankingInfoWriteRepositoryToken)
     private readonly bankingInfoWriteRepository: IProviderBankingInfoWriteRepository,
+    private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
   async execute(input: CreateProviderDto): Promise<CreateProviderResultDto> {
@@ -50,6 +52,7 @@ export class CreateProviderUseCase {
         phone: null,
         email: null,
       },
+      createdBy: input.userId,
       createdAt: new Date(),
     });
 
@@ -72,10 +75,17 @@ export class CreateProviderUseCase {
     const { data: createdBankingInfo } =
       await this.bankingInfoWriteRepository.create(bankingInfo);
 
+    const createdByUser = await this.auditUserFetcher.fetchAuditUser(
+      input.userId,
+    );
+
     return ProviderMapper.toCreateResultDto(
       createdProvider,
       createdFiscalProfile,
       createdBankingInfo,
+      undefined,
+      undefined,
+      createdByUser,
     );
   }
 

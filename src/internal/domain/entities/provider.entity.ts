@@ -15,6 +15,8 @@ export interface ProviderProps {
   accessToken: string;
   contact: ProviderContactInfo;
   status?: ProviderStatus;
+  createdBy?: string | null;
+  updatedBy?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -80,6 +82,14 @@ export class Provider extends Entity<ProviderProps> {
     return this.props.updatedAt;
   }
 
+  get createdBy(): string | null {
+    return this.props.createdBy ?? null;
+  }
+
+  get updatedBy(): string | null {
+    return this.props.updatedBy ?? null;
+  }
+
   activate(): void {
     this.props.status = ProviderStatus.ACTIVE;
     this.touch();
@@ -100,11 +110,14 @@ export class Provider extends Entity<ProviderProps> {
     this.touch();
   }
 
-  updateDetails(details: {
-    companyName?: string;
-    providerCode?: string;
-    contact?: ProviderContactInfo;
-  }): void {
+  updateDetails(
+    details: {
+      companyName?: string;
+      providerCode?: string;
+      contact?: ProviderContactInfo;
+    },
+    updatedBy?: string | null,
+  ): void {
     if (details.companyName !== undefined) {
       this.props.companyName = details.companyName;
     }
@@ -116,6 +129,10 @@ export class Provider extends Entity<ProviderProps> {
     if (details.contact !== undefined) {
       const contact = new ContactInfo(details.contact);
       this.props.contact = contact;
+    }
+
+    if (updatedBy !== undefined) {
+      this.props.updatedBy = updatedBy;
     }
 
     this.touch();

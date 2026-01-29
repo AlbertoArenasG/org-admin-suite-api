@@ -46,6 +46,12 @@ export class ProviderDocument extends Document {
   })
   status: ProviderStatus;
 
+  @Prop({ type: String, required: false, default: null, index: true })
+  created_by?: string | null;
+
+  @Prop({ type: String, required: false, default: null })
+  updated_by?: string | null;
+
   @Prop()
   createdAt?: Date;
 

@@ -25,6 +25,7 @@ import {
   buildFilesMetadataForProviderBankingInfos,
 } from '@application/utils';
 import { ProviderStatus } from '@domain/entities';
+import { AuditUserFetcherService } from '@application/services';
 
 @Injectable()
 export class UpdateProviderUseCase {
@@ -39,6 +40,7 @@ export class UpdateProviderUseCase {
     private readonly bankingInfoReadRepository: IProviderBankingInfoReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
   async execute(input: UpdateProviderDto): Promise<ProviderViewDto> {
@@ -67,10 +69,13 @@ export class UpdateProviderUseCase {
       }
     }
 
-    provider.updateDetails({
-      companyName: input.companyName,
-      providerCode: input.providerCode,
-    });
+    provider.updateDetails(
+      {
+        companyName: input.companyName,
+        providerCode: input.providerCode,
+      },
+      input.userId,
+    );
 
     await this.providerWriteRepository.update(provider);
 
@@ -98,12 +103,20 @@ export class UpdateProviderUseCase {
       bankingInfoMetadata = metadataMap.get(bankingInfo.id);
     }
 
+    const { createdByUser, updatedByUser } =
+      await this.auditUserFetcher.fetchAuditUsers({
+        createdBy: provider.createdBy,
+        updatedBy: provider.updatedBy,
+      });
+
     return ProviderMapper.toViewDto(
       provider,
       fiscalProfile,
       bankingInfo,
       fiscalProfileMetadata,
       bankingInfoMetadata,
+      createdByUser,
+      updatedByUser,
     );
   }
 }

@@ -8,6 +8,7 @@ import {
 import {
   PaginatedResultDto,
   PaginationParamsDto,
+  AuditUserDto,
 } from '@application/dto/shared';
 
 export interface ProviderFileDescriptorDto {
@@ -57,6 +58,8 @@ export interface ProviderViewDto {
     phone: string | null;
     email: string | null;
   };
+  createdBy: AuditUserDto | null;
+  updatedBy: AuditUserDto | null;
   createdAt: Date;
   updatedAt?: Date;
   fiscalProfile: ProviderFiscalProfileDetailsDto | null;

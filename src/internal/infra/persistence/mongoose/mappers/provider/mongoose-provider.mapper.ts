@@ -16,6 +16,8 @@ export class MongooseProviderMapper {
         email: document.contact.email,
       },
       status: document.status,
+      createdBy: document.created_by ?? null,
+      updatedBy: document.updated_by ?? null,
       createdAt: document.createdAt,
       updatedAt: document.updatedAt,
     });
@@ -32,6 +34,8 @@ export class MongooseProviderMapper {
         email: provider.contact.email,
       },
       status: provider.status,
+      created_by: provider.createdBy,
+      updated_by: provider.updatedBy,
     };
   }
 }

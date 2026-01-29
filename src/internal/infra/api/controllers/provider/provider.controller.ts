@@ -51,7 +51,9 @@ export class ProviderController {
   ) {
     this.ensureAuthorized(currentUser.role);
 
-    const command = CreateProviderCommandAdapter.create(body.toDomain());
+    const command = CreateProviderCommandAdapter.create(
+      body.toDomain(currentUser.userId),
+    );
     const result = await this.commandBus.execute(command);
     const data = this.presenter.toCreateResponse(result);
 
@@ -116,7 +118,7 @@ export class ProviderController {
     this.ensureAuthorized(currentUser.role);
 
     const command = UpdateProviderCommandAdapter.create(
-      body.toDomain(providerId),
+      body.toDomain(providerId, currentUser.userId),
     );
     const result = await this.commandBus.execute(command);
     const data = this.presenter.toViewResponse(result);

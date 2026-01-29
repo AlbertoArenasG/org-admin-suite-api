@@ -8,6 +8,7 @@ import {
   ProviderViewDto,
   ProviderFiscalProfileFilesMetadataDto,
   ProviderBankingInfoFilesMetadataDto,
+  AuditUserDto,
 } from '@application/dto';
 import {
   createEmptyProviderFiscalProfileFilesMetadata,
@@ -21,6 +22,7 @@ export class ProviderMapper {
     bankingInfo: ProviderBankingInfo,
     fiscalProfileFilesMetadata?: ProviderFiscalProfileFilesMetadataDto,
     bankingInfoFilesMetadata?: ProviderBankingInfoFilesMetadataDto,
+    createdByUser?: AuditUserDto | null,
   ): CreateProviderResultDto {
     return this.toViewDto(
       provider,
@@ -28,6 +30,8 @@ export class ProviderMapper {
       bankingInfo,
       fiscalProfileFilesMetadata,
       bankingInfoFilesMetadata,
+      createdByUser,
+      null,
     );
   }
 
@@ -37,6 +41,8 @@ export class ProviderMapper {
     bankingInfo: ProviderBankingInfo | null,
     fiscalProfileFilesMetadata?: ProviderFiscalProfileFilesMetadataDto,
     bankingInfoFilesMetadata?: ProviderBankingInfoFilesMetadataDto,
+    createdByUser?: AuditUserDto | null,
+    updatedByUser?: AuditUserDto | null,
   ): ProviderViewDto {
     const fiscalProfileDetails = fiscalProfile
       ? {
@@ -77,6 +83,8 @@ export class ProviderMapper {
         phone: provider.contact?.phone ?? null,
         email: provider.contact?.email ?? null,
       },
+      createdBy: createdByUser ?? null,
+      updatedBy: updatedByUser ?? null,
       createdAt: provider.createdAt ?? new Date(),
       updatedAt: provider.updatedAt,
       fiscalProfile: fiscalProfileDetails,
@@ -91,6 +99,8 @@ export class ProviderMapper {
       bankingInfo: ProviderBankingInfo | null;
       fiscalProfileFilesMetadata?: ProviderFiscalProfileFilesMetadataDto;
       bankingInfoFilesMetadata?: ProviderBankingInfoFilesMetadataDto;
+      createdByUser?: AuditUserDto | null;
+      updatedByUser?: AuditUserDto | null;
     }>,
   ): ProviderViewDto[] {
     return entries.map(
@@ -100,6 +110,8 @@ export class ProviderMapper {
         bankingInfo,
         fiscalProfileFilesMetadata,
         bankingInfoFilesMetadata,
+        createdByUser,
+        updatedByUser,
       }) =>
         this.toViewDto(
           provider,
@@ -107,6 +119,8 @@ export class ProviderMapper {
           bankingInfo,
           fiscalProfileFilesMetadata,
           bankingInfoFilesMetadata,
+          createdByUser,
+          updatedByUser,
         ),
     );
   }
