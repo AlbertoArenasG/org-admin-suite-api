@@ -10,6 +10,7 @@ export const envSchema = z.object({
   USER_PASSWORD_RESET_URL: z.string(),
   SERVICE_ENTRY_PUBLIC_BASE_URL: z.string(),
   CUSTOMER_PUBLIC_PROFILE_BASE_URL: z.string(),
+  PROVIDER_PUBLIC_PROFILE_BASE_URL: z.string(),
   API_BASE_URL: z.string(),
   MONGO_URI: z.string().url(),
   AWS_REGION: z.string(),

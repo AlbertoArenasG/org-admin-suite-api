@@ -55,7 +55,7 @@ export class CustomerController {
     this.ensureAuthorized(currentUser.role);
 
     const command = CreateCustomerFiscalProfileCommandAdapter.create(
-      body.toDomain(),
+      body.toDomain(currentUser.userId),
     );
     const result = await this.commandBus.execute(command);
     const data = this.presenter.toCreateResponse(result);
@@ -121,7 +121,7 @@ export class CustomerController {
     this.ensureAuthorized(currentUser.role);
 
     const command = UpdateCustomerCommandAdapter.create(
-      body.toDomain(customerId),
+      body.toDomain(customerId, currentUser.userId),
     );
     const result = await this.commandBus.execute(command);
     const data = this.presenter.toViewResponse(result);

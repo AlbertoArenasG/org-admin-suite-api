@@ -11,11 +11,12 @@ export class UpdateCustomerRequestDto {
   @IsString()
   client_code?: string;
 
-  toDomain(customerId: string): UpdateCustomerDto {
+  toDomain(customerId: string, userId: string): UpdateCustomerDto {
     return {
       customerId,
       companyName: this.company_name,
       clientCode: this.client_code,
+      userId,
     };
   }
 }

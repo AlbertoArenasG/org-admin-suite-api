@@ -20,6 +20,12 @@ import {
   MongooseCustomerWriteRepositoryImpl,
   MongooseServicePackageRecordWriteRepositoryImpl,
   MongooseServicePackageRecordReadRepositoryImpl,
+  MongooseProviderReadRepositoryImpl,
+  MongooseProviderWriteRepositoryImpl,
+  MongooseProviderFiscalProfileReadRepositoryImpl,
+  MongooseProviderFiscalProfileWriteRepositoryImpl,
+  MongooseProviderBankingInfoReadRepositoryImpl,
+  MongooseProviderBankingInfoWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -44,6 +50,12 @@ import {
   ICustomerWriteRepositoryToken,
   IServicePackageRecordWriteRepositoryToken,
   IServicePackageRecordReadRepositoryToken,
+  IProviderReadRepositoryToken,
+  IProviderWriteRepositoryToken,
+  IProviderFiscalProfileReadRepositoryToken,
+  IProviderFiscalProfileWriteRepositoryToken,
+  IProviderBankingInfoReadRepositoryToken,
+  IProviderBankingInfoWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -131,6 +143,30 @@ export const MongooseRepositoriesConfig = [
     provide: IServicePackageRecordReadRepositoryToken,
     useClass: MongooseServicePackageRecordReadRepositoryImpl,
   },
+  {
+    provide: IProviderReadRepositoryToken,
+    useClass: MongooseProviderReadRepositoryImpl,
+  },
+  {
+    provide: IProviderWriteRepositoryToken,
+    useClass: MongooseProviderWriteRepositoryImpl,
+  },
+  {
+    provide: IProviderFiscalProfileReadRepositoryToken,
+    useClass: MongooseProviderFiscalProfileReadRepositoryImpl,
+  },
+  {
+    provide: IProviderFiscalProfileWriteRepositoryToken,
+    useClass: MongooseProviderFiscalProfileWriteRepositoryImpl,
+  },
+  {
+    provide: IProviderBankingInfoReadRepositoryToken,
+    useClass: MongooseProviderBankingInfoReadRepositoryImpl,
+  },
+  {
+    provide: IProviderBankingInfoWriteRepositoryToken,
+    useClass: MongooseProviderBankingInfoWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -155,4 +191,10 @@ export const MongooseRepositoryTokens = [
   ICustomerWriteRepositoryToken,
   IServicePackageRecordWriteRepositoryToken,
   IServicePackageRecordReadRepositoryToken,
+  IProviderReadRepositoryToken,
+  IProviderWriteRepositoryToken,
+  IProviderFiscalProfileReadRepositoryToken,
+  IProviderFiscalProfileWriteRepositoryToken,
+  IProviderBankingInfoReadRepositoryToken,
+  IProviderBankingInfoWriteRepositoryToken,
 ];

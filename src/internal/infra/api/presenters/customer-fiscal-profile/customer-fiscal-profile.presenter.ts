@@ -43,6 +43,20 @@ export class CustomerFiscalProfilePresenter {
       public_access_url: profile.publicAccessToken
         ? this.buildPublicUrl(profile.publicAccessToken)
         : null,
+      created_by: profile.createdBy
+        ? {
+            user_id: profile.createdBy.userId,
+            name: profile.createdBy.name,
+            email: profile.createdBy.email,
+          }
+        : null,
+      updated_by: profile.updatedBy
+        ? {
+            user_id: profile.updatedBy.userId,
+            name: profile.updatedBy.name,
+            email: profile.updatedBy.email,
+          }
+        : null,
       created_at: profile.createdAt,
       updated_at: profile.updatedAt ?? null,
       fiscal_profile: profile.fiscalProfile

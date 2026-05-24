@@ -1,6 +1,7 @@
 import {
   PaginatedResultDto,
   PaginationParamsDto,
+  AuditUserDto,
 } from '@application/dto/shared';
 import { CustomerFiscalProfileStatus, CustomerStatus } from '@domain/entities';
 
@@ -55,6 +56,8 @@ export interface CustomerFiscalProfileViewDto {
   clientCode: string;
   status: CustomerStatus;
   publicAccessToken: string | null;
+  createdBy: AuditUserDto | null;
+  updatedBy: AuditUserDto | null;
   createdAt: Date;
   updatedAt?: Date;
   fiscalProfile: CustomerFiscalProfileDetailsDto | null;

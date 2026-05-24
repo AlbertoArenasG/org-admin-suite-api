@@ -9,3 +9,6 @@ export * from './service-entry-survey-template/service-entry-survey-template.sch
 export * from './customer-fiscal-profile/customer-fiscal-profile.schema';
 export * from './customer/customer.schema';
 export * from './service-package/service-package-record.schema';
+export * from './provider/provider.schema';
+export * from './provider-fiscal-profile/provider-fiscal-profile.schema';
+export * from './provider-banking-info/provider-banking-info.schema';

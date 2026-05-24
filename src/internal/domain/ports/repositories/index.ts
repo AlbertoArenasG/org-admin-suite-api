@@ -9,3 +9,6 @@ export * from './user-password-reset';
 export * from './customer-fiscal-profile';
 export * from './customer';
 export * from './service-package-record';
+export * from './provider';
+export * from './provider-fiscal-profile';
+export * from './provider-banking-info';

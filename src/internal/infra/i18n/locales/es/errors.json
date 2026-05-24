@@ -29,6 +29,15 @@
     "CUSTOMER_FISCAL_PROFILE": {
       "CLIENT_CODE": "Ya existe un perfil fiscal con el código {clientCode}",
       "FORM": "La información fiscal del cliente ya fue registrada"
+    },
+    "PROVIDER": {
+      "PROVIDER_CODE": "Ya existe un proveedor con el código {providerCode}"
+    },
+    "PROVIDER_FISCAL_PROFILE": {
+      "FORM": "La información fiscal del proveedor ya fue registrada"
+    },
+    "PROVIDER_BANKING_INFO": {
+      "FORM": "La información bancaria del proveedor ya fue registrada"
     }
   },
   "AUTHENTICATION": {
@@ -55,6 +64,9 @@
     "SERVICE_ENTRY": "No se encontró el servicio",
     "CUSTOMER": "No se encontró el cliente",
     "CUSTOMER_FISCAL_PROFILE": "No se encontró el perfil fiscal del cliente",
+    "PROVIDER": "No se encontró el proveedor",
+    "PROVIDER_FISCAL_PROFILE": "No se encontró el perfil fiscal del proveedor",
+    "PROVIDER_BANKING_INFO": "No se encontró la información bancaria del proveedor",
     "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio"
   }
 }

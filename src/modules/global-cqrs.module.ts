@@ -24,6 +24,10 @@ import {
   SubmitCustomerFiscalProfileHandler,
   UpdateCustomerHandler,
   DeleteCustomerHandler,
+  CreateProviderHandler,
+  UpdateProviderHandler,
+  DeleteProviderHandler,
+  SubmitProviderProfileHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -43,6 +47,9 @@ import {
   GetCustomerFiscalProfileByTokenHandler,
   GetServicePackageRecordsHandler,
   GetServicePackageRecordByIdHandler,
+  GetProvidersHandler,
+  GetProviderByIdHandler,
+  GetProviderByTokenHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -71,6 +78,10 @@ const providers = [
   SubmitCustomerFiscalProfileHandler,
   UpdateCustomerHandler,
   DeleteCustomerHandler,
+  CreateProviderHandler,
+  UpdateProviderHandler,
+  DeleteProviderHandler,
+  SubmitProviderProfileHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -85,6 +96,9 @@ const providers = [
   GetCustomerFiscalProfileByTokenHandler,
   GetServicePackageRecordsHandler,
   GetServicePackageRecordByIdHandler,
+  GetProvidersHandler,
+  GetProviderByIdHandler,
+  GetProviderByTokenHandler,
 ];
 
 @Global()

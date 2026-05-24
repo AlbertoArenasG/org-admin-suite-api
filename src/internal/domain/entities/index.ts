@@ -8,3 +8,6 @@ export * from './service-entry-survey-template.entity';
 export * from './customer-fiscal-profile.entity';
 export * from './customer.entity';
 export * from './service-package-record.entity';
+export * from './provider.entity';
+export * from './provider-fiscal-profile.entity';
+export * from './provider-banking-info.entity';

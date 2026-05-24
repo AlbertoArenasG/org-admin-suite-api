@@ -45,4 +45,16 @@ export const configSchemas = [
     name: schemas.ServicePackageRecordDocument.name,
     schema: schemas.ServicePackageRecordSchema,
   },
+  {
+    name: schemas.ProviderDocument.name,
+    schema: schemas.ProviderSchema,
+  },
+  {
+    name: schemas.ProviderFiscalProfileDocument.name,
+    schema: schemas.ProviderFiscalProfileSchema,
+  },
+  {
+    name: schemas.ProviderBankingInfoDocument.name,
+    schema: schemas.ProviderBankingInfoSchema,
+  },
 ];
