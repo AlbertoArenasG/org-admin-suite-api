@@ -58,3 +58,4 @@
 - Se implementó la infraestructura base de `db:seed`, incluyendo runner, contexto compartido, logger, carga validada de entorno y registro inicial de seeds por categoría.
 - Se registró el script `db:seed` en `package.json`, dejando listo el siguiente slice para cargar seeds idempotentes reales de módulos, operaciones y roles base.
 - Se implementó el primer seed idempotente real del catálogo con `permission-operations.seed.ts`, alineado al catálogo inicial CRUD aprobado en la documentación de autorización.
+- Se implementó `permission-modules.seed.ts` con un alcance mínimo de arranque para `users` y `roles`, manteniendo el refactor enfocado primero en gestión de usuarios y roles antes de abrir el catálogo completo del sistema.

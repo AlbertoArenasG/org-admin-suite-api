@@ -34,7 +34,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear repositorios Mongoose correspondientes
 - [x] Registrar tokens e implementaciones en `mongoose-repositories.config.ts`
 - [x] Registrar schemas nuevos en `schemas.config.ts`
-- [ ] Crear seeds idempotentes de módulos
+- [x] Crear seeds idempotentes de módulos
 - [x] Crear seeds idempotentes de operaciones
 - [ ] Crear seeds idempotentes de roles del sistema
 - [ ] Crear seed de `STAFF_LEGACY`
