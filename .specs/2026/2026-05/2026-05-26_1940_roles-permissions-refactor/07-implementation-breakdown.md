@@ -96,7 +96,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Reemplazar `GetUserRoles` por consulta de roles asignables
 - [x] Ajustar create user registration invitation
 - [ ] Ajustar create master user registration invitation
-- [ ] Ajustar complete invitation
+- [x] Ajustar complete invitation
 - [ ] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
 
 ## Slice 7. Migración de controllers a autorización centralizada
