@@ -13,13 +13,14 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
+import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateCustomerFiscalProfileRequestDto,
   GetCustomerFiscalProfilesRequestDto,
   UpdateCustomerRequestDto,
 } from '@infra/api/dto/customer-fiscal-profile';
-import { JwtAuthGuard } from '@infra/api/guards';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { CustomerFiscalProfilePresenter } from '@infra/api/presenters/customer-fiscal-profile';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import {
@@ -31,10 +32,7 @@ import {
   GetCustomerFiscalProfilesQuery,
   GetCustomerFiscalProfileByIdQuery,
 } from '@infra/cqrs/queries';
-import { CurrentUser } from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
-import { AuthorizationException } from '@domain/exceptions';
-import { UserRole } from '@domain/entities';
 
 @Controller('v1/customers')
 export class CustomerController {
@@ -46,14 +44,13 @@ export class CustomerController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'CREATE')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Body() body: CreateCustomerFiscalProfileRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = CreateCustomerFiscalProfileCommandAdapter.create(
       body.toDomain(currentUser.userId),
     );
@@ -68,14 +65,13 @@ export class CustomerController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Query() query: GetCustomerFiscalProfilesRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const result = await this.queryBus.execute(
       GetCustomerFiscalProfilesQuery.create(query.toDomain()),
     );
@@ -90,14 +86,13 @@ export class CustomerController {
   }
 
   @Get(':customerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'READ')
   @HttpCode(HttpStatus.OK)
   async findOne(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('customerId') customerId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const result = await this.queryBus.execute(
       GetCustomerFiscalProfileByIdQuery.create(customerId),
     );
@@ -111,15 +106,14 @@ export class CustomerController {
   }
 
   @Patch(':customerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'UPDATE')
   @HttpCode(HttpStatus.OK)
   async update(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Param('customerId') customerId: string,
     @Body() body: UpdateCustomerRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = UpdateCustomerCommandAdapter.create(
       body.toDomain(customerId, currentUser.userId),
     );
@@ -134,14 +128,13 @@ export class CustomerController {
   }
 
   @Delete(':customerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'DELETE')
   @HttpCode(HttpStatus.OK)
   async delete(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('customerId') customerId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = DeleteCustomerCommandAdapter.create(customerId);
     await this.commandBus.execute(command);
 
@@ -149,17 +142,5 @@ export class CustomerController {
       .withSuccessMessage(this.successMsgService.getMsg('CUSTOMER.DELETED'))
       .withStatus(HttpStatus.OK)
       .build();
-  }
-
-  private ensureAuthorized(role: UserRole): void {
-    const allowedRoles: UserRole[] = [
-      UserRole.MASTER_ADMIN,
-      UserRole.ADMIN,
-      UserRole.STAFF,
-    ];
-
-    if (!allowedRoles.includes(role)) {
-      throw AuthorizationException.rolePrivilegesInsufficient(role);
-    }
   }
 }

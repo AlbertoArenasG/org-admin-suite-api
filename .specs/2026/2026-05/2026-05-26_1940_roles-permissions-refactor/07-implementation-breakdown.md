@@ -102,7 +102,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 7. Migración de controllers a autorización centralizada
 
 - [ ] Migrar `user.controller`
-- [ ] Migrar `customer.controller`
+- [x] Migrar `customer.controller`
 - [ ] Migrar `provider.controller`
 - [ ] Migrar `service-entry.controller`
 - [ ] Revisar `file.controller`

@@ -70,3 +70,4 @@
 - Se migró el payload JWT a `sub + systemRole + roleId`, y el `JwtAuthGuard` ahora reconstruye un `authContext` compatible con el pipeline actual derivando `role` e `isMaster` desde `systemRole` mientras termina la transición del resto de controllers y guards.
 - Se implementó `GET /v1/auth/me/permissions` siguiendo el pipeline CQRS del repo, resolviendo metadata del rol actual y permisos efectivos con compatibilidad temporal para usuarios que aún no tienen `roleId`.
 - Se implementó la primera base reutilizable de autorización centralizada con `AuthorizationService`, `@RequirePermission(...)` y `PermissionsGuard`, y `me/permissions` quedó reutilizando esa misma resolución de permisos para no duplicar lógica.
+- Se migró `customer.controller` al patrón objetivo con `JwtAuthGuard + PermissionsGuard + @RequirePermission(...)`, eliminando ahí el primer `ensureAuthorized()` real de negocio.
