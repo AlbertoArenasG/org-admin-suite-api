@@ -69,35 +69,35 @@ Endpoints actuales:
 - `POST /v1/users`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: crea usuario ordinario
+  - nota: crea usuario ordinario, protegido por `PermissionsGuard` con `users.CREATE`
 - `PATCH /v1/users/me`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: actualizacion del propio perfil
+  - nota: actualizacion del propio perfil, protegido por `users.UPDATE`
 - `GET /v1/users/me`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: consulta del propio perfil
+  - nota: consulta del propio perfil, protegido por `users.READ`
 - `GET /v1/users`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: listado general de usuarios
+  - nota: listado general de usuarios, protegido por `users.READ`
 - `GET /v1/users/roles`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy devuelve roles asignables legacy; debe migrar a consulta de roles asignables del nuevo modelo
+  - nota: protegido por `users.READ`; hoy devuelve roles asignables legacy y debe migrar a consulta del nuevo modelo
 - `GET /v1/users/:userId`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: detalle de usuario
+  - nota: detalle de usuario, protegido por `users.READ`
 - `PATCH /v1/users/:userId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: incluye potencial cambio estructural de usuario en el refactor
+  - nota: incluye potencial cambio estructural de usuario en el refactor, protegido por `users.UPDATE`
 - `DELETE /v1/users/:userId`
   - operacion: `DELETE`
   - acceso actual: autenticado
-  - nota: elimina usuario
+  - nota: elimina usuario, protegido por `users.DELETE`
 
 Notas:
 

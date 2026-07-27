@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
+import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateUserRequestDto,
@@ -33,9 +34,9 @@ import {
   GetUsersQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard } from '@infra/api/guards';
-import { CurrentUser } from '@src/common/decorators';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
+import { SystemRole } from '@domain/entities';
 
 @Controller('v1/users')
 export class UserController {
@@ -48,7 +49,8 @@ export class UserController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'CREATE')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -69,7 +71,8 @@ export class UserController {
   }
 
   @Patch('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'UPDATE')
   @HttpCode(HttpStatus.OK)
   async updateProfile(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -89,7 +92,8 @@ export class UserController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'READ')
   @HttpCode(HttpStatus.OK)
   async getProfile(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
@@ -105,7 +109,8 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -113,7 +118,7 @@ export class UserController {
   ) {
     const result = await this.queryBus.execute(
       GetUsersQuery.create(
-        query.toDomain(currentUser.systemRole === 'MASTER_ADMIN'),
+        query.toDomain(currentUser.systemRole === SystemRole.MASTER_ADMIN),
       ),
     );
 
@@ -128,7 +133,8 @@ export class UserController {
   }
 
   @Get('roles')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'READ')
   @HttpCode(HttpStatus.OK)
   async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
@@ -148,7 +154,8 @@ export class UserController {
   }
 
   @Get(':userId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'READ')
   @HttpCode(HttpStatus.OK)
   async findOne(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -157,7 +164,7 @@ export class UserController {
     const result = await this.queryBus.execute(
       GetUserByIdQuery.create(
         userId,
-        currentUser.systemRole === 'MASTER_ADMIN',
+        currentUser.systemRole === SystemRole.MASTER_ADMIN,
       ),
     );
     const data = await this.presenter.toUserResponse(result);
@@ -170,7 +177,8 @@ export class UserController {
   }
 
   @Patch(':userId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'UPDATE')
   @HttpCode(HttpStatus.OK)
   async update(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -191,7 +199,8 @@ export class UserController {
   }
 
   @Delete(':userId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'DELETE')
   @HttpCode(HttpStatus.OK)
   async delete(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
