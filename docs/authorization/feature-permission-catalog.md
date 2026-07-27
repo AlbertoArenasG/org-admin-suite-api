@@ -250,7 +250,7 @@ Endpoints actuales:
 - `POST /v1/files`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: subida interna de archivos
+  - nota: subida interna de archivos, protegido por `PermissionsGuard` con `files.CREATE`
 - `POST /v1/files/public`
   - operacion: fuera del catalogo interno
   - acceso actual: publico
@@ -258,11 +258,11 @@ Endpoints actuales:
 - `GET /v1/files/:fileId`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: consulta de metadata
+  - nota: consulta de metadata, protegido por `PermissionsGuard` con `files.READ`
 - `GET /v1/files/:fileId/download`
   - operacion: `READ`
   - acceso actual: actualmente sin guard activo
-  - nota: candidato a futura operacion especial como `DOWNLOAD`
+  - nota: sigue temporalmente fuera del guard centralizado; candidato a futura operacion especial como `DOWNLOAD`
 
 Nota:
 

@@ -105,7 +105,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Migrar `customer.controller`
 - [x] Migrar `provider.controller`
 - [x] Migrar `service-entry.controller`
-- [ ] Revisar `file.controller`
+- [x] Revisar `file.controller`
 - [ ] Revisar `service-package.controller`
 - [ ] Revisar `master-admin/*`
 - [ ] Eliminar `ensureAuthorized()` donde exista
