@@ -1,5 +1,6 @@
 import { Entity } from '@src/internal/core/entities/entity';
 import { EntityCreatedEvent } from '@domain/events';
+import { SystemRole } from './role.entity';
 import { Phone } from '../value-objects';
 
 export interface UserProps {
@@ -8,7 +9,9 @@ export interface UserProps {
   lastname: string;
   email: string;
   password: string;
-  role: UserRole;
+  role?: UserRole;
+  systemRole?: SystemRole;
+  roleId?: string | null;
   status: UserStatus;
   cellPhone: {
     countryCode: string | null;
@@ -24,6 +27,11 @@ export class User extends Entity<UserProps> {
       const cellPhone = new Phone(props.cellPhone);
       props.cellPhone = cellPhone;
     }
+
+    props.systemRole =
+      props.systemRole ?? User.resolveSystemRoleFromLegacyRole(props.role);
+    props.roleId = props.roleId ?? null;
+
     super(props);
   }
 
@@ -48,7 +56,19 @@ export class User extends Entity<UserProps> {
   }
 
   get role(): UserRole {
-    return this.props.role;
+    return (
+      this.props.role ?? User.resolveCompatibilityLegacyRole(this.systemRole)
+    );
+  }
+
+  get systemRole(): SystemRole {
+    return (
+      this.props.systemRole ?? User.resolveSystemRoleFromLegacyRole(this.role)
+    );
+  }
+
+  get roleId(): string | null {
+    return this.props.roleId ?? null;
   }
 
   get status(): UserStatus {
@@ -91,11 +111,42 @@ export class User extends Entity<UserProps> {
   }
 
   get isMaster(): boolean {
-    return User.isMasterRole(this.role);
+    return User.isMasterSystemRole(this.systemRole);
   }
 
   static isMasterRole(role: UserRole): boolean {
     return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
+  }
+
+  static isMasterSystemRole(systemRole: SystemRole): boolean {
+    return systemRole === SystemRole.MASTER_ADMIN;
+  }
+
+  static resolveSystemRoleFromLegacyRole(
+    role: UserRole | undefined,
+  ): SystemRole {
+    if (role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF) {
+      return SystemRole.MASTER_ADMIN;
+    }
+
+    if (role === UserRole.ADMIN) {
+      return SystemRole.ADMIN;
+    }
+
+    return SystemRole.USER;
+  }
+
+  // Temporary compatibility while the rest of the codebase still reads `role`.
+  static resolveCompatibilityLegacyRole(systemRole: SystemRole): UserRole {
+    if (systemRole === SystemRole.MASTER_ADMIN) {
+      return UserRole.MASTER_ADMIN;
+    }
+
+    if (systemRole === SystemRole.ADMIN) {
+      return UserRole.ADMIN;
+    }
+
+    return UserRole.STAFF;
   }
 
   updateDetails(details: {
@@ -132,6 +183,19 @@ export class User extends Entity<UserProps> {
 
   updateRole(role: UserRole): void {
     this.props.role = role;
+    this.props.systemRole = User.resolveSystemRoleFromLegacyRole(role);
+    this.touch();
+  }
+
+  updateAuthorization(params: {
+    systemRole: SystemRole;
+    roleId: string | null;
+    role?: UserRole;
+  }): void {
+    this.props.systemRole = params.systemRole;
+    this.props.roleId = params.roleId;
+    this.props.role =
+      params.role ?? User.resolveCompatibilityLegacyRole(params.systemRole);
     this.touch();
   }
 

@@ -41,11 +41,11 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 2. Migración del modelo User
 
-- [ ] Redefinir entidad `User` para usar `systemRole + roleId`
+- [x] Redefinir entidad `User` para usar `systemRole + roleId`
 - [ ] Eliminar dependencia runtime a `UserRole`
-- [ ] Ajustar schema Mongoose de `user`
-- [ ] Ajustar mapper Mongoose de `user`
-- [ ] Ajustar repositorios de lectura/escritura de `user`
+- [x] Ajustar schema Mongoose de `user`
+- [x] Ajustar mapper Mongoose de `user`
+- [x] Ajustar repositorios de lectura/escritura de `user`
 - [ ] Agregar queries necesarias por `systemRole` y `roleId`
 - [ ] Ajustar DTOs de application relacionados con usuario
 - [ ] Ajustar presenters de usuario al nuevo modelo

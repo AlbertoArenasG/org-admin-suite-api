@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { SystemRole } from '@domain/entities';
 import { User, UserRole, UserStatus } from '@domain/entities/user.entity';
 import {
   FindUsersParams,
@@ -35,9 +36,24 @@ export class MongooseUserReadRepositoryImpl
     const roleFilter = includeMasterUsers
       ? {}
       : {
-          role: {
-            $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
-          },
+          $and: [
+            {
+              $or: [
+                { role: { $exists: false } },
+                {
+                  role: {
+                    $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
+                  },
+                },
+              ],
+            },
+            {
+              $or: [
+                { system_role: { $exists: false } },
+                { system_role: { $ne: SystemRole.MASTER_ADMIN } },
+              ],
+            },
+          ],
         };
     const searchFilter =
       search && search.trim().length > 0
