@@ -40,8 +40,8 @@
 - [x] Crear schema Mongoose para roles
   Status: done
 
-- [ ] Crear repositorios Mongoose de roles
-  Status: pending
+- [x] Crear repositorios Mongoose de roles
+  Status: done
 
 - [ ] Crear DTOs y mappers de roles
   Status: pending

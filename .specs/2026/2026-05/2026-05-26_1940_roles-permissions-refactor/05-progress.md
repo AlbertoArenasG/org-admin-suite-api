@@ -53,3 +53,4 @@
 - Se implementó la siguiente microfase de contratos de dominio con puertos de lectura/escritura para `Role` y puertos de lectura para `permission modules` y `permission operations`.
 - Se implementó la microfase de persistencia base con los schemas Mongoose de `roles`, `permission_modules` y `permission_operations`, además de su registro en exports y `schemas.config.ts`.
 - Se implementó la microfase de mappers Mongoose para `Role`, `PermissionModule` y `PermissionOperation`, manteniendo la separación entre dominio, puertos e infraestructura.
+- Se implementó la microfase de repositorios Mongoose para `Role`, `PermissionModule` y `PermissionOperation`, dejando pendiente únicamente el wiring en `mongoose-repositories.config.ts`.
