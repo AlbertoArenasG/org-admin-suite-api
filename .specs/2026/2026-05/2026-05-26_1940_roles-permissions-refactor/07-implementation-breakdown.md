@@ -24,8 +24,8 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear `role.entity.ts`
 - [ ] Crear modelos de catálogo para `permission module` y `permission operation`
 - [x] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
-- [ ] Crear puertos de lectura/escritura para roles
-- [ ] Crear puertos de lectura para módulos y operaciones
+- [x] Crear puertos de lectura/escritura para roles
+- [x] Crear puertos de lectura para módulos y operaciones
 - [ ] Crear schemas Mongoose de `roles`, `permission_modules` y `permission_operations`
 - [ ] Crear mappers Mongoose correspondientes
 - [ ] Crear repositorios Mongoose correspondientes

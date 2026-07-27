@@ -34,8 +34,8 @@
 - [x] Crear entidad de dominio `Role`
   Status: done
 
-- [ ] Crear contratos de dominio para lectura y escritura de roles
-  Status: pending
+- [x] Crear contratos de dominio para lectura y escritura de roles
+  Status: done
 
 - [ ] Crear schema Mongoose para roles
   Status: pending
