@@ -1,4 +1,7 @@
 export * from './user';
+export * from './role';
+export * from './permission-module';
+export * from './permission-operation';
 export * from './user-registration-invitation';
 export * from './user-password-reset';
 export * from './file/file.schema';

@@ -26,7 +26,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
 - [x] Crear puertos de lectura/escritura para roles
 - [x] Crear puertos de lectura para módulos y operaciones
-- [ ] Crear schemas Mongoose de `roles`, `permission_modules` y `permission_operations`
+- [x] Crear schemas Mongoose de `roles`, `permission_modules` y `permission_operations`
 - [ ] Crear mappers Mongoose correspondientes
 - [ ] Crear repositorios Mongoose correspondientes
 - [ ] Registrar tokens e implementaciones en `mongoose-repositories.config.ts`

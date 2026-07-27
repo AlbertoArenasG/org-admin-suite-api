@@ -6,6 +6,18 @@ export const configSchemas = [
     schema: schemas.UserSchema,
   },
   {
+    name: schemas.RoleDocument.name,
+    schema: schemas.RoleSchema,
+  },
+  {
+    name: schemas.PermissionModuleDocument.name,
+    schema: schemas.PermissionModuleSchema,
+  },
+  {
+    name: schemas.PermissionOperationDocument.name,
+    schema: schemas.PermissionOperationSchema,
+  },
+  {
     name: schemas.UserPasswordResetTokenDocument.name,
     schema: schemas.UserPasswordResetTokenSchema,
   },
