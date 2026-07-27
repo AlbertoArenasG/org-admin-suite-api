@@ -205,6 +205,13 @@ Forma objetivo:
 async findAll() {}
 ```
 
+Implementación actual:
+
+- `AuthorizationService` ya existe como base operativa
+- `PermissionsGuard` ya existe
+- `@RequirePermission(...)` ya existe
+- la migración de controllers hacia este patrón sigue pendiente endpoint por endpoint
+
 Antipatrón:
 
 ```ts

@@ -65,9 +65,9 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 4. Servicio de autorización centralizado
 
-- [ ] Crear `AuthorizationService`
-- [ ] Crear decorator de permisos requeridos
-- [ ] Crear guard de permisos
+- [x] Crear `AuthorizationService`
+- [x] Crear decorator de permisos requeridos
+- [x] Crear guard de permisos
 - [ ] Modelar reglas estructurales de `MASTER_ADMIN`
 - [ ] Modelar reglas estructurales de `ADMIN`
 - [ ] Resolver permisos efectivos desde `roleId`
