@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { AuthenticateUserResultDto } from '@application/dto';
+import {
+  AuthenticateUserResultDto,
+  GetMyPermissionsResultDto,
+} from '@application/dto';
 
 @Injectable()
 export class AuthPresenter {
@@ -21,6 +24,28 @@ export class AuthPresenter {
           number: result.user.cellPhone?.number ?? null,
         },
       },
+    };
+  }
+
+  async toPermissionsResponse(result: GetMyPermissionsResultDto) {
+    return {
+      system_role: result.systemRole,
+      role: result.role
+        ? {
+            id: result.role.id,
+            code: result.role.code,
+            name: result.role.name,
+            scope: result.role.scope,
+            is_system: result.role.isSystem,
+            is_default: result.role.isDefault,
+            is_immutable: result.role.isImmutable,
+            status: result.role.status,
+          }
+        : null,
+      permissions: result.permissions.map((permission) => ({
+        module: permission.module,
+        operation: permission.operation,
+      })),
     };
   }
 }

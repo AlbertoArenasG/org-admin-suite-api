@@ -48,7 +48,7 @@ La API dejará atrás el modelo legacy basado en `User.role` como enum fijo y mi
 
 Estado:
 
-- `planned`
+- `implemented`
 
 Propósito:
 
@@ -86,6 +86,10 @@ Notas:
 
 - la respuesta sigue el patrón estándar con `ApiResponseBuilder`
 - la lista de permisos será plana, no agrupada por módulo
+- durante la compatibilidad temporal, si el usuario aún no tiene `roleId`, el backend resuelve el rol por fallback:
+  - default role de `MASTER_ADMIN`
+  - default role de `ADMIN`
+  - `STAFF_LEGACY` para `USER`
 
 ### Endpoints de administración de roles custom
 

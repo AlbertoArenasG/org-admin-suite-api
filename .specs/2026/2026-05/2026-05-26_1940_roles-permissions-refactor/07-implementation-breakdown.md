@@ -60,8 +60,8 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar `@CurrentUser()`
 - [x] Ajustar `types/express/index.d.ts`
 - [ ] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
-- [ ] Crear endpoint `me/permissions`
-- [ ] Crear presenter/DTO para respuesta de permisos efectivos
+- [x] Crear endpoint `me/permissions`
+- [x] Crear presenter/DTO para respuesta de permisos efectivos
 
 ## Slice 4. Servicio de autorización centralizado
 
