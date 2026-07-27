@@ -29,7 +29,7 @@ export class GetUserByIdUseCase {
       });
     }
 
-    if (!actorIsMaster && User.isMasterRole(data.role)) {
+    if (!actorIsMaster && User.isMasterSystemRole(data.systemRole)) {
       throw AuthorizationException.masterPrivilegesRequired();
     }
 

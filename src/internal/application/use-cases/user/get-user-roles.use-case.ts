@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { GetUserRolesDto, GetUserRolesResultDto } from '@application/dto';
-import { UserRole } from '@domain/entities';
+import { SystemRole, User, UserRole } from '@domain/entities';
 
 @Injectable()
 export class GetUserRolesUseCase {
@@ -14,16 +14,17 @@ export class GetUserRolesUseCase {
   }
 
   private resolveRoles(actorRole: UserRole): UserRole[] {
+    const actorSystemRole = User.resolveSystemRoleFromLegacyRole(actorRole);
     const baseRoles: UserRole[] = [UserRole.ADMIN, UserRole.STAFF];
 
-    if (this.isMasterRole(actorRole)) {
+    if (this.isMasterRole(actorSystemRole)) {
       return [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF, ...baseRoles];
     }
 
     return baseRoles;
   }
 
-  private isMasterRole(role: UserRole): boolean {
-    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
+  private isMasterRole(systemRole: SystemRole): boolean {
+    return systemRole === SystemRole.MASTER_ADMIN;
   }
 }
