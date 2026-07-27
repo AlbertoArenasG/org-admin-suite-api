@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "nest build",
+    "db:seed": "node -r tsconfig-paths/register -r ts-node/register src/internal/infra/persistence/mongoose/seeds/run-seeds.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

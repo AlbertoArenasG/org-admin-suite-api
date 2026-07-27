@@ -55,3 +55,6 @@
 - Se implementó la microfase de mappers Mongoose para `Role`, `PermissionModule` y `PermissionOperation`, manteniendo la separación entre dominio, puertos e infraestructura.
 - Se implementó la microfase de repositorios Mongoose para `Role`, `PermissionModule` y `PermissionOperation`.
 - Se completó el wiring de repositorios nuevos en `mongoose-repositories.config.ts`, dejando cerrada la base de persistencia del Slice 1 antes de entrar a seeds.
+- Se implementó la infraestructura base de `db:seed`, incluyendo runner, contexto compartido, logger, carga validada de entorno y registro inicial de seeds por categoría.
+- Se registró el script `db:seed` en `package.json`, dejando listo el siguiente slice para cargar seeds idempotentes reales de módulos, operaciones y roles base.
+- Se implementó el primer seed idempotente real del catálogo con `permission-operations.seed.ts`, alineado al catálogo inicial CRUD aprobado en la documentación de autorización.

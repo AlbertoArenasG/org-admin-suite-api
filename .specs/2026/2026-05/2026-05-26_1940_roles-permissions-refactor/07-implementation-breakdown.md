@@ -21,6 +21,9 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Definir runner base de seeds para Mongoose
 - [x] Definir convención de contexto compartido para seeds y migrations
 - [x] Definir scripts `package.json` para `db:seed` y migración de usuarios
+- [x] Implementar runner base de seeds para Mongoose
+- [x] Implementar contexto compartido de ejecución para seeds
+- [x] Registrar script `db:seed` en `package.json`
 - [x] Crear `role.entity.ts`
 - [ ] Crear modelos de catálogo para `permission module` y `permission operation`
 - [x] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
@@ -32,7 +35,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Registrar tokens e implementaciones en `mongoose-repositories.config.ts`
 - [x] Registrar schemas nuevos en `schemas.config.ts`
 - [ ] Crear seeds idempotentes de módulos
-- [ ] Crear seeds idempotentes de operaciones
+- [x] Crear seeds idempotentes de operaciones
 - [ ] Crear seeds idempotentes de roles del sistema
 - [ ] Crear seed de `STAFF_LEGACY`
 
