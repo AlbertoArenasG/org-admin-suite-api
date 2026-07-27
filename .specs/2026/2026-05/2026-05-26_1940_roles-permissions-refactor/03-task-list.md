@@ -31,10 +31,10 @@
 - [x] Definir estructura técnica para `seeds` y `migrations`
   Status: done
 
-- [ ] Crear contratos de dominio para lectura y escritura de roles
-  Status: pending
+- [x] Crear entidad de dominio `Role`
+  Status: done
 
-- [ ] Crear entidad de dominio `Role`
+- [ ] Crear contratos de dominio para lectura y escritura de roles
   Status: pending
 
 - [ ] Crear schema Mongoose para roles

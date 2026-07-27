@@ -17,13 +17,13 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 1. Roles y catálogos base
 
-- [ ] Definir estructura de carpetas para `seeds` y `migrations`
-- [ ] Definir runner base de seeds para Mongoose
-- [ ] Definir convención de contexto compartido para seeds y migrations
-- [ ] Definir scripts `package.json` para `db:seed` y migración de usuarios
-- [ ] Crear `role.entity.ts`
+- [x] Definir estructura de carpetas para `seeds` y `migrations`
+- [x] Definir runner base de seeds para Mongoose
+- [x] Definir convención de contexto compartido para seeds y migrations
+- [x] Definir scripts `package.json` para `db:seed` y migración de usuarios
+- [x] Crear `role.entity.ts`
 - [ ] Crear modelos de catálogo para `permission module` y `permission operation`
-- [ ] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
+- [x] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
 - [ ] Crear puertos de lectura/escritura para roles
 - [ ] Crear puertos de lectura para módulos y operaciones
 - [ ] Crear schemas Mongoose de `roles`, `permission_modules` y `permission_operations`

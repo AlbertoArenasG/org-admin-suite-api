@@ -49,3 +49,4 @@
 - Se aterrizó el diseño concreto del script de migración de usuarios legacy, incluyendo ubicación, comando sugerido, algoritmo, reportes y condiciones de fallo/éxito.
 - La definición quedó cerrada con suficiente detalle para iniciar implementación por slices pequeños.
 - Se definió la microfase técnica de `seeds` y `migrations`, incluyendo estructura de carpetas, runner base, contexto compartido y comandos sugeridos para `package.json`.
+- Se implementó la primera microfase de dominio del refactor con `role.entity.ts` y los enums base `SystemRole`, `RoleScope`, `RoleStatus` y `CatalogStatus`.
