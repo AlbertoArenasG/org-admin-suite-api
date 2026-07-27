@@ -1,9 +1,9 @@
-import { UserRole } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 
 export interface AuthTokenPayloadDto {
   sub: string;
-  role: UserRole;
-  isMaster: boolean;
+  systemRole: SystemRole;
+  roleId: string | null;
   iat?: number;
   exp?: number;
 }
@@ -17,7 +17,7 @@ export function isAuthTokenPayloadDto(
 
   return (
     typeof candidate.sub === 'string' &&
-    typeof candidate.role === 'string' &&
-    typeof candidate.isMaster === 'boolean'
+    typeof candidate.systemRole === 'string' &&
+    (typeof candidate.roleId === 'string' || candidate.roleId === null)
   );
 }

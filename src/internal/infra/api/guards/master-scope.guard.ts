@@ -6,6 +6,7 @@ import {
   SCOPE_METADATA_KEY,
   ScopeType,
 } from '@src/common/decorators/scopes.decorator';
+import { SystemRole } from '@domain/entities';
 import { AuthorizationException } from '@domain/exceptions';
 
 @Injectable()
@@ -22,7 +23,7 @@ export class MasterScopeGuard implements CanActivate {
       | AuthenticatedUserContextDto
       | undefined;
 
-    if (!authContext || !authContext.isMaster) {
+    if (!authContext || authContext.systemRole !== SystemRole.MASTER_ADMIN) {
       throw AuthorizationException.masterPrivilegesRequired();
     }
 

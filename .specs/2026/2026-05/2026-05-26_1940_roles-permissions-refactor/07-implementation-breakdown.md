@@ -52,13 +52,13 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 3. JWT, auth context y autenticación
 
-- [ ] Redefinir `AuthTokenPayloadDto`
-- [ ] Ajustar `AuthTokenMapper`
+- [x] Redefinir `AuthTokenPayloadDto`
+- [x] Ajustar `AuthTokenMapper`
 - [ ] Ajustar `AuthTokenService`
-- [ ] Redefinir `AuthenticatedUserContextDto`
-- [ ] Ajustar `JwtAuthGuard`
-- [ ] Ajustar `@CurrentUser()`
-- [ ] Ajustar `types/express/index.d.ts`
+- [x] Redefinir `AuthenticatedUserContextDto`
+- [x] Ajustar `JwtAuthGuard`
+- [x] Ajustar `@CurrentUser()`
+- [x] Ajustar `types/express/index.d.ts`
 - [ ] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
 - [ ] Crear endpoint `me/permissions`
 - [ ] Crear presenter/DTO para respuesta de permisos efectivos

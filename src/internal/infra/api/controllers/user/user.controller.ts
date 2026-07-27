@@ -112,7 +112,9 @@ export class UserController {
     @Query() query: GetUsersRequestDto,
   ) {
     const result = await this.queryBus.execute(
-      GetUsersQuery.create(query.toDomain(currentUser.isMaster)),
+      GetUsersQuery.create(
+        query.toDomain(currentUser.systemRole === 'MASTER_ADMIN'),
+      ),
     );
 
     const data = await this.presenter.toUsersResponse(result.items);
@@ -130,7 +132,10 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
-      GetUserRolesQuery.create({ actorRole: currentUser.role }),
+      GetUserRolesQuery.create({
+        actorRole: currentUser.role,
+        actorSystemRole: currentUser.systemRole,
+      }),
     );
 
     const data = this.rolePresenter.toResponse(result);
@@ -150,7 +155,10 @@ export class UserController {
     @Param('userId') userId: string,
   ) {
     const result = await this.queryBus.execute(
-      GetUserByIdQuery.create(userId, currentUser.isMaster),
+      GetUserByIdQuery.create(
+        userId,
+        currentUser.systemRole === 'MASTER_ADMIN',
+      ),
     );
     const data = await this.presenter.toUserResponse(result);
 
