@@ -104,7 +104,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Migrar `user.controller`
 - [x] Migrar `customer.controller`
 - [x] Migrar `provider.controller`
-- [ ] Migrar `service-entry.controller`
+- [x] Migrar `service-entry.controller`
 - [ ] Revisar `file.controller`
 - [ ] Revisar `service-package.controller`
 - [ ] Revisar `master-admin/*`

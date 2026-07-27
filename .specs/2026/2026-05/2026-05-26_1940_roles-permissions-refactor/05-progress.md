@@ -72,3 +72,4 @@
 - Se implementó la primera base reutilizable de autorización centralizada con `AuthorizationService`, `@RequirePermission(...)` y `PermissionsGuard`, y `me/permissions` quedó reutilizando esa misma resolución de permisos para no duplicar lógica.
 - Se migró `customer.controller` al patrón objetivo con `JwtAuthGuard + PermissionsGuard + @RequirePermission(...)`, eliminando ahí el primer `ensureAuthorized()` real de negocio.
 - Se migró `provider.controller` al mismo patrón centralizado de permisos, dejando otro controller CRUD de negocio fuera de la validación hardcodeada por roles legacy.
+- Se migró `service-entry.controller` al mismo patrón centralizado, cubriendo `service_entries` y `service_entry_surveys` con permisos explícitos por endpoint y eliminando otro `ensureAuthorized()` legacy.

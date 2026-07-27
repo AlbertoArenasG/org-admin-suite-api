@@ -195,27 +195,27 @@ Endpoints actuales:
 - `POST /v1/services/service-entry`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `service_entries.CREATE`
 - `GET /v1/services/service-entry`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `service_entries.READ`
 - `GET /v1/services/service-entry/categories`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: catalogo interno de categorias
+  - nota: catalogo interno de categorias, protegido por `service_entries.READ`
 - `GET /v1/services/service-entry/:serviceEntryId`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `service_entries.READ`
 - `PATCH /v1/services/service-entry/:serviceEntryId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `service_entries.UPDATE`
 - `DELETE /v1/services/service-entry/:serviceEntryId`
   - operacion: `DELETE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `service_entries.DELETE`
 
 ### `service_entry_surveys`
 
@@ -229,11 +229,11 @@ Endpoints actuales:
 - `GET /v1/services/service-entry/surveys/stats`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: estadisticas de encuestas
+  - nota: estadisticas de encuestas, protegido por `service_entry_surveys.READ`
 - `GET /v1/services/service-entry/surveys`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: listado de respuestas de encuestas
+  - nota: listado de respuestas de encuestas, protegido por `service_entry_surveys.READ`
 - `POST /v1/public/service-entry/:token/survey`
   - operacion: fuera del catalogo interno
   - acceso actual: publico por token

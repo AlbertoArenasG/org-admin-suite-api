@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
+import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateServiceEntryRequestDto,
@@ -37,11 +38,8 @@ import {
   GetServiceCategoriesQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard } from '@infra/api/guards';
-import { CurrentUser } from '@src/common/decorators';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
-import { UserRole } from '@domain/entities';
-import { AuthorizationException } from '@domain/exceptions';
 import {
   GetServiceEntrySurveyStatsRequestDto,
   GetServiceEntrySurveyResponsesRequestDto,
@@ -59,13 +57,13 @@ export class ServiceEntryController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'CREATE')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Body() body: CreateServiceEntryRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const command = CreateServiceEntryCommandAdapter.create(body.toDomain());
     const result = await this.commandBus.execute(command);
     const data = this.presenter.toCreateResponse(result);
@@ -80,13 +78,13 @@ export class ServiceEntryController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Query() query: GetServiceEntriesRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const result = await this.queryBus.execute(
       GetServiceEntriesQuery.create(query.toDomain()),
     );
@@ -101,13 +99,13 @@ export class ServiceEntryController {
   }
 
   @Get('surveys/stats')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entry_surveys', 'READ')
   @HttpCode(HttpStatus.OK)
   async getSurveyStats(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Query() query: GetServiceEntrySurveyStatsRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const result = await this.queryBus.execute(
       GetServiceEntrySurveyStatsQuery.create(query.toDomain()),
     );
@@ -121,10 +119,10 @@ export class ServiceEntryController {
   }
 
   @Get('categories')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'READ')
   @HttpCode(HttpStatus.OK)
-  async getCategories(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
-    this.ensureAuthorized(currentUser.role);
+  async getCategories() {
     const result = await this.queryBus.execute(
       GetServiceCategoriesQuery.create(),
     );
@@ -138,13 +136,13 @@ export class ServiceEntryController {
   }
 
   @Get('surveys')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entry_surveys', 'READ')
   @HttpCode(HttpStatus.OK)
   async getSurveyResponses(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Query() query: GetServiceEntrySurveyResponsesRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const result = await this.queryBus.execute(
       GetServiceEntrySurveyResponsesQuery.create(query.toDomain()),
     );
@@ -163,13 +161,13 @@ export class ServiceEntryController {
   }
 
   @Get(':serviceEntryId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'READ')
   @HttpCode(HttpStatus.OK)
   async findOne(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('serviceEntryId') serviceEntryId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const result = await this.queryBus.execute(
       GetServiceEntryByIdQuery.create(serviceEntryId),
     );
@@ -183,14 +181,14 @@ export class ServiceEntryController {
   }
 
   @Patch(':serviceEntryId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'UPDATE')
   @HttpCode(HttpStatus.OK)
   async update(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Param('serviceEntryId') serviceEntryId: string,
     @Body() body: UpdateServiceEntryRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const command = UpdateServiceEntryCommandAdapter.create(
       body.toDomain(serviceEntryId),
     );
@@ -207,13 +205,13 @@ export class ServiceEntryController {
   }
 
   @Delete(':serviceEntryId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_entries', 'DELETE')
   @HttpCode(HttpStatus.OK)
   async delete(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('serviceEntryId') serviceEntryId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
     const command = DeleteServiceEntryCommandAdapter.create(serviceEntryId);
     await this.commandBus.execute(command);
 
@@ -223,11 +221,5 @@ export class ServiceEntryController {
       )
       .withStatus(HttpStatus.OK)
       .build();
-  }
-
-  private ensureAuthorized(role: UserRole): void {
-    if (role === UserRole.CUSTOMER) {
-      throw AuthorizationException.rolePrivilegesInsufficient(role);
-    }
   }
 }
