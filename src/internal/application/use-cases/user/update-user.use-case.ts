@@ -29,7 +29,7 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
-    const { userId, actorRole, actorUserId, payload } = input;
+    const { userId, actorSystemRole, actorUserId, payload } = input;
 
     const { data: user } = await this.userReadRepository.findById(userId);
 
@@ -42,7 +42,10 @@ export class UpdateUserUseCase {
     const isSelfUpdate = actorUserId === userId;
 
     if (!isSelfUpdate) {
-      UserRolePolicy.ensureHasHigherPrivileges(actorRole, user.systemRole);
+      UserRolePolicy.ensureHasHigherPrivileges(
+        actorSystemRole,
+        user.systemRole,
+      );
     }
 
     if (payload.systemRole !== undefined || payload.role !== undefined) {
@@ -63,7 +66,7 @@ export class UpdateUserUseCase {
         });
       }
 
-      UserRolePolicy.ensureCanManageRole(actorRole, nextSystemRole);
+      UserRolePolicy.ensureCanManageRole(actorSystemRole, nextSystemRole);
       user.updateAuthorization({
         systemRole: nextSystemRole,
         roleId: payload.roleId ?? user.roleId,

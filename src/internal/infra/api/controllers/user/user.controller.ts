@@ -185,7 +185,7 @@ export class UserController {
     @Body() body: UpdateUserRequestDto,
   ) {
     const command = UpdateUserCommandAdapter.create(
-      body.toDomain(userId, currentUser.role, currentUser.userId),
+      body.toDomain(userId, currentUser.systemRole, currentUser.userId),
     );
     const result = await this.commandBus.execute(command);
     const data = await this.presenter.toUserResponse(result);

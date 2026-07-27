@@ -4,7 +4,7 @@ import { UserViewDto } from './create-user.dto';
 
 export interface UpdateUserDto {
   userId: string;
-  actorRole: UserRole;
+  actorSystemRole: SystemRole;
   actorUserId: string;
   payload: {
     name?: string;

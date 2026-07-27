@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { User, UserRole, UserStatus } from '@domain/entities';
+import { SystemRole, User, UserRole, UserStatus } from '@domain/entities';
 import { UpdateUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
 
@@ -41,7 +41,7 @@ export class UpdateUserRequestDto {
 
   toDomain(
     userId: string,
-    actorRole: UserRole,
+    actorSystemRole: SystemRole,
     actorUserId: string,
   ): UpdateUserDto {
     const payload: UpdateUserDto['payload'] = {};
@@ -79,7 +79,7 @@ export class UpdateUserRequestDto {
 
     return {
       userId,
-      actorRole,
+      actorSystemRole,
       actorUserId,
       payload,
     };
