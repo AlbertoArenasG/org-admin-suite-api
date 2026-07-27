@@ -7,7 +7,13 @@ import {
   IUserWriteRepository,
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import { NotificationType, User, UserStatus, UserRole } from '@domain/entities';
+import {
+  NotificationType,
+  SystemRole,
+  User,
+  UserStatus,
+  UserRole,
+} from '@domain/entities';
 import { UserPasswordPolicy, UserRolePolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
@@ -37,7 +43,10 @@ export class CreateUserAndNotifyUseCase {
     input: CreateUserDto,
     actorRole: UserRole,
   ): Promise<CreateUserResultDto> {
-    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+    UserRolePolicy.ensureCanManageRole(
+      actorRole,
+      input.systemRole ?? input.role ?? SystemRole.USER,
+    );
 
     const existingUser = await this.findUserByEmail(input.email);
 
@@ -69,7 +78,9 @@ export class CreateUserAndNotifyUseCase {
       email: input.email,
       password: hashedPassword,
       role: input.role,
-      systemRole: input.systemRole,
+      systemRole:
+        input.systemRole ??
+        User.resolveSystemRoleFromLegacyRole(input.role ?? UserRole.STAFF),
       roleId: input.roleId ?? null,
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,

@@ -65,3 +65,4 @@
 - Se ajustaron `user.entity.ts`, `user.schema.ts`, `mongoose-user.mapper.ts` y la lectura Mongoose de usuarios para persistir y leer `system_role` y `role_id` junto con el campo legacy `role` mientras termina la migración del resto del backend.
 - Se propagó `systemRole` y `roleId` a DTOs, mappers y presenters de usuario y autenticación, manteniendo `role` en paralelo como campo de compatibilidad temporal para no romper contratos existentes de la API demasiado pronto.
 - Se movió la jerarquía interna de `UserRolePolicy` a `SystemRole`, reduciendo la dependencia de ranking contra roles legacy y alineando los primeros use cases de aplicación al nuevo criterio estructural.
+- Se ajustaron los flujos de creación, actualización y borrado de usuarios para preferir `systemRole` en las decisiones estructurales, manteniendo compatibilidad temporal con `role` mientras el resto del pipeline termina de migrar.

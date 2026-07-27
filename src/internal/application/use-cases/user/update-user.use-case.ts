@@ -17,7 +17,7 @@ import {
 import { UserRolePolicy } from '@domain/policies';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import { UserStatus } from '@domain/entities';
+import { User, UserStatus } from '@domain/entities';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -42,18 +42,33 @@ export class UpdateUserUseCase {
     const isSelfUpdate = actorUserId === userId;
 
     if (!isSelfUpdate) {
-      UserRolePolicy.ensureHasHigherPrivileges(actorRole, user.role);
+      UserRolePolicy.ensureHasHigherPrivileges(actorRole, user.systemRole);
     }
 
-    if (payload.role !== undefined) {
-      if (isSelfUpdate && payload.role !== user.role) {
+    if (payload.systemRole !== undefined || payload.role !== undefined) {
+      const nextSystemRole =
+        payload.systemRole ??
+        (payload.role !== undefined
+          ? User.resolveSystemRoleFromLegacyRole(payload.role)
+          : user.systemRole);
+      const nextLegacyRole = payload.role;
+
+      if (
+        isSelfUpdate &&
+        (nextSystemRole !== user.systemRole ||
+          (nextLegacyRole !== undefined && nextLegacyRole !== user.role))
+      ) {
         throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
           field: 'role',
         });
       }
 
-      UserRolePolicy.ensureCanManageRole(actorRole, payload.role);
-      user.updateRole(payload.role);
+      UserRolePolicy.ensureCanManageRole(actorRole, nextSystemRole);
+      user.updateAuthorization({
+        systemRole: nextSystemRole,
+        roleId: payload.roleId ?? user.roleId,
+        role: nextLegacyRole,
+      });
     }
 
     if (payload.status !== undefined) {
