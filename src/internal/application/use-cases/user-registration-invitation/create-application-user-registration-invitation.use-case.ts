@@ -22,7 +22,7 @@ import {
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import { UserRegistrationInvitationTokenService } from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
-import { User, UserRole } from '@domain/entities';
+import { SystemRole, User, UserRole } from '@domain/entities';
 import { UserRolePolicy } from '@domain/policies';
 
 @Injectable()
@@ -42,7 +42,10 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
     input: CreateApplicationUserRegistrationInvitationDto,
     actorRole: UserRole,
   ): Promise<UserRegistrationInvitationDto> {
-    UserRolePolicy.ensureCanManageRole(actorRole, input.role);
+    UserRolePolicy.ensureCanManageRole(
+      actorRole,
+      input.systemRole ?? input.role ?? SystemRole.USER,
+    );
 
     await this.ensureInvitationDoesNotExist(input.email);
 
@@ -64,7 +67,11 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       type: invitationType,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
-      role: input.role,
+      role:
+        input.role ??
+        User.resolveCompatibilityLegacyRole(
+          input.systemRole ?? SystemRole.USER,
+        ),
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
@@ -75,7 +82,11 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       token,
       invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.APPLICATION,
-      role: input.role,
+      role:
+        input.role ??
+        User.resolveCompatibilityLegacyRole(
+          input.systemRole ?? SystemRole.USER,
+        ),
       userData: input.userData ?? null,
     });
 

@@ -6,15 +6,17 @@ import { SystemRole, User, UserRole } from '@domain/entities';
 @Injectable()
 export class GetUserRolesUseCase {
   async execute(input: GetUserRolesDto): Promise<GetUserRolesResultDto> {
-    const roles = this.resolveRoles(input.actorRole);
+    const roles = this.resolveRoles(
+      input.actorSystemRole ??
+        User.resolveSystemRoleFromLegacyRole(input.actorRole),
+    );
 
     return {
       roles: roles.map((role) => ({ role })),
     };
   }
 
-  private resolveRoles(actorRole: UserRole): UserRole[] {
-    const actorSystemRole = User.resolveSystemRoleFromLegacyRole(actorRole);
+  private resolveRoles(actorSystemRole: SystemRole): UserRole[] {
     const baseRoles: UserRole[] = [UserRole.ADMIN, UserRole.STAFF];
 
     if (this.isMasterRole(actorSystemRole)) {

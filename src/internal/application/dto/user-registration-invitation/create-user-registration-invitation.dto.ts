@@ -1,4 +1,4 @@
-import { UserRole } from '@domain/entities';
+import { SystemRole, UserRole } from '@domain/entities';
 import {
   UserRegistrationInvitationScope,
   UserRegistrationInvitationStatus,
@@ -15,13 +15,17 @@ export interface BaseCreateUserRegistrationInvitationDto {
 export interface CreateApplicationUserRegistrationInvitationDto
   extends BaseCreateUserRegistrationInvitationDto {
   scope: UserRegistrationInvitationScope.APPLICATION;
-  role: UserRole;
+  role?: UserRole;
+  systemRole?: SystemRole;
+  roleId?: string | null;
 }
 
 export interface CreateMasterUserRegistrationInvitationDto
   extends BaseCreateUserRegistrationInvitationDto {
   scope: UserRegistrationInvitationScope.MASTER;
-  role: UserRole;
+  role?: UserRole;
+  systemRole?: SystemRole;
+  roleId?: string | null;
 }
 
 export type CreateUserRegistrationInvitationDto =

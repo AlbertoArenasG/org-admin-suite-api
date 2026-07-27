@@ -66,3 +66,4 @@
 - Se propagó `systemRole` y `roleId` a DTOs, mappers y presenters de usuario y autenticación, manteniendo `role` en paralelo como campo de compatibilidad temporal para no romper contratos existentes de la API demasiado pronto.
 - Se movió la jerarquía interna de `UserRolePolicy` a `SystemRole`, reduciendo la dependencia de ranking contra roles legacy y alineando los primeros use cases de aplicación al nuevo criterio estructural.
 - Se ajustaron los flujos de creación, actualización y borrado de usuarios para preferir `systemRole` en las decisiones estructurales, manteniendo compatibilidad temporal con `role` mientras el resto del pipeline termina de migrar.
+- Se ajustaron invitaciones de usuario y `GetUserRoles` para aceptar `systemRole` en paralelo al `role` legacy, reduciendo otra capa de dependencia runtime al modelo anterior sin romper todavía los contratos existentes.
