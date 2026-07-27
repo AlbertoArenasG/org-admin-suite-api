@@ -47,8 +47,8 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar mapper Mongoose de `user`
 - [x] Ajustar repositorios de lectura/escritura de `user`
 - [ ] Agregar queries necesarias por `systemRole` y `roleId`
-- [ ] Ajustar DTOs de application relacionados con usuario
-- [ ] Ajustar presenters de usuario al nuevo modelo
+- [x] Ajustar DTOs de application relacionados con usuario
+- [x] Ajustar presenters de usuario al nuevo modelo
 
 ## Slice 3. JWT, auth context y autenticación
 

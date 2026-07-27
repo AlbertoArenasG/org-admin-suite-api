@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@domain/entities';
+import { SystemRole, UserRole, UserStatus } from '@domain/entities';
 import { PhoneDto } from '@application/dto/shared';
 
 export interface CreateUserDto {
@@ -6,7 +6,9 @@ export interface CreateUserDto {
   lastname: string;
   email: string;
   password: string;
-  role: UserRole;
+  role?: UserRole;
+  systemRole?: SystemRole;
+  roleId?: string | null;
   cellPhone: PhoneDto;
 }
 
@@ -16,6 +18,8 @@ export interface UserViewDto {
   lastname: string;
   email: string;
   role: UserRole;
+  systemRole: SystemRole;
+  roleId: string | null;
   status: UserStatus;
   cellPhone: PhoneDto;
   createdAt: Date;

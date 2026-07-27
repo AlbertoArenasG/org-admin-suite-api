@@ -21,6 +21,8 @@ export class UserResultMapper {
       lastname: user.lastname,
       email: user.email,
       role: user.role,
+      systemRole: user.systemRole,
+      roleId: user.roleId,
       status: user.status,
       cellPhone: toCellPhoneDto(user),
     };
@@ -33,6 +35,8 @@ export class UserResultMapper {
       lastname: user.lastname,
       email: user.email,
       role: user.role,
+      systemRole: user.systemRole,
+      roleId: user.roleId,
       status: user.status,
       cellPhone: toCellPhoneDto(user),
       createdAt: user.createdAt ?? new Date(),

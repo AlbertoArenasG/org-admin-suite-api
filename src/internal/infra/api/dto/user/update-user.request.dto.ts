@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { UserRole, UserStatus } from '@domain/entities';
+import { User, UserRole, UserStatus } from '@domain/entities';
 import { UpdateUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
 
@@ -69,6 +69,8 @@ export class UpdateUserRequestDto {
 
     if (this.role_id !== undefined) {
       payload.role = this.role_id;
+      payload.systemRole = User.resolveSystemRoleFromLegacyRole(this.role_id);
+      payload.roleId = null;
     }
 
     if (this.status_id !== undefined) {

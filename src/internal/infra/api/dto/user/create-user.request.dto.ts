@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { UserRole } from '@domain/entities';
+import { User, UserRole } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import { CreateUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
@@ -46,6 +46,13 @@ export class CreateUserRequestDto {
       email: this.email,
       password: this.password,
       role: this.role_id,
+      systemRole: User.resolveSystemRoleFromLegacyRole(this.role_id),
+      roleId:
+        this.role_id === UserRole.ADMIN
+          ? null
+          : this.role_id === UserRole.STAFF
+            ? null
+            : null,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,
         number: this.cell_phone?.number || null,

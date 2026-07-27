@@ -13,6 +13,8 @@ export class AuthPresenter {
         lastname: result.user.lastname,
         email: result.user.email,
         role: result.user.role,
+        system_role: result.user.systemRole,
+        role_id: result.user.roleId,
         status: result.user.status,
         cell_phone: {
           country_code: result.user.cellPhone?.countryCode ?? null,

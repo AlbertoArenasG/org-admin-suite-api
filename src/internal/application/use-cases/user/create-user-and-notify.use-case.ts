@@ -69,6 +69,8 @@ export class CreateUserAndNotifyUseCase {
       email: input.email,
       password: hashedPassword,
       role: input.role,
+      systemRole: input.systemRole,
+      roleId: input.roleId ?? null,
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,
     });
