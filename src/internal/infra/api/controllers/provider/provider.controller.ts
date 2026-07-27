@@ -13,13 +13,14 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
+import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateProviderRequestDto,
   GetProvidersRequestDto,
   UpdateProviderRequestDto,
 } from '@infra/api/dto/provider';
-import { JwtAuthGuard } from '@infra/api/guards';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { ProviderPresenter } from '@infra/api/presenters/provider';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import {
@@ -28,10 +29,7 @@ import {
   DeleteProviderCommandAdapter,
 } from '@infra/cqrs/commands';
 import { GetProvidersQuery, GetProviderByIdQuery } from '@infra/cqrs/queries';
-import { CurrentUser } from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
-import { AuthorizationException } from '@domain/exceptions';
-import { UserRole } from '@domain/entities';
 
 @Controller('v1/providers')
 export class ProviderController {
@@ -43,14 +41,13 @@ export class ProviderController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'CREATE')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Body() body: CreateProviderRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = CreateProviderCommandAdapter.create(
       body.toDomain(currentUser.userId),
     );
@@ -65,14 +62,13 @@ export class ProviderController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Query() query: GetProvidersRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const result = await this.queryBus.execute(
       GetProvidersQuery.create(query.toDomain()),
     );
@@ -87,14 +83,13 @@ export class ProviderController {
   }
 
   @Get(':providerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'READ')
   @HttpCode(HttpStatus.OK)
   async findOne(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('providerId') providerId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const result = await this.queryBus.execute(
       GetProviderByIdQuery.create(providerId),
     );
@@ -108,15 +103,14 @@ export class ProviderController {
   }
 
   @Patch(':providerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'UPDATE')
   @HttpCode(HttpStatus.OK)
   async update(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Param('providerId') providerId: string,
     @Body() body: UpdateProviderRequestDto,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = UpdateProviderCommandAdapter.create(
       body.toDomain(providerId, currentUser.userId),
     );
@@ -131,14 +125,13 @@ export class ProviderController {
   }
 
   @Delete(':providerId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'DELETE')
   @HttpCode(HttpStatus.OK)
   async delete(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
     @Param('providerId') providerId: string,
   ) {
-    this.ensureAuthorized(currentUser.role);
-
     const command = DeleteProviderCommandAdapter.create(providerId);
     await this.commandBus.execute(command);
 
@@ -146,17 +139,5 @@ export class ProviderController {
       .withSuccessMessage(this.successMsgService.getMsg('PROVIDER.DELETED'))
       .withStatus(HttpStatus.OK)
       .build();
-  }
-
-  private ensureAuthorized(role: UserRole): void {
-    const allowedRoles: UserRole[] = [
-      UserRole.MASTER_ADMIN,
-      UserRole.ADMIN,
-      UserRole.STAFF,
-    ];
-
-    if (!allowedRoles.includes(role)) {
-      throw AuthorizationException.rolePrivilegesInsufficient(role);
-    }
   }
 }
