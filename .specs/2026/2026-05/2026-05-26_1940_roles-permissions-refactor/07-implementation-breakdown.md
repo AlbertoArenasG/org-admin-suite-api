@@ -27,7 +27,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear puertos de lectura/escritura para roles
 - [x] Crear puertos de lectura para módulos y operaciones
 - [x] Crear schemas Mongoose de `roles`, `permission_modules` y `permission_operations`
-- [ ] Crear mappers Mongoose correspondientes
+- [x] Crear mappers Mongoose correspondientes
 - [ ] Crear repositorios Mongoose correspondientes
 - [ ] Registrar tokens e implementaciones en `mongoose-repositories.config.ts`
 - [ ] Registrar schemas nuevos en `schemas.config.ts`
