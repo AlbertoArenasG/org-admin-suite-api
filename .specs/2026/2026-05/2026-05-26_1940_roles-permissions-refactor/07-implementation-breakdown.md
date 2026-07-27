@@ -36,7 +36,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Registrar schemas nuevos en `schemas.config.ts`
 - [x] Crear seeds idempotentes de módulos
 - [x] Crear seeds idempotentes de operaciones
-- [ ] Crear seeds idempotentes de roles del sistema
+- [x] Crear seeds idempotentes de roles del sistema
 - [ ] Crear seed de `STAFF_LEGACY`
 
 ## Slice 2. Migración del modelo User
