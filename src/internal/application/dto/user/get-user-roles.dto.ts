@@ -1,8 +1,7 @@
 import { SystemRole, UserRole } from '@domain/entities';
 
 export interface GetUserRolesDto {
-  actorRole: UserRole;
-  actorSystemRole?: SystemRole;
+  actorSystemRole: SystemRole;
 }
 
 export interface UserRoleViewDto {

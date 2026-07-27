@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { GetUserRolesDto, GetUserRolesResultDto } from '@application/dto';
-import { SystemRole, User, UserRole } from '@domain/entities';
+import { SystemRole, UserRole } from '@domain/entities';
 
 @Injectable()
 export class GetUserRolesUseCase {
   async execute(input: GetUserRolesDto): Promise<GetUserRolesResultDto> {
-    const roles = this.resolveRoles(
-      input.actorSystemRole ??
-        User.resolveSystemRoleFromLegacyRole(input.actorRole),
-    );
+    const roles = this.resolveRoles(input.actorSystemRole);
 
     return {
       roles: roles.map((role) => ({ role })),

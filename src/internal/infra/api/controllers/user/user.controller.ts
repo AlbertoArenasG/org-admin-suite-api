@@ -58,7 +58,7 @@ export class UserController {
   ) {
     const command = CreateUserAndNotifyCommandAdapter.create(
       body.toDomain(),
-      currentUser.role,
+      currentUser.systemRole,
     );
     const result = await this.commandBus.execute(command);
     const data = await this.presenter.toUserResponse(result);
@@ -139,7 +139,6 @@ export class UserController {
   async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
       GetUserRolesQuery.create({
-        actorRole: currentUser.role,
         actorSystemRole: currentUser.systemRole,
       }),
     );
@@ -208,7 +207,7 @@ export class UserController {
   ) {
     const command = DeleteUserCommandAdapter.create({
       userId,
-      actorRole: currentUser.role,
+      actorSystemRole: currentUser.systemRole,
     });
 
     await this.commandBus.execute(command);
