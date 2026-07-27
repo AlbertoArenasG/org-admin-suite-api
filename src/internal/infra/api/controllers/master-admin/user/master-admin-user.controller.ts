@@ -35,7 +35,7 @@ export class MasterAdminUserController {
   ) {
     const command = CreateMasterUserCommandAdapter.create(
       body.toDomain(),
-      currentUser.role,
+      currentUser.systemRole,
     );
     const result = await this.commandBus.execute(command);
     const data = await this.presenter.toUserResponse(result);

@@ -12,7 +12,6 @@ import {
   SystemRole,
   User,
   UserStatus,
-  UserRole,
 } from '@domain/entities';
 import { UserPasswordPolicy, UserRolePolicy } from '@domain/policies';
 import {
@@ -44,10 +43,10 @@ export class CreateMasterUserAndNotifyUseCase {
    */
   async execute(
     input: CreateMasterUserDto,
-    actorRole: UserRole,
+    actorSystemRole: SystemRole,
   ): Promise<CreateMasterUserResultDto> {
     UserRolePolicy.ensureCanManageRole(
-      actorRole,
+      actorSystemRole,
       input.systemRole ?? input.role ?? SystemRole.MASTER_ADMIN,
     );
 
@@ -66,7 +65,8 @@ export class CreateMasterUserAndNotifyUseCase {
       systemRole:
         input.systemRole ??
         User.resolveSystemRoleFromLegacyRole(
-          input.role ?? UserRole.MASTER_ADMIN,
+          input.role ??
+            User.resolveCompatibilityLegacyRole(SystemRole.MASTER_ADMIN),
         ),
       roleId: input.roleId ?? null,
       status: UserStatus.ACTIVE,
