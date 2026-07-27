@@ -74,3 +74,4 @@
 - Se migró `provider.controller` al mismo patrón centralizado de permisos, dejando otro controller CRUD de negocio fuera de la validación hardcodeada por roles legacy.
 - Se migró `service-entry.controller` al mismo patrón centralizado, cubriendo `service_entries` y `service_entry_surveys` con permisos explícitos por endpoint y eliminando otro `ensureAuthorized()` legacy.
 - Se revisó `file.controller` y se migraron sus endpoints internos de subida y metadata a `PermissionsGuard` con el módulo `files`, dejando documentado que `POST /v1/files/public` y `GET /v1/files/:fileId/download` permanecen temporalmente fuera del guard centralizado por su naturaleza pública/mixta actual.
+- Se revisó `service-package.controller` y se migraron los endpoints autenticados de `records` al patrón centralizado con el módulo `service_packages`, dejando `POST /v1/service-packages/uploads` sin guard mientras su política final siga pendiente de definición.

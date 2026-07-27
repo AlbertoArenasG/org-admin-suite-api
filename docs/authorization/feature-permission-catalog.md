@@ -283,12 +283,15 @@ Endpoints actuales:
 - `GET /v1/service-packages/records`
   - operacion: `READ`
   - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `service_packages.READ`
 - `GET /v1/service-packages/records/:recordId`
   - operacion: `READ`
   - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `service_packages.READ`
 - `DELETE /v1/service-packages/records/:recordId`
   - operacion: `DELETE`
   - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `service_packages.DELETE`
 
 ### `user_registration_invitations`
 

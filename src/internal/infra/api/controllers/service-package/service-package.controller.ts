@@ -16,6 +16,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer, memoryStorage } from 'multer';
 
+import { RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   DeleteServicePackageRecordCommandAdapter,
@@ -28,7 +29,7 @@ import {
   GetServicePackageRecordByIdQuery,
 } from '@infra/cqrs/queries';
 import { GetServicePackageRecordsRequestDto } from '@infra/api/dto';
-import { JwtAuthGuard } from '@infra/api/guards';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 
 @Controller('v1/service-packages')
 export class ServicePackageController {
@@ -69,7 +70,8 @@ export class ServicePackageController {
   }
 
   @Get('records')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_packages', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() query: GetServicePackageRecordsRequestDto) {
     const result = await this.queryBus.execute(
@@ -86,7 +88,8 @@ export class ServicePackageController {
   }
 
   @Get('records/:recordId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_packages', 'READ')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('recordId') recordId: string) {
     const result = await this.queryBus.execute(
@@ -102,7 +105,8 @@ export class ServicePackageController {
   }
 
   @Delete('records/:recordId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_packages', 'DELETE')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('recordId') recordId: string) {
     const command = DeleteServicePackageRecordCommandAdapter.create({
