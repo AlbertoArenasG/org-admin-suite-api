@@ -22,7 +22,7 @@ import {
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import { UserRegistrationInvitationTokenService } from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
-import { SystemRole, User, UserRole } from '@domain/entities';
+import { SystemRole, User } from '@domain/entities';
 import { UserRolePolicy } from '@domain/policies';
 
 @Injectable()
@@ -40,10 +40,10 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
 
   async execute(
     input: CreateApplicationUserRegistrationInvitationDto,
-    actorRole: UserRole,
+    actorSystemRole: SystemRole,
   ): Promise<UserRegistrationInvitationDto> {
     UserRolePolicy.ensureCanManageRole(
-      actorRole,
+      actorSystemRole,
       input.systemRole ?? input.role ?? SystemRole.USER,
     );
 

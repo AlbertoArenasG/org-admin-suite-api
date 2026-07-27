@@ -6,23 +6,23 @@ import {
   CreateApplicationUserRegistrationInvitationDto,
   UserRegistrationInvitationDto,
 } from '@application/dto';
-import { UserRole } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 
 export class CreateUserRegistrationInvitationCommandAdapter
   implements ICommand
 {
   private constructor(
     public readonly payload: CreateApplicationUserRegistrationInvitationDto,
-    public readonly actorRole: UserRole,
+    public readonly actorSystemRole: SystemRole,
   ) {}
 
   static create(
     payload: CreateApplicationUserRegistrationInvitationDto,
-    actorRole: UserRole,
+    actorSystemRole: SystemRole,
   ) {
     return new CreateUserRegistrationInvitationCommandAdapter(
       payload,
-      actorRole,
+      actorSystemRole,
     );
   }
 }
@@ -42,7 +42,7 @@ export class CreateUserRegistrationInvitationHandler extends BaseCommandHandler<
     command: CreateUserRegistrationInvitationCommandAdapter,
   ): Promise<UserRegistrationInvitationDto> {
     return this.run(command, () =>
-      this.useCase.execute(command.payload, command.actorRole),
+      this.useCase.execute(command.payload, command.actorSystemRole),
     );
   }
 }

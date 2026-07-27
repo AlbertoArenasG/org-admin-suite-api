@@ -79,3 +79,4 @@
 - Se migró `user.controller` al patrón HTTP centralizado con `PermissionsGuard` y permisos explícitos del módulo `users`, manteniendo por ahora en application las validaciones estructurales y la consulta legacy de roles asignables.
 - Se ajustaron los flows internos de `create user`, `delete user` y `GetUserRoles` para tomar `actorSystemRole` como contrato principal, reduciendo otra capa de dependencia runtime a `UserRole` legacy sin rediseñar todavía el request model legacy de usuarios.
 - Se ajustó `update user` para que las decisiones estructurales de privilegios y cambio de autorización usen `actorSystemRole` desde controller hasta application, manteniendo todavía el request DTO legacy basado en `role_id` mientras se rediseña el payload final.
+- Se ajustó `create user registration invitation` para usar `actorSystemRole` desde controller hasta use case, manteniendo por ahora el request DTO legacy que sigue enviando `role_id`.
