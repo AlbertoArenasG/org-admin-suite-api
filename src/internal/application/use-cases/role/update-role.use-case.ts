@@ -4,11 +4,19 @@ import { RoleMapper } from '@application/mappers';
 import { AuditUserFetcherService } from '@application/services';
 import { UpdateRoleDto, UpdateRoleResultDto } from '@application/dto';
 import {
+  InvalidValueException,
+  InvalidValueExceptionCode,
+} from '@domain/exceptions';
+import {
   IRoleReadRepository,
   IRoleReadRepositoryToken,
   IRoleWriteRepository,
   IRoleWriteRepositoryToken,
 } from '@domain/ports/repositories';
+import {
+  isValidAuthorizationPermission,
+  normalizeAuthorizationPermission,
+} from '@application/services/authz/authorization-catalog.utils';
 import { RoleMutationPolicy } from './shared/role-mutation-policy';
 
 @Injectable()
@@ -30,7 +38,31 @@ export class UpdateRoleUseCase {
     RoleMutationPolicy.ensureMutable(role);
 
     if (permissions !== undefined) {
-      role.replacePermissions(permissions, actorUserId);
+      role.replacePermissions(
+        permissions.map((permission) => {
+          const normalized = normalizeAuthorizationPermission(permission);
+
+          if (
+            !isValidAuthorizationPermission(
+              normalized.module,
+              normalized.operation,
+            )
+          ) {
+            throw InvalidValueException.create(
+              InvalidValueExceptionCode.DEFAULT,
+              {
+                field: 'permissions',
+                module: permission.module,
+                operation: permission.operation,
+                reason: 'INVALID_ROLE_PERMISSION',
+              },
+            );
+          }
+
+          return normalized;
+        }),
+        actorUserId,
+      );
     }
 
     const { data: updated } = await this.roleWriteRepository.update(role);

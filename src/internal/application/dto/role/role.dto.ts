@@ -12,23 +12,17 @@ export interface RolePermissionDto {
 }
 
 export interface PermissionModuleViewDto {
-  id: string;
   code: string;
-  name: string;
+  nameKey: string;
   status: string;
   isSystem: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface PermissionOperationViewDto {
-  id: string;
   code: string;
-  name: string;
+  nameKey: string;
   status: string;
   isSystem: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface RoleViewDto {

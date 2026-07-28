@@ -60,5 +60,24 @@
       "PENDING": "Pending",
       "COMPLETED": "Completed"
     }
+  },
+  "AUTHORIZATION": {
+    "MODULE": {
+      "USERS": "Users",
+      "ROLES": "Roles",
+      "CUSTOMERS": "Customers",
+      "PROVIDERS": "Providers",
+      "SERVICE_ENTRIES": "Service entries",
+      "SERVICE_ENTRY_SURVEYS": "Service entry surveys",
+      "FILES": "Files",
+      "SERVICE_PACKAGES": "Service packages",
+      "USER_REGISTRATION_INVITATIONS": "User registration invitations"
+    },
+    "OPERATION": {
+      "CREATE": "Create",
+      "READ": "Read",
+      "UPDATE": "Update",
+      "DELETE": "Delete"
+    }
   }
 }

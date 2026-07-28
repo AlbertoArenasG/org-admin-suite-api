@@ -124,8 +124,8 @@ Detalles de integración:
 - `PATCH /v1/roles/:roleId` devuelve el rol actualizado con el mismo shape de detalle de `GET /v1/roles/:roleId`
 - `PATCH /v1/roles/:roleId/status` acepta `status_id` con `ACTIVE` o `INACTIVE`
 - `DELETE /v1/roles/:roleId` realiza borrado lógico y responde con `data: null`
-- `GET /v1/roles/modules` debe estabilizarse para devolver el catálogo de módulos autorizables desde código
-- `GET /v1/roles/operations` debe estabilizarse para devolver el catálogo de operaciones autorizables desde código
+- `GET /v1/roles/modules` ya responde desde el catálogo en código
+- `GET /v1/roles/operations` ya responde desde el catálogo en código
 - el backend bloquea por ahora cualquier mutación ordinaria sobre roles del sistema o roles inmutables
 - el backend también bloquea borrar un rol si todavía existen usuarios vinculados a ese `roleId`
 
@@ -143,6 +143,44 @@ Shape objetivo conceptual:
   "module_code": "USERS",
   "module_name": "Usuarios",
   "module_name_key": "AUTHORIZATION.MODULE.USERS"
+}
+```
+
+Respuesta actual esperada para módulos:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": [
+    {
+      "module_id": "USERS",
+      "module_code": "USERS",
+      "module_name": "Usuarios",
+      "module_name_key": "AUTHORIZATION.MODULE.USERS",
+      "status_id": "ACTIVE",
+      "is_system": true
+    }
+  ],
+  "status_code": 200
+}
+```
+
+Respuesta actual esperada para operaciones:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": [
+    {
+      "operation_id": "CREATE",
+      "operation_code": "CREATE",
+      "operation_name": "Crear",
+      "operation_name_key": "AUTHORIZATION.OPERATION.CREATE",
+      "status_id": "ACTIVE",
+      "is_system": true
+    }
+  ],
+  "status_code": 200
 }
 ```
 

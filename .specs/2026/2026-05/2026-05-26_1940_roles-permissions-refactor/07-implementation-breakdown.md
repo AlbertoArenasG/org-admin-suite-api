@@ -87,9 +87,9 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Bloquear mutaciones de roles del sistema e inmutables en el CRUD ordinario
 - [x] Bloquear eliminación de roles con usuarios vinculados
 - [x] Crear endpoints de catálogo de módulos y operaciones
-- [ ] Migrar catálogo de permisos desde Mongo a código
-- [ ] Definir catálogo en código con `code` en mayúsculas y `nameKey` para i18n
-- [ ] Reemplazar queries de `modules` y `operations` por lectura desde código
+- [x] Migrar catálogo de permisos desde Mongo a código
+- [x] Definir catálogo en código con `code` en mayúsculas y `nameKey` para i18n
+- [x] Reemplazar queries de `modules` y `operations` por lectura desde código
 - [ ] Marcar como obsoleta la infraestructura Mongo de `permission_modules` y `permission_operations`
 
 ## Slice 6. Migración de usuarios e invitaciones

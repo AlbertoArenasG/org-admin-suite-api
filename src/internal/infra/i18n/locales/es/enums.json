@@ -60,5 +60,24 @@
       "PENDING": "Pendiente",
       "COMPLETED": "Completado"
     }
+  },
+  "AUTHORIZATION": {
+    "MODULE": {
+      "USERS": "Usuarios",
+      "ROLES": "Roles",
+      "CUSTOMERS": "Clientes",
+      "PROVIDERS": "Proveedores",
+      "SERVICE_ENTRIES": "Órdenes de servicio",
+      "SERVICE_ENTRY_SURVEYS": "Encuestas de órdenes de servicio",
+      "FILES": "Archivos",
+      "SERVICE_PACKAGES": "Paquetes de servicio",
+      "USER_REGISTRATION_INVITATIONS": "Invitaciones de registro de usuario"
+    },
+    "OPERATION": {
+      "CREATE": "Crear",
+      "READ": "Leer",
+      "UPDATE": "Actualizar",
+      "DELETE": "Eliminar"
+    }
   }
 }

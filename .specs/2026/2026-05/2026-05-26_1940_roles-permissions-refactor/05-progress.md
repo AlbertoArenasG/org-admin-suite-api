@@ -114,3 +114,7 @@
 - Se revisó la decisión del catálogo técnico de permisos y se aprobó mover la fuente de verdad desde Mongo hacia código.
 - Se definió como nuevo objetivo un catálogo agrupado por módulo, con `code` en mayúsculas, `nameKey` para i18n y operaciones válidas por módulo.
 - Se documentó el plan de transición para migrar endpoints y validaciones desde `permission_modules` y `permission_operations` hacia el catálogo en código antes de eliminar infraestructura sobrante.
+- Se implementó el catálogo en código dentro de `application/services/authz`, incluyendo módulos reales del sistema, operaciones controladas y helpers para normalizar y validar permisos.
+- `GET /v1/roles/modules` y `GET /v1/roles/operations` dejaron de depender de Mongo y ahora responden desde el catálogo en código, resolviendo nombres visibles mediante i18n.
+- La creación y actualización de roles custom ahora validan sus permisos contra el catálogo en código y normalizan `module + operation` hacia `code` técnico en mayúsculas.
+- `AuthorizationService` ahora normaliza y filtra permisos efectivos usando el catálogo en código, reduciendo dependencia runtime a combinaciones libres o inconsistentes.

@@ -17,6 +17,10 @@ import {
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
 import { Role, RoleScope, RoleStatus, SystemRole } from '@domain/entities';
+import {
+  isValidAuthorizationPermission,
+  normalizeAuthorizationPermission,
+} from './authorization-catalog.utils';
 
 export interface PermissionActorDto {
   userId: string;
@@ -79,11 +83,14 @@ export class AuthorizationService {
     return {
       systemRole: actor.systemRole,
       role: role ? this.toRoleMetadata(role) : null,
-      permissions:
-        role?.permissions.map((permission) => ({
-          module: permission.module,
-          operation: permission.operation,
-        })) ?? [],
+      permissions: (role?.permissions ?? [])
+        .map((permission) => normalizeAuthorizationPermission(permission))
+        .filter((permission) =>
+          isValidAuthorizationPermission(
+            permission.module,
+            permission.operation,
+          ),
+        ),
     };
   }
 

@@ -6,8 +6,14 @@ import { AuditUserFetcherService } from '@application/services';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
+  InvalidValueException,
+  InvalidValueExceptionCode,
 } from '@domain/exceptions';
 import { Role, RoleScope } from '@domain/entities';
+import {
+  isValidAuthorizationPermission,
+  normalizeAuthorizationPermission,
+} from '@application/services/authz/authorization-catalog.utils';
 import {
   IRoleReadRepository,
   IRoleReadRepositoryToken,
@@ -27,6 +33,7 @@ export class CreateRoleUseCase {
 
   async execute(input: CreateRoleDto): Promise<CreateRoleResultDto> {
     const code = this.generateCode(input.name);
+    const permissions = this.normalizePermissions(input.permissions);
 
     await this.ensureNameUnique(input.name);
     await this.ensureCodeUnique(code);
@@ -38,7 +45,7 @@ export class CreateRoleUseCase {
       isSystem: false,
       isImmutable: false,
       isDefault: false,
-      permissions: input.permissions,
+      permissions,
       createdBy: input.actorUserId,
       updatedBy: input.actorUserId,
       createdAt: new Date(),
@@ -84,5 +91,24 @@ export class CreateRoleUseCase {
       .replace(/^_+|_+$/g, '')
       .replace(/_+/g, '_')
       .toUpperCase();
+  }
+
+  private normalizePermissions(input: CreateRoleDto['permissions']) {
+    return input.map((permission) => {
+      const normalized = normalizeAuthorizationPermission(permission);
+
+      if (
+        !isValidAuthorizationPermission(normalized.module, normalized.operation)
+      ) {
+        throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+          field: 'permissions',
+          module: permission.module,
+          operation: permission.operation,
+          reason: 'INVALID_ROLE_PERMISSION',
+        });
+      }
+
+      return normalized;
+    });
   }
 }

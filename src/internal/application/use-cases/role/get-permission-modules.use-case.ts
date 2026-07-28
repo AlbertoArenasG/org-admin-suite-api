@@ -1,29 +1,16 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { GetPermissionModulesResultDto } from '@application/dto';
-import {
-  IPermissionModuleReadRepository,
-  IPermissionModuleReadRepositoryToken,
-} from '@domain/ports/repositories';
+import { getAuthorizationModules } from '@application/services/authz/authorization-catalog.utils';
 
 @Injectable()
 export class GetPermissionModulesUseCase {
-  constructor(
-    @Inject(IPermissionModuleReadRepositoryToken)
-    private readonly permissionModuleReadRepository: IPermissionModuleReadRepository,
-  ) {}
-
   async execute(): Promise<GetPermissionModulesResultDto> {
-    const { data } = await this.permissionModuleReadRepository.findAllActive();
-
-    return data.map((module) => ({
-      id: module.id,
+    return getAuthorizationModules().map((module) => ({
       code: module.code,
-      name: module.name,
-      status: module.status,
-      isSystem: module.isSystem,
-      createdAt: module.createdAt,
-      updatedAt: module.updatedAt,
+      nameKey: module.nameKey,
+      status: 'ACTIVE',
+      isSystem: true,
     }));
   }
 }

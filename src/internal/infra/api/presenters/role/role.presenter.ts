@@ -8,9 +8,12 @@ import {
   GetRoleByIdResultDto,
   RoleViewDto,
 } from '@application/dto';
+import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class RolePresenter {
+  constructor(private readonly enumNameService: EnumNameService) {}
+
   toCreateResponse(result: CreateRoleResultDto) {
     return this.toViewResponse(result);
   }
@@ -62,25 +65,23 @@ export class RolePresenter {
 
   toPermissionModulesResponse(results: GetPermissionModulesResultDto) {
     return results.map((result) => ({
-      module_id: result.id,
+      module_id: result.code,
       module_code: result.code,
-      module_name: result.name,
+      module_name: this.enumNameService.getEnumName(result.nameKey),
+      module_name_key: result.nameKey,
       status_id: result.status,
       is_system: result.isSystem,
-      created_at: result.createdAt ?? null,
-      updated_at: result.updatedAt ?? null,
     }));
   }
 
   toPermissionOperationsResponse(results: GetPermissionOperationsResultDto) {
     return results.map((result) => ({
-      operation_id: result.id,
+      operation_id: result.code,
       operation_code: result.code,
-      operation_name: result.name,
+      operation_name: this.enumNameService.getEnumName(result.nameKey),
+      operation_name_key: result.nameKey,
       status_id: result.status,
       is_system: result.isSystem,
-      created_at: result.createdAt ?? null,
-      updated_at: result.updatedAt ?? null,
     }));
   }
 }
