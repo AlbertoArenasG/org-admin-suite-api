@@ -14,6 +14,8 @@ export class UserRegistrationInvitationMapper {
       type: record.type,
       status: record.status,
       role: record.role,
+      systemRole: record.systemRole,
+      roleId: record.roleId,
       invitedByUserId: record.invitedByUserId,
       userData: record.userData ?? null,
       consumedAt: record.consumedAt ?? null,

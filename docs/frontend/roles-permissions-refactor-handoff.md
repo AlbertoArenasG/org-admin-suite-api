@@ -42,6 +42,46 @@ La API dejará atrás el modelo legacy basado en `User.role` como enum fijo y mi
 - `USER` siempre usa un rol custom
 - los permisos efectivos se resolverán por `roleId`
 
+## Contratos HTTP Ya Migrados
+
+Los requests de creación y edición de usuarios e invitaciones ya no deben enviar enums legacy como si `role_id` fuera `ADMIN`, `STAFF` o similares.
+
+El backend ahora espera shape nativo:
+
+- `system_role`
+- `role_id`
+
+Reglas:
+
+- si `system_role = ADMIN`, `role_id` debe omitirse o enviarse en `null`
+- si `system_role = MASTER_ADMIN`, `role_id` debe omitirse o enviarse en `null`
+- si `system_role = USER`, `role_id` debe enviarse con el id real del rol custom
+
+Ejemplo para crear un usuario `USER`:
+
+```json
+{
+  "name": "Ana",
+  "lastname": "López",
+  "email": "ana@example.com",
+  "password": "secret123",
+  "system_role": "USER",
+  "role_id": "STAFF_LEGACY"
+}
+```
+
+Ejemplo para crear un usuario `ADMIN`:
+
+```json
+{
+  "name": "Luis",
+  "lastname": "Pérez",
+  "email": "luis@example.com",
+  "password": "secret123",
+  "system_role": "ADMIN"
+}
+```
+
 ## Nuevos Endpoints Esperados
 
 ### `GET /v1/auth/me/permissions`
@@ -191,7 +231,7 @@ Respuesta actual esperada para operaciones:
 Estado:
 
 - `implemented`
-- `not executed yet`
+- ejecución manual disponible por comando
 
 Comandos disponibles:
 
@@ -223,7 +263,7 @@ Reglas de mapeo:
 Estado:
 
 - `implemented`
-- `pending_execution`
+- ejecución manual disponible por comando
 
 Propósito:
 

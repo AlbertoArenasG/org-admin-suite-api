@@ -52,14 +52,9 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
         roleId: null,
       },
       {
-        systemRole:
-          input.systemRole ??
-          User.resolveSystemRoleFromLegacyRole(
-            input.role ?? User.resolveCompatibilityLegacyRole(SystemRole.USER),
-          ),
-        roleId: input.roleId ?? null,
+        systemRole: input.systemRole,
+        roleId: input.roleId,
       },
-      { allowLegacyUserRoleFallback: true },
     );
 
     await this.ensureInvitationDoesNotExist(input.email);
@@ -82,11 +77,9 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       type: invitationType,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
-      role:
-        input.role ??
-        User.resolveCompatibilityLegacyRole(
-          input.systemRole ?? SystemRole.USER,
-        ),
+      role: User.resolveCompatibilityLegacyRole(input.systemRole),
+      systemRole: input.systemRole,
+      roleId: input.roleId,
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
@@ -97,11 +90,7 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       token,
       invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.APPLICATION,
-      role:
-        input.role ??
-        User.resolveCompatibilityLegacyRole(
-          input.systemRole ?? SystemRole.USER,
-        ),
+      role: User.resolveCompatibilityLegacyRole(input.systemRole),
       userData: input.userData ?? null,
     });
 

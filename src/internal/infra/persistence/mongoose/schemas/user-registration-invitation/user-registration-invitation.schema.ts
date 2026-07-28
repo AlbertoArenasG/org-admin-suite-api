@@ -6,6 +6,7 @@ import {
   UserRegistrationInvitationStatus,
   UserRegistrationInvitationType,
 } from '@domain/ports/repositories';
+import { SystemRole } from '@domain/entities';
 import { IPhoneSchema, PhoneSchema } from '../shared';
 import { genId } from '@src/common/utils';
 
@@ -56,6 +57,18 @@ export class UserRegistrationInvitationDocument extends Document {
 
   @Prop({ type: String, required: true })
   role: string;
+
+  @Prop({
+    type: String,
+    enum: Object.values(SystemRole),
+    required: false,
+    default: null,
+    index: true,
+  })
+  system_role?: SystemRole | null;
+
+  @Prop({ type: String, required: false, default: null, index: true })
+  role_id?: string | null;
 
   @Prop({ type: String, required: true, index: true })
   invited_by_user_id: string;

@@ -56,13 +56,8 @@ export class CreateMasterUserAndNotifyUseCase {
         roleId: null,
       },
       {
-        systemRole:
-          input.systemRole ??
-          User.resolveSystemRoleFromLegacyRole(
-            input.role ??
-              User.resolveCompatibilityLegacyRole(SystemRole.MASTER_ADMIN),
-          ),
-        roleId: input.roleId ?? null,
+        systemRole: input.systemRole,
+        roleId: input.roleId,
       },
     );
 
@@ -77,14 +72,8 @@ export class CreateMasterUserAndNotifyUseCase {
       lastname: input.lastname,
       email: input.email,
       password: hashedPassword,
-      role: input.role,
-      systemRole:
-        input.systemRole ??
-        User.resolveSystemRoleFromLegacyRole(
-          input.role ??
-            User.resolveCompatibilityLegacyRole(SystemRole.MASTER_ADMIN),
-        ),
-      roleId: input.roleId ?? null,
+      systemRole: input.systemRole,
+      roleId: input.roleId,
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,
     });

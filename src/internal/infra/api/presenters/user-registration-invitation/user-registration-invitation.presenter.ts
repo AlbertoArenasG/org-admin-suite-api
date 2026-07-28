@@ -15,6 +15,8 @@ export class UserRegistrationInvitationPresenter {
       status: invitation.status,
       email: invitation.email,
       role: invitation.role,
+      system_role: invitation.systemRole,
+      role_id: invitation.roleId,
       role_name: this.enumNameService.getEnumName(
         `USER.ROLE.${invitation.role}`,
       ),
@@ -34,6 +36,8 @@ export class UserRegistrationInvitationPresenter {
       status: invitation.status,
       email: invitation.email,
       role: invitation.role,
+      system_role: invitation.systemRole,
+      role_id: invitation.roleId,
       role_name: this.enumNameService.getEnumName(
         `USER.ROLE.${invitation.role}`,
       ),
@@ -52,6 +56,8 @@ export class UserRegistrationInvitationPresenter {
       status: invitation.status,
       email: invitation.email,
       role: invitation.role,
+      system_role: invitation.systemRole,
+      role_id: invitation.roleId,
       role_name: this.enumNameService.getEnumName(
         `USER.ROLE.${invitation.role}`,
       ),

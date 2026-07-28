@@ -1,8 +1,10 @@
 import {
   CreateUserRegistrationInvitationRecord,
+  UserRegistrationInvitationScope,
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationUserData,
 } from '@domain/ports/repositories';
+import { SystemRole, User } from '@domain/entities';
 import { UserRegistrationInvitationDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserRegistrationInvitationMapper {
@@ -37,6 +39,17 @@ export class MongooseUserRegistrationInvitationMapper {
       status: document.status,
       email: document.email,
       role: document.role,
+      systemRole:
+        document.system_role ??
+        User.resolveSystemRoleFromLegacyRole(document.role as never),
+      roleId:
+        document.role_id ??
+        resolveLegacyInvitationRoleId(
+          document.scope,
+          document.system_role ??
+            User.resolveSystemRoleFromLegacyRole(document.role as never),
+          document.role,
+        ),
       invitedByUserId: document.invited_by_user_id,
       tokenHash: document.token_hash,
       userData,
@@ -60,6 +73,8 @@ export class MongooseUserRegistrationInvitationMapper {
       status: record.status,
       email: record.email,
       role: record.role,
+      system_role: record.systemRole,
+      role_id: record.roleId,
       invited_by_user_id: record.invitedByUserId,
       token_hash: record.tokenHash,
       user_data: {
@@ -76,4 +91,24 @@ export class MongooseUserRegistrationInvitationMapper {
       consumed_at: null,
     };
   }
+}
+
+function resolveLegacyInvitationRoleId(
+  scope: UserRegistrationInvitationScope,
+  systemRole: SystemRole,
+  legacyRole: string,
+): string | null {
+  if (systemRole === SystemRole.MASTER_ADMIN) {
+    return 'MASTER_ADMIN_DEFAULT';
+  }
+
+  if (systemRole === SystemRole.ADMIN) {
+    return 'ADMIN_DEFAULT';
+  }
+
+  if (scope === UserRegistrationInvitationScope.APPLICATION || legacyRole) {
+    return 'STAFF_LEGACY';
+  }
+
+  return null;
 }

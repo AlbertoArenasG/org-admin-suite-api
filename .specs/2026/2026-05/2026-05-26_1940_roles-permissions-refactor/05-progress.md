@@ -125,3 +125,6 @@
 - Se agregó compatibilidad temporal de lectura para resolver roles por `role_id` histórico o por `code` durante la ventana de transición.
 - Se implementó la migración manual `migrate-role-ids-to-code` con modos `dry-run` y `apply`, enfocada en convertir roles existentes y sus referencias de usuario sin duplicar datos.
 - Se corrigió la migración `migrate-role-ids-to-code` para actualizar `roles.role_id` mediante el driver nativo de Mongo y no por el model de Mongoose, evitando el bloqueo de `immutable: true` durante la conversión de datos legacy.
+- Se cerró el contrato HTTP de entrada para `create/update user` y para creación de invitaciones, dejando de aceptar `UserRole` legacy y pidiendo ya `system_role + role_id` como shape nativo.
+- Se ajustó la persistencia de invitaciones para guardar `system_role` y `role_id`, manteniendo lectura compatible con invitaciones legacy que solo tenían `role`.
+- Se actualizó el consumo de invitaciones para crear usuarios desde `systemRole + roleId`, eliminando la dependencia principal al enum legacy en ese flujo.

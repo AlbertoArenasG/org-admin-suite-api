@@ -16,7 +16,7 @@ import {
 } from '@domain/exceptions';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import { User, UserStatus } from '@domain/entities';
+import { UserStatus } from '@domain/entities';
 import { AuthorizationService } from '@application/services';
 
 @Injectable()
@@ -49,18 +49,13 @@ export class UpdateUserUseCase {
       );
     }
 
-    if (payload.systemRole !== undefined || payload.role !== undefined) {
-      const nextSystemRole =
-        payload.systemRole ??
-        (payload.role !== undefined
-          ? User.resolveSystemRoleFromLegacyRole(payload.role)
-          : user.systemRole);
-      const nextLegacyRole = payload.role;
+    if (payload.systemRole !== undefined || payload.roleId !== undefined) {
+      const nextSystemRole = payload.systemRole ?? user.systemRole;
 
       if (
         isSelfUpdate &&
         (nextSystemRole !== user.systemRole ||
-          (nextLegacyRole !== undefined && nextLegacyRole !== user.role))
+          (payload.roleId ?? user.roleId) !== user.roleId)
       ) {
         throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
           field: 'role',
@@ -79,12 +74,10 @@ export class UpdateUserUseCase {
           nextRoleId: payload.roleId ?? user.roleId,
           isSelfUpdate,
         },
-        { allowLegacyUserRoleFallback: true },
       );
       user.updateAuthorization({
         systemRole: nextSystemRole,
         roleId: payload.roleId ?? user.roleId,
-        role: nextLegacyRole,
       });
     }
 

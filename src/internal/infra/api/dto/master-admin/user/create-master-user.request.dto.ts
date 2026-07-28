@@ -6,10 +6,11 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-import { User, UserRole } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import { CreateMasterUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
@@ -36,8 +37,15 @@ export class CreateMasterUserRequestDto {
   password!: string;
 
   @IsNotEmpty()
-  @IsIn(Object.values(UserRole))
-  role_id!: UserRole;
+  @IsIn(Object.values(SystemRole))
+  system_role!: SystemRole;
+
+  @ValidateIf(
+    (o: CreateMasterUserRequestDto) => o.system_role === SystemRole.USER,
+  )
+  @IsNotEmpty()
+  @IsString()
+  role_id!: string;
 
   toDomain(): CreateMasterUserDto {
     return {
@@ -45,9 +53,8 @@ export class CreateMasterUserRequestDto {
       lastname: this.lastname,
       email: this.email,
       password: this.password,
-      role: this.role_id,
-      systemRole: User.resolveSystemRoleFromLegacyRole(this.role_id),
-      roleId: null,
+      systemRole: this.system_role,
+      roleId: this.system_role === SystemRole.USER ? this.role_id : null,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,
         number: this.cell_phone?.number || null,

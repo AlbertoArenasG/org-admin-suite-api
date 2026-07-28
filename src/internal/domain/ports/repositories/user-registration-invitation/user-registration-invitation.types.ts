@@ -1,3 +1,5 @@
+import { SystemRole } from '@domain/entities';
+
 export enum UserRegistrationInvitationScope {
   APPLICATION = 'APPLICATION',
   MASTER = 'MASTER',
@@ -28,6 +30,8 @@ export interface CreateUserRegistrationInvitationRecord {
   status: UserRegistrationInvitationStatus;
   email: string;
   role: string;
+  systemRole: SystemRole;
+  roleId: string | null;
   invitedByUserId: string;
   tokenHash: string;
   userData?: UserRegistrationInvitationUserData | null;

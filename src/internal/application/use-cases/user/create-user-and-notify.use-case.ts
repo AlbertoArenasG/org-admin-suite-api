@@ -53,14 +53,9 @@ export class CreateUserAndNotifyUseCase {
         roleId: null,
       },
       {
-        systemRole:
-          input.systemRole ??
-          User.resolveSystemRoleFromLegacyRole(
-            input.role ?? User.resolveCompatibilityLegacyRole(SystemRole.USER),
-          ),
-        roleId: input.roleId ?? null,
+        systemRole: input.systemRole,
+        roleId: input.roleId,
       },
-      { allowLegacyUserRoleFallback: true },
     );
 
     const existingUser = await this.findUserByEmail(input.email);
@@ -92,13 +87,8 @@ export class CreateUserAndNotifyUseCase {
       lastname: input.lastname,
       email: input.email,
       password: hashedPassword,
-      role: input.role,
-      systemRole:
-        input.systemRole ??
-        User.resolveSystemRoleFromLegacyRole(
-          input.role ?? User.resolveCompatibilityLegacyRole(SystemRole.USER),
-        ),
-      roleId: input.roleId ?? null,
+      systemRole: input.systemRole,
+      roleId: input.roleId,
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,
     });

@@ -52,13 +52,8 @@ export class CreateMasterUserRegistrationInvitationUseCase {
         roleId: null,
       },
       {
-        systemRole:
-          input.systemRole ??
-          User.resolveSystemRoleFromLegacyRole(
-            input.role ??
-              User.resolveCompatibilityLegacyRole(SystemRole.MASTER_ADMIN),
-          ),
-        roleId: input.roleId ?? null,
+        systemRole: input.systemRole,
+        roleId: input.roleId,
       },
     );
 
@@ -72,11 +67,9 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       type: UserRegistrationInvitationType.NEW_USER_REGISTRATION,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
-      role:
-        input.role ??
-        User.resolveCompatibilityLegacyRole(
-          input.systemRole ?? SystemRole.MASTER_ADMIN,
-        ),
+      role: User.resolveCompatibilityLegacyRole(input.systemRole),
+      systemRole: input.systemRole,
+      roleId: input.roleId,
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
@@ -87,11 +80,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       token,
       invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.MASTER,
-      role:
-        input.role ??
-        User.resolveCompatibilityLegacyRole(
-          input.systemRole ?? SystemRole.MASTER_ADMIN,
-        ),
+      role: User.resolveCompatibilityLegacyRole(input.systemRole),
       userData: input.userData ?? null,
     });
 

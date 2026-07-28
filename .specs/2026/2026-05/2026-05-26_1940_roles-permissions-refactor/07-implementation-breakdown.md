@@ -103,6 +103,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar create user registration invitation
 - [x] Ajustar create master user registration invitation
 - [x] Ajustar complete invitation
+- [x] Cerrar contrato HTTP de entrada de usuarios e invitaciones a `system_role + role_id`
 - [ ] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
 
 ## Slice 7. Migración de controllers a autorización centralizada

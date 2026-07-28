@@ -6,9 +6,8 @@ export interface CreateUserDto {
   lastname: string;
   email: string;
   password: string;
-  role?: UserRole;
-  systemRole?: SystemRole;
-  roleId?: string | null;
+  systemRole: SystemRole;
+  roleId: string | null;
   cellPhone: PhoneDto;
 }
 

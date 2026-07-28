@@ -24,7 +24,7 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
-import { User, UserRole, UserStatus } from '@domain/entities';
+import { User, UserStatus } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import {
   CompleteNewUserRegistrationInvitationDto,
@@ -87,18 +87,13 @@ export class CompleteNewUserRegistrationInvitationUseCase {
       });
     }
 
-    const resolvedRole = invitation.role as UserRole;
-    const resolvedSystemRole =
-      User.resolveSystemRoleFromLegacyRole(resolvedRole);
-
     const user = new User({
       name: mergedUserData.name,
       lastname: mergedUserData.lastname,
       email: invitation.email,
       password: hashedPassword,
-      role: resolvedRole,
-      systemRole: resolvedSystemRole,
-      roleId: null,
+      systemRole: invitation.systemRole,
+      roleId: invitation.roleId,
       status: UserStatus.ACTIVE,
       cellPhone: {
         countryCode: mergedUserData.cellPhone?.countryCode ?? null,

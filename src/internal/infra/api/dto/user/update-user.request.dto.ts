@@ -4,10 +4,11 @@ import {
   IsIn,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-import { SystemRole, User, UserRole, UserStatus } from '@domain/entities';
+import { SystemRole, UserStatus } from '@domain/entities';
 import { UpdateUserDto } from '@application/dto';
 import { PhoneRequestDto } from '@infra/api/dto/shared';
 
@@ -32,8 +33,13 @@ export class UpdateUserRequestDto {
   cell_phone?: PhoneRequestDto | null;
 
   @IsOptional()
-  @IsIn(Object.values(UserRole))
-  role_id?: UserRole;
+  @IsIn(Object.values(SystemRole))
+  system_role?: SystemRole;
+
+  @ValidateIf((o: UpdateUserRequestDto) => o.system_role === SystemRole.USER)
+  @IsOptional()
+  @IsString()
+  role_id?: string;
 
   @IsOptional()
   @IsIn(ALLOWED_STATUSES)
@@ -67,10 +73,12 @@ export class UpdateUserRequestDto {
         : null;
     }
 
+    if (this.system_role !== undefined) {
+      payload.systemRole = this.system_role;
+    }
+
     if (this.role_id !== undefined) {
-      payload.role = this.role_id;
-      payload.systemRole = User.resolveSystemRoleFromLegacyRole(this.role_id);
-      payload.roleId = null;
+      payload.roleId = this.role_id;
     }
 
     if (this.status_id !== undefined) {

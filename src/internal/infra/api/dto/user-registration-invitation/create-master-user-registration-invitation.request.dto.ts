@@ -5,10 +5,11 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-import { User, UserRole } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 import { CreateMasterUserRegistrationInvitationDto } from '@application/dto';
 import {
   UserRegistrationInvitationScope,
@@ -34,16 +35,23 @@ export class CreateMasterUserRegistrationInvitationRequestDto {
   cell_phone?: PhoneRequestDto;
 
   @IsNotEmpty()
-  @IsIn(Object.values(UserRole))
-  role_id!: UserRole;
+  @IsIn(Object.values(SystemRole))
+  system_role!: SystemRole;
+
+  @ValidateIf(
+    (o: CreateMasterUserRegistrationInvitationRequestDto) =>
+      o.system_role === SystemRole.USER,
+  )
+  @IsNotEmpty()
+  @IsString()
+  role_id!: string;
 
   toDomain(invitedByUserId: string): CreateMasterUserRegistrationInvitationDto {
     return {
       scope: UserRegistrationInvitationScope.MASTER,
       email: this.email,
-      role: this.role_id,
-      systemRole: User.resolveSystemRoleFromLegacyRole(this.role_id),
-      roleId: null,
+      systemRole: this.system_role,
+      roleId: this.system_role === SystemRole.USER ? this.role_id : null,
       invitedByUserId,
       userData: this.buildUserData(),
     };
