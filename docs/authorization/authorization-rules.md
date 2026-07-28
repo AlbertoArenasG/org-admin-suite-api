@@ -107,6 +107,10 @@ Casos que deben resolverse con permiso genérico:
 - eliminar service package record
 - crear rol custom
 
+Excepción importante:
+
+- endpoints self-service del usuario autenticado como `GET /v1/users/me` y `PATCH /v1/users/me` pueden vivir solo con `JwtAuthGuard` cuando la acción no implica backoffice ni acceso sobre otros usuarios
+
 Casos que deben resolverse con validación estructural:
 
 - crear un usuario `ADMIN`
@@ -204,6 +208,14 @@ Forma objetivo:
 async findAll() {}
 ```
 
+Excepción válida:
+
+```ts
+@Get('me')
+@UseGuards(JwtAuthGuard)
+async getProfile() {}
+```
+
 Implementación actual:
 
 - `AuthorizationService` ya existe como base operativa
@@ -250,6 +262,27 @@ Semántica:
 - declara un permiso requerido por endpoint
 - usa el catálogo controlado `module + operation`
 - no debe representar reglas estructurales exclusivas de `MASTER_ADMIN`
+- no es obligatorio en endpoints self-service autenticados que no deban depender del catálogo de permisos
+
+## Runbook De Evolución Del Catálogo
+
+Cuando se agregue un nuevo módulo o una nueva operación autorizable al sistema, la fuente de verdad debe actualizarse primero en código.
+
+Orden esperado:
+
+1. actualizar `AUTHORIZATION_CATALOG` y, si aplica, el catálogo de operaciones controladas
+2. migrar o crear los endpoints que usarán ese nuevo permiso
+3. correr `npm run db:seed` para sincronizar `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`
+4. validar `GET /v1/auth/me/permissions` con usuarios `MASTER_ADMIN` y `ADMIN`
+5. actualizar `docs/authorization/feature-permission-catalog.md` si cambió el mapa funcional de endpoints
+
+Reglas:
+
+- `npm run db:seed` es idempotente
+- el seed de roles del sistema recalcula los permisos desde el catálogo en código
+- `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` se sincronizan automáticamente con el catálogo vigente
+- los roles custom no se modifican automáticamente
+- los permisos persistidos en `roles.permissions` deben quedar en formato canónico de mayúsculas, por ejemplo `USERS/READ`
 
 ## Contrato Esperado De `PermissionsGuard`
 

@@ -59,7 +59,7 @@
 - Se registró el script `db:seed` en `package.json`, dejando listo el siguiente slice para cargar seeds idempotentes reales de módulos, operaciones y roles base.
 - Se implementó el primer seed idempotente real del catálogo con `permission-operations.seed.ts`, alineado al catálogo inicial CRUD aprobado en la documentación de autorización.
 - Se implementó `permission-modules.seed.ts` con un alcance mínimo de arranque para `users` y `roles`, manteniendo el refactor enfocado primero en gestión de usuarios y roles antes de abrir el catálogo completo del sistema.
-- Se implementó `system-roles.seed.ts` para crear y sincronizar `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` con permisos completos sobre `users` y `roles`, manteniendo las diferencias exclusivas de `MASTER_ADMIN` como reglas estructurales fuera del catálogo de permisos.
+- Se implementó `system-roles.seed.ts` para crear y sincronizar `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`, y después se fortaleció para derivar automáticamente todos los permisos vigentes desde el catálogo en código, persistiéndolos con `module + operation` canónicos en mayúsculas.
 - Se implementó `legacy-staff-role.seed.ts` para garantizar la existencia de `STAFF_LEGACY` como rol custom de `USER` con permisos vacíos, dejando listo el prerequisito de `roleId` obligatorio antes de migrar usuarios legacy.
 - Se inició la ventana de compatibilidad temporal del Slice 2: `User` ahora soporta `systemRole + roleId` sin romper todavía a los consumidores legacy de `role`.
 - Se ajustaron `user.entity.ts`, `user.schema.ts`, `mongoose-user.mapper.ts` y la lectura Mongoose de usuarios para persistir y leer `system_role` y `role_id` junto con el campo legacy `role` mientras termina la migración del resto del backend.
@@ -125,6 +125,7 @@
 - Se agregó compatibilidad temporal de lectura para resolver roles por `role_id` histórico o por `code` durante la ventana de transición.
 - Se implementó la migración manual `migrate-role-ids-to-code` con modos `dry-run` y `apply`, enfocada en convertir roles existentes y sus referencias de usuario sin duplicar datos.
 - Se corrigió la migración `migrate-role-ids-to-code` para actualizar `roles.role_id` mediante el driver nativo de Mongo y no por el model de Mongoose, evitando el bloqueo de `immutable: true` durante la conversión de datos legacy.
+- Se ejecutaron manualmente las migraciones de datos sobre la base remota: primero `users -> system_role + role_id` y después `role_id == code`, dejando usuarios y roles alineados al identificador canónico basado en `code`.
 - Se cerró el contrato HTTP de entrada para `create/update user` y para creación de invitaciones, dejando de aceptar `UserRole` legacy y pidiendo ya `system_role + role_id` como shape nativo.
 - Se ajustó la persistencia de invitaciones para guardar `system_role` y `role_id`, manteniendo lectura compatible con invitaciones legacy que solo tenían `role`.
 - Se actualizó el consumo de invitaciones para crear usuarios desde `systemRole + roleId`, eliminando la dependencia principal al enum legacy en ese flujo.
@@ -134,3 +135,6 @@
 - Las respuestas HTTP de usuario y login dejaron de exponer `role` y `role_name`, reforzando que el contrato público vigente se basa en `system_role` y `role_id`.
 - Se retiró `UserRolePolicy` del runtime porque sus reglas ya habían sido absorbidas por `AuthorizationService`.
 - Se alinearon `docs/authorization/authorization-rules.md` y `docs/frontend/roles-permissions-refactor-handoff.md` al estado actual del backend, eliminando referencias ya obsoletas al `authContext` viejo y al contrato de salida legacy de usuarios.
+- Durante la validación manual en Postman apareció y se corrigió un bug de normalización en `AuthorizationService`: los permisos efectivos ya se resolvían como `MODULE/OPERATION` en mayúsculas, pero la verificación seguía comparando contra decorators legacy en minúsculas como `users/READ`, provocando falsos `403` para roles que sí tenían permisos válidos.
+- Se ajustó el diseño de self-service del usuario autenticado para que `GET /v1/users/me` y `PATCH /v1/users/me` dejen de depender de `USERS/READ` y `USERS/UPDATE`; ahora viven solo bajo autenticación JWT porque consultar o editar el propio perfil no equivale a administrar usuarios de terceros.
+- Se dejó preparado el rerun de `db:seed` como mecanismo idempotente para sincronizar en la base remota los permisos completos y ya normalizados de `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` sin duplicar datos.

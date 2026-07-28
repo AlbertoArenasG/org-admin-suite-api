@@ -68,10 +68,15 @@ export class AuthorizationService {
     operation: string,
   ): Promise<boolean> {
     const context = await this.resolveEffectivePermissions(actor);
+    const requestedPermission = normalizeAuthorizationPermission({
+      module,
+      operation,
+    });
 
     return context.permissions.some(
       (permission) =>
-        permission.module === module && permission.operation === operation,
+        permission.module === requestedPermission.module &&
+        permission.operation === requestedPermission.operation,
     );
   }
 

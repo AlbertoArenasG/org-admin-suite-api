@@ -50,6 +50,13 @@ Estado actual:
 - la API ya resuelve `GET /v1/roles/modules` y `GET /v1/roles/operations` desde catálogo en código
 - `permission_modules` y `permission_operations` ya no forman parte del runtime de la aplicación
 
+Runbook operativo:
+
+- si agregas un nuevo módulo o cambias las operaciones válidas de uno existente, actualiza primero el catálogo en código
+- después corre `npm run db:seed`
+- ese seed sincroniza de forma idempotente los permisos completos de `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`
+- los roles custom no se alteran automáticamente
+
 ## Operaciones Base
 
 Operaciones controladas aprobadas para la primera etapa:
@@ -100,11 +107,11 @@ Endpoints actuales:
 - `PATCH /v1/users/me`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: actualizacion del propio perfil, protegido por `users.UPDATE`
+  - nota: actualizacion del propio perfil, protegida solo por autenticacion JWT
 - `GET /v1/users/me`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: consulta del propio perfil, protegido por `users.READ`
+  - nota: consulta del propio perfil, protegida solo por autenticacion JWT
 - `GET /v1/users`
   - operacion: `READ`
   - acceso actual: autenticado

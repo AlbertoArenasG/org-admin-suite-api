@@ -1,5 +1,6 @@
 import { Model } from 'mongoose';
 
+import { AUTHORIZATION_CATALOG } from '@application/services/authz/authorization.catalog';
 import { RoleScope, RoleStatus } from '@domain/entities';
 import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
 import {
@@ -20,16 +21,14 @@ interface SystemRoleSeedItem {
   permissions: RolePermissionSeedItem[];
 }
 
-const BASE_PERMISSIONS: RolePermissionSeedItem[] = [
-  { module: 'users', operation: 'CREATE' },
-  { module: 'users', operation: 'READ' },
-  { module: 'users', operation: 'UPDATE' },
-  { module: 'users', operation: 'DELETE' },
-  { module: 'roles', operation: 'CREATE' },
-  { module: 'roles', operation: 'READ' },
-  { module: 'roles', operation: 'UPDATE' },
-  { module: 'roles', operation: 'DELETE' },
-];
+const BASE_PERMISSIONS: RolePermissionSeedItem[] = Object.values(
+  AUTHORIZATION_CATALOG,
+).flatMap((moduleItem) =>
+  moduleItem.operations.map((operation) => ({
+    module: moduleItem.code,
+    operation,
+  })),
+);
 
 const SYSTEM_ROLES: SystemRoleSeedItem[] = [
   {

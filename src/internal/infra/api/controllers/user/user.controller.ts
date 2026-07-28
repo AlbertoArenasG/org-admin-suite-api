@@ -70,8 +70,7 @@ export class UserController {
   }
 
   @Patch('me')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('users', 'UPDATE')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async updateProfile(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,
@@ -91,8 +90,7 @@ export class UserController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('users', 'READ')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async getProfile(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(

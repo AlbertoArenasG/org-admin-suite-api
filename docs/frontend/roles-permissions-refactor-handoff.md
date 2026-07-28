@@ -140,6 +140,20 @@ Ejemplo aproximado de usuario detallado:
 }
 ```
 
+## Endpoints Self-Service Del Usuario Autenticado
+
+Estado actual:
+
+- `GET /v1/users/me` requiere solo autenticación JWT
+- `PATCH /v1/users/me` requiere solo autenticación JWT
+
+Notas:
+
+- estos endpoints no deben interpretarse como permisos de backoffice sobre `USERS`
+- un usuario autenticado puede consultar su propio perfil aunque no tenga `USERS/READ`
+- un usuario autenticado puede actualizar su propio perfil aunque no tenga `USERS/UPDATE`
+- `USERS/*` sigue aplicando para operaciones sobre terceros o administración general de usuarios
+
 ## Nuevos Endpoints Esperados
 
 ### `GET /v1/auth/me/permissions`
@@ -184,6 +198,7 @@ Notas:
 
 - la respuesta sigue el patrón estándar con `ApiResponseBuilder`
 - la lista de permisos será plana, no agrupada por módulo
+- los `module` y `operation` devueltos por backend deben considerarse canónicos en mayúsculas
 - durante la compatibilidad temporal, si el usuario aún no tiene `roleId`, el backend resuelve el rol por fallback:
   - default role de `MASTER_ADMIN`
   - default role de `ADMIN`

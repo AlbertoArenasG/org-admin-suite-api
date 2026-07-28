@@ -63,6 +63,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
 - [x] Crear endpoint `me/permissions`
 - [x] Crear presenter/DTO para respuesta de permisos efectivos
+- [x] Separar endpoints self-service `users/me` del catálogo `USERS/*`
 
 ## Slice 4. Servicio de autorización centralizado
 
@@ -71,7 +72,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear guard de permisos
 - [x] Modelar reglas estructurales de `MASTER_ADMIN`
 - [x] Modelar reglas estructurales de `ADMIN`
-- [ ] Resolver permisos efectivos desde `roleId`
+- [x] Resolver permisos efectivos desde `roleId`
 - [x] Soportar validación de roles del sistema vs roles custom
 
 ## Slice 5. CRUD de roles
@@ -139,7 +140,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Implementar migración de `roles.role_id -> roles.code`
 - [x] Implementar migración de referencias `users.role_id` hacia `code`
 - [x] Agregar compatibilidad temporal de lectura por `role_id | code`
-- [ ] Ejecutar `dry-run` y `apply` de la migración `role_id == code`
+- [x] Ejecutar `dry-run` y `apply` de la migración `role_id == code`
 
 ## Slice 9. Limpieza final
 
