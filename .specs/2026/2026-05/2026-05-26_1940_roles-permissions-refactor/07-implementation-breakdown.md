@@ -75,11 +75,11 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 5. CRUD de roles
 
-- [ ] Crear DTO request para crear rol
-- [ ] Crear DTO request para actualizar rol
-- [ ] Crear DTO request para listar roles
-- [ ] Crear DTO request para activar/desactivar rol
-- [ ] Crear presenters de roles
+- [x] Crear DTO request para crear rol
+- [x] Crear DTO request para actualizar rol
+- [x] Crear DTO request para listar roles
+- [x] Crear DTO request para activar/desactivar rol
+- [x] Crear presenters de roles
 - [ ] Crear commands/queries CQRS para roles
 - [ ] Crear handlers CQRS de roles
 - [ ] Crear use cases de roles
