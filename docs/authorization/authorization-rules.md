@@ -17,6 +17,36 @@ Su objetivo es evitar que el proyecto vuelva a caer en:
 - los controllers declaran permisos; no deben decidir permisos por sí mismos
 - los use cases pueden conservar validaciones defensivas, pero deben apoyarse en un servicio central de autorización
 
+## Frontera Del Catálogo Vs Frontera `MASTER_ADMIN`
+
+El catálogo de autorización y la frontera exclusiva de `MASTER_ADMIN` no son lo mismo.
+
+Reglas:
+
+- `authorization.catalog.ts` debe contener solo módulos funcionales autorizables del sistema
+- esos módulos representan capacidades de negocio o backoffice que pueden asignarse por permisos
+- las capacidades exclusivas de plataforma, soporte o mantenimiento no deben entrar automáticamente al catálogo
+- toda feature exclusiva de `MASTER_ADMIN` debe evaluarse primero como frontera estructural, no como módulo funcional
+
+Criterio práctico:
+
+- si la feature es una capacidad del producto que en el futuro podría asignarse por permisos, debe modelarse como módulo del catálogo
+- si la feature es una capacidad técnica, operativa o de soporte reservada a desarrollo/plataforma, debe vivir fuera del catálogo general
+
+Implementación esperada para features exclusivas de `MASTER_ADMIN`:
+
+- controller bajo `src/internal/infra/api/controllers/master-admin`
+- protección con frontera `MASTER_ADMIN`
+- reglas complementarias en `AuthorizationService` cuando aplique
+
+Ejemplos de cosas que normalmente no deben entrar al catálogo general:
+
+- herramientas de mantenimiento
+- utilidades de soporte
+- reparación o corrección manual de datos
+- administración técnica de catálogos internos del sistema
+- diagnósticos operativos
+
 ## Regla Central
 
 El sistema no debe modelar autorización con un método por cada acción del sistema.

@@ -219,6 +219,23 @@ Impact:
 - futuras features reservadas deben implementarse bajo `controllers/master-admin`
 - la administración de roles del sistema y catálogos del sistema queda del lado de `MASTER_ADMIN`
 
+## 2026-07-28
+
+Decision: el catálogo de permisos en código solo debe contener módulos funcionales del sistema; la frontera exclusiva de `MASTER_ADMIN` se documenta y evoluciona aparte.
+
+Reason:
+
+- evita mezclar capacidades de negocio con herramientas técnicas o de soporte
+- reduce el riesgo de modelar como permiso configurable algo que en realidad debe seguir reservado a plataforma
+- deja una regla clara para futuras features que se agreguen mucho tiempo después de este refactor
+
+Impact:
+
+- `authorization.catalog.ts` debe contener únicamente módulos funcionales/autorizables
+- una feature nueva de `MASTER_ADMIN` debe evaluarse primero como frontera estructural
+- si la feature es técnica o de soporte, debe vivir en `controllers/master-admin` y no entrar automáticamente al catálogo
+- si la feature es funcional y potencialmente reusable por negocio, sí puede modelarse como módulo del catálogo aunque inicialmente solo la use `MASTER_ADMIN`
+
 ## 2026-07-26
 
 Decision: el JWT se reduce a `sub + systemRole + roleId`, y el patrón existente de `authContext` se evoluciona en lugar de reemplazarse.

@@ -22,6 +22,7 @@ Complemento normativo:
 - las operaciones aqui definidas deben alinearse con el catálogo fuente de verdad en código
 - toda feature exclusiva de `MASTER_ADMIN` debe vivir bajo `src/internal/infra/api/controllers/master-admin`
 - los endpoints `auth`, `health` y `public/*` no forman parte del catalogo de permisos internos de negocio
+- este documento describe el catálogo funcional general; no pretende listar por defecto utilidades técnicas o de soporte exclusivas de `MASTER_ADMIN`
 
 ## Fuente De Verdad Del Catálogo
 
@@ -49,6 +50,12 @@ Estado actual:
 
 - la API ya resuelve `GET /v1/roles/modules` y `GET /v1/roles/operations` desde catálogo en código
 - `permission_modules` y `permission_operations` ya no forman parte del runtime de la aplicación
+
+Frontera complementaria:
+
+- las capacidades exclusivas de `MASTER_ADMIN` no deben agregarse automáticamente como módulos del catálogo
+- primero debe evaluarse si son capacidades funcionales del producto o herramientas técnicas de plataforma/soporte
+- si son técnicas o de soporte, deben vivir bajo `controllers/master-admin` y protegerse por la frontera estructural de `MASTER_ADMIN`
 
 Runbook operativo:
 
