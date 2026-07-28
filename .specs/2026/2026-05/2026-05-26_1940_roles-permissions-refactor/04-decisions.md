@@ -158,6 +158,22 @@ Impact:
 - `GET /v1/roles/modules` y `GET /v1/roles/operations` deben seguir existiendo, pero leyendo desde código
 - quedará una fase posterior de limpieza para retirar infraestructura Mongo sobrante
 
+## 2026-07-28
+
+Decision: `roleId` y `Role.id` serán idénticos al `code` del rol.
+
+Reason:
+
+- evita ids opacos innecesarios para una entidad cuyo `code` ya es único e inmutable
+- simplifica migraciones, debugging, payloads y trazabilidad humana
+- reduce el costo mental al asignar, consultar y auditar roles en usuarios
+
+Impact:
+
+- todo rol nuevo debe persistirse con `role_id = code`
+- los roles existentes requieren migración controlada de `roles.role_id` y `users.role_id`
+- mientras se ejecuta la migración, la lectura de roles debe tolerar resolución por `role_id` o por `code`
+
 ## 2026-07-26
 
 Decision: los modulos iniciales del sistema se alinean a las features actuales del repo.

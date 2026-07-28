@@ -1,4 +1,3 @@
-import { genId } from '@src/common/utils';
 import { Entity } from '@src/internal/core/entities/entity';
 
 import { InvalidValueException } from '@domain/exceptions';
@@ -49,7 +48,7 @@ export enum CatalogStatus {
 
 export class Role extends Entity<RoleProps> {
   constructor(props: RoleProps) {
-    props.id = props.id ?? genId();
+    props.id = props.id ?? props.code;
     props.status = props.status ?? RoleStatus.ACTIVE;
     props.permissions = Role.ensureUniquePermissions(props.permissions ?? []);
     props.createdBy = props.createdBy ?? null;
@@ -147,6 +146,14 @@ export class Role extends Entity<RoleProps> {
   }
 
   private static ensureModelConsistency(props: RoleProps): void {
+    if (props.id !== props.code) {
+      throw InvalidValueException.create(undefined, {
+        message: 'Role id must match role code',
+        id: props.id,
+        code: props.code,
+      });
+    }
+
     if (!props.isSystem && props.scope !== RoleScope.USER) {
       throw InvalidValueException.create(undefined, {
         message: 'Custom roles must use USER scope',

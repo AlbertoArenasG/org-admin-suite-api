@@ -2,8 +2,6 @@ import { Model } from 'mongoose';
 
 import { RoleScope, RoleStatus } from '@domain/entities';
 import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
-import { genId } from '@src/common/utils';
-
 import {
   MongooseSeedContext,
   MongooseSeedDefinition,
@@ -93,7 +91,7 @@ export const systemRolesSeed: MongooseSeedDefinition = {
 
       if (!existing) {
         await roleModel.create({
-          role_id: genId(),
+          role_id: role.code,
           name: role.name,
           code: role.code,
           scope: role.scope,

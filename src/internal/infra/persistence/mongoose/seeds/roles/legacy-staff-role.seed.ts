@@ -2,8 +2,6 @@ import { Model } from 'mongoose';
 
 import { RoleScope, RoleStatus } from '@domain/entities';
 import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
-import { genId } from '@src/common/utils';
-
 import {
   MongooseSeedContext,
   MongooseSeedDefinition,
@@ -37,7 +35,7 @@ export const legacyStaffRoleSeed: MongooseSeedDefinition = {
 
     if (!existing) {
       await roleModel.create({
-        role_id: genId(),
+        role_id: 'STAFF_LEGACY',
         name: 'Staff Legacy',
         code: 'STAFF_LEGACY',
         scope: RoleScope.USER,

@@ -132,6 +132,11 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Verificar existencia previa de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y `STAFF_LEGACY`
 - [x] Ejecutar validaciones posteriores de integridad sobre `system_role` y `role_id`
 - [x] Verificar integridad de `roleId` en todos los usuarios
+- [x] Definir que `role_id` canónico será igual a `code`
+- [x] Implementar migración de `roles.role_id -> roles.code`
+- [x] Implementar migración de referencias `users.role_id` hacia `code`
+- [x] Agregar compatibilidad temporal de lectura por `role_id | code`
+- [ ] Ejecutar `dry-run` y `apply` de la migración `role_id == code`
 
 ## Slice 9. Limpieza final
 

@@ -64,7 +64,7 @@ Response esperada:
   "data": {
     "system_role": "ADMIN",
     "role": {
-      "id": "role_123",
+      "id": "ADMIN_DEFAULT",
       "code": "ADMIN_DEFAULT",
       "name": "Administrador",
       "scope": "ADMIN",
@@ -198,6 +198,8 @@ Comandos disponibles:
 ```bash
 npm run db:migrate:users-system-role:dry-run
 npm run db:migrate:users-system-role:apply
+npm run db:migrate:role-ids-to-code:dry-run
+npm run db:migrate:role-ids-to-code:apply
 ```
 
 Comportamiento:
@@ -215,6 +217,23 @@ Reglas de mapeo:
 - `MASTER_ADMIN` legacy -> `system_role=MASTER_ADMIN` + `role_id=MASTER_ADMIN_DEFAULT`
 - `ADMIN` legacy -> `system_role=ADMIN` + `role_id=ADMIN_DEFAULT`
 - `STAFF` legacy -> `system_role=USER` + `role_id=STAFF_LEGACY`
+
+### Migración de identidad canónica de roles
+
+Estado:
+
+- `implemented`
+- `pending_execution`
+
+Propósito:
+
+- convertir la identidad técnica de los roles para que `role_id` sea igual a `code`
+- alinear también `users.role_id` con ese formato canónico
+
+Notas:
+
+- el backend quedó con compatibilidad temporal para resolver roles tanto por `role_id` histórico como por `code`
+- esta migración debe ejecutarse después del seed y de la migración de `system_role + role_id`
 
 ## Endpoints Existentes Que Cambiarán De Sentido
 

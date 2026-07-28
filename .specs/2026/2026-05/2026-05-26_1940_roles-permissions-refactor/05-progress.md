@@ -119,3 +119,9 @@
 - La creación y actualización de roles custom ahora validan sus permisos contra el catálogo en código y normalizan `module + operation` hacia `code` técnico en mayúsculas.
 - `AuthorizationService` ahora normaliza y filtra permisos efectivos usando el catálogo en código, reduciendo dependencia runtime a combinaciones libres o inconsistentes.
 - Se retiró del runtime la infraestructura Mongo obsoleta de `permission_modules` y `permission_operations`, incluyendo puertos, schemas, mappers, repositorios, wiring y seeds que ya no eran fuente de verdad.
+- Se aprobó cerrar también la convención de identidad de roles para que `role_id` sea idéntico a `code`, eliminando ids opacos en esta entidad.
+- Se definió como siguiente paso una migración controlada adicional para convertir tanto `roles.role_id` como `users.role_id` al valor canónico basado en `code`.
+- Se implementó el cambio de modelo para que todo rol nuevo nazca con `role_id = code`, incluyendo entidad, schema y seeds.
+- Se agregó compatibilidad temporal de lectura para resolver roles por `role_id` histórico o por `code` durante la ventana de transición.
+- Se implementó la migración manual `migrate-role-ids-to-code` con modos `dry-run` y `apply`, enfocada en convertir roles existentes y sus referencias de usuario sin duplicar datos.
+- Se corrigió la migración `migrate-role-ids-to-code` para actualizar `roles.role_id` mediante el driver nativo de Mongo y no por el model de Mongoose, evitando el bloqueo de `immutable: true` durante la conversión de datos legacy.

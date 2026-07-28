@@ -140,6 +140,7 @@ enum RoleStatus {
 
 Reglas a modelar en la entidad o policy:
 
+- `id` será idéntico a `code`
 - `name` único e inmutable
 - `code` único e inmutable
 - `code` generado desde `name`
@@ -184,6 +185,12 @@ Reglas:
 - cada módulo declara sus operaciones válidas
 - `Role.permissions` sigue persistiendo pares `module + operation` por `code`
 - el catálogo en código valida combinaciones válidas y alimenta endpoints de consulta
+
+Regla adicional del modelo:
+
+- `role_id` persistido en Mongo debe ser idéntico a `code`
+- no se usan ids aleatorios para roles
+- la migración de datos debe convertir roles y referencias de usuario ya existentes a ese formato
 
 Ubicación sugerida:
 

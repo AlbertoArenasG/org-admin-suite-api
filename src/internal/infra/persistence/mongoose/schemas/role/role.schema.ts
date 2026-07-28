@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-import { genId } from '@src/common/utils';
 import { RoleScope, RoleStatus } from '@domain/entities';
 
 export interface IRolePermissionSchema {
@@ -18,7 +17,7 @@ export interface IRolePermissionSchema {
 export class RoleDocument extends Document {
   @Prop({
     type: String,
-    default: () => genId(),
+    required: true,
     immutable: true,
     unique: true,
     index: true,
