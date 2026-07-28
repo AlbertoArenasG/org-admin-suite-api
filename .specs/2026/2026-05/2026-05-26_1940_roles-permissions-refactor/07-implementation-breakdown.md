@@ -150,6 +150,20 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Revisar i18n de enums/roles/estados
 - [x] Revisar documentación interna alineada al modelo final
 
+## Pendientes Tras Integración Frontend
+
+Cuando termine la integración y el refactor en frontend, retomar este spec con este orden:
+
+- [ ] Ejecutar una ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`
+- [ ] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
+- [ ] Revisar si durante la integración frontend aparecieron ajustes de contrato backend pendientes
+- [ ] Actualizar `docs/frontend/roles-permissions-refactor-handoff.md` con cualquier cambio real de integración detectado en pruebas
+- [ ] Eliminar enums legacy de roles que ya no tengan uso real en runtime
+- [ ] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
+- [ ] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
+- [ ] Revisar i18n final de catálogos, nombres de permisos, roles y estados
+- [ ] Cerrar el spec marcando qué quedó completado y qué se decide mantener como compatibilidad temporal
+
 ## Orden sugerido de ejecución
 
 1. Slice 1
