@@ -97,7 +97,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async getProfile(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
-      GetUserByIdQuery.create(currentUser.userId, true),
+      GetUserByIdQuery.create(currentUser.userId, currentUser.systemRole),
     );
     const data = await this.presenter.toUserResponse(result);
 
@@ -161,10 +161,7 @@ export class UserController {
     @Param('userId') userId: string,
   ) {
     const result = await this.queryBus.execute(
-      GetUserByIdQuery.create(
-        userId,
-        currentUser.systemRole === SystemRole.MASTER_ADMIN,
-      ),
+      GetUserByIdQuery.create(userId, currentUser.systemRole),
     );
     const data = await this.presenter.toUserResponse(result);
 

@@ -89,13 +89,13 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 6. Migración de usuarios e invitaciones
 
 - [x] Ajustar create user
-- [ ] Ajustar create master user
+- [x] Ajustar create master user
 - [x] Ajustar update user
 - [ ] Ajustar update my profile
 - [x] Ajustar delete user
 - [ ] Reemplazar `GetUserRoles` por consulta de roles asignables
 - [x] Ajustar create user registration invitation
-- [ ] Ajustar create master user registration invitation
+- [x] Ajustar create master user registration invitation
 - [x] Ajustar complete invitation
 - [ ] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
 

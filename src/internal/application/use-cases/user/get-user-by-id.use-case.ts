@@ -9,7 +9,7 @@ import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
-import { User, UserStatus } from '@domain/entities';
+import { SystemRole, User, UserStatus } from '@domain/entities';
 import { UserViewDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 
@@ -20,7 +20,10 @@ export class GetUserByIdUseCase {
     private readonly userReadRepository: IUserReadRepository,
   ) {}
 
-  async execute(userId: string, actorIsMaster: boolean): Promise<UserViewDto> {
+  async execute(
+    userId: string,
+    actorSystemRole: SystemRole,
+  ): Promise<UserViewDto> {
     const { data } = await this.userReadRepository.findById(userId);
 
     if (!data || data.status === UserStatus.DELETED) {
@@ -29,7 +32,10 @@ export class GetUserByIdUseCase {
       });
     }
 
-    if (!actorIsMaster && User.isMasterSystemRole(data.systemRole)) {
+    if (
+      actorSystemRole !== SystemRole.MASTER_ADMIN &&
+      User.isMasterSystemRole(data.systemRole)
+    ) {
       throw AuthorizationException.masterPrivilegesRequired();
     }
 

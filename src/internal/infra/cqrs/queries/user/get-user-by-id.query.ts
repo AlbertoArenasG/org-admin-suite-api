@@ -3,15 +3,16 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UserViewDto } from '@application/dto';
 import { GetUserByIdUseCase } from '@application/use-cases';
 import { BaseQueryHandler } from '@infra/cqrs/base-query.handler';
+import { SystemRole } from '@domain/entities';
 
 export class GetUserByIdQuery {
   private constructor(
     public readonly userId: string,
-    public readonly actorIsMaster: boolean,
+    public readonly actorSystemRole: SystemRole,
   ) {}
 
-  static create(userId: string, actorIsMaster: boolean) {
-    return new GetUserByIdQuery(userId, actorIsMaster);
+  static create(userId: string, actorSystemRole: SystemRole) {
+    return new GetUserByIdQuery(userId, actorSystemRole);
   }
 }
 
@@ -26,7 +27,7 @@ export class GetUserByIdHandler
 
   async execute(query: GetUserByIdQuery): Promise<UserViewDto> {
     return this.run(query, () =>
-      this.useCase.execute(query.userId, query.actorIsMaster),
+      this.useCase.execute(query.userId, query.actorSystemRole),
     );
   }
 }
