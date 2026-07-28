@@ -86,3 +86,6 @@
 - Se ajustó el request DTO de `create user registration invitation` para hidratar `systemRole` explícito desde `role_id`, manteniendo por ahora `roleId` en `null` mientras se sigue usando el contrato legacy del endpoint.
 - Se ajustó el listado de usuarios para transportar `actorSystemRole` desde controller hasta repositorio, eliminando otra dependencia a un booleano derivado como `includeMasterUsers`.
 - Se revisó `update my profile` y quedó formalmente cerrado dentro del slice porque no depende de reglas estructurales de rol ni de compatibilidad `isMaster`/`role`.
+- Se migró `user-registration-invitation.controller` para declarar `user_registration_invitations.CREATE` mediante `PermissionsGuard`, alineando también el backoffice de invitaciones ordinarias al patrón centralizado.
+- Se ajustó `master-user-registration-invitation.controller` para combinar `PermissionsGuard` con `MasterScopeGuard`, dejando explícita la convivencia entre permiso funcional y frontera estructural `MASTER_ADMIN`.
+- Se ajustó `master-admin-user.controller` al mismo patrón combinado, declarando `users.CREATE` junto con la restricción estructural de `MASTER_ADMIN`.

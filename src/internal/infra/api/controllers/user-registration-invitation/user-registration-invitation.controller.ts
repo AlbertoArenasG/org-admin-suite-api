@@ -8,13 +8,13 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
+import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { CreateUserRegistrationInvitationCommandAdapter } from '@infra/cqrs/commands';
 import { CreateUserRegistrationInvitationRequestDto } from '@infra/api/dto';
 import { UserRegistrationInvitationPresenter } from '@infra/api/presenters';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard } from '@infra/api/guards';
-import { CurrentUser } from '@src/common/decorators';
+import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
 @Controller('v1/user-registration-invitations')
@@ -26,7 +26,8 @@ export class UserRegistrationInvitationController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('user_registration_invitations', 'CREATE')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @CurrentUser() currentUser: AuthenticatedUserContextDto,

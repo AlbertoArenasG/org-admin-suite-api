@@ -306,11 +306,11 @@ Endpoints actuales de backoffice:
 - `POST /v1/user-registration-invitations`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: invitacion ordinaria de aplicacion
+  - nota: invitacion ordinaria de aplicacion, protegida por `PermissionsGuard` con `user_registration_invitations.CREATE`
 - `POST /v1/master-admin/user-registration-invitations`
   - operacion: `CREATE`
   - acceso actual: exclusivo de `MASTER_ADMIN`
-  - nota: invitacion para capa `master-admin`
+  - nota: invitacion para capa `master-admin`, protegida por `PermissionsGuard` con `user_registration_invitations.CREATE` y por la frontera estructural `MasterScopeGuard`
 
 Endpoints publicos por token:
 
@@ -341,7 +341,7 @@ Las siguientes features existen en el repo, pero no se incluyen dentro del catal
 ## Observaciones Del Estado Actual
 
 - `customer.controller`, `provider.controller` y `service-entry.controller` siguen usando `ensureAuthorized()`
-- `master-admin/user` y `master-admin/user-registration-invitations` siguen una frontera estructural separada con `MasterScopeGuard`
+- `master-admin/user` y `master-admin/user-registration-invitations` siguen una frontera estructural separada con `MasterScopeGuard`, pero ya conviven con `PermissionsGuard` para declarar el permiso funcional del endpoint
 - `GET /v1/files/:fileId/download` hoy no tiene guard activo
 - `POST /v1/service-packages/uploads` hoy no tiene `JwtAuthGuard`
 - el modulo `roles` aun no tiene controllers reales; su implementacion forma parte de este refactor
