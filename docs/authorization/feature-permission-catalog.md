@@ -45,6 +45,11 @@ AUTHORIZATION_CATALOG.USERS = {
 }
 ```
 
+Estado actual:
+
+- la API ya resuelve `GET /v1/roles/modules` y `GET /v1/roles/operations` desde catálogo en código
+- `permission_modules` y `permission_operations` ya no forman parte del runtime de la aplicación
+
 ## Operaciones Base
 
 Operaciones controladas aprobadas para la primera etapa:

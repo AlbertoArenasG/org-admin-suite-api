@@ -2,8 +2,6 @@ export * from './user';
 export * from './user-registration-invitation';
 export * from './user-password-reset';
 export * from './role';
-export * from './permission-module';
-export * from './permission-operation';
 export * from './file/mongoose-file.mapper';
 export * from './service-entry/mongoose-service-entry.mapper';
 export * from './service-entry-access/mongoose-service-entry-access.mapper';

@@ -118,3 +118,4 @@
 - `GET /v1/roles/modules` y `GET /v1/roles/operations` dejaron de depender de Mongo y ahora responden desde el catálogo en código, resolviendo nombres visibles mediante i18n.
 - La creación y actualización de roles custom ahora validan sus permisos contra el catálogo en código y normalizan `module + operation` hacia `code` técnico en mayúsculas.
 - `AuthorizationService` ahora normaliza y filtra permisos efectivos usando el catálogo en código, reduciendo dependencia runtime a combinaciones libres o inconsistentes.
+- Se retiró del runtime la infraestructura Mongo obsoleta de `permission_modules` y `permission_operations`, incluyendo puertos, schemas, mappers, repositorios, wiring y seeds que ya no eran fuente de verdad.

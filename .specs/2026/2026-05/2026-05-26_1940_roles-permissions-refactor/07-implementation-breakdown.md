@@ -90,7 +90,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Migrar catálogo de permisos desde Mongo a código
 - [x] Definir catálogo en código con `code` en mayúsculas y `nameKey` para i18n
 - [x] Reemplazar queries de `modules` y `operations` por lectura desde código
-- [ ] Marcar como obsoleta la infraestructura Mongo de `permission_modules` y `permission_operations`
+- [x] Marcar como obsoleta la infraestructura Mongo de `permission_modules` y `permission_operations`
 
 ## Slice 6. Migración de usuarios e invitaciones
 
