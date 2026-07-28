@@ -83,3 +83,6 @@
 - Se ajustó `complete invitation` para que el usuario creado desde una invitación persistida con `role` legacy también hidrate `systemRole` explícito al momento del alta, manteniendo temporalmente `roleId` en `null` mientras se rediseña el modelo final de invitaciones.
 - Se ajustaron los request DTOs de `create master user` y `create master user registration invitation` para hidratar `systemRole` explícito desde `role_id`, manteniendo todavía el contrato HTTP legacy mientras el frontend no migra al payload nuevo.
 - Se ajustó `GetUserById` para que la restricción sobre usuarios `MASTER_ADMIN` dependa de `actorSystemRole` en lugar de un booleano `actorIsMaster`, reduciendo otra capa de compatibilidad ad hoc en queries de usuario.
+- Se ajustó el request DTO de `create user registration invitation` para hidratar `systemRole` explícito desde `role_id`, manteniendo por ahora `roleId` en `null` mientras se sigue usando el contrato legacy del endpoint.
+- Se ajustó el listado de usuarios para transportar `actorSystemRole` desde controller hasta repositorio, eliminando otra dependencia a un booleano derivado como `includeMasterUsers`.
+- Se revisó `update my profile` y quedó formalmente cerrado dentro del slice porque no depende de reglas estructurales de rol ni de compatibilidad `isMaster`/`role`.

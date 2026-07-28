@@ -1,3 +1,4 @@
+import { SystemRole } from '@domain/entities';
 import { User } from '@domain/entities/user.entity';
 
 export type UserSortField =
@@ -12,7 +13,7 @@ export type SortDirection = 'asc' | 'desc';
 export interface FindUsersParams {
   page: number;
   perPage: number;
-  includeMasterUsers: boolean;
+  actorSystemRole: SystemRole;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
 }

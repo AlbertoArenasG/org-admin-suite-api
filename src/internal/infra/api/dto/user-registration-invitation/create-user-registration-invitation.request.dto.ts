@@ -8,7 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { UserRole } from '@domain/entities';
+import { User, UserRole } from '@domain/entities';
 import { CreateApplicationUserRegistrationInvitationDto } from '@application/dto';
 import {
   UserRegistrationInvitationScope,
@@ -44,6 +44,8 @@ export class CreateUserRegistrationInvitationRequestDto {
       scope: UserRegistrationInvitationScope.APPLICATION,
       email: this.email,
       role: this.role_id,
+      systemRole: User.resolveSystemRoleFromLegacyRole(this.role_id),
+      roleId: null,
       invitedByUserId,
       userData: this.buildUserData(),
     };

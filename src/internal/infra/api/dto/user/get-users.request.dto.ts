@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 
 import { GetUsersDto } from '@application/dto';
+import { SystemRole } from '@domain/entities';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 const ALLOWED_SORT_FIELDS = [
@@ -41,11 +42,11 @@ export class GetUsersRequestDto extends PaginationRequestDto {
   @IsString()
   search?: string;
 
-  toDomain(includeMasterUsers: boolean): GetUsersDto {
+  toDomain(actorSystemRole: SystemRole): GetUsersDto {
     return {
       page: this.getPage(),
       perPage: this.getPerPage(),
-      includeMasterUsers,
+      actorSystemRole,
       sorts: this.sort?.map((item) => ({
         field: item.field,
         direction: item.direction,

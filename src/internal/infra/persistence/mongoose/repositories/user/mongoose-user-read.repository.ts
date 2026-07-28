@@ -31,30 +31,31 @@ export class MongooseUserReadRepositoryImpl
   }
 
   async findAll(params: FindUsersParams): Promise<FindUsersResult> {
-    const { page, perPage, includeMasterUsers, sorts, search } = params;
+    const { page, perPage, actorSystemRole, sorts, search } = params;
     const skip = (page - 1) * perPage;
-    const roleFilter = includeMasterUsers
-      ? {}
-      : {
-          $and: [
-            {
-              $or: [
-                { role: { $exists: false } },
-                {
-                  role: {
-                    $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
+    const roleFilter =
+      actorSystemRole === SystemRole.MASTER_ADMIN
+        ? {}
+        : {
+            $and: [
+              {
+                $or: [
+                  { role: { $exists: false } },
+                  {
+                    role: {
+                      $nin: [UserRole.MASTER_ADMIN, UserRole.MASTER_STAFF],
+                    },
                   },
-                },
-              ],
-            },
-            {
-              $or: [
-                { system_role: { $exists: false } },
-                { system_role: { $ne: SystemRole.MASTER_ADMIN } },
-              ],
-            },
-          ],
-        };
+                ],
+              },
+              {
+                $or: [
+                  { system_role: { $exists: false } },
+                  { system_role: { $ne: SystemRole.MASTER_ADMIN } },
+                ],
+              },
+            ],
+          };
     const searchFilter =
       search && search.trim().length > 0
         ? {

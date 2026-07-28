@@ -36,7 +36,6 @@ import {
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
-import { SystemRole } from '@domain/entities';
 
 @Controller('v1/users')
 export class UserController {
@@ -117,9 +116,7 @@ export class UserController {
     @Query() query: GetUsersRequestDto,
   ) {
     const result = await this.queryBus.execute(
-      GetUsersQuery.create(
-        query.toDomain(currentUser.systemRole === SystemRole.MASTER_ADMIN),
-      ),
+      GetUsersQuery.create(query.toDomain(currentUser.systemRole)),
     );
 
     const data = await this.presenter.toUsersResponse(result.items);
