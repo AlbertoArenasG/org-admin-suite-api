@@ -143,9 +143,9 @@ Cambio esperado:
 Estas áreas existen hoy y deben tratarse como sensibles durante la migración:
 
 - `GET /v1/users/roles`
-- controllers que hoy dependen de `ensureAuthorized()`
-- flows que hoy usan `currentUser.role`
-- flows que hoy usan `currentUser.isMaster`
+- flows que todavía devuelven o aceptan roles legacy en contratos temporales
+- flows que todavía persisten invitaciones con `role` legacy
+- puntos donde `roleId` sigue quedando temporalmente en `null`
 
 ## Reglas De Interpretación Del Modelo
 

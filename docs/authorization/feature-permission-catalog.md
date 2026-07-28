@@ -137,23 +137,23 @@ Endpoints actuales:
 - `POST /v1/customers`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `customers.CREATE`
 - `GET /v1/customers`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `customers.READ`
 - `GET /v1/customers/:customerId`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `customers.READ`
 - `PATCH /v1/customers/:customerId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `customers.UPDATE`
 - `DELETE /v1/customers/:customerId`
   - operacion: `DELETE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `customers.DELETE`
 
 ### `providers`
 
@@ -166,23 +166,23 @@ Endpoints actuales:
 - `POST /v1/providers`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `providers.CREATE`
 - `GET /v1/providers`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `providers.READ`
 - `GET /v1/providers/:providerId`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `providers.READ`
 - `PATCH /v1/providers/:providerId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `providers.UPDATE`
 - `DELETE /v1/providers/:providerId`
   - operacion: `DELETE`
   - acceso actual: autenticado
-  - nota: hoy usa `ensureAuthorized()`
+  - nota: protegido por `PermissionsGuard` con `providers.DELETE`
 
 ### `service_entries`
 
@@ -340,7 +340,7 @@ Las siguientes features existen en el repo, pero no se incluyen dentro del catal
 
 ## Observaciones Del Estado Actual
 
-- `customer.controller`, `provider.controller` y `service-entry.controller` siguen usando `ensureAuthorized()`
+- `customer.controller`, `provider.controller`, `service-entry.controller`, `user.controller` y las invitaciones internas ya fueron migrados al patrón con `PermissionsGuard`
 - `master-admin/user` y `master-admin/user-registration-invitations` siguen una frontera estructural separada con `MasterScopeGuard`, pero ya conviven con `PermissionsGuard` para declarar el permiso funcional del endpoint
 - `GET /v1/files/:fileId/download` hoy no tiene guard activo
 - `POST /v1/service-packages/uploads` hoy no tiene `JwtAuthGuard`

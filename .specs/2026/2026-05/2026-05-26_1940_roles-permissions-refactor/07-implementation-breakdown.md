@@ -108,7 +108,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Revisar `file.controller`
 - [x] Revisar `service-package.controller`
 - [x] Revisar `master-admin/*`
-- [ ] Eliminar `ensureAuthorized()` donde exista
+- [x] Eliminar `ensureAuthorized()` donde exista
 - [ ] Reemplazar checks hardcodeados por decorators/guards
 
 ## Slice 8. Migración de datos

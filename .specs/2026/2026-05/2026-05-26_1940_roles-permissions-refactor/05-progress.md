@@ -89,3 +89,4 @@
 - Se migró `user-registration-invitation.controller` para declarar `user_registration_invitations.CREATE` mediante `PermissionsGuard`, alineando también el backoffice de invitaciones ordinarias al patrón centralizado.
 - Se ajustó `master-user-registration-invitation.controller` para combinar `PermissionsGuard` con `MasterScopeGuard`, dejando explícita la convivencia entre permiso funcional y frontera estructural `MASTER_ADMIN`.
 - Se ajustó `master-admin-user.controller` al mismo patrón combinado, declarando `users.CREATE` junto con la restricción estructural de `MASTER_ADMIN`.
+- Se corrigió la documentación operativa para reflejar que `customer`, `provider`, `service-entry`, `user` e invitaciones internas ya no dependen de `ensureAuthorized()`, cerrando también esa deuda técnica como tarea cumplida en el spec.
