@@ -100,3 +100,6 @@
 - Se expuso el primer controller HTTP de `roles` con `GET /v1/roles`, `GET /v1/roles/:roleId` y `POST /v1/roles`, todos bajo `JwtAuthGuard + PermissionsGuard + @RequirePermission(...)`.
 - Se registraron los handlers de `roles` en el `GlobalCqrsModule` y se actualizaron los índices de controllers para dejar visible el módulo dentro del runtime de la API.
 - Se actualizó el catálogo de permisos y el handoff de frontend para reflejar que el módulo `roles` ya está en estado `in_progress` con lectura y creación implementadas.
+- Se completó la siguiente tanda del CRUD de `roles` con `PATCH /v1/roles/:roleId`, `PATCH /v1/roles/:roleId/status` y `DELETE /v1/roles/:roleId`, todos siguiendo el mismo pipeline CQRS y `PermissionsGuard`.
+- Se agregó la regla de aplicación para impedir mutaciones ordinarias sobre roles del sistema, roles default e inmutables, reservando esas capacidades a futuros flows especiales de `MASTER_ADMIN`.
+- Se agregó la validación para impedir el borrado lógico de un rol cuando todavía tiene usuarios vinculados por `roleId`.

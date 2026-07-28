@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Param,
   Post,
   Query,
@@ -13,11 +15,21 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
-import { CreateRoleRequestDto, GetRolesRequestDto } from '@infra/api/dto';
+import {
+  ChangeRoleStatusRequestDto,
+  CreateRoleRequestDto,
+  GetRolesRequestDto,
+  UpdateRoleRequestDto,
+} from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { RolePresenter } from '@infra/api/presenters';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { CreateRoleCommandAdapter } from '@infra/cqrs/commands';
+import {
+  ChangeRoleStatusCommandAdapter,
+  CreateRoleCommandAdapter,
+  DeleteRoleCommandAdapter,
+  UpdateRoleCommandAdapter,
+} from '@infra/cqrs/commands';
 import { GetRoleByIdQuery, GetRolesQuery } from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
@@ -86,6 +98,72 @@ export class RoleController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Patch(':roleId')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('roles', 'UPDATE')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('roleId') roleId: string,
+    @Body() body: UpdateRoleRequestDto,
+  ) {
+    const command = UpdateRoleCommandAdapter.create(
+      body.toDomain(roleId, currentUser.userId),
+    );
+    const result = await this.commandBus.execute(command);
+    const data = this.presenter.toUpdateResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Patch(':roleId/status')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('roles', 'UPDATE')
+  @HttpCode(HttpStatus.OK)
+  async changeStatus(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('roleId') roleId: string,
+    @Body() body: ChangeRoleStatusRequestDto,
+  ) {
+    const command = ChangeRoleStatusCommandAdapter.create(
+      body.toDomain(roleId, currentUser.userId),
+    );
+    const result = await this.commandBus.execute(command);
+    const data = this.presenter.toStatusResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Delete(':roleId')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('roles', 'DELETE')
+  @HttpCode(HttpStatus.OK)
+  async delete(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('roleId') roleId: string,
+  ) {
+    await this.commandBus.execute(
+      DeleteRoleCommandAdapter.create({
+        roleId,
+        actorUserId: currentUser.userId,
+      }),
+    );
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(null)
       .withStatus(HttpStatus.OK)
       .build();
   }

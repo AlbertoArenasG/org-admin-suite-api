@@ -129,6 +129,18 @@ Endpoints actuales:
   - operacion: `CREATE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `roles.CREATE`; crea roles custom con `scope = USER`
+- `PATCH /v1/roles/:roleId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.UPDATE`; reemplaza permisos del rol custom
+- `PATCH /v1/roles/:roleId/status`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.UPDATE`; activa o desactiva roles custom
+- `DELETE /v1/roles/:roleId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.DELETE`; hace soft delete solo si el rol no tiene usuarios vinculados
 
 Notas:
 

@@ -89,6 +89,15 @@ export class MongooseUserReadRepositoryImpl
     };
   }
 
+  async countByRoleId(roleId: string): Promise<number> {
+    return this.userModel
+      .countDocuments({
+        role_id: roleId,
+        status: { $ne: UserStatus.DELETED },
+      })
+      .exec();
+  }
+
   private buildSortCriteria(
     sorts: Array<{
       field: FindUsersParams['sorts'][number]['field'];

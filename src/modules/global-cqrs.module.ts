@@ -29,6 +29,9 @@ import {
   DeleteProviderHandler,
   SubmitProviderProfileHandler,
   CreateRoleHandler,
+  UpdateRoleHandler,
+  ChangeRoleStatusHandler,
+  DeleteRoleHandler,
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdHandler,
@@ -86,6 +89,9 @@ const providers = [
   DeleteProviderHandler,
   SubmitProviderProfileHandler,
   CreateRoleHandler,
+  UpdateRoleHandler,
+  ChangeRoleStatusHandler,
+  DeleteRoleHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,

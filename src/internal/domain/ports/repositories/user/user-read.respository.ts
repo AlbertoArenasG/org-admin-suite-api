@@ -27,6 +27,7 @@ export interface IUserReadRepository {
   findByEmail(email: string): Promise<{ data: User | null }>;
   findById(userId: string): Promise<{ data: User | null }>;
   findAll(params: FindUsersParams): Promise<FindUsersResult>;
+  countByRoleId(roleId: string): Promise<number>;
 }
 
 export const IUserReadRepositoryToken = Symbol('IUserReadRepository');
