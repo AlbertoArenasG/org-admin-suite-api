@@ -1,11 +1,16 @@
-import { SystemRole, UserRole } from '@domain/entities';
+import { RoleScope, SystemRole } from '@domain/entities';
 
 export interface GetUserRolesDto {
   actorSystemRole: SystemRole;
 }
 
 export interface UserRoleViewDto {
-  role: UserRole;
+  roleId: string;
+  code: string;
+  name: string;
+  scope: RoleScope;
+  isSystem: boolean;
+  isDefault: boolean;
 }
 
 export interface GetUserRolesResultDto {

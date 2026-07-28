@@ -90,3 +90,5 @@
 - Se ajustó `master-user-registration-invitation.controller` para combinar `PermissionsGuard` con `MasterScopeGuard`, dejando explícita la convivencia entre permiso funcional y frontera estructural `MASTER_ADMIN`.
 - Se ajustó `master-admin-user.controller` al mismo patrón combinado, declarando `users.CREATE` junto con la restricción estructural de `MASTER_ADMIN`.
 - Se corrigió la documentación operativa para reflejar que `customer`, `provider`, `service-entry`, `user` e invitaciones internas ya no dependen de `ensureAuthorized()`, cerrando también esa deuda técnica como tarea cumplida en el spec.
+- Se reemplazó la lógica hardcodeada de `GetUserRoles` por una consulta basada en la colección `roles`, devolviendo roles asignables reales según el `actorSystemRole` y no solo enums legacy.
+- Se actualizó el presenter y el handoff de frontend para reflejar el nuevo shape de `GET /v1/users/roles`, incluyendo `role_id`, `role_code`, `role_name`, `role_scope`, `is_system` e `is_default`.

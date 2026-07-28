@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
 import { GetUserRolesResultDto } from '@application/dto';
-import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class UserRolePresenter {
-  constructor(private readonly enumNameService: EnumNameService) {}
-
   toResponse(result: GetUserRolesResultDto) {
     return result.roles.map((item) => ({
-      role_id: item.role,
-      role_name: this.enumNameService.getEnumName(`USER.ROLE.${item.role}`),
+      role_id: item.roleId,
+      role_code: item.code,
+      role_name: item.name,
+      role_scope: item.scope,
+      is_system: item.isSystem,
+      is_default: item.isDefault,
     }));
   }
 }

@@ -85,7 +85,7 @@ Endpoints actuales:
 - `GET /v1/users/roles`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: protegido por `users.READ`; hoy devuelve roles asignables legacy y debe migrar a consulta del nuevo modelo
+  - nota: protegido por `users.READ`; hoy resuelve roles asignables desde la colección `roles`, devolviendo metadata real del rol en lugar de una lista fija de enums legacy
 - `GET /v1/users/:userId`
   - operacion: `READ`
   - acceso actual: autenticado

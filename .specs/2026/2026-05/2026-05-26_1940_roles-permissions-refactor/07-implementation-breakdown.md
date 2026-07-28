@@ -93,7 +93,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar update user
 - [x] Ajustar update my profile
 - [x] Ajustar delete user
-- [ ] Reemplazar `GetUserRoles` por consulta de roles asignables
+- [x] Reemplazar `GetUserRoles` por consulta de roles asignables
 - [x] Ajustar create user registration invitation
 - [x] Ajustar create master user registration invitation
 - [x] Ajustar complete invitation

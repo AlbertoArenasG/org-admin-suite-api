@@ -9,8 +9,8 @@ No es una spec histórica. Es un documento vivo de integración entre backend y 
 ## Estado
 
 - iniciativa: `roles-permissions-refactor`
-- estado actual: `planned`
-- última actualización: `2026-07-27`
+- estado actual: `in_progress`
+- última actualización: `2026-07-28`
 
 ## Objetivo Del Refactor
 
@@ -117,12 +117,41 @@ Nota:
 Estado actual:
 
 - existe hoy en el backend
-- devuelve roles asignables del modelo legacy
+- ya consulta roles asignables desde la colección `roles`
+- devuelve metadata real del rol asignable
 
 Cambio esperado:
 
-- debe migrar a lógica basada en roles del nuevo modelo
-- es posible que cambie de contrato o que sea reemplazado por un endpoint más explícito
+- el nombre del endpoint sigue siendo legacy
+- el contrato ya no devuelve solo enums fijos
+- más adelante podría renombrarse o reemplazarse por un endpoint más explícito
+
+Response actual aproximada:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": [
+    {
+      "role_id": "role_123",
+      "role_code": "ADMIN_DEFAULT",
+      "role_name": "Administrador",
+      "role_scope": "ADMIN",
+      "is_system": true,
+      "is_default": true
+    },
+    {
+      "role_id": "role_456",
+      "role_code": "STAFF_LEGACY",
+      "role_name": "Staff Legacy",
+      "role_scope": "USER",
+      "is_system": false,
+      "is_default": false
+    }
+  ],
+  "status_code": 200
+}
+```
 
 ### `POST /v1/users`
 
