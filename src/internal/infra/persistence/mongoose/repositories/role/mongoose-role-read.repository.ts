@@ -5,7 +5,7 @@ import {
   FindRolesResult,
   IRoleReadRepository,
 } from '@domain/ports/repositories';
-import { Role, RoleStatus } from '@domain/entities';
+import { Role, RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 import { MongooseRoleBaseRepository } from './mongoose-role-base.repository';
 
 @Injectable()
@@ -50,7 +50,16 @@ export class MongooseRoleReadRepositoryImpl
   }
 
   async findAll(params: FindRolesParams): Promise<FindRolesResult> {
-    const { page, perPage, search, scope, status, isSystem, sorts } = params;
+    const {
+      page,
+      perPage,
+      actorSystemRole,
+      search,
+      scope,
+      status,
+      isSystem,
+      sorts,
+    } = params;
     const skip = (page - 1) * perPage;
 
     const filter: Record<string, unknown> = {};
@@ -74,6 +83,10 @@ export class MongooseRoleReadRepositoryImpl
 
     if (isSystem !== null && isSystem !== undefined) {
       filter.is_system = isSystem;
+    }
+
+    if (actorSystemRole !== SystemRole.MASTER_ADMIN) {
+      filter.scope = scope ?? { $ne: RoleScope.MASTER_ADMIN };
     }
 
     const sortCriteria = this.buildSortCriteria(sorts);

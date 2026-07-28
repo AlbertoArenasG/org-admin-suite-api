@@ -2,7 +2,14 @@ import { RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 
 export interface ResolvedPermissionDto {
   module: string;
+  moduleNameKey: string;
   operation: string;
+  operationNameKey: string;
+}
+
+export interface ResolvedPermissionModuleDto {
+  code: string;
+  nameKey: string;
 }
 
 export interface AuthenticatedRoleMetadataDto {
@@ -25,5 +32,6 @@ export interface GetMyPermissionsDto {
 export interface GetMyPermissionsResultDto {
   systemRole: SystemRole;
   role: AuthenticatedRoleMetadataDto | null;
+  modules: ResolvedPermissionModuleDto[];
   permissions: ResolvedPermissionDto[];
 }

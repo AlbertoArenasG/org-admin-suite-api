@@ -18,6 +18,8 @@ import {
 } from '@domain/exceptions';
 import { Role, RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 import {
+  getAuthorizationModule,
+  getAuthorizationOperation,
   isValidAuthorizationPermission,
   normalizeAuthorizationPermission,
 } from './authorization-catalog.utils';
@@ -84,18 +86,52 @@ export class AuthorizationService {
     actor: AuthenticatedUserContextDto | PermissionActorDto,
   ): Promise<GetMyPermissionsResultDto> {
     const role = await this.resolveRole(actor);
+    const permissions = (role?.permissions ?? [])
+      .map((permission) => normalizeAuthorizationPermission(permission))
+      .filter((permission) =>
+        isValidAuthorizationPermission(permission.module, permission.operation),
+      )
+      .map((permission) => {
+        const module = getAuthorizationModule(permission.module);
+        const operation = getAuthorizationOperation(permission.operation);
+
+        if (!module || !operation) {
+          throw InvalidValueException.create(
+            InvalidValueExceptionCode.DEFAULT,
+            {
+              field: 'permissions',
+              module: permission.module,
+              operation: permission.operation,
+              reason: 'INVALID_ROLE_PERMISSION',
+            },
+          );
+        }
+
+        return {
+          module: permission.module,
+          moduleNameKey: module.nameKey,
+          operation: permission.operation,
+          operationNameKey: operation.nameKey,
+        };
+      });
+
+    const modules = Array.from(
+      new Map(
+        permissions.map((permission) => [
+          permission.module,
+          {
+            code: permission.module,
+            nameKey: permission.moduleNameKey,
+          },
+        ]),
+      ).values(),
+    );
 
     return {
       systemRole: actor.systemRole,
       role: role ? this.toRoleMetadata(role) : null,
-      permissions: (role?.permissions ?? [])
-        .map((permission) => normalizeAuthorizationPermission(permission))
-        .filter((permission) =>
-          isValidAuthorizationPermission(
-            permission.module,
-            permission.operation,
-          ),
-        ),
+      modules,
+      permissions,
     };
   }
 

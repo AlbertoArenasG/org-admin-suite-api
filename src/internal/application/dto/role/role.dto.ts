@@ -3,7 +3,7 @@ import {
   PaginatedResultDto,
   PaginationParamsDto,
 } from '@application/dto/shared';
-import { RoleScope, RoleStatus } from '@domain/entities';
+import { RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 import { RoleSortDirection, RoleSortField } from '@domain/ports/repositories';
 
 export interface RolePermissionDto {
@@ -58,6 +58,7 @@ export interface UpdateRoleDto {
 export type UpdateRoleResultDto = RoleViewDto;
 
 export interface GetRolesDto extends PaginationParamsDto {
+  actorSystemRole: SystemRole;
   search?: string | null;
   scope?: RoleScope | null;
   status?: RoleStatus | null;

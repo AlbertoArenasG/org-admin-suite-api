@@ -73,11 +73,11 @@ export class RoleController {
   @RequirePermission('roles', 'READ')
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
     @Query() query: GetRolesRequestDto,
   ) {
     const result = await this.queryBus.execute(
-      GetRolesQuery.create(query.toDomain()),
+      GetRolesQuery.create(query.toDomain(currentUser.systemRole)),
     );
     const data = this.presenter.toCollection(result.items);
 

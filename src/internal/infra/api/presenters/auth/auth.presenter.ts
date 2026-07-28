@@ -4,9 +4,12 @@ import {
   AuthenticateUserResultDto,
   GetMyPermissionsResultDto,
 } from '@application/dto';
+import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class AuthPresenter {
+  constructor(private readonly enumNameService: EnumNameService) {}
+
   async toLoginResponse(result: AuthenticateUserResultDto) {
     return {
       access_token: result.accessToken,
@@ -41,9 +44,20 @@ export class AuthPresenter {
             status: result.role.status,
           }
         : null,
+      modules: result.modules.map((module) => ({
+        code: module.code,
+        name: this.enumNameService.getEnumName(module.nameKey),
+        name_key: module.nameKey,
+      })),
       permissions: result.permissions.map((permission) => ({
         module: permission.module,
+        module_name: this.enumNameService.getEnumName(permission.moduleNameKey),
+        module_name_key: permission.moduleNameKey,
         operation: permission.operation,
+        operation_name: this.enumNameService.getEnumName(
+          permission.operationNameKey,
+        ),
+        operation_name_key: permission.operationNameKey,
       })),
     };
   }

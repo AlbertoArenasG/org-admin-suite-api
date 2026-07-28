@@ -30,7 +30,7 @@ export class GetUserRolesUseCase {
   }
 
   private async resolveRoles(actorSystemRole: SystemRole): Promise<Role[]> {
-    const customUserRoles = await this.findCustomUserRoles();
+    const customUserRoles = await this.findCustomUserRoles(actorSystemRole);
 
     if (actorSystemRole === SystemRole.MASTER_ADMIN) {
       const [masterDefaultRole, adminDefaultRole] = await Promise.all([
@@ -59,10 +59,13 @@ export class GetUserRolesUseCase {
     return data;
   }
 
-  private async findCustomUserRoles(): Promise<Role[]> {
+  private async findCustomUserRoles(
+    actorSystemRole: SystemRole,
+  ): Promise<Role[]> {
     const { data } = await this.roleReadRepository.findAll({
       page: 1,
       perPage: 1000,
+      actorSystemRole,
       scope: RoleScope.USER,
       status: null,
       isSystem: false,

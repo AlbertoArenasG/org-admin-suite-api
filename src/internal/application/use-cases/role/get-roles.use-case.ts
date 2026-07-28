@@ -21,6 +21,7 @@ export class GetRolesUseCase {
     const params: FindRolesParams = {
       page: input.page,
       perPage: input.perPage,
+      actorSystemRole: input.actorSystemRole,
       search: input.search ?? null,
       scope: input.scope ?? null,
       status: input.status ?? null,

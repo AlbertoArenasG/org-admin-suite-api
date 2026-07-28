@@ -166,6 +166,7 @@ Propósito:
 
 - devolver el `systemRole` actual del usuario autenticado
 - devolver metadata del rol resuelto
+- devolver módulos efectivos agregados
 - devolver permisos efectivos en lista plana
 
 Response esperada:
@@ -175,21 +176,47 @@ Response esperada:
   "success_message": "DEFAULT",
   "data": {
     "system_role": "ADMIN",
-    "role": {
-      "id": "ADMIN_DEFAULT",
-      "code": "ADMIN_DEFAULT",
-      "name": "Administrador",
-      "scope": "ADMIN",
+      "role": {
+        "id": "ADMIN_DEFAULT",
+        "code": "ADMIN_DEFAULT",
+        "name": "Administrador",
+        "scope": "ADMIN",
       "is_system": true,
-      "is_default": true,
-      "is_immutable": true,
-      "status": "ACTIVE"
+        "is_default": true,
+        "is_immutable": true,
+        "status": "ACTIVE"
+      },
+      "modules": [
+        {
+          "code": "USERS",
+          "name": "Usuarios",
+          "name_key": "AUTHORIZATION.MODULE.USERS"
+        },
+        {
+          "code": "ROLES",
+          "name": "Roles",
+          "name_key": "AUTHORIZATION.MODULE.ROLES"
+        }
+      ],
+      "permissions": [
+        {
+          "module": "USERS",
+          "module_name": "Usuarios",
+          "module_name_key": "AUTHORIZATION.MODULE.USERS",
+          "operation": "READ",
+          "operation_name": "Leer",
+          "operation_name_key": "AUTHORIZATION.OPERATION.READ"
+        },
+        {
+          "module": "USERS",
+          "module_name": "Usuarios",
+          "module_name_key": "AUTHORIZATION.MODULE.USERS",
+          "operation": "UPDATE",
+          "operation_name": "Actualizar",
+          "operation_name_key": "AUTHORIZATION.OPERATION.UPDATE"
+        }
+      ]
     },
-    "permissions": [
-      { "module": "USERS", "operation": "READ" },
-      { "module": "USERS", "operation": "UPDATE" }
-    ]
-  },
   "status_code": 200
 }
 ```
@@ -197,8 +224,11 @@ Response esperada:
 Notas:
 
 - la respuesta sigue el patrón estándar con `ApiResponseBuilder`
+- `modules` es un agregado derivado desde los permisos efectivos; sirve para navegación o visibilidad de áreas
 - la lista de permisos será plana, no agrupada por módulo
 - los `module` y `operation` devueltos por backend deben considerarse canónicos en mayúsculas
+- los `name` se resuelven en backend según `x-user-lang`
+- los `name_key` viajan también para conservar trazabilidad técnica del catálogo
 - durante la compatibilidad temporal, si el usuario aún no tiene `roleId`, el backend resuelve el rol por fallback:
   - default role de `MASTER_ADMIN`
   - default role de `ADMIN`

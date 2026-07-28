@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 import { GetRolesDto } from '@application/dto';
-import { RoleScope, RoleStatus } from '@domain/entities';
+import { RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 const ALLOWED_SORT_FIELDS = ['name', 'code', 'status', 'created_at'] as const;
@@ -58,8 +58,9 @@ export class GetRolesRequestDto extends PaginationRequestDto {
   @IsBoolean()
   is_system?: boolean;
 
-  toDomain(): GetRolesDto {
+  toDomain(actorSystemRole: SystemRole): GetRolesDto {
     return {
+      actorSystemRole,
       page: this.getPage(),
       perPage: this.getPerPage(),
       search: this.search ?? null,

@@ -75,6 +75,12 @@ authorizationService.hasPermission(actor, module, operation)
 authorizationService.resolveEffectivePermissions(actor)
 ```
 
+La respuesta derivada de `resolveEffectivePermissions(actor)` puede incluir:
+
+- `role`: metadata del rol efectivo
+- `modules`: módulos efectivos deduplicados
+- `permissions`: permisos efectivos detallados
+
 Ejemplos:
 
 - `CUSTOMERS + CREATE`
@@ -293,6 +299,26 @@ Semántica:
 - usa el catálogo controlado `module + operation`
 - no debe representar reglas estructurales exclusivas de `MASTER_ADMIN`
 - no es obligatorio en endpoints self-service autenticados que no deban depender del catálogo de permisos
+
+## Contrato Recomendado Para `GET /v1/auth/me/permissions`
+
+Este endpoint puede exponer una vista enriquecida del contexto efectivo de autorización sin mezclar lógica de interfaz específica.
+
+Forma recomendada:
+
+- `system_role`
+- `role`
+- `modules`
+- `permissions`
+
+Reglas:
+
+- `modules` debe derivarse de `permissions`
+- un módulo aparece si el usuario tiene al menos un permiso válido dentro de ese módulo
+- `permissions` debe incluir `module`, `operation` y metadata localizada (`name` + `name_key`)
+- `modules` también debe incluir `name` + `name_key`
+- la localización debe resolverse con el idioma efectivo del request
+- no deben agregarse flags acoplados a UI como `show_in_sidebar`
 
 ## Runbook De Evolución Del Catálogo
 

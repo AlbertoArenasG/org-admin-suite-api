@@ -18,6 +18,43 @@ export interface AuthorizationOperationCatalogItem {
   nameKey: string;
 }
 
+export function getAuthorizationModule(
+  code: string,
+): AuthorizationModuleCatalogItem | null {
+  const normalizedCode = normalizeAuthorizationModuleCode(
+    code,
+  ) as AuthorizationModuleCode;
+  const module = AUTHORIZATION_CATALOG[normalizedCode];
+
+  if (!module) {
+    return null;
+  }
+
+  return {
+    code: module.code,
+    nameKey: module.nameKey,
+    operations: [...module.operations],
+  };
+}
+
+export function getAuthorizationOperation(
+  code: string,
+): AuthorizationOperationCatalogItem | null {
+  const normalizedCode = normalizeAuthorizationOperationCode(
+    code,
+  ) as AuthorizationOperationCode;
+  const operation = AUTHORIZATION_OPERATIONS[normalizedCode];
+
+  if (!operation) {
+    return null;
+  }
+
+  return {
+    code: operation.code,
+    nameKey: operation.nameKey,
+  };
+}
+
 export function normalizeAuthorizationModuleCode(code: string): string {
   return code.trim().replace(/\s+/g, '_').toUpperCase();
 }

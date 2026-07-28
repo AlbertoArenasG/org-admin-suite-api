@@ -1,4 +1,4 @@
-import { Role, RoleScope, RoleStatus } from '@domain/entities';
+import { Role, RoleScope, RoleStatus, SystemRole } from '@domain/entities';
 
 export type RoleSortField = 'name' | 'code' | 'status' | 'created_at';
 export type RoleSortDirection = 'asc' | 'desc';
@@ -6,6 +6,7 @@ export type RoleSortDirection = 'asc' | 'desc';
 export interface FindRolesParams {
   page: number;
   perPage: number;
+  actorSystemRole: SystemRole;
   search?: string | null;
   scope?: RoleScope | null;
   status?: RoleStatus | null;
