@@ -30,7 +30,12 @@ import {
   DeleteRoleCommandAdapter,
   UpdateRoleCommandAdapter,
 } from '@infra/cqrs/commands';
-import { GetRoleByIdQuery, GetRolesQuery } from '@infra/cqrs/queries';
+import {
+  GetPermissionModulesQuery,
+  GetPermissionOperationsQuery,
+  GetRoleByIdQuery,
+  GetRolesQuery,
+} from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
 @Controller('v1/roles')
@@ -80,6 +85,40 @@ export class RoleController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('modules')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('roles', 'READ')
+  @HttpCode(HttpStatus.OK)
+  async getModules() {
+    const result = await this.queryBus.execute(
+      GetPermissionModulesQuery.create(),
+    );
+    const data = this.presenter.toPermissionModulesResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('operations')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('roles', 'READ')
+  @HttpCode(HttpStatus.OK)
+  async getOperations() {
+    const result = await this.queryBus.execute(
+      GetPermissionOperationsQuery.create(),
+    );
+    const data = this.presenter.toPermissionOperationsResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }

@@ -11,6 +11,26 @@ export interface RolePermissionDto {
   operation: string;
 }
 
+export interface PermissionModuleViewDto {
+  id: string;
+  code: string;
+  name: string;
+  status: string;
+  isSystem: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface PermissionOperationViewDto {
+  id: string;
+  code: string;
+  name: string;
+  status: string;
+  isSystem: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface RoleViewDto {
   id: string;
   name: string;
@@ -54,6 +74,8 @@ export interface GetRolesDto extends PaginationParamsDto {
 export type GetRolesResultDto = PaginatedResultDto<RoleViewDto>;
 
 export type GetRoleByIdResultDto = RoleViewDto;
+export type GetPermissionModulesResultDto = PermissionModuleViewDto[];
+export type GetPermissionOperationsResultDto = PermissionOperationViewDto[];
 
 export interface ChangeRoleStatusDto {
   roleId: string;

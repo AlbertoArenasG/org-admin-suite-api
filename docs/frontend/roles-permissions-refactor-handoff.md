@@ -105,7 +105,8 @@ Endpoints esperados:
 - `PATCH /v1/roles/:roleId`
 - `PATCH /v1/roles/:roleId/status`
 - `DELETE /v1/roles/:roleId`
-- endpoints para catálogos de módulos y operaciones
+- `GET /v1/roles/modules`
+- `GET /v1/roles/operations`
 
 Estado puntual:
 
@@ -115,13 +116,16 @@ Estado puntual:
 - `PATCH /v1/roles/:roleId` implementado
 - `PATCH /v1/roles/:roleId/status` implementado
 - `DELETE /v1/roles/:roleId` implementado
-- catálogos `modules` y `operations` pendientes
+- `GET /v1/roles/modules` implementado
+- `GET /v1/roles/operations` implementado
 
 Detalles de integración:
 
 - `PATCH /v1/roles/:roleId` devuelve el rol actualizado con el mismo shape de detalle de `GET /v1/roles/:roleId`
 - `PATCH /v1/roles/:roleId/status` acepta `status_id` con `ACTIVE` o `INACTIVE`
 - `DELETE /v1/roles/:roleId` realiza borrado lógico y responde con `data: null`
+- `GET /v1/roles/modules` devuelve el catálogo activo de módulos autorizables
+- `GET /v1/roles/operations` devuelve el catálogo activo de operaciones autorizables
 - el backend bloquea por ahora cualquier mutación ordinaria sobre roles del sistema o roles inmutables
 - el backend también bloquea borrar un rol si todavía existen usuarios vinculados a ese `roleId`
 

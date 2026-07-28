@@ -103,3 +103,4 @@
 - Se completó la siguiente tanda del CRUD de `roles` con `PATCH /v1/roles/:roleId`, `PATCH /v1/roles/:roleId/status` y `DELETE /v1/roles/:roleId`, todos siguiendo el mismo pipeline CQRS y `PermissionsGuard`.
 - Se agregó la regla de aplicación para impedir mutaciones ordinarias sobre roles del sistema, roles default e inmutables, reservando esas capacidades a futuros flows especiales de `MASTER_ADMIN`.
 - Se agregó la validación para impedir el borrado lógico de un rol cuando todavía tiene usuarios vinculados por `roleId`.
+- Se cerró el Slice 5 con `GET /v1/roles/modules` y `GET /v1/roles/operations`, exponiendo por HTTP los catálogos activos sembrados en Mongo para construir permisos de roles desde datos reales del sistema.

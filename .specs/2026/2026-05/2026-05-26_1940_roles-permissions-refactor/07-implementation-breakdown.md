@@ -86,7 +86,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear controllers HTTP de roles
 - [x] Bloquear mutaciones de roles del sistema e inmutables en el CRUD ordinario
 - [x] Bloquear eliminación de roles con usuarios vinculados
-- [ ] Crear endpoints de catálogo de módulos y operaciones
+- [x] Crear endpoints de catálogo de módulos y operaciones
 
 ## Slice 6. Migración de usuarios e invitaciones
 

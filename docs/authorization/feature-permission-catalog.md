@@ -141,6 +141,14 @@ Endpoints actuales:
   - operacion: `DELETE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `roles.DELETE`; hace soft delete solo si el rol no tiene usuarios vinculados
+- `GET /v1/roles/modules`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve el catálogo activo de módulos autorizables
+- `GET /v1/roles/operations`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve el catálogo activo de operaciones autorizables
 
 Notas:
 

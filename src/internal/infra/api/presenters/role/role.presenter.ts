@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import {
   ChangeRoleStatusResultDto,
   CreateRoleResultDto,
+  GetPermissionModulesResultDto,
+  GetPermissionOperationsResultDto,
   GetRoleByIdResultDto,
   RoleViewDto,
 } from '@application/dto';
@@ -56,5 +58,29 @@ export class RolePresenter {
 
   toCollection(results: RoleViewDto[]) {
     return results.map((result) => this.toViewResponse(result));
+  }
+
+  toPermissionModulesResponse(results: GetPermissionModulesResultDto) {
+    return results.map((result) => ({
+      module_id: result.id,
+      module_code: result.code,
+      module_name: result.name,
+      status_id: result.status,
+      is_system: result.isSystem,
+      created_at: result.createdAt ?? null,
+      updated_at: result.updatedAt ?? null,
+    }));
+  }
+
+  toPermissionOperationsResponse(results: GetPermissionOperationsResultDto) {
+    return results.map((result) => ({
+      operation_id: result.id,
+      operation_code: result.code,
+      operation_name: result.name,
+      status_id: result.status,
+      is_system: result.isSystem,
+      created_at: result.createdAt ?? null,
+      updated_at: result.updatedAt ?? null,
+    }));
   }
 }
