@@ -112,12 +112,23 @@ Notas:
 
 Estado actual:
 
-- no existe aun un controller real para administracion de roles custom
-- el modulo `roles` existe en el catalogo porque forma parte directa del refactor aprobado
+- existe ya un controller inicial para administracion de roles custom
+- el modulo `roles` sigue en construcción incremental dentro de este refactor
 
 Endpoints actuales:
 
-- ninguno implementado todavia
+- `GET /v1/roles`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve colección real de roles desde Mongo
+- `GET /v1/roles/:roleId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve detalle de rol real desde Mongo
+- `POST /v1/roles`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `roles.CREATE`; crea roles custom con `scope = USER`
 
 Notas:
 

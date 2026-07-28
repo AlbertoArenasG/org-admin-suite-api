@@ -95,16 +95,26 @@ Notas:
 
 Estado:
 
-- `planned`
+- `in_progress`
 
 Endpoints esperados:
 
 - `GET /v1/roles`
-- `GET /v1/roles/:roleId`
 - `POST /v1/roles`
+- `GET /v1/roles/:roleId`
 - `PATCH /v1/roles/:roleId`
 - endpoint para activar o desactivar rol
 - endpoints para catálogos de módulos y operaciones
+
+Estado puntual:
+
+- `GET /v1/roles` implementado
+- `GET /v1/roles/:roleId` implementado
+- `POST /v1/roles` implementado
+- `PATCH /v1/roles/:roleId` pendiente
+- `PATCH /v1/roles/:roleId/status` pendiente
+- `DELETE /v1/roles/:roleId` pendiente
+- catálogos `modules` y `operations` pendientes
 
 Nota:
 

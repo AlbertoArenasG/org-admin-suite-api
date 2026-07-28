@@ -83,7 +83,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear commands/queries CQRS para roles
 - [x] Crear handlers CQRS de roles
 - [x] Crear use cases de roles
-- [ ] Crear controllers HTTP de roles
+- [x] Crear controllers HTTP de roles
 - [ ] Crear endpoints de catálogo de módulos y operaciones
 
 ## Slice 6. Migración de usuarios e invitaciones

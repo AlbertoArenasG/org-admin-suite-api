@@ -97,3 +97,6 @@
 - Se implementó `RolePresenter` junto con los exports necesarios para presentar respuestas de detalle, colección, creación y cambio de estado del módulo `roles`.
 - Se implementaron las primeras piezas CQRS de `roles` para `GET /roles`, `GET /roles/:roleId` y `POST /roles`, junto con sus use cases de aplicación y el mapper interno de `Role` hacia DTOs de vista.
 - Se agregaron códigos de excepción específicos para `ROLE` no encontrado y para conflictos de unicidad por `ROLE.NAME` y `ROLE.CODE`, dejando mejor aterrizado el manejo de errores del módulo.
+- Se expuso el primer controller HTTP de `roles` con `GET /v1/roles`, `GET /v1/roles/:roleId` y `POST /v1/roles`, todos bajo `JwtAuthGuard + PermissionsGuard + @RequirePermission(...)`.
+- Se registraron los handlers de `roles` en el `GlobalCqrsModule` y se actualizaron los índices de controllers para dejar visible el módulo dentro del runtime de la API.
+- Se actualizó el catálogo de permisos y el handoff de frontend para reflejar que el módulo `roles` ya está en estado `in_progress` con lectura y creación implementadas.
