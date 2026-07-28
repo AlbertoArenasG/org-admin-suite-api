@@ -34,6 +34,7 @@ import {
   DeleteRoleHandler,
 } from '@infra/cqrs/commands';
 import {
+  GetMyPermissionsHandler,
   GetUserByIdHandler,
   GetUserRegistrationInvitationHandler,
   GetUsersHandler,
@@ -69,6 +70,7 @@ const providers = [
   CreateUserRegistrationInvitationHandler,
   CreateMasterUserRegistrationInvitationHandler,
   CompleteNewUserRegistrationInvitationHandler,
+  GetMyPermissionsHandler,
   GetUserRegistrationInvitationHandler,
   GetUsersHandler,
   GetUserByIdHandler,
