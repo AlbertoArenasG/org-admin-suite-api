@@ -68,10 +68,10 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Crear `AuthorizationService`
 - [x] Crear decorator de permisos requeridos
 - [x] Crear guard de permisos
-- [ ] Modelar reglas estructurales de `MASTER_ADMIN`
-- [ ] Modelar reglas estructurales de `ADMIN`
+- [x] Modelar reglas estructurales de `MASTER_ADMIN`
+- [x] Modelar reglas estructurales de `ADMIN`
 - [ ] Resolver permisos efectivos desde `roleId`
-- [ ] Soportar validación de roles del sistema vs roles custom
+- [x] Soportar validación de roles del sistema vs roles custom
 
 ## Slice 5. CRUD de roles
 

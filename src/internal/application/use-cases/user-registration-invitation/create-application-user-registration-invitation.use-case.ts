@@ -20,10 +20,12 @@ import {
   UserRegistrationInvitationDto,
 } from '@application/dto';
 import { UserRegistrationInvitationMapper } from '@application/mappers';
-import { UserRegistrationInvitationTokenService } from '@application/services';
+import {
+  AuthorizationService,
+  UserRegistrationInvitationTokenService,
+} from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
 import { SystemRole, User } from '@domain/entities';
-import { UserRolePolicy } from '@domain/policies';
 
 @Injectable()
 export class CreateApplicationUserRegistrationInvitationUseCase {
@@ -36,15 +38,28 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
     private readonly invitationWriteRepository: IUserRegistrationInvitationWriteRepository,
     private readonly notifier: UserRegistrationInvitationNotifierService,
     private readonly tokenService: UserRegistrationInvitationTokenService,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   async execute(
     input: CreateApplicationUserRegistrationInvitationDto,
     actorSystemRole: SystemRole,
   ): Promise<UserRegistrationInvitationDto> {
-    UserRolePolicy.ensureCanManageRole(
-      actorSystemRole,
-      input.systemRole ?? input.role ?? SystemRole.USER,
+    await this.authorizationService.ensureCanCreateUser(
+      {
+        userId: input.invitedByUserId,
+        systemRole: actorSystemRole,
+        roleId: null,
+      },
+      {
+        systemRole:
+          input.systemRole ??
+          User.resolveSystemRoleFromLegacyRole(
+            input.role ?? User.resolveCompatibilityLegacyRole(SystemRole.USER),
+          ),
+        roleId: input.roleId ?? null,
+      },
+      { allowLegacyUserRoleFallback: true },
     );
 
     await this.ensureInvitationDoesNotExist(input.email);

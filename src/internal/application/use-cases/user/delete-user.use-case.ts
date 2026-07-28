@@ -12,7 +12,7 @@ import {
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
 import { UserStatus } from '@domain/entities';
-import { UserRolePolicy } from '@domain/policies';
+import { AuthorizationService } from '@application/services';
 
 @Injectable()
 export class DeleteUserUseCase {
@@ -21,6 +21,7 @@ export class DeleteUserUseCase {
     private readonly userReadRepository: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   async execute(input: DeleteUserDto): Promise<void> {
@@ -34,7 +35,10 @@ export class DeleteUserUseCase {
       });
     }
 
-    UserRolePolicy.ensureHasHigherPrivileges(actorSystemRole, user.systemRole);
+    this.authorizationService.ensureHasHigherPrivileges(
+      actorSystemRole,
+      user.systemRole,
+    );
 
     if (user.status === UserStatus.DELETED) {
       return;

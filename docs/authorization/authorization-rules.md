@@ -71,6 +71,7 @@ authorizationService.ensureCanUpdateUser(actor, {
   nextSystemRole,
   nextRole,
 })
+authorizationService.ensureHasHigherPrivileges(actorSystemRole, targetSystemRole)
 ```
 
 Estas validaciones deben cubrir casos como:
@@ -211,6 +212,23 @@ Implementación actual:
 - `PermissionsGuard` ya existe
 - `@RequirePermission(...)` ya existe
 - la migración de controllers hacia este patrón sigue pendiente endpoint por endpoint
+- los flows sensibles de usuario e invitaciones ya empezaron a migrar sus validaciones estructurales desde `UserRolePolicy` hacia `AuthorizationService`
+
+## Estado Actual De Reglas Estructurales
+
+Hoy `AuthorizationService` ya concentra estas reglas:
+
+- `MASTER_ADMIN` puede gestionar cualquier `systemRole`
+- `ADMIN` puede gestionar `ADMIN` y `USER`, pero nunca `MASTER_ADMIN`
+- `USER` solo puede gestionar objetivos `USER`
+- `MASTER_ADMIN` y `ADMIN` solo pueden quedar consistentes con sus roles default del sistema
+- `USER` debe usar rol custom de `scope = USER`
+
+Compatibilidad temporal:
+
+- mientras sigan vivos algunos request DTOs legacy, ciertos flows todavía permiten crear o invitar usuarios `USER` sin `roleId` explícito
+- esa excepción está encapsulada como compatibilidad temporal en `AuthorizationService`
+- esa compatibilidad debe desaparecer cuando el contrato HTTP migre por completo a `systemRole + roleId`
 
 Antipatrón:
 

@@ -14,10 +14,10 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
-import { UserRolePolicy } from '@domain/policies';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 import { User, UserStatus } from '@domain/entities';
+import { AuthorizationService } from '@application/services';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -26,6 +26,7 @@ export class UpdateUserUseCase {
     private readonly userReadRepository: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
@@ -42,7 +43,7 @@ export class UpdateUserUseCase {
     const isSelfUpdate = actorUserId === userId;
 
     if (!isSelfUpdate) {
-      UserRolePolicy.ensureHasHigherPrivileges(
+      this.authorizationService.ensureHasHigherPrivileges(
         actorSystemRole,
         user.systemRole,
       );
@@ -66,7 +67,20 @@ export class UpdateUserUseCase {
         });
       }
 
-      UserRolePolicy.ensureCanManageRole(actorSystemRole, nextSystemRole);
+      await this.authorizationService.ensureCanUpdateUser(
+        {
+          userId: actorUserId,
+          systemRole: actorSystemRole,
+          roleId: null,
+        },
+        {
+          currentSystemRole: user.systemRole,
+          nextSystemRole,
+          nextRoleId: payload.roleId ?? user.roleId,
+          isSelfUpdate,
+        },
+        { allowLegacyUserRoleFallback: true },
+      );
       user.updateAuthorization({
         systemRole: nextSystemRole,
         roleId: payload.roleId ?? user.roleId,

@@ -13,14 +13,17 @@ import {
   User,
   UserStatus,
 } from '@domain/entities';
-import { UserPasswordPolicy, UserRolePolicy } from '@domain/policies';
+import { UserPasswordPolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
 } from '@domain/exceptions';
 import { CreateUserDto, CreateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import { UserNotifierService } from '@application/services';
+import {
+  AuthorizationService,
+  UserNotifierService,
+} from '@application/services';
 
 @Injectable()
 export class CreateUserAndNotifyUseCase {
@@ -30,6 +33,7 @@ export class CreateUserAndNotifyUseCase {
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
     private readonly notifier: UserNotifierService,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   /**
@@ -42,9 +46,21 @@ export class CreateUserAndNotifyUseCase {
     input: CreateUserDto,
     actorSystemRole: SystemRole,
   ): Promise<CreateUserResultDto> {
-    UserRolePolicy.ensureCanManageRole(
-      actorSystemRole,
-      input.systemRole ?? input.role ?? SystemRole.USER,
+    await this.authorizationService.ensureCanCreateUser(
+      {
+        userId: 'system',
+        systemRole: actorSystemRole,
+        roleId: null,
+      },
+      {
+        systemRole:
+          input.systemRole ??
+          User.resolveSystemRoleFromLegacyRole(
+            input.role ?? User.resolveCompatibilityLegacyRole(SystemRole.USER),
+          ),
+        roleId: input.roleId ?? null,
+      },
+      { allowLegacyUserRoleFallback: true },
     );
 
     const existingUser = await this.findUserByEmail(input.email);

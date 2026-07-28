@@ -104,3 +104,6 @@
 - Se agregó la regla de aplicación para impedir mutaciones ordinarias sobre roles del sistema, roles default e inmutables, reservando esas capacidades a futuros flows especiales de `MASTER_ADMIN`.
 - Se agregó la validación para impedir el borrado lógico de un rol cuando todavía tiene usuarios vinculados por `roleId`.
 - Se cerró el Slice 5 con `GET /v1/roles/modules` y `GET /v1/roles/operations`, exponiendo por HTTP los catálogos activos sembrados en Mongo para construir permisos de roles desde datos reales del sistema.
+- Se fortaleció `AuthorizationService` como capa estructural central, agregando validaciones explícitas para jerarquía entre `MASTER_ADMIN`, `ADMIN` y `USER`, además de la consistencia entre `systemRole` y `roleId`.
+- Se migraron los flows de `create user`, `create master user`, `create application invitation`, `create master invitation`, `update user` y `delete user` para depender de `AuthorizationService` en lugar de `UserRolePolicy` como mecanismo principal de autorización estructural.
+- Se dejó documentada y encapsulada una compatibilidad temporal para flows legacy que todavía crean o invitan usuarios `USER` sin `roleId` explícito mientras el contrato HTTP antiguo siga vivo.
