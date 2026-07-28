@@ -11,12 +11,6 @@ export class MongooseUserMapper {
       lastname: userDocument.lastname,
       email: userDocument.email,
       password: userDocument.password,
-      role:
-        userDocument.role ??
-        User.resolveCompatibilityLegacyRole(
-          userDocument.system_role ??
-            User.resolveSystemRoleFromLegacyRole(userDocument.role),
-        ),
       systemRole:
         userDocument.system_role ??
         User.resolveSystemRoleFromLegacyRole(userDocument.role),
@@ -38,7 +32,7 @@ export class MongooseUserMapper {
       full_name: `${user.name} ${user.lastname}`,
       email: user.email,
       password: user.password,
-      role: user.role,
+      role: User.resolveCompatibilityLegacyRole(user.systemRole),
       system_role: user.systemRole,
       role_id: user.roleId,
       status: user.status,

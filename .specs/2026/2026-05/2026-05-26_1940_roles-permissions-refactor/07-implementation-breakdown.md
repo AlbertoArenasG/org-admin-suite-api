@@ -42,7 +42,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 2. Migración del modelo User
 
 - [x] Redefinir entidad `User` para usar `systemRole + roleId`
-- [ ] Eliminar dependencia runtime a `UserRole`
+- [x] Eliminar dependencia runtime a `UserRole`
 - [x] Ajustar schema Mongoose de `user`
 - [x] Ajustar mapper Mongoose de `user`
 - [x] Ajustar repositorios de lectura/escritura de `user`
@@ -106,7 +106,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar complete invitation
 - [x] Cerrar contrato HTTP de entrada de usuarios e invitaciones a `system_role + role_id`
 - [x] Ajustar queries de usuario que hoy mezclaban filtros por `role` y `system_role`
-- [ ] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
+- [x] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
 
 ## Slice 7. Migración de controllers a autorización centralizada
 
@@ -144,10 +144,10 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 9. Limpieza final
 
 - [ ] Eliminar enums legacy de roles que queden obsoletos
-- [ ] Eliminar policies legacy que ya no apliquen
-- [ ] Eliminar código muerto de autorización previa
+- [x] Eliminar policies legacy que ya no apliquen
+- [x] Eliminar código muerto de autorización previa
 - [ ] Revisar i18n de enums/roles/estados
-- [ ] Revisar documentación interna alineada al modelo final
+- [x] Revisar documentación interna alineada al modelo final
 
 ## Orden sugerido de ejecución
 

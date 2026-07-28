@@ -144,7 +144,6 @@ interface AuthenticatedUserContextDto {
   systemRole: SystemRole;
   roleId: string;
   token: string;
-  role?: AuthorizationRoleSummaryDto;
 }
 ```
 
@@ -152,7 +151,6 @@ Reglas:
 
 - `role` e `isMaster` legacy deben desaparecer del contexto nuevo
 - el `authContext` debe transportar lo mínimo para autorización consistente
-- la metadata opcional de `role` puede adjuntarse cuando convenga evitar lecturas repetidas
 
 ## DTOs Estructurales Esperados
 
@@ -211,8 +209,8 @@ Implementación actual:
 - `AuthorizationService` ya existe como base operativa
 - `PermissionsGuard` ya existe
 - `@RequirePermission(...)` ya existe
-- la migración de controllers hacia este patrón sigue pendiente endpoint por endpoint
-- los flows sensibles de usuario e invitaciones ya empezaron a migrar sus validaciones estructurales desde `UserRolePolicy` hacia `AuthorizationService`
+- la migración de controllers quedó aterrizada en los endpoints internos principales del repo
+- los flows sensibles de usuario e invitaciones ya migraron sus validaciones estructurales desde `UserRolePolicy` hacia `AuthorizationService`
 
 ## Estado Actual De Reglas Estructurales
 
@@ -226,9 +224,8 @@ Hoy `AuthorizationService` ya concentra estas reglas:
 
 Compatibilidad temporal:
 
-- mientras sigan vivos algunos request DTOs legacy, ciertos flows todavía permiten crear o invitar usuarios `USER` sin `roleId` explícito
-- esa excepción está encapsulada como compatibilidad temporal en `AuthorizationService`
-- esa compatibilidad debe desaparecer cuando el contrato HTTP migre por completo a `systemRole + roleId`
+- el request model HTTP ya quedó migrado a `systemRole + roleId`
+- el runtime todavía conserva compatibilidad de persistencia para algunos campos legacy en Mongo, pero ya no como contrato principal de autorización
 
 Antipatrón:
 

@@ -13,8 +13,6 @@ export class MasterUserPresenter {
       name: result.name,
       lastname: result.lastname,
       email: result.email,
-      role: result.role,
-      role_name: this.enumNameService.getEnumName(`USER.ROLE.${result.role}`),
       system_role: result.systemRole,
       role_id: result.roleId,
       status: result.status,

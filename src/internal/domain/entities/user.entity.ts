@@ -9,9 +9,8 @@ export interface UserProps {
   lastname: string;
   email: string;
   password: string;
-  role?: UserRole;
-  systemRole?: SystemRole;
-  roleId?: string | null;
+  systemRole: SystemRole;
+  roleId: string | null;
   status: UserStatus;
   cellPhone: {
     countryCode: string | null;
@@ -28,8 +27,6 @@ export class User extends Entity<UserProps> {
       props.cellPhone = cellPhone;
     }
 
-    props.systemRole =
-      props.systemRole ?? User.resolveSystemRoleFromLegacyRole(props.role);
     props.roleId = props.roleId ?? null;
 
     super(props);
@@ -55,16 +52,8 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
-  get role(): UserRole {
-    return (
-      this.props.role ?? User.resolveCompatibilityLegacyRole(this.systemRole)
-    );
-  }
-
   get systemRole(): SystemRole {
-    return (
-      this.props.systemRole ?? User.resolveSystemRoleFromLegacyRole(this.role)
-    );
+    return this.props.systemRole;
   }
 
   get roleId(): string | null {
@@ -108,14 +97,6 @@ export class User extends Entity<UserProps> {
 
   private touch(): void {
     this.props.updatedAt = new Date();
-  }
-
-  get isMaster(): boolean {
-    return User.isMasterSystemRole(this.systemRole);
-  }
-
-  static isMasterRole(role: UserRole): boolean {
-    return role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF;
   }
 
   static isMasterSystemRole(systemRole: SystemRole): boolean {
@@ -181,21 +162,12 @@ export class User extends Entity<UserProps> {
     this.touch();
   }
 
-  updateRole(role: UserRole): void {
-    this.props.role = role;
-    this.props.systemRole = User.resolveSystemRoleFromLegacyRole(role);
-    this.touch();
-  }
-
   updateAuthorization(params: {
     systemRole: SystemRole;
     roleId: string | null;
-    role?: UserRole;
   }): void {
     this.props.systemRole = params.systemRole;
     this.props.roleId = params.roleId;
-    this.props.role =
-      params.role ?? User.resolveCompatibilityLegacyRole(params.systemRole);
     this.touch();
   }
 

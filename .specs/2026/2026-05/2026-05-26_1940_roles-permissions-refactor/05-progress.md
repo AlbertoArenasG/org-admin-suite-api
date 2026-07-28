@@ -130,3 +130,7 @@
 - Se actualizó el consumo de invitaciones para crear usuarios desde `systemRole + roleId`, eliminando la dependencia principal al enum legacy en ese flujo.
 - Se simplificó el `authContext` autenticado para que transporte solo `userId`, `systemRole`, `roleId` y `token`, eliminando `role` e `isMaster` como runtime state del guard JWT.
 - Se limpió el listado de usuarios para ocultar `MASTER_ADMIN` basándose únicamente en `system_role`, quitando la mezcla anterior con checks sobre `role` legacy.
+- La entidad `User` dejó de cargar `role` como estado de dominio; ahora el modelo runtime se sostiene en `systemRole + roleId` y el campo legacy solo se deriva al persistir en Mongo por compatibilidad temporal.
+- Las respuestas HTTP de usuario y login dejaron de exponer `role` y `role_name`, reforzando que el contrato público vigente se basa en `system_role` y `role_id`.
+- Se retiró `UserRolePolicy` del runtime porque sus reglas ya habían sido absorbidas por `AuthorizationService`.
+- Se alinearon `docs/authorization/authorization-rules.md` y `docs/frontend/roles-permissions-refactor-handoff.md` al estado actual del backend, eliminando referencias ya obsoletas al `authContext` viejo y al contrato de salida legacy de usuarios.

@@ -82,6 +82,64 @@ Ejemplo para crear un usuario `ADMIN`:
 }
 ```
 
+## Contratos De Respuesta Ya Simplificados
+
+Las respuestas de usuario autenticado y de usuarios en backoffice ya no exponen `role` ni `role_name` como fuente principal.
+
+El contrato vigente se centra en:
+
+- `system_role`
+- `role_id`
+
+Ejemplo aproximado de login:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": {
+    "access_token": "jwt",
+    "user": {
+      "id": "USR_123",
+      "name": "Luis",
+      "lastname": "Pérez",
+      "email": "luis@example.com",
+      "system_role": "ADMIN",
+      "role_id": null,
+      "status": "ACTIVE",
+      "cell_phone": {
+        "country_code": null,
+        "number": null
+      }
+    }
+  },
+  "status_code": 200
+}
+```
+
+Ejemplo aproximado de usuario detallado:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": {
+    "id": "USR_123",
+    "name": "Ana",
+    "lastname": "López",
+    "email": "ana@example.com",
+    "system_role": "USER",
+    "role_id": "STAFF_LEGACY",
+    "status": "ACTIVE",
+    "status_name": "Activo",
+    "cell_phone": {
+      "country_code": null,
+      "number": null
+    },
+    "created_at": "2026-07-28T00:00:00.000Z"
+  },
+  "status_code": 200
+}
+```
+
 ## Nuevos Endpoints Esperados
 
 ### `GET /v1/auth/me/permissions`
