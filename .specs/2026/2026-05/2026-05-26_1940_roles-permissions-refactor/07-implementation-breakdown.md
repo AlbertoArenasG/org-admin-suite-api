@@ -87,6 +87,10 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Bloquear mutaciones de roles del sistema e inmutables en el CRUD ordinario
 - [x] Bloquear eliminación de roles con usuarios vinculados
 - [x] Crear endpoints de catálogo de módulos y operaciones
+- [ ] Migrar catálogo de permisos desde Mongo a código
+- [ ] Definir catálogo en código con `code` en mayúsculas y `nameKey` para i18n
+- [ ] Reemplazar queries de `modules` y `operations` por lectura desde código
+- [ ] Marcar como obsoleta la infraestructura Mongo de `permission_modules` y `permission_operations`
 
 ## Slice 6. Migración de usuarios e invitaciones
 
@@ -115,19 +119,19 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 8. Migración de datos
 
-- [ ] Diseñar script o rutina de migración de usuarios legacy
-- [ ] Diseñar modo `--dry-run` para la migración de usuarios
-- [ ] Diseñar modo `--apply` para la migración real
-- [ ] Definir comando de ejecución del script de migración
-- [ ] Definir formato de reporte de `dry-run` y `apply`
-- [ ] Definir queries de verificación previa y posterior
-- [ ] Mapear `MASTER_ADMIN` actual a nuevo modelo
-- [ ] Mapear `ADMIN` actual a nuevo modelo
-- [ ] Mapear `STAFF` actual a `USER + STAFF_LEGACY`
-- [ ] Validar que no existan `CUSTOMER` ni `MASTER_STAFF` reales antes de ejecutar migración
-- [ ] Verificar existencia previa de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y `STAFF_LEGACY`
-- [ ] Ejecutar validaciones posteriores de integridad sobre `system_role` y `role_id`
-- [ ] Verificar integridad de `roleId` en todos los usuarios
+- [x] Diseñar script o rutina de migración de usuarios legacy
+- [x] Diseñar modo `--dry-run` para la migración de usuarios
+- [x] Diseñar modo `--apply` para la migración real
+- [x] Definir comando de ejecución del script de migración
+- [x] Definir formato de reporte de `dry-run` y `apply`
+- [x] Definir queries de verificación previa y posterior
+- [x] Mapear `MASTER_ADMIN` actual a nuevo modelo
+- [x] Mapear `ADMIN` actual a nuevo modelo
+- [x] Mapear `STAFF` actual a `USER + STAFF_LEGACY`
+- [x] Validar que no existan `CUSTOMER` ni `MASTER_STAFF` reales antes de ejecutar migración
+- [x] Verificar existencia previa de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y `STAFF_LEGACY`
+- [x] Ejecutar validaciones posteriores de integridad sobre `system_role` y `role_id`
+- [x] Verificar integridad de `roleId` en todos los usuarios
 
 ## Slice 9. Limpieza final
 

@@ -107,3 +107,10 @@
 - Se fortaleció `AuthorizationService` como capa estructural central, agregando validaciones explícitas para jerarquía entre `MASTER_ADMIN`, `ADMIN` y `USER`, además de la consistencia entre `systemRole` y `roleId`.
 - Se migraron los flows de `create user`, `create master user`, `create application invitation`, `create master invitation`, `update user` y `delete user` para depender de `AuthorizationService` en lugar de `UserRolePolicy` como mecanismo principal de autorización estructural.
 - Se dejó documentada y encapsulada una compatibilidad temporal para flows legacy que todavía crean o invitan usuarios `USER` sin `roleId` explícito mientras el contrato HTTP antiguo siga vivo.
+- Se implementó la infraestructura base de `migrations` con utilidades compartidas para cargar entorno, conectar a Mongo, parsear modo de ejecución y emitir logs con prefijo propio.
+- Se implementó `migrate-users-to-system-role-and-role-id.ts` con modos explícitos `--dry-run` y `--apply`, manteniendo la regla de no ejecutar ninguna migración automáticamente al levantar la app.
+- El script ya valida precondiciones bloqueantes, exige la existencia de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y `STAFF_LEGACY`, detecta roles legacy inesperados como `CUSTOMER` o `MASTER_STAFF`, construye el plan de migración y verifica integridad final después de `--apply`.
+- Se registraron los comandos `db:migrate:users-system-role:dry-run` y `db:migrate:users-system-role:apply` en `package.json`, dejando lista la ejecución manual controlada cuando decidas correrla sobre la base remota.
+- Se revisó la decisión del catálogo técnico de permisos y se aprobó mover la fuente de verdad desde Mongo hacia código.
+- Se definió como nuevo objetivo un catálogo agrupado por módulo, con `code` en mayúsculas, `nameKey` para i18n y operaciones válidas por módulo.
+- Se documentó el plan de transición para migrar endpoints y validaciones desde `permission_modules` y `permission_operations` hacia el catálogo en código antes de eliminar infraestructura sobrante.

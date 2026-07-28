@@ -124,10 +124,59 @@ Detalles de integración:
 - `PATCH /v1/roles/:roleId` devuelve el rol actualizado con el mismo shape de detalle de `GET /v1/roles/:roleId`
 - `PATCH /v1/roles/:roleId/status` acepta `status_id` con `ACTIVE` o `INACTIVE`
 - `DELETE /v1/roles/:roleId` realiza borrado lógico y responde con `data: null`
-- `GET /v1/roles/modules` devuelve el catálogo activo de módulos autorizables
-- `GET /v1/roles/operations` devuelve el catálogo activo de operaciones autorizables
+- `GET /v1/roles/modules` debe estabilizarse para devolver el catálogo de módulos autorizables desde código
+- `GET /v1/roles/operations` debe estabilizarse para devolver el catálogo de operaciones autorizables desde código
 - el backend bloquea por ahora cualquier mutación ordinaria sobre roles del sistema o roles inmutables
 - el backend también bloquea borrar un rol si todavía existen usuarios vinculados a ese `roleId`
+
+Cambio de diseño aprobado:
+
+- el catálogo técnico de permisos ya no debe considerarse fuente de verdad en Mongo
+- la fuente de verdad objetivo será un catálogo en código
+- los `code` técnicos serán en mayúsculas
+- los nombres visibles deben resolverse por i18n usando `nameKey`
+
+Shape objetivo conceptual:
+
+```json
+{
+  "module_code": "USERS",
+  "module_name": "Usuarios",
+  "module_name_key": "AUTHORIZATION.MODULE.USERS"
+}
+```
+
+## Scripts Operativos Nuevos
+
+### Migración legacy de usuarios
+
+Estado:
+
+- `implemented`
+- `not executed yet`
+
+Comandos disponibles:
+
+```bash
+npm run db:migrate:users-system-role:dry-run
+npm run db:migrate:users-system-role:apply
+```
+
+Comportamiento:
+
+- `dry-run` no escribe nada en la base
+- `apply` solo migra usuarios pendientes que todavía no tienen `system_role` o `role_id`
+- el script bloquea si detecta usuarios legacy con `CUSTOMER` o `MASTER_STAFF`
+- el script exige la existencia previa de:
+  - `MASTER_ADMIN_DEFAULT`
+  - `ADMIN_DEFAULT`
+  - `STAFF_LEGACY`
+
+Reglas de mapeo:
+
+- `MASTER_ADMIN` legacy -> `system_role=MASTER_ADMIN` + `role_id=MASTER_ADMIN_DEFAULT`
+- `ADMIN` legacy -> `system_role=ADMIN` + `role_id=ADMIN_DEFAULT`
+- `STAFF` legacy -> `system_role=USER` + `role_id=STAFF_LEGACY`
 
 ## Endpoints Existentes Que Cambiarán De Sentido
 

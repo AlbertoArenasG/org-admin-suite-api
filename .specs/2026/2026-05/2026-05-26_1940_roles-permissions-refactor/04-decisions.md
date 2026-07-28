@@ -139,6 +139,25 @@ Impact:
 - los cambios a catalogos se haran por codigo y seeders
 - el sistema queda listo para exponer catalogos a la UI de forma consistente
 
+## 2026-07-28
+
+Decision: el catálogo técnico de permisos deja de tener su fuente de verdad en Mongo y pasa a código.
+
+Reason:
+
+- `modules` y `operations` son catálogos técnicos, no datos de negocio configurables por el cliente
+- conviene que queden controlados por desarrollo, versionados en git y sin drift contra el backend
+- la API ya usa i18n, así que el catálogo debe exponer `nameKey` y no nombres hardcodeados
+- un catálogo agrupado por módulo permite definir operaciones válidas por módulo y evita combinaciones inválidas
+
+Impact:
+
+- `roles` siguen persistidos en Mongo como configuración de negocio
+- `permission_modules` y `permission_operations` dejan de considerarse fuente de verdad
+- el nuevo shape objetivo será catálogo en código con `code` en mayúsculas, `nameKey` y operaciones válidas por módulo
+- `GET /v1/roles/modules` y `GET /v1/roles/operations` deben seguir existiendo, pero leyendo desde código
+- quedará una fase posterior de limpieza para retirar infraestructura Mongo sobrante
+
 ## 2026-07-26
 
 Decision: los modulos iniciales del sistema se alinean a las features actuales del repo.

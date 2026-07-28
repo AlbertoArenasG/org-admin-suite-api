@@ -147,40 +147,52 @@ Reglas a modelar en la entidad o policy:
 - roles del sistema inmutables salvo intervención reservada
 - roles con usuarios vinculados no se eliminan; se desactivan
 
-#### 1.3 Permission catalogs
+#### 1.3 Permission catalog
 
-Nuevas entidades ligeras o modelos de catálogo:
+El catálogo técnico de permisos debe vivir en código y no en Mongo.
 
-- `PermissionModule`
-- `PermissionOperation`
+La fuente de verdad objetivo es un catálogo agrupado por módulo, con `code` técnico en mayúsculas y `nameKey` para i18n.
 
-No son “entidades ricas” de negocio como `User` o `Role`, pero sí tendrán contrato y persistencia formal.
-
-Shape sugerido:
+Shape objetivo:
 
 ```ts
-interface PermissionModuleProps {
-  id?: string;
-  code: string;
-  name: string;
-  status: CatalogStatus;
-  isSystem: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+const AUTHORIZATION_OPERATIONS = {
+  CREATE: { code: 'CREATE', nameKey: 'AUTHORIZATION.OPERATION.CREATE' },
+  READ: { code: 'READ', nameKey: 'AUTHORIZATION.OPERATION.READ' },
+  UPDATE: { code: 'UPDATE', nameKey: 'AUTHORIZATION.OPERATION.UPDATE' },
+  DELETE: { code: 'DELETE', nameKey: 'AUTHORIZATION.OPERATION.DELETE' },
+} as const;
 
-interface PermissionOperationProps {
-  id?: string;
-  code: string;
-  name: string;
-  status: CatalogStatus;
-  isSystem: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+const AUTHORIZATION_CATALOG = {
+  USERS: {
+    code: 'USERS',
+    nameKey: 'AUTHORIZATION.MODULE.USERS',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
+  ROLES: {
+    code: 'ROLES',
+    nameKey: 'AUTHORIZATION.MODULE.ROLES',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
+} as const;
 ```
 
-Se referenciarán por `code` desde `Role.permissions`.
+Reglas:
+
+- `code` técnico en mayúsculas
+- `nameKey` traducible por i18n
+- cada módulo declara sus operaciones válidas
+- `Role.permissions` sigue persistiendo pares `module + operation` por `code`
+- el catálogo en código valida combinaciones válidas y alimenta endpoints de consulta
+
+Ubicación sugerida:
+
+```text
+src/internal/application/services/authz/
+  authorization-operations.catalog.ts
+  authorization.catalog.ts
+  authorization-catalog.utils.ts
+```
 
 #### 1.4 Authorization service/policy layer
 
@@ -808,10 +820,13 @@ Por lo tanto:
 
 Seeds iniciales:
 
-- `permission-modules.seed.ts`
-- `permission-operations.seed.ts`
 - `system-roles.seed.ts`
 - `legacy-staff-role.seed.ts`
+
+Nota:
+
+- `permission-modules.seed.ts` y `permission-operations.seed.ts` pasan a quedar obsoletos con el nuevo enfoque
+- pueden mantenerse temporalmente mientras se completa la transición, pero ya no deben considerarse fuente de verdad
 
 Requisitos:
 
@@ -1256,6 +1271,43 @@ Si se exponen:
 
 - `GET /v1/roles/modules`
 - `GET /v1/roles/operations`
+
+Fuente de verdad:
+
+- deben leer desde el catálogo en código
+- no deben depender de `permission_modules` ni `permission_operations` en Mongo
+
+Shape sugerido:
+
+```ts
+{
+  module_code: 'USERS',
+  module_name: 'Usuarios',
+  module_name_key: 'AUTHORIZATION.MODULE.USERS',
+}
+```
+
+```ts
+{
+  operation_code: 'CREATE',
+  operation_name: 'Crear',
+  operation_name_key: 'AUTHORIZATION.OPERATION.CREATE',
+}
+```
+
+Más adelante puede agregarse:
+
+- `GET /v1/roles/permission-catalog`
+
+para devolver el catálogo agrupado por módulo con sus operaciones válidas.
+
+#### 8.2.1 Plan de transición
+
+1. introducir el catálogo en código y sus helpers
+2. cambiar `GET /v1/roles/modules` y `GET /v1/roles/operations` para leer desde código
+3. cambiar validaciones internas para usar el catálogo en código
+4. actualizar documentación y handoff
+5. en fase posterior, eliminar infraestructura sobrante de `permission_modules` y `permission_operations`
 
 #### 8.3 Master-admin endpoints
 

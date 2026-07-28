@@ -18,10 +18,32 @@ Complemento normativo:
 
 - este catalogo solo debe incluir features ya existentes en el repo
 - no debe incluir features futuras o especulativas
-- los modulos aqui definidos deben alinearse con los catalogos persistidos del sistema
-- las operaciones aqui definidas deben alinearse con el catalogo controlado de operaciones
+- los modulos aqui definidos deben alinearse con el catálogo fuente de verdad en código
+- las operaciones aqui definidas deben alinearse con el catálogo fuente de verdad en código
 - toda feature exclusiva de `MASTER_ADMIN` debe vivir bajo `src/internal/infra/api/controllers/master-admin`
 - los endpoints `auth`, `health` y `public/*` no forman parte del catalogo de permisos internos de negocio
+
+## Fuente De Verdad Del Catálogo
+
+El catálogo técnico de permisos del sistema debe vivir en código, no en Mongo.
+
+Reglas:
+
+- los `module_code` deben estar en mayúsculas
+- los `operation_code` deben estar en mayúsculas
+- cada módulo debe definir sus operaciones válidas
+- los nombres visibles no deben hardcodearse en español
+- el catálogo debe exponer `nameKey` para resolverse por i18n
+
+Ejemplo conceptual:
+
+```ts
+AUTHORIZATION_CATALOG.USERS = {
+  code: 'USERS',
+  nameKey: 'AUTHORIZATION.MODULE.USERS',
+  operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+}
+```
 
 ## Operaciones Base
 
