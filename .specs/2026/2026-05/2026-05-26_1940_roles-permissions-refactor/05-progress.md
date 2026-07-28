@@ -95,3 +95,5 @@
 - Se creó la base de DTOs de application para el CRUD de `roles`, incluyendo contratos de creación, edición, listado, cambio de estado, borrado y representación de permisos del rol.
 - Se implementaron los request DTOs HTTP de `roles` para creación, edición, listado y cambio de estado, alineados al estilo `snake_case` y al pipeline del repo.
 - Se implementó `RolePresenter` junto con los exports necesarios para presentar respuestas de detalle, colección, creación y cambio de estado del módulo `roles`.
+- Se implementaron las primeras piezas CQRS de `roles` para `GET /roles`, `GET /roles/:roleId` y `POST /roles`, junto con sus use cases de aplicación y el mapper interno de `Role` hacia DTOs de vista.
+- Se agregaron códigos de excepción específicos para `ROLE` no encontrado y para conflictos de unicidad por `ROLE.NAME` y `ROLE.CODE`, dejando mejor aterrizado el manejo de errores del módulo.
