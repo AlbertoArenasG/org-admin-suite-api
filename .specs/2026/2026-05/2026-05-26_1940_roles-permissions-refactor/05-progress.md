@@ -128,3 +128,5 @@
 - Se cerró el contrato HTTP de entrada para `create/update user` y para creación de invitaciones, dejando de aceptar `UserRole` legacy y pidiendo ya `system_role + role_id` como shape nativo.
 - Se ajustó la persistencia de invitaciones para guardar `system_role` y `role_id`, manteniendo lectura compatible con invitaciones legacy que solo tenían `role`.
 - Se actualizó el consumo de invitaciones para crear usuarios desde `systemRole + roleId`, eliminando la dependencia principal al enum legacy en ese flujo.
+- Se simplificó el `authContext` autenticado para que transporte solo `userId`, `systemRole`, `roleId` y `token`, eliminando `role` e `isMaster` como runtime state del guard JWT.
+- Se limpió el listado de usuarios para ocultar `MASTER_ADMIN` basándose únicamente en `system_role`, quitando la mezcla anterior con checks sobre `role` legacy.

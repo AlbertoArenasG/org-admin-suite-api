@@ -6,7 +6,6 @@ import {
   AuthenticatedUserContextDto,
   isAuthTokenPayloadDto,
 } from '@application/dto';
-import { User } from '@domain/entities';
 import { AuthenticationException } from '@domain/exceptions';
 import {
   extractBearerToken,
@@ -63,10 +62,8 @@ export class JwtAuthGuard implements CanActivate {
 
     return {
       userId: sub,
-      role: User.resolveCompatibilityLegacyRole(systemRole),
       systemRole,
       roleId,
-      isMaster: User.isMasterSystemRole(systemRole),
       token,
     };
   }

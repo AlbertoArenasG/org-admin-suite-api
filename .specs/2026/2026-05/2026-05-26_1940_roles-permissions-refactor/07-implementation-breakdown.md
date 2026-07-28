@@ -59,6 +59,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar `JwtAuthGuard`
 - [x] Ajustar `@CurrentUser()`
 - [x] Ajustar `types/express/index.d.ts`
+- [x] Reducir `AuthenticatedUserContextDto` a shape mínimo sin `role` ni `isMaster`
 - [ ] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
 - [x] Crear endpoint `me/permissions`
 - [x] Crear presenter/DTO para respuesta de permisos efectivos
@@ -104,6 +105,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Ajustar create master user registration invitation
 - [x] Ajustar complete invitation
 - [x] Cerrar contrato HTTP de entrada de usuarios e invitaciones a `system_role + role_id`
+- [x] Ajustar queries de usuario que hoy mezclaban filtros por `role` y `system_role`
 - [ ] Ajustar queries de usuario que hoy dependen de `isMaster` o `role`
 
 ## Slice 7. Migración de controllers a autorización centralizada
