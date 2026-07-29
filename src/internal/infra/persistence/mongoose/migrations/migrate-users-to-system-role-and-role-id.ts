@@ -1,12 +1,8 @@
 import { AnyBulkWriteOperation, Model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import {
-  RoleDocument,
-  RoleSchema,
-  UserDocument,
-  UserSchema,
-} from '@infra/persistence/mongoose/schemas';
-import { SystemRole, UserRole } from '@domain/entities';
+import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
+import { SystemRole } from '@domain/entities';
 
 import {
   connectMigrationMongo,
@@ -24,9 +20,9 @@ import {
 } from './shared/mongoose-migration.types';
 
 type LegacyMigratableRole =
-  | UserRole.MASTER_ADMIN
-  | UserRole.ADMIN
-  | UserRole.STAFF;
+  | LegacyUserRole.MASTER_ADMIN
+  | LegacyUserRole.ADMIN
+  | LegacyUserRole.STAFF;
 
 interface MigrationTargetRole {
   code: string;
@@ -34,13 +30,43 @@ interface MigrationTargetRole {
 }
 
 interface PendingUserRecord {
-  _id: UserDocument['_id'];
+  _id: unknown;
   user_id: string;
   email: string;
-  role: UserRole;
+  role: LegacyUserRole;
   system_role?: SystemRole;
   role_id?: string | null;
 }
+
+enum LegacyUserRole {
+  MASTER_ADMIN = 'MASTER_ADMIN',
+  MASTER_STAFF = 'MASTER_STAFF',
+  ADMIN = 'ADMIN',
+  STAFF = 'STAFF',
+  CUSTOMER = 'CUSTOMER',
+}
+
+@Schema({ collection: 'users', strict: false })
+class HistoricalUserDocument {
+  @Prop()
+  user_id: string;
+
+  @Prop()
+  email: string;
+
+  @Prop({ type: String, enum: Object.values(LegacyUserRole) })
+  role: LegacyUserRole;
+
+  @Prop({ type: String, enum: Object.values(SystemRole) })
+  system_role?: SystemRole;
+
+  @Prop({ type: String, default: null })
+  role_id?: string | null;
+}
+
+const HistoricalUserSchema = SchemaFactory.createForClass(
+  HistoricalUserDocument,
+);
 
 interface MigrationDependencies {
   masterAdminDefault: MigrationTargetRole;
@@ -103,10 +129,12 @@ async function bootstrap() {
   }
 }
 
-function getUserModel(context: MongooseMigrationContext): Model<UserDocument> {
+function getUserModel(
+  context: MongooseMigrationContext,
+): Model<HistoricalUserDocument> {
   return (
-    context.connection.models[UserDocument.name] ??
-    context.connection.model(UserDocument.name, UserSchema)
+    context.connection.models[HistoricalUserDocument.name] ??
+    context.connection.model(HistoricalUserDocument.name, HistoricalUserSchema)
   );
 }
 
@@ -155,7 +183,7 @@ async function loadDependencies(
 }
 
 async function buildMigrationPlan(
-  userModel: Model<UserDocument>,
+  userModel: Model<HistoricalUserDocument>,
   dependencies: MigrationDependencies,
 ): Promise<UserMigrationPlanSummary> {
   const [
@@ -184,20 +212,20 @@ async function buildMigrationPlan(
       })
       .select('user_id email role system_role role_id')
       .lean<PendingUserRecord[]>(),
-    userModel.countDocuments({ role: UserRole.CUSTOMER }),
-    userModel.countDocuments({ role: UserRole.MASTER_STAFF }),
+    userModel.countDocuments({ role: LegacyUserRole.CUSTOMER }),
+    userModel.countDocuments({ role: LegacyUserRole.MASTER_STAFF }),
     userModel.countDocuments({
-      role: UserRole.MASTER_ADMIN,
+      role: LegacyUserRole.MASTER_ADMIN,
       system_role: SystemRole.MASTER_ADMIN,
       role_id: dependencies.masterAdminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.ADMIN,
+      role: LegacyUserRole.ADMIN,
       system_role: SystemRole.ADMIN,
       role_id: dependencies.adminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.STAFF,
+      role: LegacyUserRole.STAFF,
       system_role: SystemRole.USER,
       role_id: dependencies.staffLegacy.roleId,
     }),
@@ -220,17 +248,17 @@ async function buildMigrationPlan(
       usersMissingRoleId += 1;
     }
 
-    if (user.role === UserRole.MASTER_ADMIN) {
+    if (user.role === LegacyUserRole.MASTER_ADMIN) {
       pendingMasterAdmin += 1;
       continue;
     }
 
-    if (user.role === UserRole.ADMIN) {
+    if (user.role === LegacyUserRole.ADMIN) {
       pendingAdmin += 1;
       continue;
     }
 
-    if (user.role === UserRole.STAFF) {
+    if (user.role === LegacyUserRole.STAFF) {
       pendingStaff += 1;
       continue;
     }
@@ -291,7 +319,7 @@ async function buildMigrationPlan(
 }
 
 async function applyMigration(
-  userModel: Model<UserDocument>,
+  userModel: Model<HistoricalUserDocument>,
   dependencies: MigrationDependencies,
 ): Promise<UserMigrationApplySummary> {
   const pendingUsers = await userModel
@@ -303,14 +331,18 @@ async function applyMigration(
         { role_id: null },
       ],
       role: {
-        $in: [UserRole.MASTER_ADMIN, UserRole.ADMIN, UserRole.STAFF],
+        $in: [
+          LegacyUserRole.MASTER_ADMIN,
+          LegacyUserRole.ADMIN,
+          LegacyUserRole.STAFF,
+        ],
       },
     })
     .select('_id role')
-    .lean<Array<{ _id: UserDocument['_id']; role: LegacyMigratableRole }>>();
+    .lean<Array<{ _id: unknown; role: LegacyMigratableRole }>>();
 
-  const operations: AnyBulkWriteOperation<UserDocument>[] = pendingUsers.map(
-    (user) => ({
+  const operations: AnyBulkWriteOperation<HistoricalUserDocument>[] =
+    pendingUsers.map((user) => ({
       updateOne: {
         filter: {
           _id: user._id,
@@ -323,8 +355,7 @@ async function applyMigration(
         },
         update: buildUserMigrationUpdate(user.role, dependencies),
       },
-    }),
-  );
+    }));
 
   if (operations.length === 0) {
     return {
@@ -339,17 +370,17 @@ async function applyMigration(
 
   const [updatedMasterAdmin, updatedAdmin, updatedStaff] = await Promise.all([
     userModel.countDocuments({
-      role: UserRole.MASTER_ADMIN,
+      role: LegacyUserRole.MASTER_ADMIN,
       system_role: SystemRole.MASTER_ADMIN,
       role_id: dependencies.masterAdminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.ADMIN,
+      role: LegacyUserRole.ADMIN,
       system_role: SystemRole.ADMIN,
       role_id: dependencies.adminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.STAFF,
+      role: LegacyUserRole.STAFF,
       system_role: SystemRole.USER,
       role_id: dependencies.staffLegacy.roleId,
     }),
@@ -367,7 +398,7 @@ function buildUserMigrationUpdate(
   role: LegacyMigratableRole,
   dependencies: MigrationDependencies,
 ): Record<string, unknown> {
-  if (role === UserRole.MASTER_ADMIN) {
+  if (role === LegacyUserRole.MASTER_ADMIN) {
     return {
       $set: {
         system_role: SystemRole.MASTER_ADMIN,
@@ -376,7 +407,7 @@ function buildUserMigrationUpdate(
     };
   }
 
-  if (role === UserRole.ADMIN) {
+  if (role === LegacyUserRole.ADMIN) {
     return {
       $set: {
         system_role: SystemRole.ADMIN,
@@ -394,7 +425,7 @@ function buildUserMigrationUpdate(
 }
 
 async function verifyIntegrity(
-  userModel: Model<UserDocument>,
+  userModel: Model<HistoricalUserDocument>,
   dependencies: MigrationDependencies,
 ): Promise<UserMigrationIntegritySummary> {
   const [
@@ -421,21 +452,25 @@ async function verifyIntegrity(
         { role_id: null },
       ],
       role: {
-        $in: [UserRole.MASTER_ADMIN, UserRole.ADMIN, UserRole.STAFF],
+        $in: [
+          LegacyUserRole.MASTER_ADMIN,
+          LegacyUserRole.ADMIN,
+          LegacyUserRole.STAFF,
+        ],
       },
     }),
     userModel.countDocuments({
-      role: UserRole.MASTER_ADMIN,
+      role: LegacyUserRole.MASTER_ADMIN,
       system_role: SystemRole.MASTER_ADMIN,
       role_id: dependencies.masterAdminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.ADMIN,
+      role: LegacyUserRole.ADMIN,
       system_role: SystemRole.ADMIN,
       role_id: dependencies.adminDefault.roleId,
     }),
     userModel.countDocuments({
-      role: UserRole.STAFF,
+      role: LegacyUserRole.STAFF,
       system_role: SystemRole.USER,
       role_id: dependencies.staffLegacy.roleId,
     }),

@@ -103,33 +103,6 @@ export class User extends Entity<UserProps> {
     return systemRole === SystemRole.MASTER_ADMIN;
   }
 
-  static resolveSystemRoleFromLegacyRole(
-    role: UserRole | undefined,
-  ): SystemRole {
-    if (role === UserRole.MASTER_ADMIN || role === UserRole.MASTER_STAFF) {
-      return SystemRole.MASTER_ADMIN;
-    }
-
-    if (role === UserRole.ADMIN) {
-      return SystemRole.ADMIN;
-    }
-
-    return SystemRole.USER;
-  }
-
-  // Temporary compatibility while the rest of the codebase still reads `role`.
-  static resolveCompatibilityLegacyRole(systemRole: SystemRole): UserRole {
-    if (systemRole === SystemRole.MASTER_ADMIN) {
-      return UserRole.MASTER_ADMIN;
-    }
-
-    if (systemRole === SystemRole.ADMIN) {
-      return UserRole.ADMIN;
-    }
-
-    return UserRole.STAFF;
-  }
-
   updateDetails(details: {
     name?: string;
     lastname?: string;
@@ -191,12 +164,4 @@ export enum UserStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   DELETED = 'DELETED',
-}
-
-export enum UserRole {
-  MASTER_ADMIN = 'MASTER_ADMIN',
-  MASTER_STAFF = 'MASTER_STAFF',
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
-  CUSTOMER = 'CUSTOMER',
 }

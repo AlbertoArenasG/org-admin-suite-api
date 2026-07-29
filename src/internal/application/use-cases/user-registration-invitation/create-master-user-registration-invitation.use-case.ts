@@ -25,7 +25,7 @@ import {
   AuthorizationService,
   UserRegistrationInvitationTokenService,
 } from '@application/services';
-import { SystemRole, User } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 
 @Injectable()
 export class CreateMasterUserRegistrationInvitationUseCase {
@@ -67,7 +67,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       type: UserRegistrationInvitationType.NEW_USER_REGISTRATION,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
-      role: User.resolveCompatibilityLegacyRole(input.systemRole),
+      role: mapSystemRoleToLegacyInvitationRole(input.systemRole),
       systemRole: input.systemRole,
       roleId: input.roleId,
       invitedByUserId: input.invitedByUserId,
@@ -80,7 +80,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       token,
       invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.MASTER,
-      role: User.resolveCompatibilityLegacyRole(input.systemRole),
+      role: mapSystemRoleToLegacyInvitationRole(input.systemRole),
       userData: input.userData ?? null,
     });
 
@@ -112,5 +112,16 @@ export class CreateMasterUserRegistrationInvitationUseCase {
         { email, scope: UserRegistrationInvitationScope.MASTER },
       );
     }
+  }
+}
+
+function mapSystemRoleToLegacyInvitationRole(systemRole: SystemRole): string {
+  switch (systemRole) {
+    case SystemRole.MASTER_ADMIN:
+      return 'MASTER_ADMIN';
+    case SystemRole.ADMIN:
+      return 'ADMIN';
+    case SystemRole.USER:
+      return 'STAFF';
   }
 }

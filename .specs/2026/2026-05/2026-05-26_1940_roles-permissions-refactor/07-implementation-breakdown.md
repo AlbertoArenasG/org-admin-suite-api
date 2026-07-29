@@ -42,7 +42,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 2. Migración del modelo User
 
 - [x] Redefinir entidad `User` para usar `systemRole + roleId`
-- [ ] Eliminar dependencia runtime a `UserRole`
+- [x] Eliminar dependencia runtime a `UserRole`
 - [x] Ajustar schema Mongoose de `user`
 - [x] Ajustar mapper Mongoose de `user`
 - [x] Ajustar repositorios de lectura/escritura de `user`
@@ -165,17 +165,17 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 #### Dominio de usuario
 
-- [ ] `src/internal/domain/entities/user.entity.ts`
+- [x] `src/internal/domain/entities/user.entity.ts`
   - eliminar enum `UserRole`
   - eliminar `resolveSystemRoleFromLegacyRole(...)`
   - eliminar `resolveCompatibilityLegacyRole(...)`
 
 #### Persistencia de usuarios
 
-- [ ] `src/internal/infra/persistence/mongoose/schemas/user/user.schema.ts`
+- [x] `src/internal/infra/persistence/mongoose/schemas/user/user.schema.ts`
   - retirar campo `role`
   - dejar schema alineado solo a `system_role + role_id`
-- [ ] `src/internal/infra/persistence/mongoose/mappers/user/mongoose-user.mapper.ts`
+- [x] `src/internal/infra/persistence/mongoose/mappers/user/mongoose-user.mapper.ts`
   - dejar de leer fallback desde `userDocument.role`
   - dejar de persistir `role` derivado
 - [ ] `src/internal/infra/persistence/mongoose/repositories/user/*`

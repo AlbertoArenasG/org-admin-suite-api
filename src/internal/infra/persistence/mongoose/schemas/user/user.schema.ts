@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import { SystemRole } from '@domain/entities';
-import { UserRole, UserStatus } from '@domain/entities/user.entity';
+import { UserStatus } from '@domain/entities/user.entity';
 import { PhoneSchema, IPhoneSchema } from '../shared';
 import { genId } from '@src/common/utils';
 
@@ -39,19 +39,11 @@ export class UserDocument extends Document {
 
   @Prop({
     type: String,
-    enum: Object.values(UserRole),
+    enum: Object.values(SystemRole),
     required: true,
     index: true,
   })
-  role: UserRole;
-
-  @Prop({
-    type: String,
-    enum: Object.values(SystemRole),
-    required: false,
-    index: true,
-  })
-  system_role?: SystemRole;
+  system_role: SystemRole;
 
   @Prop({ type: String, required: false, default: null, index: true })
   role_id?: string | null;

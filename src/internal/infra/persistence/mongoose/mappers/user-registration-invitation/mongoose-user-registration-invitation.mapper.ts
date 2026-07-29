@@ -4,7 +4,7 @@ import {
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationUserData,
 } from '@domain/ports/repositories';
-import { SystemRole, User } from '@domain/entities';
+import { SystemRole } from '@domain/entities';
 import { UserRegistrationInvitationDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserRegistrationInvitationMapper {
@@ -41,13 +41,13 @@ export class MongooseUserRegistrationInvitationMapper {
       role: document.role,
       systemRole:
         document.system_role ??
-        User.resolveSystemRoleFromLegacyRole(document.role as never),
+        resolveSystemRoleFromLegacyInvitationRole(document.role),
       roleId:
         document.role_id ??
         resolveLegacyInvitationRoleId(
           document.scope,
           document.system_role ??
-            User.resolveSystemRoleFromLegacyRole(document.role as never),
+            resolveSystemRoleFromLegacyInvitationRole(document.role),
           document.role,
         ),
       invitedByUserId: document.invited_by_user_id,
@@ -91,6 +91,18 @@ export class MongooseUserRegistrationInvitationMapper {
       consumed_at: null,
     };
   }
+}
+
+function resolveSystemRoleFromLegacyInvitationRole(role: string): SystemRole {
+  if (role === 'MASTER_ADMIN' || role === 'MASTER_STAFF') {
+    return SystemRole.MASTER_ADMIN;
+  }
+
+  if (role === 'ADMIN') {
+    return SystemRole.ADMIN;
+  }
+
+  return SystemRole.USER;
 }
 
 function resolveLegacyInvitationRoleId(
