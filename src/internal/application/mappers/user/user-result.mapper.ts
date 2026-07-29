@@ -27,7 +27,10 @@ export class UserResultMapper {
     };
   }
 
-  static toUserViewDto(user: User): UserViewDto {
+  static toUserViewDto(
+    user: User,
+    roleName: string | null = null,
+  ): UserViewDto {
     return {
       id: user.id!,
       name: user.name,
@@ -35,21 +38,36 @@ export class UserResultMapper {
       email: user.email,
       systemRole: user.systemRole,
       roleId: user.roleId,
+      roleName,
       status: user.status,
       cellPhone: toCellPhoneDto(user),
       createdAt: user.createdAt ?? new Date(),
     };
   }
 
-  static toUserViewCollection(users: User[]): UserViewDto[] {
-    return users.map((user) => this.toUserViewDto(user));
+  static toUserViewCollection(
+    users: User[],
+    roleNamesByRoleId: Map<string, string> = new Map(),
+  ): UserViewDto[] {
+    return users.map((user) =>
+      this.toUserViewDto(
+        user,
+        user.roleId ? (roleNamesByRoleId.get(user.roleId) ?? null) : null,
+      ),
+    );
   }
 
-  static toCreateMasterUserResultDto(user: User): CreateMasterUserResultDto {
-    return this.toUserViewDto(user);
+  static toCreateMasterUserResultDto(
+    user: User,
+    roleName: string | null = null,
+  ): CreateMasterUserResultDto {
+    return this.toUserViewDto(user, roleName);
   }
 
-  static toCreateUserResultDto(user: User): CreateUserResultDto {
-    return this.toUserViewDto(user);
+  static toCreateUserResultDto(
+    user: User,
+    roleName: string | null = null,
+  ): CreateUserResultDto {
+    return this.toUserViewDto(user, roleName);
   }
 }

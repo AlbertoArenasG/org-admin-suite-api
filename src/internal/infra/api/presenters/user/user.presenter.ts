@@ -14,6 +14,7 @@ export class UserPresenter {
       email: result.email,
       system_role: result.systemRole,
       role_id: result.roleId,
+      role_name: result.roleName,
       status: result.status,
       status_name: this.enumNameService.getEnumName(
         `USER.STATUS.${result.status}`,

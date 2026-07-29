@@ -18,6 +18,7 @@ export interface UserViewDto {
   email: string;
   systemRole: SystemRole;
   roleId: string | null;
+  roleName: string | null;
   status: UserStatus;
   cellPhone: PhoneDto;
   createdAt: Date;

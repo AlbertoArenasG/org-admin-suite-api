@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
+  IRoleReadRepository,
+  IRoleReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
 } from '@domain/ports/repositories';
@@ -18,6 +20,8 @@ export class GetUserByIdUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
+    @Inject(IRoleReadRepositoryToken)
+    private readonly roleReadRepository: IRoleReadRepository,
   ) {}
 
   async execute(
@@ -39,6 +43,11 @@ export class GetUserByIdUseCase {
       throw AuthorizationException.masterPrivilegesRequired();
     }
 
-    return UserResultMapper.toUserViewDto(data);
+    const roleName = data.roleId
+      ? ((await this.roleReadRepository.findById(data.roleId)).data?.name ??
+        null)
+      : null;
+
+    return UserResultMapper.toUserViewDto(data, roleName);
   }
 }

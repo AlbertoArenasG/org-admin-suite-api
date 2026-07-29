@@ -2,9 +2,11 @@
 
 ## Propósito
 
-Este documento existe para dar contexto rápido a futuras sesiones de frontend sobre el refactor de roles y permisos de la API.
+Este documento da contexto de integración para frontend sobre el refactor de roles y permisos de la API.
 
-No es una spec histórica. Es un documento vivo de integración entre backend y frontend.
+La fuente de verdad de este documento es el backend implementado al `2026-07-28`.
+
+No es una spec histórica. Es un documento vivo de integración.
 
 ## Estado
 
@@ -14,84 +16,277 @@ No es una spec histórica. Es un documento vivo de integración entre backend y 
 
 ## Objetivo Del Refactor
 
-La API dejará atrás el modelo legacy basado en `User.role` como enum fijo y migrará a un modelo con:
+La API está migrando del modelo legacy basado en `User.role` como enum fijo hacia un modelo con:
 
 - `systemRole`
 - `roleId`
 - roles custom persistidos
 - permisos por `module + operation`
 
-## Cambios De Modelo Que Frontend Debe Conocer
+## Modelo Actual Que Frontend Debe Asumir
 
-### Antes
+### Invariantes
 
-- el usuario autenticado dependía conceptualmente de `role`
-- varios flujos asumían enums legacy como `MASTER_ADMIN`, `ADMIN`, `STAFF`, `CUSTOMER`
-- la autorización estaba acoplada a roles hardcodeados
-
-### Después
-
-- todo usuario tendrá:
-  - `systemRole`
-  - `roleId`
-- los únicos `systemRole` serán:
+- todo usuario persiste:
+  - `system_role`
+  - `role_id`
+- los únicos `system_role` válidos son:
   - `MASTER_ADMIN`
   - `ADMIN`
   - `USER`
-- `MASTER_ADMIN` y `ADMIN` usan roles default del sistema
-- `USER` siempre usa un rol custom
-- los permisos efectivos se resolverán por `roleId`
+- `system_role` define jerarquía estructural
+- `role_id` resuelve el rol efectivo y, por tanto, los permisos ordinarios de negocio
 
-## Contratos HTTP Ya Migrados
+### Relación Entre `system_role` Y `role_id`
 
-Los requests de creación y edición de usuarios e invitaciones ya no deben enviar enums legacy como si `role_id` fuera `ADMIN`, `STAFF` o similares.
+- `MASTER_ADMIN` usa un rol default de scope `MASTER_ADMIN`
+- `ADMIN` usa un rol default de scope `ADMIN`
+- `USER` usa un rol de scope `USER`
 
-El backend ahora espera shape nativo:
+### Regla Importante De Integración
+
+Hay que separar estas tres cosas:
+
+- payload de entrada
+- estado persistido
+- payload de salida
+
+No significan lo mismo.
+
+#### Payload de entrada
+
+En requests de creación e invitación:
+
+- si `system_role = USER`, `role_id` es obligatorio
+- si `system_role = ADMIN`, `role_id` no debe enviarse y el backend lo trata como `null`
+
+En el scope normal de aplicación, `MASTER_ADMIN` no es un valor aceptado por `POST /v1/users` ni por `POST /v1/user-registration-invitations`.
+
+#### Estado persistido
+
+Después de creación, migración o actualización válida, el usuario queda persistido con `role_id` resuelto.
+
+Para usuarios del sistema, el backend trabaja con roles default:
+
+- `MASTER_ADMIN_DEFAULT`
+- `ADMIN_DEFAULT`
+
+Para compatibilidad temporal, si un usuario llega a no tener `role_id`, el backend aún puede resolver permisos por fallback. Ese fallback es solo una red de compatibilidad, no el contrato objetivo estable.
+
+#### Payload de salida
+
+En responses modernas de usuarios y auth, la API expone como fuente principal:
 
 - `system_role`
 - `role_id`
 
-Reglas:
+En algunos flujos legacy o de transición, todavía viajan también `role` y `role_name`.
 
-- si `system_role = ADMIN`, `role_id` debe omitirse o enviarse en `null`
-- si `system_role = MASTER_ADMIN`, `role_id` debe omitirse o enviarse en `null`
-- si `system_role = USER`, `role_id` debe enviarse con el id real del rol custom
+## Contratos HTTP Ya Migrados
 
-Ejemplo para crear un usuario `USER`:
+## `POST /v1/users`
+
+Estado:
+
+- `implemented`
+
+Permiso requerido:
+
+- `USERS/CREATE`
+
+Request vigente:
 
 ```json
 {
   "name": "Ana",
-  "lastname": "López",
+  "lastname": "Lopez",
   "email": "ana@example.com",
   "password": "secret123",
+  "cell_phone": {
+    "country_code": "+52",
+    "number": "5512345678"
+  },
   "system_role": "USER",
   "role_id": "STAFF_LEGACY"
 }
 ```
 
-Ejemplo para crear un usuario `ADMIN`:
+Reglas:
+
+- `system_role` solo acepta `ADMIN` o `USER`
+- `role_id` es obligatorio solo cuando `system_role = USER`
+- si `system_role = ADMIN`, el backend persiste el rol default de administración
+
+Ejemplo de request para `ADMIN`:
 
 ```json
 {
   "name": "Luis",
-  "lastname": "Pérez",
+  "lastname": "Perez",
   "email": "luis@example.com",
   "password": "secret123",
   "system_role": "ADMIN"
 }
 ```
 
-## Contratos De Respuesta Ya Simplificados
+Response vigente:
 
-Las respuestas de usuario autenticado y de usuarios en backoffice ya no exponen `role` ni `role_name` como fuente principal.
+```json
+{
+  "success_message": "USER.CREATED",
+  "data": {
+    "id": "USR_123",
+    "name": "Luis",
+    "lastname": "Perez",
+    "email": "luis@example.com",
+    "system_role": "ADMIN",
+    "role_id": "ADMIN_DEFAULT",
+    "role_name": "Administrador",
+    "status": "ACTIVE",
+    "status_name": "Activo",
+    "cell_phone": {
+      "country_code": null,
+      "number": null
+    },
+    "created_at": "2026-07-28T00:00:00.000Z"
+  },
+  "status_code": 201
+}
+```
 
-El contrato vigente se centra en:
+## `PATCH /v1/users/:userId`
 
-- `system_role`
-- `role_id`
+Estado:
 
-Ejemplo aproximado de login:
+- `implemented`
+
+Permiso requerido:
+
+- `USERS/UPDATE`
+
+Request vigente:
+
+```json
+{
+  "name": "Ana",
+  "lastname": "Lopez",
+  "email": "ana@example.com",
+  "cell_phone": {
+    "country_code": "+52",
+    "number": "5512345678"
+  },
+  "system_role": "USER",
+  "role_id": "ANALYST_MX",
+  "status_id": "ACTIVE"
+}
+```
+
+Reglas:
+
+- todos los campos son opcionales
+- `system_role` acepta `MASTER_ADMIN`, `ADMIN` o `USER`
+- `role_id` puede enviarse cuando se quiera reasignar el rol
+- si se cambia a `USER`, debe quedar un `role_id` válido de scope `USER`
+- un usuario no puede auto-cambiarse `system_role`, `role_id` ni `status`
+- el backend valida jerarquía estructural antes de permitir promoción, degradación o reasignación
+
+Response vigente:
+
+```json
+{
+  "success_message": "USER.UPDATED",
+  "data": {
+    "id": "USR_123",
+    "name": "Ana",
+    "lastname": "Lopez",
+    "email": "ana@example.com",
+    "system_role": "USER",
+    "role_id": "ANALYST_MX",
+    "status": "ACTIVE",
+    "status_name": "Activo",
+    "cell_phone": {
+      "country_code": "+52",
+      "number": "5512345678"
+    },
+    "created_at": "2026-07-28T00:00:00.000Z"
+  },
+  "status_code": 200
+}
+```
+
+## `POST /v1/user-registration-invitations`
+
+Estado:
+
+- `implemented`
+
+Permiso requerido:
+
+- `USER_REGISTRATION_INVITATIONS/CREATE`
+
+Request vigente:
+
+```json
+{
+  "email": "ana@example.com",
+  "name": "Ana",
+  "lastname": "Lopez",
+  "cell_phone": {
+    "country_code": "+52",
+    "number": "5512345678"
+  },
+  "system_role": "USER",
+  "role_id": "STAFF_LEGACY"
+}
+```
+
+Reglas:
+
+- `system_role` solo acepta `ADMIN` o `USER`
+- `role_id` es obligatorio solo cuando `system_role = USER`
+- si `system_role = ADMIN`, el backend resuelve la invitación con el rol default de administración
+
+Response vigente:
+
+```json
+{
+  "success_message": "USER_REGISTRATION_INVITATION.CREATED",
+  "data": {
+    "invitation_id": "INV_123",
+    "scope": "APPLICATION",
+    "type": "NEW_USER",
+    "status": "PENDING",
+    "email": "ana@example.com",
+    "role": "STAFF",
+    "system_role": "USER",
+    "role_id": "STAFF_LEGACY",
+    "role_name": "Staff",
+    "invited_by_user_id": "USR_999",
+    "user_data": {
+      "name": "Ana",
+      "lastname": "Lopez",
+      "cell_phone": {
+        "country_code": "+52",
+        "number": "5512345678"
+      }
+    },
+    "consumed_at": null,
+    "created_at": "2026-07-28T00:00:00.000Z",
+    "updated_at": "2026-07-28T00:00:00.000Z"
+  },
+  "status_code": 201
+}
+```
+
+## Contratos De Respuesta Modernos
+
+### `POST /v1/auth/login`
+
+Estado:
+
+- `implemented`
+
+Response vigente:
 
 ```json
 {
@@ -101,10 +296,10 @@ Ejemplo aproximado de login:
     "user": {
       "id": "USR_123",
       "name": "Luis",
-      "lastname": "Pérez",
+      "lastname": "Perez",
       "email": "luis@example.com",
       "system_role": "ADMIN",
-      "role_id": null,
+      "role_id": "ADMIN_DEFAULT",
       "status": "ACTIVE",
       "cell_phone": {
         "country_code": null,
@@ -116,18 +311,32 @@ Ejemplo aproximado de login:
 }
 ```
 
-Ejemplo aproximado de usuario detallado:
+Notas:
+
+- `role` y `role_name` ya no forman parte de la respuesta de login
+
+### `GET /v1/users/me`
+
+Estado:
+
+- `implemented`
+
+Autorización:
+
+- solo JWT
+
+Response vigente:
 
 ```json
 {
   "success_message": "DEFAULT",
   "data": {
     "id": "USR_123",
-    "name": "Ana",
-    "lastname": "López",
-    "email": "ana@example.com",
-    "system_role": "USER",
-    "role_id": "STAFF_LEGACY",
+    "name": "Luis",
+    "lastname": "Perez",
+    "email": "luis@example.com",
+    "system_role": "ADMIN",
+    "role_id": "ADMIN_DEFAULT",
     "status": "ACTIVE",
     "status_name": "Activo",
     "cell_phone": {
@@ -139,6 +348,57 @@ Ejemplo aproximado de usuario detallado:
   "status_code": 200
 }
 ```
+
+### `GET /v1/users`
+
+Estado:
+
+- `implemented`
+
+Permiso requerido:
+
+- `USERS/READ`
+
+Response vigente por item:
+
+```json
+{
+  "id": "USR_123",
+  "name": "Ana",
+  "lastname": "Lopez",
+  "email": "ana@example.com",
+  "system_role": "USER",
+  "role_id": "STAFF_LEGACY",
+  "role_name": "Staff Legacy",
+  "status": "ACTIVE",
+  "status_name": "Activo",
+  "cell_phone": {
+    "country_code": null,
+    "number": null
+  },
+  "created_at": "2026-07-28T00:00:00.000Z"
+}
+```
+
+Notas:
+
+- el listado ya no usa `role` ni `role_name` como contrato principal
+- `role_name` se expone como metadata descriptiva asociada al `role_id` efectivo del usuario
+- la paginación sigue el formato estándar de `ApiResponseBuilder`
+
+### `GET /v1/users/:userId`
+
+Estado:
+
+- `implemented`
+
+Permiso requerido:
+
+- `USERS/READ`
+
+Response vigente:
+
+- mismo shape que `GET /v1/users/me`
 
 ## Endpoints Self-Service Del Usuario Autenticado
 
@@ -154,7 +414,7 @@ Notas:
 - un usuario autenticado puede actualizar su propio perfil aunque no tenga `USERS/UPDATE`
 - `USERS/*` sigue aplicando para operaciones sobre terceros o administración general de usuarios
 
-## Nuevos Endpoints Esperados
+## Nuevo Endpoint De Permisos
 
 ### `GET /v1/auth/me/permissions`
 
@@ -164,83 +424,82 @@ Estado:
 
 Propósito:
 
-- devolver el `systemRole` actual del usuario autenticado
+- devolver el `system_role` actual del usuario autenticado
 - devolver metadata del rol resuelto
 - devolver módulos efectivos agregados
 - devolver permisos efectivos en lista plana
 
-Response esperada:
+Response vigente:
 
 ```json
 {
   "success_message": "DEFAULT",
   "data": {
     "system_role": "ADMIN",
-      "role": {
-        "id": "ADMIN_DEFAULT",
-        "code": "ADMIN_DEFAULT",
-        "name": "Administrador",
-        "scope": "ADMIN",
+    "role": {
+      "id": "ADMIN_DEFAULT",
+      "code": "ADMIN_DEFAULT",
+      "name": "Administrador",
+      "scope": "ADMIN",
       "is_system": true,
-        "is_default": true,
-        "is_immutable": true,
-        "status": "ACTIVE"
-      },
-      "modules": [
-        {
-          "code": "USERS",
-          "name": "Usuarios",
-          "name_key": "AUTHORIZATION.MODULE.USERS"
-        },
-        {
-          "code": "ROLES",
-          "name": "Roles",
-          "name_key": "AUTHORIZATION.MODULE.ROLES"
-        }
-      ],
-      "permissions": [
-        {
-          "module": "USERS",
-          "module_name": "Usuarios",
-          "module_name_key": "AUTHORIZATION.MODULE.USERS",
-          "operation": "READ",
-          "operation_name": "Leer",
-          "operation_name_key": "AUTHORIZATION.OPERATION.READ"
-        },
-        {
-          "module": "USERS",
-          "module_name": "Usuarios",
-          "module_name_key": "AUTHORIZATION.MODULE.USERS",
-          "operation": "UPDATE",
-          "operation_name": "Actualizar",
-          "operation_name_key": "AUTHORIZATION.OPERATION.UPDATE"
-        }
-      ]
+      "is_default": true,
+      "is_immutable": true,
+      "status": "ACTIVE"
     },
+    "modules": [
+      {
+        "code": "USERS",
+        "name": "Usuarios",
+        "name_key": "AUTHORIZATION.MODULE.USERS"
+      },
+      {
+        "code": "ROLES",
+        "name": "Roles",
+        "name_key": "AUTHORIZATION.MODULE.ROLES"
+      }
+    ],
+    "permissions": [
+      {
+        "module": "USERS",
+        "module_name": "Usuarios",
+        "module_name_key": "AUTHORIZATION.MODULE.USERS",
+        "operation": "READ",
+        "operation_name": "Leer",
+        "operation_name_key": "AUTHORIZATION.OPERATION.READ"
+      },
+      {
+        "module": "USERS",
+        "module_name": "Usuarios",
+        "module_name_key": "AUTHORIZATION.MODULE.USERS",
+        "operation": "UPDATE",
+        "operation_name": "Actualizar",
+        "operation_name_key": "AUTHORIZATION.OPERATION.UPDATE"
+      }
+    ]
+  },
   "status_code": 200
 }
 ```
 
 Notas:
 
-- la respuesta sigue el patrón estándar con `ApiResponseBuilder`
-- `modules` es un agregado derivado desde los permisos efectivos; sirve para navegación o visibilidad de áreas
-- la lista de permisos será plana, no agrupada por módulo
-- los `module` y `operation` devueltos por backend deben considerarse canónicos en mayúsculas
-- los `name` se resuelven en backend según `x-user-lang`
-- los `name_key` viajan también para conservar trazabilidad técnica del catálogo
-- durante la compatibilidad temporal, si el usuario aún no tiene `roleId`, el backend resuelve el rol por fallback:
+- `modules` se deriva desde los permisos efectivos
+- la lista de permisos es plana
+- `module` y `operation` deben tratarse como valores canónicos en mayúsculas
+- `name` se resuelve en backend según `x-user-lang`
+- `name_key` viaja para trazabilidad técnica del catálogo
+- si un usuario todavía no tiene `role_id`, el backend puede resolver el rol por fallback:
   - default role de `MASTER_ADMIN`
   - default role de `ADMIN`
   - `STAFF_LEGACY` para `USER`
 
-### Endpoints de administración de roles custom
+## Endpoints De Administración De Roles Custom
 
 Estado:
 
-- `in_progress`
+- `implemented`
 
-Endpoints esperados:
+Endpoints:
 
 - `GET /v1/roles`
 - `POST /v1/roles`
@@ -251,45 +510,160 @@ Endpoints esperados:
 - `GET /v1/roles/modules`
 - `GET /v1/roles/operations`
 
-Estado puntual:
+### `GET /v1/roles`
 
-- `GET /v1/roles` implementado
-- `GET /v1/roles/:roleId` implementado
-- `POST /v1/roles` implementado
-- `PATCH /v1/roles/:roleId` implementado
-- `PATCH /v1/roles/:roleId/status` implementado
-- `DELETE /v1/roles/:roleId` implementado
-- `GET /v1/roles/modules` implementado
-- `GET /v1/roles/operations` implementado
+Permiso requerido:
 
-Detalles de integración:
+- `ROLES/READ`
 
-- `PATCH /v1/roles/:roleId` devuelve el rol actualizado con el mismo shape de detalle de `GET /v1/roles/:roleId`
-- `PATCH /v1/roles/:roleId/status` acepta `status_id` con `ACTIVE` o `INACTIVE`
-- `DELETE /v1/roles/:roleId` realiza borrado lógico y responde con `data: null`
-- `GET /v1/roles/modules` ya responde desde el catálogo en código
-- `GET /v1/roles/operations` ya responde desde el catálogo en código
-- el backend bloquea por ahora cualquier mutación ordinaria sobre roles del sistema o roles inmutables
-- el backend también bloquea borrar un rol si todavía existen usuarios vinculados a ese `roleId`
+Query params soportados:
 
-Cambio de diseño aprobado:
+- `page`
+- `limit`
+- `search`
+- `scope`
+- `status`
+- `is_system`
+- `sort[][field|direction]`
 
-- el catálogo técnico de permisos ya no debe considerarse fuente de verdad en Mongo
-- la fuente de verdad objetivo será un catálogo en código
-- los `code` técnicos serán en mayúsculas
-- los nombres visibles deben resolverse por i18n usando `nameKey`
+Sorts permitidos:
 
-Shape objetivo conceptual:
+- `name`
+- `code`
+- `status`
+- `created_at`
+
+Notas:
+
+- si el actor no es `MASTER_ADMIN`, el backend excluye roles de scope `MASTER_ADMIN`
+- si no se envía `status`, el backend excluye `DELETED`
+
+Shape de item:
 
 ```json
 {
-  "module_code": "USERS",
-  "module_name": "Usuarios",
-  "module_name_key": "AUTHORIZATION.MODULE.USERS"
+  "role_id": "ANALYST_MX",
+  "name": "Analista MX",
+  "code": "ANALYST_MX",
+  "scope": "USER",
+  "is_system": false,
+  "is_immutable": false,
+  "is_default": false,
+  "status_id": "ACTIVE",
+  "permissions": [
+    {
+      "module": "USERS",
+      "operation": "READ"
+    }
+  ],
+  "created_by": {
+    "user_id": "USR_1",
+    "name": "Ana",
+    "email": "ana@example.com"
+  },
+  "updated_by": null,
+  "created_at": "2026-07-28T00:00:00.000Z",
+  "updated_at": null
 }
 ```
 
-Respuesta actual esperada para módulos:
+### `POST /v1/roles`
+
+Permiso requerido:
+
+- `ROLES/CREATE`
+
+Request vigente:
+
+```json
+{
+  "name": "Analista MX",
+  "permissions": [
+    {
+      "module": "USERS",
+      "operation": "READ"
+    },
+    {
+      "module": "CUSTOMERS",
+      "operation": "UPDATE"
+    }
+  ]
+}
+```
+
+Notas:
+
+- el backend define internamente `scope = USER`
+- el backend genera internamente el `code`
+- no se envía `code`, `scope`, `is_system` ni `is_default` desde frontend
+
+Response:
+
+- mismo shape que `GET /v1/roles/:roleId`
+
+### `PATCH /v1/roles/:roleId`
+
+Permiso requerido:
+
+- `ROLES/UPDATE`
+
+Request vigente:
+
+```json
+{
+  "permissions": [
+    {
+      "module": "USERS",
+      "operation": "READ"
+    }
+  ]
+}
+```
+
+Notas:
+
+- actualiza únicamente permisos
+- devuelve el rol actualizado con el mismo shape de detalle
+- el backend bloquea mutaciones ordinarias sobre roles del sistema, roles default o roles inmutables
+
+### `PATCH /v1/roles/:roleId/status`
+
+Permiso requerido:
+
+- `ROLES/UPDATE`
+
+Request vigente:
+
+```json
+{
+  "status_id": "INACTIVE"
+}
+```
+
+Notas:
+
+- solo acepta `ACTIVE` o `INACTIVE`
+- devuelve el rol actualizado con el mismo shape de detalle
+
+### `DELETE /v1/roles/:roleId`
+
+Permiso requerido:
+
+- `ROLES/DELETE`
+
+Notas:
+
+- realiza borrado lógico
+- responde con `data: null`
+- el backend bloquea el borrado si todavía existen usuarios vinculados a ese `role_id`
+
+### `GET /v1/roles/modules`
+
+Permiso requerido:
+
+- `ROLES/READ`
+
+Response vigente:
 
 ```json
 {
@@ -308,7 +682,13 @@ Respuesta actual esperada para módulos:
 }
 ```
 
-Respuesta actual esperada para operaciones:
+### `GET /v1/roles/operations`
+
+Permiso requerido:
+
+- `ROLES/READ`
+
+Response vigente:
 
 ```json
 {
@@ -326,6 +706,80 @@ Respuesta actual esperada para operaciones:
   "status_code": 200
 }
 ```
+
+## `GET /v1/users/roles`
+
+Estado:
+
+- `implemented`
+
+Permiso requerido:
+
+- `USERS/READ`
+
+Propósito:
+
+- devolver roles asignables para alta, edición o invitación de usuarios
+
+Comportamiento actual:
+
+- si el actor es `MASTER_ADMIN`, devuelve:
+  - default role de `MASTER_ADMIN`
+  - default role de `ADMIN`
+  - roles custom de scope `USER`
+- si el actor es `ADMIN`, devuelve:
+  - default role de `ADMIN`
+  - roles custom de scope `USER`
+- si el actor es `USER`, devuelve solo roles custom de scope `USER`
+
+Response vigente:
+
+```json
+{
+  "success_message": "DEFAULT",
+  "data": [
+    {
+      "role_id": "ADMIN_DEFAULT",
+      "role_code": "ADMIN_DEFAULT",
+      "role_name": "Administrador",
+      "role_scope": "ADMIN",
+      "is_system": true,
+      "is_default": true
+    },
+    {
+      "role_id": "STAFF_LEGACY",
+      "role_code": "STAFF_LEGACY",
+      "role_name": "Staff Legacy",
+      "role_scope": "USER",
+      "is_system": false,
+      "is_default": false
+    }
+  ],
+  "status_code": 200
+}
+```
+
+Notas:
+
+- `role_id` debe tratarse como identificador canónico del rol
+- hoy el repositorio de roles aún acepta lookup por `role_id` histórico o por `code` para compatibilidad temporal
+- el contrato esperado hacia consumidores debe asumir `role_id == code`
+
+## Compatibilidad Temporal Y Zonas Legacy
+
+Estas zonas siguen en transición y no deben interpretarse como contrato final limpio:
+
+- responses de invitaciones todavía exponen:
+  - `role`
+  - `role_name`
+- lógica interna de compatibilidad todavía resuelve rol por fallback si falta `role_id`
+- el repositorio de roles todavía puede resolver por `role_id` histórico o `code`
+
+Regla práctica:
+
+- para usuarios autenticados, listado de usuarios y detalle de usuarios, frontend debe tratar `system_role` y `role_id` como contrato principal
+- `role_name` debe considerarse metadata auxiliar y descriptiva donde aparezca
+- `role` debe considerarse un campo legacy donde todavía aparezca
 
 ## Scripts Operativos Nuevos
 
@@ -375,82 +829,17 @@ Propósito:
 
 Notas:
 
-- el backend quedó con compatibilidad temporal para resolver roles tanto por `role_id` histórico como por `code`
-- esta migración debe ejecutarse después del seed y de la migración de `system_role + role_id`
-
-## Endpoints Existentes Que Cambiarán De Sentido
-
-### `GET /v1/users/roles`
-
-Estado actual:
-
-- existe hoy en el backend
-- ya consulta roles asignables desde la colección `roles`
-- devuelve metadata real del rol asignable
-
-Cambio esperado:
-
-- el nombre del endpoint sigue siendo legacy
-- el contrato ya no devuelve solo enums fijos
-- más adelante podría renombrarse o reemplazarse por un endpoint más explícito
-
-Response actual aproximada:
-
-```json
-{
-  "success_message": "DEFAULT",
-  "data": [
-    {
-      "role_id": "role_123",
-      "role_code": "ADMIN_DEFAULT",
-      "role_name": "Administrador",
-      "role_scope": "ADMIN",
-      "is_system": true,
-      "is_default": true
-    },
-    {
-      "role_id": "role_456",
-      "role_code": "STAFF_LEGACY",
-      "role_name": "Staff Legacy",
-      "role_scope": "USER",
-      "is_system": false,
-      "is_default": false
-    }
-  ],
-  "status_code": 200
-}
-```
-
-### `POST /v1/users`
-
-Cambio esperado:
-
-- dejará de depender de `role` legacy
-- deberá trabajar con `systemRole` y `roleId`
-
-### `PATCH /v1/users/:userId`
-
-Cambio esperado:
-
-- deberá soportar transición estructural de usuario
-- promoción, degradación y reasignación de rol quedarán sujetas al nuevo modelo
-
-## Endpoints Legacy O Zonas A Revisar
-
-Estas áreas existen hoy y deben tratarse como sensibles durante la migración:
-
-- `GET /v1/users/roles`
-- flows que todavía devuelven o aceptan roles legacy en contratos temporales
-- flows que todavía persisten invitaciones con `role` legacy
-- puntos donde `roleId` sigue quedando temporalmente en `null`
+- el backend mantiene compatibilidad temporal para resolver roles tanto por `role_id` histórico como por `code`
+- el contrato de integración debe asumir como objetivo estable:
+  - `role_id == code`
 
 ## Reglas De Interpretación Del Modelo
 
 - `systemRole` no reemplaza permisos; define jerarquía estructural
 - `roleId` y sus permisos resuelven acciones ordinarias de negocio
-- `MASTER_ADMIN` representa soporte/plataforma, no negocio ordinario
+- `MASTER_ADMIN` representa soporte/plataforma
 - `ADMIN` representa administración de negocio
-- `USER` es una categoría amplia cuyo comportamiento depende del rol custom asignado
+- `USER` representa una categoría amplia cuyo comportamiento depende del rol asignado
 
 ## Documentos De Referencia Para Otra Sesión
 
@@ -465,7 +854,7 @@ Estas áreas existen hoy y deben tratarse como sensibles durante la migración:
 
 ## Regla De Mantenimiento
 
-Este documento debe actualizarse conforme cambie cualquiera de estas cosas:
+Este documento debe actualizarse cuando cambie cualquiera de estas cosas:
 
 - endpoints agregados
 - endpoints modificados

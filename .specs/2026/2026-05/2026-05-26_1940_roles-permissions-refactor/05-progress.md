@@ -140,3 +140,5 @@
 - Se dejó preparado el rerun de `db:seed` como mecanismo idempotente para sincronizar en la base remota los permisos completos y ya normalizados de `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` sin duplicar datos.
 - Se enriqueció `GET /v1/auth/me/permissions` para devolver también `modules` agregados y metadata localizada por `x-user-lang` tanto en módulos como en permisos, facilitando integración con navegación y controles finos del frontend sin acoplar el backend a una UI concreta.
 - Se corrigió el listado de `roles` para que usuarios `ADMIN` no vean roles de `scope = MASTER_ADMIN`, propagando `actorSystemRole` hasta el repositorio y aplicando el filtro estructural también sobre la paginación y el total.
+- Se enriquecieron `GET /v1/users`, `GET /v1/users/:userId` y `GET /v1/users/me` para incluir `role_name` como metadata descriptiva del `role_id` resuelto, obteniendo ese nombre desde el repositorio de roles sin reintroducir `role` legacy en el contrato principal.
+- Se actualizó el handoff de frontend en `docs/frontend/roles-permissions-refactor-handoff.md` para reflejar este ajuste de contrato en responses de usuario autenticado, listado y detalle.

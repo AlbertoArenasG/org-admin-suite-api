@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
+  IRoleReadRepository,
+  IRoleReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
   IUserWriteRepository,
@@ -24,6 +26,8 @@ export class UpdateUserUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
+    @Inject(IRoleReadRepositoryToken)
+    private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
     private readonly authorizationService: AuthorizationService,
@@ -146,6 +150,11 @@ export class UpdateUserUseCase {
       });
     }
 
-    return UserResultMapper.toUserViewDto(updated);
+    const roleName = updated.roleId
+      ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??
+        null)
+      : null;
+
+    return UserResultMapper.toUserViewDto(updated, roleName);
   }
 }

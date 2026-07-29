@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import {
+  IRoleReadRepository,
+  IRoleReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
   IUserWriteRepository,
@@ -21,6 +23,8 @@ export class UpdateMyProfileUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
+    @Inject(IRoleReadRepositoryToken)
+    private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
   ) {}
@@ -75,7 +79,12 @@ export class UpdateMyProfileUseCase {
       });
     }
 
-    return UserResultMapper.toUserViewDto(updated);
+    const roleName = updated.roleId
+      ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??
+        null)
+      : null;
+
+    return UserResultMapper.toUserViewDto(updated, roleName);
   }
 
   private async hashPassword(password: string): Promise<string> {

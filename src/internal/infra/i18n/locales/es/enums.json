@@ -67,10 +67,10 @@
       "ROLES": "Roles",
       "CUSTOMERS": "Clientes",
       "PROVIDERS": "Proveedores",
-      "SERVICE_ENTRIES": "Órdenes de servicio",
-      "SERVICE_ENTRY_SURVEYS": "Encuestas de órdenes de servicio",
+      "SERVICE_ENTRIES": "Registro de servicio",
+      "SERVICE_ENTRY_SURVEYS": "Encuestas de servicio",
       "FILES": "Archivos",
-      "SERVICE_PACKAGES": "Paquetes de servicio",
+      "SERVICE_PACKAGES": "Recolección",
       "USER_REGISTRATION_INVITATIONS": "Invitaciones de registro de usuario"
     },
     "OPERATION": {
