@@ -92,6 +92,7 @@
 - Se corrigió la documentación operativa para reflejar que `customer`, `provider`, `service-entry`, `user` e invitaciones internas ya no dependen de `ensureAuthorized()`, cerrando también esa deuda técnica como tarea cumplida en el spec.
 - Se reemplazó la lógica hardcodeada de `GetUserRoles` por una consulta basada en la colección `roles`, devolviendo roles asignables reales según el `actorSystemRole` y no solo enums legacy.
 - Se actualizó el presenter y el handoff de frontend para reflejar el nuevo shape de `GET /v1/users/roles`, incluyendo `role_id`, `role_code`, `role_name`, `role_scope`, `is_system` e `is_default`.
+- Se enriqueció `GET /v1/users/roles` para devolver también `system_role` explícito por opción asignable, manteniendo `role_scope` como metadata del rol y facilitando a frontend distinguir de forma directa los defaults especiales de `MASTER_ADMIN` y `ADMIN` frente a roles custom de `USER`.
 - Se creó la base de DTOs de application para el CRUD de `roles`, incluyendo contratos de creación, edición, listado, cambio de estado, borrado y representación de permisos del rol.
 - Se implementaron los request DTOs HTTP de `roles` para creación, edición, listado y cambio de estado, alineados al estilo `snake_case` y al pipeline del repo.
 - Se implementó `RolePresenter` junto con los exports necesarios para presentar respuestas de detalle, colección, creación y cambio de estado del módulo `roles`.

@@ -22,6 +22,7 @@ export class GetUserRolesUseCase {
         roleId: role.id,
         code: role.code,
         name: role.name,
+        systemRole: this.mapScopeToSystemRole(role.scope),
         scope: role.scope,
         isSystem: role.isSystem,
         isDefault: role.isDefault,
@@ -57,6 +58,17 @@ export class GetUserRolesUseCase {
   private async findDefaultRole(scope: RoleScope): Promise<Role | null> {
     const { data } = await this.roleReadRepository.findDefaultByScope(scope);
     return data;
+  }
+
+  private mapScopeToSystemRole(scope: RoleScope): SystemRole {
+    switch (scope) {
+      case RoleScope.MASTER_ADMIN:
+        return SystemRole.MASTER_ADMIN;
+      case RoleScope.ADMIN:
+        return SystemRole.ADMIN;
+      case RoleScope.USER:
+        return SystemRole.USER;
+    }
   }
 
   private async findCustomUserRoles(

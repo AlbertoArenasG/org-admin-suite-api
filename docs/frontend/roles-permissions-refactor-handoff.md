@@ -742,6 +742,7 @@ Response vigente:
       "role_id": "ADMIN_DEFAULT",
       "role_code": "ADMIN_DEFAULT",
       "role_name": "Administrador",
+      "system_role": "ADMIN",
       "role_scope": "ADMIN",
       "is_system": true,
       "is_default": true
@@ -750,6 +751,7 @@ Response vigente:
       "role_id": "STAFF_LEGACY",
       "role_code": "STAFF_LEGACY",
       "role_name": "Staff Legacy",
+      "system_role": "USER",
       "role_scope": "USER",
       "is_system": false,
       "is_default": false
@@ -762,6 +764,8 @@ Response vigente:
 Notas:
 
 - `role_id` debe tratarse como identificador canónico del rol
+- `system_role` viene explícito para que frontend pueda distinguir directamente opciones estructurales especiales como `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` al construir selects o reglas de UI
+- `role_scope` se mantiene como metadata del rol y hoy coincide con `system_role` en este endpoint
 - hoy el repositorio de roles aún acepta lookup por `role_id` histórico o por `code` para compatibilidad temporal
 - el contrato esperado hacia consumidores debe asumir `role_id == code`
 

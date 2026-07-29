@@ -8,6 +8,7 @@ export interface UserRoleViewDto {
   roleId: string;
   code: string;
   name: string;
+  systemRole: SystemRole;
   scope: RoleScope;
   isSystem: boolean;
   isDefault: boolean;
