@@ -14,11 +14,7 @@ export class MongooseRoleReadRepositoryImpl
   implements IRoleReadRepository
 {
   async findById(id: string): Promise<{ data: Role | null }> {
-    const document = await this.roleModel
-      .findOne({
-        $or: [{ role_id: id }, { code: id }],
-      })
-      .exec();
+    const document = await this.roleModel.findOne({ role_id: id }).exec();
 
     return { data: this.toDomain(document) };
   }

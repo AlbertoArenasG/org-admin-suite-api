@@ -35,10 +35,6 @@ export interface AuthorizationUserTargetDto {
   roleId: string | null;
 }
 
-export interface AuthorizationAssignmentOptions {
-  allowLegacyUserRoleFallback?: boolean;
-}
-
 const SYSTEM_ROLE_RANK: Record<SystemRole, number> = {
   [SystemRole.MASTER_ADMIN]: 0,
   [SystemRole.ADMIN]: 1,
@@ -138,10 +134,9 @@ export class AuthorizationService {
   async ensureCanCreateUser(
     actor: AuthenticatedUserContextDto | PermissionActorDto,
     target: AuthorizationUserTargetDto,
-    options?: AuthorizationAssignmentOptions,
   ): Promise<void> {
     this.ensureCanManageTargetSystemRole(actor.systemRole, target.systemRole);
-    await this.ensureRoleAssignment(target, options);
+    await this.ensureRoleAssignment(target);
   }
 
   async ensureCanUpdateUser(
@@ -152,7 +147,6 @@ export class AuthorizationService {
       nextRoleId: string | null;
       isSelfUpdate: boolean;
     },
-    options?: AuthorizationAssignmentOptions,
   ): Promise<void> {
     if (!input.isSelfUpdate) {
       this.ensureHasHigherPrivileges(actor.systemRole, input.currentSystemRole);
@@ -163,13 +157,10 @@ export class AuthorizationService {
       input.nextSystemRole,
     );
 
-    await this.ensureRoleAssignment(
-      {
-        systemRole: input.nextSystemRole,
-        roleId: input.nextRoleId,
-      },
-      options,
-    );
+    await this.ensureRoleAssignment({
+      systemRole: input.nextSystemRole,
+      roleId: input.nextRoleId,
+    });
   }
 
   ensureHasHigherPrivileges(
@@ -240,7 +231,6 @@ export class AuthorizationService {
 
   private async ensureRoleAssignment(
     target: AuthorizationUserTargetDto,
-    options?: AuthorizationAssignmentOptions,
   ): Promise<void> {
     if (target.systemRole === SystemRole.MASTER_ADMIN) {
       await this.ensureDefaultSystemRoleAssignment(
@@ -256,10 +246,6 @@ export class AuthorizationService {
     }
 
     if (!target.roleId) {
-      if (options?.allowLegacyUserRoleFallback) {
-        return;
-      }
-
       throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
         field: 'role_id',
         reason: 'ROLE_ID_REQUIRED_FOR_USER',

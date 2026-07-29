@@ -140,14 +140,15 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Implementar migración de `roles.role_id -> roles.code`
 - [x] Implementar migración de referencias `users.role_id` hacia `code`
 - [x] Agregar compatibilidad temporal de lectura por `role_id | code`
+  - implementada y posteriormente retirada tras ejecutar la migración canónica de `role_id == code`
 - [x] Ejecutar `dry-run` y `apply` de la migración `role_id == code`
 
 ## Slice 9. Limpieza final
 
-- [ ] Eliminar enums legacy de roles que queden obsoletos
+- [x] Eliminar enums legacy de roles que queden obsoletos
 - [x] Eliminar policies legacy que ya no apliquen
 - [x] Eliminar código muerto de autorización previa
-- [ ] Revisar i18n de enums/roles/estados
+- [x] Revisar i18n de enums/roles/estados
 - [x] Revisar documentación interna alineada al modelo final
 
 ## Bloqueadores De Cierre Del Spec
@@ -158,8 +159,8 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 - [x] Eliminar persistencia/lectura derivada del campo legacy `role` en usuarios donde ya no sea estrictamente necesaria para migración
 - [x] Eliminar `role` y `role_name` legacy de responses de invitaciones y alinear su presenter al contrato final
 - [ ] Revisar DTOs, mappers y repositorios que todavía cargan `role` como campo de transición
-- [ ] Limpiar referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF` que solo sobreviven por herencia del modelo anterior
-- [ ] Revisar i18n final de enums, roles y estados para retirar nombres legacy ya sin uso
+- [x] Limpiar referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF` que solo sobreviven por herencia del modelo anterior
+- [x] Revisar i18n final de enums, roles y estados para retirar nombres legacy ya sin uso
 
 ### Inventario Exacto Del Legacy Restante
 
@@ -201,7 +202,7 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 #### Autorización y compatibilidad temporal
 
-- [ ] `src/internal/application/services/authz/authorization.service.ts`
+- [x] `src/internal/application/services/authz/authorization.service.ts`
   - retirar fallback `allowLegacyUserRoleFallback` si ya no queda runtime legacy que lo necesite
 - [x] `src/internal/application/use-cases/user-registration-invitation/*`
   - revisar creación y consumo de invitaciones para dejar de derivar `role` legacy
@@ -213,14 +214,16 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
   - si se mantiene, dejar explícito que es script histórico post-ejecución y no dependencia runtime
 - [ ] `src/internal/infra/persistence/mongoose/migrations/migrate-role-ids-to-code.ts`
   - misma revisión documental/operativa
+- [x] `src/internal/infra/persistence/mongoose/repositories/role/mongoose-role-read.repository.ts`
+  - retirar lookup dual `role_id | code` una vez completada la migración canónica
 
 #### i18n y documentación residual
 
-- [ ] `src/internal/infra/i18n/locales/*/enums.json`
+- [x] `src/internal/infra/i18n/locales/*/enums.json`
   - retirar `MASTER_STAFF`, `CUSTOMER`, `STAFF` si ya no tienen uso real
-- [ ] `docs/frontend/roles-permissions-refactor-handoff.md`
+- [x] `docs/frontend/roles-permissions-refactor-handoff.md`
   - retirar notas de compatibilidad temporal una vez eliminado el legacy real
-- [ ] `docs/authorization/authorization-rules.md`
+- [x] `docs/authorization/authorization-rules.md`
   - alinear el documento al estado final sin fallback legacy
 
 ## Pendientes Tras Integración Frontend
@@ -231,10 +234,10 @@ Tras las pruebas de integración frontend/backend y antes de cerrar el spec:
 - [ ] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
 - [ ] Revisar si durante la integración frontend aparecieron ajustes de contrato backend pendientes
 - [ ] Actualizar `docs/frontend/roles-permissions-refactor-handoff.md` con cualquier cambio real de integración detectado en pruebas
-- [ ] Eliminar enums legacy de roles que ya no tengan uso real en runtime
+- [x] Eliminar enums legacy de roles que ya no tengan uso real en runtime
 - [ ] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
-- [ ] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
-- [ ] Revisar i18n final de catálogos, nombres de permisos, roles y estados
+- [x] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
+- [x] Revisar i18n final de catálogos, nombres de permisos, roles y estados
 - [ ] Cerrar el spec únicamente después de eliminar el legacy restante y dejar alineados task list, progress y breakdown al estado final
 
 ## Orden sugerido de ejecución

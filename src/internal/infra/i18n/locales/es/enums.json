@@ -2,10 +2,7 @@
   "USER": {
     "ROLE": {
       "MASTER_ADMIN": "Administrador principal",
-      "MASTER_STAFF": "Staff principal",
-      "ADMIN": "Administrador",
-      "STAFF": "Staff",
-      "CUSTOMER": "Cliente"
+      "ADMIN": "Administrador"
     },
     "STATUS": {
       "ACTIVE": "Activo",

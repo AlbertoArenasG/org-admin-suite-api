@@ -71,16 +71,12 @@ Para usuarios del sistema, el backend trabaja con roles default:
 - `MASTER_ADMIN_DEFAULT`
 - `ADMIN_DEFAULT`
 
-Para compatibilidad temporal, si un usuario llega a no tener `role_id`, el backend aún puede resolver permisos por fallback. Ese fallback es solo una red de compatibilidad, no el contrato objetivo estable.
-
 #### Payload de salida
 
 En responses modernas de usuarios y auth, la API expone como fuente principal:
 
 - `system_role`
 - `role_id`
-
-En algunos flujos legacy o de transición, todavía viajan también `role` y `role_name`.
 
 ## Contratos HTTP Ya Migrados
 
@@ -486,10 +482,6 @@ Notas:
 - `module` y `operation` deben tratarse como valores canónicos en mayúsculas
 - `name` se resuelve en backend según `x-user-lang`
 - `name_key` viaja para trazabilidad técnica del catálogo
-- si un usuario todavía no tiene `role_id`, el backend puede resolver el rol por fallback:
-  - default role de `MASTER_ADMIN`
-  - default role de `ADMIN`
-  - `STAFF_LEGACY` para `USER`
 
 ## Endpoints De Administración De Roles Custom
 
@@ -764,14 +756,13 @@ Notas:
 - `role_id` debe tratarse como identificador canónico del rol
 - `system_role` viene explícito para que frontend pueda distinguir directamente opciones estructurales especiales como `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` al construir selects o reglas de UI
 - `role_scope` se mantiene como metadata del rol y hoy coincide con `system_role` en este endpoint
-- hoy el repositorio de roles aún acepta lookup por `role_id` histórico o por `code` para compatibilidad temporal
 - el contrato esperado hacia consumidores debe asumir `role_id == code`
 
 ## Compatibilidad Temporal Y Zonas Legacy
 
 Estas zonas siguen en transición y no deben interpretarse como contrato final limpio:
 
-- el repositorio de roles todavía puede resolver por `role_id` histórico o `code`
+- los scripts manuales de migración se conservan como artefactos históricos/operativos y no como parte del runtime ordinario
 
 Regla práctica:
 
@@ -826,7 +817,6 @@ Propósito:
 
 Notas:
 
-- el backend mantiene compatibilidad temporal para resolver roles tanto por `role_id` histórico como por `code`
 - el contrato de integración debe asumir como objetivo estable:
   - `role_id == code`
 

@@ -142,5 +142,5 @@
 - [x] Eliminar autorizacion hardcodeada residual
   Status: done
 
-- [ ] Eliminar policies y enums legacy ya obsoletos
-  Status: pending
+- [x] Eliminar policies y enums legacy ya obsoletos
+  Status: done

@@ -155,3 +155,7 @@
 - Se desacopló temporalmente la compatibilidad legacy de invitaciones para que ya no dependa de helpers borrados del agregado `User`, moviendo ese mapeo residual a los propios flows y mappers de invitación mientras se completa la purga final de ese módulo.
 - Se completó la purga principal del módulo de invitaciones: `role` dejó de formar parte del record persistido, de los DTOs de salida, del presenter HTTP y del payload de notificación, dejando el contrato del flujo sostenido únicamente por `system_role + role_id`.
 - Se eliminó del mapper de invitaciones la compatibilidad runtime que reconstruía `systemRole` y `roleId` desde `document.role`, cerrando también el residuo `resolveSystemRoleFromLegacyInvitationRole(...)`.
+- Se retiró de `AuthorizationService` el fallback `allowLegacyUserRoleFallback`, dejando obligatorio `role_id` para cualquier actor `USER` en creación o actualización y eliminando la última compatibilidad runtime de autorización basada en ausencia de rol efectivo.
+- Se limpiaron los enums i18n de usuario para retirar `MASTER_STAFF`, `STAFF` y `CUSTOMER` como roles visibles del modelo actual.
+- Se retiró del repositorio de roles el lookup dual `role_id | code`, dejando `role_id` como única identidad runtime válida del agregado y acotando el legado restante a scripts históricos de migración.
+- Se volvió a alinear el handoff de frontend y el breakdown del spec al estado posterior al cleanup, dejando documentado que la compatibilidad remanente se limita a scripts históricos de migración.

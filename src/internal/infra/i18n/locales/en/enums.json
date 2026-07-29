@@ -2,10 +2,7 @@
   "USER": {
     "ROLE": {
       "MASTER_ADMIN": "Master admin",
-      "MASTER_STAFF": "Master staff",
-      "ADMIN": "Administrator",
-      "STAFF": "Staff",
-      "CUSTOMER": "Customer"
+      "ADMIN": "Administrator"
     },
     "STATUS": {
       "ACTIVE": "Active user",
