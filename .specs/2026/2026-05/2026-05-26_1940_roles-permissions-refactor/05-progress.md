@@ -143,3 +143,10 @@
 - Se corrigió el listado de `roles` para que usuarios `ADMIN` no vean roles de `scope = MASTER_ADMIN`, propagando `actorSystemRole` hasta el repositorio y aplicando el filtro estructural también sobre la paginación y el total.
 - Se enriquecieron `GET /v1/users`, `GET /v1/users/:userId` y `GET /v1/users/me` para incluir `role_name` como metadata descriptiva del `role_id` resuelto, obteniendo ese nombre desde el repositorio de roles sin reintroducir `role` legacy en el contrato principal.
 - Se actualizó el handoff de frontend en `docs/frontend/roles-permissions-refactor-handoff.md` para reflejar este ajuste de contrato en responses de usuario autenticado, listado y detalle.
+
+## 2026-07-29
+
+- Se saneó la spec para alinear `03-task-list.md` y `07-implementation-breakdown.md` al estado real del código, marcando como completado todo lo que ya vive en runtime y dejando abiertos solo pendientes reales.
+- Se dejó explícito que el spec no puede cerrarse todavía por deuda documental, sino por cleanup legacy pendiente dentro del mismo backend.
+- Se formalizaron como bloqueadores de cierre de esta misma spec la eliminación de `UserRole` legacy, la purga del campo `role` como compatibilidad de transición en usuario e invitaciones, la salida legacy `role` y `role_name` en invitaciones, y la limpieza final de i18n y referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF`.
+- Se confirmó como criterio de cierre que este refactor no se dará por terminado mientras siga existiendo compatibilidad temporal efectiva en runtime o en contratos relacionados con autorización y gestión de usuarios.
