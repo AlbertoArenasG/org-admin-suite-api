@@ -109,7 +109,7 @@ export class MongooseUserReadRepositoryImpl
       lastname: 'lastname',
       email: 'email',
       status: 'status',
-      role: 'system_role',
+      system_role: 'system_role',
       created_at: 'createdAt',
     };
 

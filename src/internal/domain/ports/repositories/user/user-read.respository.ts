@@ -6,7 +6,7 @@ export type UserSortField =
   | 'lastname'
   | 'email'
   | 'status'
-  | 'role'
+  | 'system_role'
   | 'created_at';
 export type SortDirection = 'asc' | 'desc';
 

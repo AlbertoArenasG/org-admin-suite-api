@@ -19,6 +19,9 @@ import {
   UserMigrationPlanSummary,
 } from './shared/mongoose-migration.types';
 
+// Historical operational script kept for traceability and controlled reruns.
+// It is not part of the application's ordinary runtime path.
+
 type LegacyMigratableRole =
   | LegacyUserRole.MASTER_ADMIN
   | LegacyUserRole.ADMIN

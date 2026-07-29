@@ -159,3 +159,9 @@
 - Se limpiaron los enums i18n de usuario para retirar `MASTER_STAFF`, `STAFF` y `CUSTOMER` como roles visibles del modelo actual.
 - Se retiró del repositorio de roles el lookup dual `role_id | code`, dejando `role_id` como única identidad runtime válida del agregado y acotando el legado restante a scripts históricos de migración.
 - Se volvió a alinear el handoff de frontend y el breakdown del spec al estado posterior al cleanup, dejando documentado que la compatibilidad remanente se limita a scripts históricos de migración.
+- Se normalizó el sort público de `GET /v1/users` para aceptar `system_role` como campo canónico, eliminando el alias residual `role` que todavía sobrevivía en request DTO, puerto de repositorio y mapper de ordenamiento.
+- Se corrigió también el último residuo semántico en `update-user.use-case.ts`, dejando de reportar `field: 'role'` en validaciones de auto-actualización y sustituyéndolo por `system_role` o `role_id` según el cambio intentado.
+- Se revisaron las referencias residuales a `role` dentro de DTOs, presenters, repositorios y documentación viva, confirmando que lo que permanece en runtime ya corresponde al agregado `Role` o a metadata explícita del rol efectivo, no al enum legacy de usuario.
+- Se dejó documentado en ambos scripts de migración que permanecen únicamente como artefactos operativos/históricos y no como parte del runtime ordinario de la aplicación.
+- La validación automática de cierre se reforzó con `npm run build`, que siguió pasando después del cleanup final; `npm run test:e2e` no fue concluyente en este entorno por un `EPERM` de conexión local del sandbox, por lo que la validación funcional pendiente sigue siendo manual.
+- Con esto, el spec de backend quedó bloqueado ya solo por la ronda final de QA manual multi-rol y por el cierre formal posterior de los documentos de seguimiento.

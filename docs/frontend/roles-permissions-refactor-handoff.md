@@ -353,6 +353,22 @@ Permiso requerido:
 
 - `USERS/READ`
 
+Query params soportados:
+
+- `page`
+- `limit`
+- `search`
+- `sort[].field`
+  - `name`
+  - `lastname`
+  - `email`
+  - `status`
+  - `system_role`
+  - `created_at`
+- `sort[].direction`
+  - `asc`
+  - `desc`
+
 Response vigente por item:
 
 ```json
@@ -377,6 +393,7 @@ Response vigente por item:
 Notas:
 
 - el listado ya no usa `role` ni `role_name` como contrato principal
+- el listado ya no acepta `role` como sort field; el valor canónico es `system_role`
 - `role_name` se expone como metadata descriptiva asociada al `role_id` efectivo del usuario
 - la paginación sigue el formato estándar de `ApiResponseBuilder`
 

@@ -158,7 +158,7 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 - [x] Eliminar `UserRole` legacy del dominio y cualquier helper de compatibilidad derivado desde `systemRole`
 - [x] Eliminar persistencia/lectura derivada del campo legacy `role` en usuarios donde ya no sea estrictamente necesaria para migración
 - [x] Eliminar `role` y `role_name` legacy de responses de invitaciones y alinear su presenter al contrato final
-- [ ] Revisar DTOs, mappers y repositorios que todavía cargan `role` como campo de transición
+- [x] Revisar DTOs, mappers y repositorios que todavía cargan `role` como campo de transición
 - [x] Limpiar referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF` que solo sobreviven por herencia del modelo anterior
 - [x] Revisar i18n final de enums, roles y estados para retirar nombres legacy ya sin uso
 
@@ -179,8 +179,9 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 - [x] `src/internal/infra/persistence/mongoose/mappers/user/mongoose-user.mapper.ts`
   - dejar de leer fallback desde `userDocument.role`
   - dejar de persistir `role` derivado
-- [ ] `src/internal/infra/persistence/mongoose/repositories/user/*`
+- [x] `src/internal/infra/persistence/mongoose/repositories/user/*`
   - revisar filtros, sorts y mapeos que todavía mencionan `role`
+  - normalizar sort field público de usuarios a `system_role`
 
 #### Invitaciones de usuario
 
@@ -209,10 +210,10 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 #### Migraciones y scripts
 
-- [ ] `src/internal/infra/persistence/mongoose/migrations/migrate-users-to-system-role-and-role-id.ts`
+- [x] `src/internal/infra/persistence/mongoose/migrations/migrate-users-to-system-role-and-role-id.ts`
   - conservar solo como artefacto histórico si sigue aportando valor operativo
   - si se mantiene, dejar explícito que es script histórico post-ejecución y no dependencia runtime
-- [ ] `src/internal/infra/persistence/mongoose/migrations/migrate-role-ids-to-code.ts`
+- [x] `src/internal/infra/persistence/mongoose/migrations/migrate-role-ids-to-code.ts`
   - misma revisión documental/operativa
 - [x] `src/internal/infra/persistence/mongoose/repositories/role/mongoose-role-read.repository.ts`
   - retirar lookup dual `role_id | code` una vez completada la migración canónica
@@ -232,10 +233,10 @@ Tras las pruebas de integración frontend/backend y antes de cerrar el spec:
 
 - [ ] Ejecutar una ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`
 - [ ] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
-- [ ] Revisar si durante la integración frontend aparecieron ajustes de contrato backend pendientes
-- [ ] Actualizar `docs/frontend/roles-permissions-refactor-handoff.md` con cualquier cambio real de integración detectado en pruebas
+- [x] Revisar si durante la integración frontend aparecieron ajustes de contrato backend pendientes
+- [x] Actualizar `docs/frontend/roles-permissions-refactor-handoff.md` con cualquier cambio real de integración detectado en pruebas
 - [x] Eliminar enums legacy de roles que ya no tengan uso real en runtime
-- [ ] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
+- [x] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
 - [x] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
 - [x] Revisar i18n final de catálogos, nombres de permisos, roles y estados
 - [ ] Cerrar el spec únicamente después de eliminar el legacy restante y dejar alineados task list, progress y breakdown al estado final

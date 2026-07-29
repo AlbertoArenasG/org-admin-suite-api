@@ -62,7 +62,11 @@ export class UpdateUserUseCase {
           (payload.roleId ?? user.roleId) !== user.roleId)
       ) {
         throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
-          field: 'role',
+          field:
+            payload.systemRole !== undefined &&
+            payload.systemRole !== user.systemRole
+              ? 'system_role'
+              : 'role_id',
         });
       }
 

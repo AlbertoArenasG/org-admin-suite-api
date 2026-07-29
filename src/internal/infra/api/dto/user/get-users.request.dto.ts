@@ -16,7 +16,7 @@ const ALLOWED_SORT_FIELDS = [
   'lastname',
   'email',
   'status',
-  'role',
+  'system_role',
   'created_at',
 ] as const;
 
