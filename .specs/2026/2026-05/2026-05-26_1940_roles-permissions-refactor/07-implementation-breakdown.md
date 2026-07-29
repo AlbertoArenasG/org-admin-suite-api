@@ -231,8 +231,8 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 Tras las pruebas de integración frontend/backend y antes de cerrar el spec:
 
-- [ ] Ejecutar una ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`
-- [ ] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
+- [x] Ejecutar una ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`
+- [x] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
 - [x] Revisar si durante la integración frontend aparecieron ajustes de contrato backend pendientes
 - [x] Actualizar `docs/frontend/roles-permissions-refactor-handoff.md` con cualquier cambio real de integración detectado en pruebas
 - [x] Eliminar enums legacy de roles que ya no tengan uso real en runtime

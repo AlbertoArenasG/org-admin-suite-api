@@ -165,3 +165,4 @@
 - Se dejó documentado en ambos scripts de migración que permanecen únicamente como artefactos operativos/históricos y no como parte del runtime ordinario de la aplicación.
 - La validación automática de cierre se reforzó con `npm run build`, que siguió pasando después del cleanup final; `npm run test:e2e` no fue concluyente en este entorno por un `EPERM` de conexión local del sandbox, por lo que la validación funcional pendiente sigue siendo manual.
 - Con esto, el spec de backend quedó bloqueado ya solo por la ronda final de QA manual multi-rol y por el cierre formal posterior de los documentos de seguimiento.
+- Se registró como completada la ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`, incluyendo la validación de `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`.
