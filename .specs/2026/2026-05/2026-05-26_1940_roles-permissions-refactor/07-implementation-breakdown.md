@@ -25,7 +25,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Implementar contexto compartido de ejecución para seeds
 - [x] Registrar script `db:seed` en `package.json`
 - [x] Crear `role.entity.ts`
-- [ ] Crear modelos de catálogo para `permission module` y `permission operation`
+- [x] Crear modelos de catálogo para `permission module` y `permission operation`
 - [x] Crear enums/constantes de `SystemRole`, `RoleScope` y `RoleStatus`
 - [x] Crear puertos de lectura/escritura para roles
 - [x] Crear puertos de lectura para módulos y operaciones
@@ -42,11 +42,11 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 2. Migración del modelo User
 
 - [x] Redefinir entidad `User` para usar `systemRole + roleId`
-- [x] Eliminar dependencia runtime a `UserRole`
+- [ ] Eliminar dependencia runtime a `UserRole`
 - [x] Ajustar schema Mongoose de `user`
 - [x] Ajustar mapper Mongoose de `user`
 - [x] Ajustar repositorios de lectura/escritura de `user`
-- [ ] Agregar queries necesarias por `systemRole` y `roleId`
+- [x] Agregar queries necesarias por `systemRole` y `roleId`
 - [x] Ajustar DTOs de application relacionados con usuario
 - [x] Ajustar presenters de usuario al nuevo modelo
 
@@ -54,13 +54,13 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 - [x] Redefinir `AuthTokenPayloadDto`
 - [x] Ajustar `AuthTokenMapper`
-- [ ] Ajustar `AuthTokenService`
+- [x] Ajustar `AuthTokenService`
 - [x] Redefinir `AuthenticatedUserContextDto`
 - [x] Ajustar `JwtAuthGuard`
 - [x] Ajustar `@CurrentUser()`
 - [x] Ajustar `types/express/index.d.ts`
 - [x] Reducir `AuthenticatedUserContextDto` a shape mínimo sin `role` ni `isMaster`
-- [ ] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
+- [x] Ajustar `MasterScopeGuard` o eliminarlo si queda absorbido por el nuevo modelo
 - [x] Crear endpoint `me/permissions`
 - [x] Crear presenter/DTO para respuesta de permisos efectivos
 - [x] Separar endpoints self-service `users/me` del catálogo `USERS/*`
@@ -119,7 +119,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Revisar `service-package.controller`
 - [x] Revisar `master-admin/*`
 - [x] Eliminar `ensureAuthorized()` donde exista
-- [ ] Reemplazar checks hardcodeados por decorators/guards
+- [x] Reemplazar checks hardcodeados por decorators/guards
 
 ## Slice 8. Migración de datos
 
@@ -150,9 +150,20 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Revisar i18n de enums/roles/estados
 - [x] Revisar documentación interna alineada al modelo final
 
+## Bloqueadores De Cierre Del Spec
+
+Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efectiva en runtime o en contratos públicos internos relacionados con autorización y usuarios.
+
+- [ ] Eliminar `UserRole` legacy del dominio y cualquier helper de compatibilidad derivado desde `systemRole`
+- [ ] Eliminar persistencia/lectura derivada del campo legacy `role` en usuarios donde ya no sea estrictamente necesaria para migración
+- [ ] Eliminar `role` y `role_name` legacy de responses de invitaciones y alinear su presenter al contrato final
+- [ ] Revisar DTOs, mappers y repositorios que todavía cargan `role` como campo de transición
+- [ ] Limpiar referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF` que solo sobreviven por herencia del modelo anterior
+- [ ] Revisar i18n final de enums, roles y estados para retirar nombres legacy ya sin uso
+
 ## Pendientes Tras Integración Frontend
 
-Cuando termine la integración y el refactor en frontend, retomar este spec con este orden:
+Tras las pruebas de integración frontend/backend y antes de cerrar el spec:
 
 - [ ] Ejecutar una ronda final de QA manual con `MASTER_ADMIN`, `ADMIN` y `USER`
 - [ ] Validar al menos `GET /v1/auth/me/permissions`, `GET /v1/roles`, `GET /v1/users/me`, CRUD de roles custom y creación/edición de usuarios con `system_role + role_id`
@@ -162,7 +173,7 @@ Cuando termine la integración y el refactor en frontend, retomar este spec con 
 - [ ] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
 - [ ] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
 - [ ] Revisar i18n final de catálogos, nombres de permisos, roles y estados
-- [ ] Cerrar el spec marcando qué quedó completado y qué se decide mantener como compatibilidad temporal
+- [ ] Cerrar el spec únicamente después de eliminar el legacy restante y dejar alineados task list, progress y breakdown al estado final
 
 ## Orden sugerido de ejecución
 

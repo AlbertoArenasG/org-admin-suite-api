@@ -43,104 +43,104 @@
 - [x] Crear repositorios Mongoose de roles
   Status: done
 
-- [ ] Crear DTOs y mappers de roles
-  Status: pending
+- [x] Crear DTOs y mappers de roles
+  Status: done
 
 ## Phase 3. Authentication And Actor Context
 
-- [ ] Redefinir el payload JWT para el nuevo modelo
-  Status: pending
+- [x] Redefinir el payload JWT para el nuevo modelo
+  Status: done
 
-- [ ] Ajustar `AuthenticatedUserContextDto`
-  Status: pending
+- [x] Ajustar `AuthenticatedUserContextDto`
+  Status: done
 
-- [ ] Ajustar `JwtAuthGuard` al nuevo actor context
-  Status: pending
+- [x] Ajustar `JwtAuthGuard` al nuevo actor context
+  Status: done
 
-- [ ] Ajustar `@CurrentUser()` y el tipado de Express al nuevo `authContext`
-  Status: pending
+- [x] Ajustar `@CurrentUser()` y el tipado de Express al nuevo `authContext`
+  Status: done
 
-- [ ] Crear endpoint para consultar permisos efectivos y metadatos del rol actual del usuario autenticado
-  Status: pending
+- [x] Crear endpoint para consultar permisos efectivos y metadatos del rol actual del usuario autenticado
+  Status: done
 
 ## Phase 4. Centralized Authorization
 
-- [ ] Crear `AuthorizationService`
-  Status: pending
+- [x] Crear `AuthorizationService`
+  Status: done
 
-- [ ] Crear decorador para permisos requeridos por endpoint
-  Status: pending
+- [x] Crear decorador para permisos requeridos por endpoint
+  Status: done
 
-- [ ] Crear guard de permisos
-  Status: pending
+- [x] Crear guard de permisos
+  Status: done
 
-- [ ] Definir regla estructural especial para `MASTER_ADMIN`
-  Status: pending
+- [x] Definir regla estructural especial para `MASTER_ADMIN`
+  Status: done
 
-- [ ] Reemplazar `ensureAuthorized()` por el modelo centralizado de permisos y reglas estructurales
-  Status: pending
+- [x] Reemplazar `ensureAuthorized()` por el modelo centralizado de permisos y reglas estructurales
+  Status: done
 
 ## Phase 5. User Management Migration
 
-- [ ] Ajustar flujo de creacion de usuario para usar `roleId`
-  Status: pending
+- [x] Ajustar flujo de creacion de usuario para usar `roleId`
+  Status: done
 
-- [ ] Ajustar flujo de actualizacion de usuario para usar `roleId`
-  Status: pending
+- [x] Ajustar flujo de actualizacion de usuario para usar `roleId`
+  Status: done
 
-- [ ] Ajustar flujo de borrado de usuario para nueva autorizacion
-  Status: pending
+- [x] Ajustar flujo de borrado de usuario para nueva autorizacion
+  Status: done
 
-- [ ] Ajustar invitaciones de usuario al nuevo modelo
-  Status: pending
+- [x] Ajustar invitaciones de usuario al nuevo modelo
+  Status: done
 
-- [ ] Reemplazar `GetUserRoles` por consulta de roles asignables
-  Status: pending
+- [x] Reemplazar `GetUserRoles` por consulta de roles asignables
+  Status: done
 
 ## Phase 6. Endpoint Migration
 
-- [ ] Migrar `customer.controller` a permisos centralizados
-  Status: pending
+- [x] Migrar `customer.controller` a permisos centralizados
+  Status: done
 
-- [ ] Migrar `provider.controller` a permisos centralizados
-  Status: pending
+- [x] Migrar `provider.controller` a permisos centralizados
+  Status: done
 
-- [ ] Migrar `service-entry.controller` a permisos centralizados
-  Status: pending
+- [x] Migrar `service-entry.controller` a permisos centralizados
+  Status: done
 
-- [ ] Revisar endpoints `master-admin` para nueva regla estructural
-  Status: pending
+- [x] Revisar endpoints `master-admin` para nueva regla estructural
+  Status: done
 
-- [ ] Alinear endpoints nuevos y migrados al estandar de `docs/api-pipeline.md`
-  Status: pending
+- [x] Alinear endpoints nuevos y migrados al estandar de `docs/api-pipeline.md`
+  Status: done
 
 ## Phase 7. Role Management Feature
 
-- [ ] Crear endpoint para listar roles
-  Status: pending
+- [x] Crear endpoint para listar roles
+  Status: done
 
-- [ ] Crear endpoint para crear roles
-  Status: pending
+- [x] Crear endpoint para crear roles
+  Status: done
 
-- [ ] Crear endpoint para actualizar roles
-  Status: pending
+- [x] Crear endpoint para actualizar roles
+  Status: done
 
-- [ ] Crear endpoint para consultar detalle de rol
-  Status: pending
+- [x] Crear endpoint para consultar detalle de rol
+  Status: done
 
-- [ ] Crear endpoint para activar o desactivar roles
-  Status: pending
+- [x] Crear endpoint para activar o desactivar roles
+  Status: done
 
 ## Phase 8. Data Migration And Cleanup
 
-- [ ] Definir mapping de roles legacy al nuevo modelo
-  Status: pending
+- [x] Definir mapping de roles legacy al nuevo modelo
+  Status: done
 
-- [ ] Diseñar migracion de usuarios existentes
-  Status: pending
+- [x] Diseñar migracion de usuarios existentes
+  Status: done
 
-- [ ] Eliminar autorizacion hardcodeada residual
-  Status: pending
+- [x] Eliminar autorizacion hardcodeada residual
+  Status: done
 
 - [ ] Eliminar policies y enums legacy ya obsoletos
   Status: pending
