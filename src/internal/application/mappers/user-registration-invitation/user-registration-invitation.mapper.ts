@@ -13,7 +13,6 @@ export class UserRegistrationInvitationMapper {
       scope: record.scope,
       type: record.type,
       status: record.status,
-      role: record.role,
       systemRole: record.systemRole,
       roleId: record.roleId,
       invitedByUserId: record.invitedByUserId,

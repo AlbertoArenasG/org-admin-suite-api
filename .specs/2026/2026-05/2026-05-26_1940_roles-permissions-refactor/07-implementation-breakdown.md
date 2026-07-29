@@ -154,9 +154,9 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efectiva en runtime o en contratos públicos internos relacionados con autorización y usuarios.
 
-- [ ] Eliminar `UserRole` legacy del dominio y cualquier helper de compatibilidad derivado desde `systemRole`
-- [ ] Eliminar persistencia/lectura derivada del campo legacy `role` en usuarios donde ya no sea estrictamente necesaria para migración
-- [ ] Eliminar `role` y `role_name` legacy de responses de invitaciones y alinear su presenter al contrato final
+- [x] Eliminar `UserRole` legacy del dominio y cualquier helper de compatibilidad derivado desde `systemRole`
+- [x] Eliminar persistencia/lectura derivada del campo legacy `role` en usuarios donde ya no sea estrictamente necesaria para migración
+- [x] Eliminar `role` y `role_name` legacy de responses de invitaciones y alinear su presenter al contrato final
 - [ ] Revisar DTOs, mappers y repositorios que todavía cargan `role` como campo de transición
 - [ ] Limpiar referencias residuales a `MASTER_STAFF`, `CUSTOMER` y `STAFF` que solo sobreviven por herencia del modelo anterior
 - [ ] Revisar i18n final de enums, roles y estados para retirar nombres legacy ya sin uso
@@ -183,19 +183,19 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 #### Invitaciones de usuario
 
-- [ ] `src/internal/domain/ports/repositories/user-registration-invitation/user-registration-invitation.types.ts`
+- [x] `src/internal/domain/ports/repositories/user-registration-invitation/user-registration-invitation.types.ts`
   - retirar `role` del record persistido
-- [ ] `src/internal/application/dto/user-registration-invitation/*.ts`
+- [x] `src/internal/application/dto/user-registration-invitation/*.ts`
   - retirar `role` de DTOs de salida si ya no es parte del contrato final
-- [ ] `src/internal/application/mappers/user-registration-invitation/user-registration-invitation.mapper.ts`
+- [x] `src/internal/application/mappers/user-registration-invitation/user-registration-invitation.mapper.ts`
   - eliminar propagación de `role` legacy
-- [ ] `src/internal/infra/persistence/mongoose/schemas/user-registration-invitation/user-registration-invitation.schema.ts`
+- [x] `src/internal/infra/persistence/mongoose/schemas/user-registration-invitation/user-registration-invitation.schema.ts`
   - evaluar retiro del campo `role`
-- [ ] `src/internal/infra/persistence/mongoose/mappers/user-registration-invitation/mongoose-user-registration-invitation.mapper.ts`
+- [x] `src/internal/infra/persistence/mongoose/mappers/user-registration-invitation/mongoose-user-registration-invitation.mapper.ts`
   - eliminar fallback desde `document.role`
   - eliminar `resolveLegacyInvitationRoleId(...)`
   - dejar persistencia y lectura nativas solo con `system_role + role_id`
-- [ ] `src/internal/infra/api/presenters/user-registration-invitation/user-registration-invitation.presenter.ts`
+- [x] `src/internal/infra/api/presenters/user-registration-invitation/user-registration-invitation.presenter.ts`
   - retirar `role`
   - retirar `role_name` legacy basado en enum
 
@@ -203,7 +203,7 @@ Este spec no se puede cerrar mientras siga existiendo compatibilidad legacy efec
 
 - [ ] `src/internal/application/services/authz/authorization.service.ts`
   - retirar fallback `allowLegacyUserRoleFallback` si ya no queda runtime legacy que lo necesite
-- [ ] `src/internal/application/use-cases/user-registration-invitation/*`
+- [x] `src/internal/application/use-cases/user-registration-invitation/*`
   - revisar creación y consumo de invitaciones para dejar de derivar `role` legacy
 
 #### Migraciones y scripts

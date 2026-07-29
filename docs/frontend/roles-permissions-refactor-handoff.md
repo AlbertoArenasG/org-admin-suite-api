@@ -257,10 +257,8 @@ Response vigente:
     "type": "NEW_USER",
     "status": "PENDING",
     "email": "ana@example.com",
-    "role": "STAFF",
     "system_role": "USER",
     "role_id": "STAFF_LEGACY",
-    "role_name": "Staff",
     "invited_by_user_id": "USR_999",
     "user_data": {
       "name": "Ana",
@@ -773,17 +771,12 @@ Notas:
 
 Estas zonas siguen en transición y no deben interpretarse como contrato final limpio:
 
-- responses de invitaciones todavía exponen:
-  - `role`
-  - `role_name`
-- lógica interna de compatibilidad todavía resuelve rol por fallback si falta `role_id`
 - el repositorio de roles todavía puede resolver por `role_id` histórico o `code`
 
 Regla práctica:
 
 - para usuarios autenticados, listado de usuarios y detalle de usuarios, frontend debe tratar `system_role` y `role_id` como contrato principal
 - `role_name` debe considerarse metadata auxiliar y descriptiva donde aparezca
-- `role` debe considerarse un campo legacy donde todavía aparezca
 
 ## Scripts Operativos Nuevos
 

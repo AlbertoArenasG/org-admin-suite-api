@@ -67,7 +67,6 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       type: UserRegistrationInvitationType.NEW_USER_REGISTRATION,
       status: UserRegistrationInvitationStatus.PENDING,
       email: input.email,
-      role: mapSystemRoleToLegacyInvitationRole(input.systemRole),
       systemRole: input.systemRole,
       roleId: input.roleId,
       invitedByUserId: input.invitedByUserId,
@@ -80,7 +79,6 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       token,
       invitationUrl: this.tokenService.buildInvitationUrl(token),
       scope: UserRegistrationInvitationScope.MASTER,
-      role: mapSystemRoleToLegacyInvitationRole(input.systemRole),
       userData: input.userData ?? null,
     });
 
@@ -112,16 +110,5 @@ export class CreateMasterUserRegistrationInvitationUseCase {
         { email, scope: UserRegistrationInvitationScope.MASTER },
       );
     }
-  }
-}
-
-function mapSystemRoleToLegacyInvitationRole(systemRole: SystemRole): string {
-  switch (systemRole) {
-    case SystemRole.MASTER_ADMIN:
-      return 'MASTER_ADMIN';
-    case SystemRole.ADMIN:
-      return 'ADMIN';
-    case SystemRole.USER:
-      return 'STAFF';
   }
 }

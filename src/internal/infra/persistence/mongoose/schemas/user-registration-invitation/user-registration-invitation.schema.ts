@@ -55,20 +55,16 @@ export class UserRegistrationInvitationDocument extends Document {
   @Prop({ type: String, required: true, index: true })
   email: string;
 
-  @Prop({ type: String, required: true })
-  role: string;
-
   @Prop({
     type: String,
     enum: Object.values(SystemRole),
-    required: false,
-    default: null,
+    required: true,
     index: true,
   })
-  system_role?: SystemRole | null;
+  system_role: SystemRole;
 
   @Prop({ type: String, required: false, default: null, index: true })
-  role_id?: string | null;
+  role_id: string | null;
 
   @Prop({ type: String, required: true, index: true })
   invited_by_user_id: string;

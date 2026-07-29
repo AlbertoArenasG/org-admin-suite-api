@@ -29,7 +29,6 @@ export interface CreateUserRegistrationInvitationRecord {
   type: UserRegistrationInvitationType;
   status: UserRegistrationInvitationStatus;
   email: string;
-  role: string;
   systemRole: SystemRole;
   roleId: string | null;
   invitedByUserId: string;

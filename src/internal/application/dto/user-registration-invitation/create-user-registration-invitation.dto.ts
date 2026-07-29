@@ -36,7 +36,6 @@ export interface UserRegistrationInvitationDto {
   scope: UserRegistrationInvitationScope;
   type: UserRegistrationInvitationType;
   status: UserRegistrationInvitationStatus;
-  role: string;
   systemRole: SystemRole;
   roleId: string | null;
   invitedByUserId: string;

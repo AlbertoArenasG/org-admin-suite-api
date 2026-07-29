@@ -1,10 +1,8 @@
 import {
   CreateUserRegistrationInvitationRecord,
-  UserRegistrationInvitationScope,
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationUserData,
 } from '@domain/ports/repositories';
-import { SystemRole } from '@domain/entities';
 import { UserRegistrationInvitationDocument } from '@infra/persistence/mongoose/schemas';
 
 export class MongooseUserRegistrationInvitationMapper {
@@ -38,18 +36,8 @@ export class MongooseUserRegistrationInvitationMapper {
       type: document.type,
       status: document.status,
       email: document.email,
-      role: document.role,
-      systemRole:
-        document.system_role ??
-        resolveSystemRoleFromLegacyInvitationRole(document.role),
-      roleId:
-        document.role_id ??
-        resolveLegacyInvitationRoleId(
-          document.scope,
-          document.system_role ??
-            resolveSystemRoleFromLegacyInvitationRole(document.role),
-          document.role,
-        ),
+      systemRole: document.system_role,
+      roleId: document.role_id ?? null,
       invitedByUserId: document.invited_by_user_id,
       tokenHash: document.token_hash,
       userData,
@@ -72,7 +60,6 @@ export class MongooseUserRegistrationInvitationMapper {
       type: record.type,
       status: record.status,
       email: record.email,
-      role: record.role,
       system_role: record.systemRole,
       role_id: record.roleId,
       invited_by_user_id: record.invitedByUserId,
@@ -91,36 +78,4 @@ export class MongooseUserRegistrationInvitationMapper {
       consumed_at: null,
     };
   }
-}
-
-function resolveSystemRoleFromLegacyInvitationRole(role: string): SystemRole {
-  if (role === 'MASTER_ADMIN' || role === 'MASTER_STAFF') {
-    return SystemRole.MASTER_ADMIN;
-  }
-
-  if (role === 'ADMIN') {
-    return SystemRole.ADMIN;
-  }
-
-  return SystemRole.USER;
-}
-
-function resolveLegacyInvitationRoleId(
-  scope: UserRegistrationInvitationScope,
-  systemRole: SystemRole,
-  legacyRole: string,
-): string | null {
-  if (systemRole === SystemRole.MASTER_ADMIN) {
-    return 'MASTER_ADMIN_DEFAULT';
-  }
-
-  if (systemRole === SystemRole.ADMIN) {
-    return 'ADMIN_DEFAULT';
-  }
-
-  if (scope === UserRegistrationInvitationScope.APPLICATION || legacyRole) {
-    return 'STAFF_LEGACY';
-  }
-
-  return null;
 }

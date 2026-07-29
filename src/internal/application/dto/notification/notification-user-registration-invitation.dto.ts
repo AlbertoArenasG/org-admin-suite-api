@@ -8,6 +8,5 @@ export interface UserRegistrationInvitationEmailDto {
   token: string;
   invitationUrl: string;
   scope: UserRegistrationInvitationScope;
-  role: string;
   userData?: UserRegistrationInvitationUserData | null;
 }
