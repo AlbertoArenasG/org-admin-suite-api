@@ -239,7 +239,7 @@ Tras las pruebas de integración frontend/backend y antes de cerrar el spec:
 - [x] Revisar referencias residuales al modelo legacy `role` en DTOs, compatibilidad temporal y documentación
 - [x] Evaluar si ya se puede retirar más compatibilidad temporal de persistencia o de contratos internos
 - [x] Revisar i18n final de catálogos, nombres de permisos, roles y estados
-- [ ] Cerrar el spec únicamente después de eliminar el legacy restante y dejar alineados task list, progress y breakdown al estado final
+- [x] Cerrar el spec únicamente después de eliminar el legacy restante y dejar alineados task list, progress y breakdown al estado final
 
 ## Orden sugerido de ejecución
 
