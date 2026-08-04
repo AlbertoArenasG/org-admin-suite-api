@@ -136,6 +136,11 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
 - [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de providers
 
+## Slice 7.3 Service entries public token cleanup
+
+- [ ] Retirar `public_access_token` de la respuesta de `POST /v1/services/service-entry`
+- [ ] Mantener sin cambios el `READ` ordinario de `service_entries`, ya que no expone hoy token o URL pública
+
 ## Slice 8. Migración de datos
 
 - [x] Diseñar script o rutina de migración de usuarios legacy

@@ -298,7 +298,7 @@ Endpoints actuales:
 - `POST /v1/services/service-entry`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `service_entries.CREATE`
+  - nota: protegido por `PermissionsGuard` con `service_entries.CREATE`; como cleanup aprobado de contrato, la respuesta de creación debe dejar de devolver `public_access_token` porque el acceso público ya se distribuye por correo
 - `GET /v1/services/service-entry`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -319,6 +319,12 @@ Endpoints actuales:
   - operacion: `DELETE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `service_entries.DELETE`
+
+Nota de alcance aprobada:
+
+- `service_entries` no replica el problema de `CUSTOMERS` y `PROVIDERS` en el `READ` ordinario, porque listado y detalle no exponen hoy `public_access_token` ni `public_access_url`
+- no se aprueba por ahora una nueva operación explícita `READ_PUBLIC_ACCESS` para este módulo
+- sí se aprueba como cleanup retirar `public_access_token` de la respuesta de `POST /v1/services/service-entry`
 
 ### `service_entry_surveys`
 

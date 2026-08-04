@@ -143,6 +143,9 @@
 - [ ] Ajustar presenters de providers para retirar campos sensibles del listado y detalle ordinario
   Status: pending
 
+- [ ] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
+  Status: pending
+
 ## Phase 7. Role Management Feature
 
 - [x] Crear endpoint para listar roles

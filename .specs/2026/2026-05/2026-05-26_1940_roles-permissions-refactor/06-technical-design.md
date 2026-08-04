@@ -339,6 +339,7 @@ Caso adicional aprobado:
 
 - revelar `public_access_url` y `public_access_token` de un customer no debe quedar absorbido por `CUSTOMERS/READ`; debe convertirse en `CUSTOMERS/READ_PUBLIC_ACCESS`
 - revelar `public_access_url` y `public_access_token` de un provider no debe quedar absorbido por `PROVIDERS/READ`; debe convertirse en `PROVIDERS/READ_PUBLIC_ACCESS`
+- `service_entries` no requiere esa misma promoción para `READ`, pero la respuesta de `CREATE` debe dejar de devolver `public_access_token` porque el acceso público ya se distribuye por correo
 
 ##### F. Interfaz exacta propuesta
 
