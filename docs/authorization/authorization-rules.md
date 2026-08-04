@@ -52,6 +52,7 @@ Ejemplos de cosas que normalmente no deben entrar al catálogo general:
 - reparación o corrección manual de datos
 - administración técnica de catálogos internos del sistema
 - diagnósticos operativos
+- capabilities transversales de infraestructura consumidas implícitamente por otros módulos funcionales, como manejo genérico de archivos
 
 ## Regla Central
 
@@ -173,6 +174,8 @@ Ejemplo práctico:
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 - si `GET /v1/customers` o `GET /v1/customers/:customerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `CUSTOMERS`
 - si `GET /v1/providers` o `GET /v1/providers/:providerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `PROVIDERS`
+- si un capability como `FILES` solo existe para soportar uploads, metadata o descargas requeridas por otros módulos funcionales y no tiene UI ni gobierno de negocio propio, debe salir del catálogo funcional general y tratarse como infraestructura transversal
+- para `files`, la decisión aprobada no es absorber sus endpoints por permisos del módulo padre, sino dejar `JwtAuthGuard` donde hoy ya exista autenticación y retirar `PermissionsGuard` junto con cualquier permiso `FILES/*`
 
 Casos que deben resolverse con validación estructural:
 

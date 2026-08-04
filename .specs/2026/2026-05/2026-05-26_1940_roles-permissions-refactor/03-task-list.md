@@ -146,6 +146,18 @@
 - [ ] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
   Status: pending
 
+- [ ] Retirar `FILES` del catálogo funcional de módulos y permisos
+  Status: pending
+
+- [ ] Documentar `files` como capability transversal absorbida por otros módulos
+  Status: pending
+
+- [ ] Retirar `PermissionsGuard` y permisos `FILES/*` de endpoints de `files`
+  Status: pending
+
+- [ ] Mantener `JwtAuthGuard` en endpoints autenticados de `files`
+  Status: pending
+
 ## Phase 7. Role Management Feature
 
 - [x] Crear endpoint para listar roles

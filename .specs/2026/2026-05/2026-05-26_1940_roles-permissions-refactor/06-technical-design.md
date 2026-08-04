@@ -340,6 +340,8 @@ Caso adicional aprobado:
 - revelar `public_access_url` y `public_access_token` de un customer no debe quedar absorbido por `CUSTOMERS/READ`; debe convertirse en `CUSTOMERS/READ_PUBLIC_ACCESS`
 - revelar `public_access_url` y `public_access_token` de un provider no debe quedar absorbido por `PROVIDERS/READ`; debe convertirse en `PROVIDERS/READ_PUBLIC_ACCESS`
 - `service_entries` no requiere esa misma promoción para `READ`, pero la respuesta de `CREATE` debe dejar de devolver `public_access_token` porque el acceso público ya se distribuye por correo
+- `files` no debe mantenerse como módulo funcional de negocio; debe salir del catálogo y tratarse como capability transversal consumida implícitamente por otros módulos
+- para `files`, el cierre aprobado no es reexpresar sus endpoints con permisos del módulo padre; el cierre aprobado es conservar `JwtAuthGuard` donde ya exista autenticación y retirar `PermissionsGuard` junto con `FILES/*`
 
 ##### F. Interfaz exacta propuesta
 

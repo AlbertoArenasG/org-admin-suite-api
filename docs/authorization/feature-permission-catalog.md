@@ -89,9 +89,12 @@ Los modulos actuales del sistema son:
 - `providers`
 - `service_entries`
 - `service_entry_surveys`
-- `files`
 - `service_packages`
 - `user_registration_invitations`
+
+Nota:
+
+- `files` deja de considerarse modulo funcional de negocio y pasa a tratarse como capability transversal de infraestructura consumida por otros módulos
 
 ## Criterio De Mapeo
 
@@ -350,32 +353,38 @@ Endpoints actuales:
 
 ### `files`
 
-Controller actual:
+Estado funcional aprobado:
+
+- `files` ya no debe tratarse como módulo funcional de negocio dentro del catálogo general de permisos
+- su uso actual es transversal y está absorbido por dominios como `service_entries`, `customers` y `providers`
+- no existe hoy una UI de backoffice dedicada a administración de archivos como capacidad autónoma
+
+Controllers actuales:
 
 - `src/internal/infra/api/controllers/file/file.controller.ts`
 
-Endpoints actuales:
+Endpoints existentes:
 
 - `POST /v1/files`
-  - operacion: `CREATE`
-  - acceso actual: autenticado
-  - nota: subida interna de archivos, protegido por `PermissionsGuard` con `files.CREATE`
+  - estado: capability transversal
+  - nota: upload autenticado consumido implícitamente por otros módulos; en el modelo objetivo conserva `JwtAuthGuard` y pierde `PermissionsGuard`
 - `POST /v1/files/public`
-  - operacion: fuera del catalogo interno
-  - acceso actual: publico
-  - nota: no se modela como permiso de backoffice
+  - estado: fuera del catálogo interno
+  - nota: upload público consumido por flujos públicos tokenizados
 - `GET /v1/files/:fileId`
-  - operacion: `READ`
-  - acceso actual: autenticado
-  - nota: consulta de metadata, protegido por `PermissionsGuard` con `files.READ`
+  - estado: capability transversal
+  - nota: metadata técnica de archivo, sin UI funcional propia; en el modelo objetivo conserva `JwtAuthGuard` y pierde `PermissionsGuard`
 - `GET /v1/files/:fileId/download`
-  - operacion: `READ`
-  - acceso actual: actualmente sin guard activo
-  - nota: sigue temporalmente fuera del guard centralizado; candidato a futura operacion especial como `DOWNLOAD`
+  - estado: capability transversal
+  - nota: descarga compartida entre contextos públicos y autenticados; por ahora no se modifica ni se endurece con guard en esta spec
 
-Nota:
+Decisión de esta spec:
 
-- si en el futuro se formaliza una operacion especial como `DOWNLOAD`, este modulo debera actualizar su mapeo
+- retirar `FILES` del catálogo funcional de módulos y permisos
+- retirar `FILES/*` del modelo de permisos y los `PermissionsGuard` asociados a endpoints de `files`
+- mantener `JwtAuthGuard` en los endpoints de `files` que hoy ya son autenticados
+- no tocar por ahora el endpoint de descarga sin guard
+- mantener las descargas y uploads como capabilities transversales sin gobierno por módulo funcional
 
 ### `service_packages`
 
