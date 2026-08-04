@@ -38,7 +38,7 @@ No registrar aquí:
 - módulo principal relacionado: `USERS`
 - capacidad principal que lo absorbe: `USERS/READ`
 - razón:
-  - sirve para poblar selects y flujos de create, edit e invite de usuarios
+  - sirve para poblar selects y flujos de edit e invite de usuarios
   - hoy no tiene autonomía funcional propia dentro del backoffice
   - no conviene introducirlo como permiso explícito independiente en el CRUD de roles
 

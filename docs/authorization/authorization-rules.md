@@ -163,6 +163,7 @@ Excepción importante:
 Ejemplo práctico:
 
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
+- si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 
 Casos que deben resolverse con validación estructural:
 

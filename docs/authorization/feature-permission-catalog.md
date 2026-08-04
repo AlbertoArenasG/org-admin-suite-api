@@ -107,10 +107,6 @@ Controller actual:
 
 Endpoints actuales:
 
-- `POST /v1/users`
-  - operacion: `CREATE`
-  - acceso actual: autenticado
-  - nota: crea usuario ordinario, protegido por `PermissionsGuard` con `users.CREATE`
 - `PATCH /v1/users/me`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -142,6 +138,7 @@ Endpoints actuales:
 
 Notas:
 
+- `POST /v1/users` ya no debe considerarse parte del catálogo funcional de negocio; la creación funcional de usuarios en aplicación vive en el flujo de invitaciones
 - ver usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - crear usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - promover hacia `MASTER_ADMIN` o degradar desde `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`

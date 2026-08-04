@@ -45,7 +45,6 @@
 
 ## Modules Pending Review
 
-- `USERS`
 - `ROLES`
 - `CUSTOMERS`
 - `PROVIDERS`
@@ -54,3 +53,24 @@
 - `FILES`
 - `SERVICE_PACKAGES`
 - `USER_REGISTRATION_INVITATIONS`
+
+## Reviewed Modules
+
+### `USERS`
+
+- clasificación actual:
+  - módulo de negocio cercano a CRUD, pero no definido por obligación CRUD
+- operaciones explícitas de negocio que hoy sí se sostienen:
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+- operaciones absorbidas o excluidas:
+  - `GET /v1/users/roles` queda absorbido por `USERS/READ` como catálogo auxiliar
+  - `GET /v1/users/me` y `PATCH /v1/users/me` quedan fuera del catálogo de backoffice por ser self-service
+  - `POST /v1/users` deja de considerarse capacidad de negocio del catálogo general
+- lectura actual:
+  - la creación de usuarios para negocio hoy ocurre a través del flujo de invitaciones
+  - el alta directa de usuarios queda mejor clasificada como capacidad operativa o de plataforma
+- implicación para el refactor:
+  - `USERS/CREATE` debe salir del catálogo general de negocio
+  - el endpoint técnico de creación directa deberá reevaluarse bajo frontera `MASTER_ADMIN` o capacidad de plataforma equivalente

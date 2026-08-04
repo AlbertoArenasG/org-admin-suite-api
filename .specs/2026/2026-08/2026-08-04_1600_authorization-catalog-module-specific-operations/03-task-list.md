@@ -11,6 +11,10 @@
 - [ ] Identificar capacidades que pertenecen a plataforma y no al catálogo general
       Status: pending
 
+Notas de avance:
+
+- `USERS` ya fue analizado y se decidió sacar `USERS/CREATE` del catálogo de negocio
+
 ## Phase 2. Definition
 
 - [ ] Cerrar la decisión sobre el modelo objetivo del catálogo
