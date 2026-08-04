@@ -53,3 +53,41 @@ El contrato HTTP debe exponer esa relación de forma directa para evitar que fro
 ### Status
 
 approved
+
+---
+
+## Decision 02. Futuro de `GET /v1/roles/operations`
+
+### Context
+
+Una vez que `GET /v1/roles/modules` exponga las operaciones válidas por módulo, `GET /v1/roles/operations` se vuelve redundante para el caso real de integración con frontend.
+
+Además, el catálogo de operaciones ya vive en código backend y no en una fuente externa o persistente.
+
+### Options
+
+1. Mantener `GET /v1/roles/operations` como endpoint complementario
+2. Marcarlo como deprecated y retirarlo después
+3. Eliminarlo dentro de esta misma iniciativa
+
+### Recommendation
+
+Opcion 3.
+
+No hay necesidad de sostener un endpoint redundante si backend y frontend se desplegarán juntos al completar esta iniciativa.
+
+### Implications
+
+- el contrato de catálogo para frontend se simplifica
+- backend concentra la integración del editor en un solo endpoint
+- la documentación de handoff debe actualizarse para reflejar la eliminación
+
+### Decision Final
+
+Se aprueba eliminar `GET /v1/roles/operations`.
+
+`GET /v1/roles/modules` quedará como el único contrato necesario para que frontend construya el editor de permisos.
+
+### Status
+
+approved
