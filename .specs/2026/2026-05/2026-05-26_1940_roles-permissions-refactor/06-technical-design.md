@@ -863,9 +863,12 @@ Seed data inicial esperado:
 - `PROVIDERS`
 - `SERVICE_ENTRIES`
 - `SERVICE_ENTRY_SURVEYS`
-- `FILES`
 - `SERVICE_PACKAGES`
 - `USER_REGISTRATION_INVITATIONS`
+
+Nota:
+
+- `FILES` deja de formar parte del catálogo funcional objetivo y se reclasifica como capability transversal fuera del modelo de permisos por módulo
 
 #### Permission operations
 
