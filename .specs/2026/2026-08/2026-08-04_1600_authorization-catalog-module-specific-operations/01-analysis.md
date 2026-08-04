@@ -93,3 +93,21 @@
 - implicación para el refactor:
   - `PATCH /v1/roles/:roleId/status` debe migrar a `ROLES/ACTIVATE`
   - el vocabulario global deberá admitir `ACTIVATE` como operación real del dominio
+
+### `CUSTOMERS`
+
+- clasificación actual:
+  - módulo de negocio CRUD para backoffice autenticado
+- operaciones explícitas de negocio que hoy sí se sostienen:
+  - `CREATE`
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+- operaciones absorbidas o excluidas:
+  - los endpoints públicos por token del customer fiscal profile quedan fuera del catálogo autenticado
+- lectura actual:
+  - el controller autenticado de `CUSTOMERS` sí representa administración ordinaria del dominio desde backoffice
+  - el flujo público por token pertenece al mismo dominio funcional, pero no al modelo de permisos por rol
+- implicación para el refactor:
+  - `CUSTOMERS` puede mantenerse como módulo CRUD dentro del catálogo autenticado
+  - los endpoints públicos por token deben seguir documentándose como frontera separada y no como permisos del catálogo general

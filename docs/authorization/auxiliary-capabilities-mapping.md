@@ -42,6 +42,18 @@ No registrar aquí:
   - hoy no tiene autonomía funcional propia dentro del backoffice
   - no conviene introducirlo como permiso explícito independiente en el CRUD de roles
 
+### `GET /v1/customers/:customerId/public-access`
+
+- tipo: capacidad auxiliar sensible
+- módulo principal relacionado: `CUSTOMERS`
+- decisión de modelado: no queda absorbido por `CUSTOMERS/READ`
+- operación explícita objetivo: `CUSTOMERS/READ_PUBLIC_ACCESS`
+- razón:
+  - expone `public_access_url` y `public_access_token`
+  - esos campos permiten reutilizar el acceso tokenizado externo del customer fiscal profile
+  - por sensibilidad, no conviene mantenerlos embebidos en el read ordinario del listado o detalle
+  - la UI podrá pedirlos de forma explícita cuando realmente necesite revelar ese dato
+
 ## Mantenimiento
 
 - si un endpoint auxiliar deja de ser auxiliar y adquiere autonomía funcional, debe reevaluarse para promoverlo al catálogo general

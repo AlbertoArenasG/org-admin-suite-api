@@ -255,6 +255,7 @@ Uso esperado:
 
 - `CUSTOMERS + CREATE`
 - `CUSTOMERS + READ`
+- `CUSTOMERS + READ_PUBLIC_ACCESS`
 - `PROVIDERS + UPDATE`
 - `SERVICE_ENTRIES + DELETE`
 - `ROLES + CREATE`
@@ -322,6 +323,7 @@ Casos que deben resolverse con permiso genérico:
 - actualizar service entry
 - eliminar service package record
 - crear rol custom
+- consultar un endpoint autenticado dedicado para revelar un dato sensible puntual, cuando esa capacidad ya fue promovida a operación explícita del mismo módulo
 
 Casos que deben resolverse con validación estructural:
 
@@ -331,6 +333,10 @@ Casos que deben resolverse con validación estructural:
 - degradar un `ADMIN` a `USER`
 - asignar el rol default `ADMIN`
 - modificar un rol del sistema inmutable
+
+Caso adicional aprobado:
+
+- revelar `public_access_url` y `public_access_token` de un customer no debe quedar absorbido por `CUSTOMERS/READ`; debe convertirse en `CUSTOMERS/READ_PUBLIC_ACCESS`
 
 ##### F. Interfaz exacta propuesta
 
@@ -1163,6 +1169,11 @@ export class CustomerController {
   @RequirePermission('CUSTOMERS', 'READ')
   async findOne() {}
 
+  @Get(':customerId/public-access')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('CUSTOMERS', 'READ_PUBLIC_ACCESS')
+  async findPublicAccess() {}
+
   @Patch(':customerId')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('CUSTOMERS', 'UPDATE')
@@ -1180,6 +1191,22 @@ Resultado esperado:
 - desaparece `ensureAuthorized()`
 - el controller declara intención, no lógica de autorización
 - el permiso se resuelve desde `systemRole + roleId`
+- los campos sensibles no viajan embebidos en responses ordinarias de listado y detalle
+
+#### 7.4.1 Criterio específico para customers con acceso tokenizado
+
+Problema detectado:
+
+- `public_access_url` y `public_access_token` son datos sensibles
+- si viajan dentro de `GET /v1/customers` o `GET /v1/customers/:customerId`, cualquier actor con `CUSTOMERS/READ` obtiene capacidad indirecta para reutilizar el flujo público tokenizado
+
+Diseño aprobado para esta spec:
+
+- mantener `CUSTOMERS/READ` para listado y detalle ordinario
+- retirar `public_access_url` y `public_access_token` de los presenters ordinarios
+- crear un endpoint autenticado dedicado para consultar esos dos campos cuando la UI lo solicite explícitamente
+- modelar esa revelación como operación explícita `CUSTOMERS/READ_PUBLIC_ACCESS`
+- replicar el mismo criterio en `providers` si se confirma el mismo patrón de datos sensibles tokenizados
 
 #### 7.5 Ejemplo aterrizado: migración de `CreateUserAndNotifyUseCase`
 

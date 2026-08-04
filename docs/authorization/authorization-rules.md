@@ -138,6 +138,13 @@ Regla para endpoints de catálogo auxiliares:
 - si ese endpoint solo existe para soportar una acción principal de negocio, su acceso puede quedar implícitamente cubierto por el permiso funcional principal
 - solo debe modelarse como operación explícita si expone información con sensibilidad propia o si negocio necesita gobernarlo de manera separada
 
+Regla para datos sensibles dentro de un módulo:
+
+- si un endpoint ordinario de `READ` incluye campos con sensibilidad propia, esos campos no deben quedarse acoplados por inercia al permiso general de lectura
+- en esos casos, el dato sensible debe separarse a un endpoint o capacidad auxiliar dedicada
+- esa capacidad sí debe promoverse a operación explícita del mismo módulo cuando negocio o seguridad necesiten gobernarla por separado
+- esto evita meter lógica condicional por campo dentro de presenters generales y mantiene más clara la frontera de autorización
+
 Usar validación estructural cuando:
 
 - interviene `systemRole`
@@ -164,6 +171,7 @@ Ejemplo práctico:
 
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
+- si `GET /v1/customers` o `GET /v1/customers/:customerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `CUSTOMERS`
 
 Casos que deben resolverse con validación estructural:
 

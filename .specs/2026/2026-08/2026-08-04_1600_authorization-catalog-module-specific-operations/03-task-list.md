@@ -15,6 +15,7 @@ Notas de avance:
 
 - `USERS` ya fue analizado y se decidió sacar `USERS/CREATE` del catálogo de negocio
 - `ROLES` ya fue analizado y se decidió introducir `ROLES/ACTIVATE` para el cambio de estado
+- `CUSTOMERS` ya fue analizado y se confirmó que el flujo público por token queda fuera del catálogo autenticado
 
 ## Phase 2. Definition
 

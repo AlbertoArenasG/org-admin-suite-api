@@ -114,6 +114,23 @@
 - [x] Alinear endpoints nuevos y migrados al estandar de `docs/api-pipeline.md`
   Status: done
 
+## Phase 6.1 Sensitive Auxiliary Access
+
+- [ ] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `CUSTOMERS`
+  Status: pending
+
+- [ ] Definir operación explícita `CUSTOMERS/READ_PUBLIC_ACCESS`
+  Status: pending
+
+- [ ] Crear endpoint autenticado dedicado para consultar acceso público sensible de customer
+  Status: pending
+
+- [ ] Ajustar presenters de customers para retirar campos sensibles del listado y detalle ordinario
+  Status: pending
+
+- [ ] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
+  Status: pending
+
 ## Phase 7. Role Management Feature
 
 - [x] Crear endpoint para listar roles

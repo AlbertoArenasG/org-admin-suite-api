@@ -75,6 +75,10 @@ Operaciones controladas aprobadas para la primera etapa:
 
 Este documento puede mapear endpoints concretos a una de esas operaciones, aunque el endpoint no sea literalmente CRUD.
 
+Nota:
+
+- un módulo puede crecer con operaciones no CRUD cuando una capacidad auxiliar tenga sensibilidad o gobierno propio
+
 ## Modulos Actuales
 
 Los modulos actuales del sistema son:
@@ -213,6 +217,10 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `customers.READ`
+- `GET /v1/customers/:customerId/public-access`
+  - operacion objetivo: `READ_PUBLIC_ACCESS`
+  - acceso objetivo: autenticado
+  - nota: endpoint especial pendiente para consultar `public_access_url` y `public_access_token` fuera del `READ` general del customer
 - `PATCH /v1/customers/:customerId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -221,6 +229,18 @@ Endpoints actuales:
   - operacion: `DELETE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `customers.DELETE`
+
+Frontera complementaria:
+
+- los endpoints públicos por token de customer fiscal profile viven fuera del catálogo autenticado de permisos
+- ese flujo pertenece al mismo dominio funcional, pero no al modelo de autorización por usuario autenticado con rol
+
+Decisión de evolución aprobada:
+
+- `CUSTOMERS/READ` debe seguir cubriendo listado y detalle ordinario del customer
+- `public_access_url` y `public_access_token` no deben permanecer dentro del payload ordinario de `GET /v1/customers` ni `GET /v1/customers/:customerId`
+- esos dos campos deben salir a un endpoint autenticado dedicado bajo el mismo módulo `CUSTOMERS`
+- esa capacidad debe modelarse como nueva operación explícita `READ_PUBLIC_ACCESS`
 
 ### `providers`
 

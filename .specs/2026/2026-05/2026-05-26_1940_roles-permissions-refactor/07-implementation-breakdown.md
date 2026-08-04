@@ -121,6 +121,14 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Eliminar `ensureAuthorized()` donde exista
 - [x] Reemplazar checks hardcodeados por decorators/guards
 
+## Slice 7.1 Customers sensitive public access
+
+- [ ] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `CUSTOMERS`
+- [ ] Crear query/use case/controller para `GET /v1/customers/:customerId/public-access`
+- [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
+- [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de customers
+- [ ] Verificar si providers necesita el mismo patrón y documentarlo en esta misma spec
+
 ## Slice 8. Migración de datos
 
 - [x] Diseñar script o rutina de migración de usuarios legacy
