@@ -172,9 +172,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `roles.UPDATE`; reemplaza permisos del rol custom
 - `PATCH /v1/roles/:roleId/status`
-  - operacion: `UPDATE`
+  - operacion: `ACTIVATE`
   - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `roles.UPDATE`; activa o desactiva roles custom
+  - nota: hoy sigue protegido por `roles.UPDATE`, pero el modelo objetivo del catálogo lo reclasifica como operación explícita de activación/inactivación
 - `DELETE /v1/roles/:roleId`
   - operacion: `DELETE`
   - acceso actual: autenticado
@@ -187,6 +187,8 @@ Endpoints actuales:
 Notas:
 
 - este modulo incluye solo administracion de roles custom en el flujo ordinario
+- `GET /v1/roles/modules` funciona como catálogo auxiliar absorbido por `ROLES/READ`
+- `PATCH /v1/roles/:roleId/status` debe evolucionar a `ROLES/ACTIVATE`
 - ver el rol del sistema `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - modificar roles del sistema inmutables es exclusivo de `MASTER_ADMIN`
 - `ADMIN` puede ver el rol del sistema `ADMIN`, pero bloqueado

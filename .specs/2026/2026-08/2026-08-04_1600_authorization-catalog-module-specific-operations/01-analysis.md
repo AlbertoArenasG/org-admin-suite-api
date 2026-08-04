@@ -74,3 +74,22 @@
 - implicación para el refactor:
   - `USERS/CREATE` debe salir del catálogo general de negocio
   - el endpoint técnico de creación directa deberá reevaluarse bajo frontera `MASTER_ADMIN` o capacidad de plataforma equivalente
+
+### `ROLES`
+
+- clasificación actual:
+  - módulo de negocio cercano a CRUD, pero con una operación explícita adicional de activación
+- operaciones explícitas de negocio que hoy sí se sostienen:
+  - `CREATE`
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+  - `ACTIVATE`
+- operaciones absorbidas o excluidas:
+  - `GET /v1/roles/modules` queda absorbido por `ROLES/READ` como catálogo auxiliar del editor de permisos
+- lectura actual:
+  - la administración de roles custom sí pertenece claramente al catálogo funcional de negocio
+  - el cambio de estado de un rol no debe seguir modelado como simple `UPDATE`
+- implicación para el refactor:
+  - `PATCH /v1/roles/:roleId/status` debe migrar a `ROLES/ACTIVATE`
+  - el vocabulario global deberá admitir `ACTIVATE` como operación real del dominio

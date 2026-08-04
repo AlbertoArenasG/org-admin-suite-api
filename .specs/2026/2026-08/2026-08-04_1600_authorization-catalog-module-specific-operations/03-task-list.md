@@ -14,6 +14,7 @@
 Notas de avance:
 
 - `USERS` ya fue analizado y se decidió sacar `USERS/CREATE` del catálogo de negocio
+- `ROLES` ya fue analizado y se decidió introducir `ROLES/ACTIVATE` para el cambio de estado
 
 ## Phase 2. Definition
 

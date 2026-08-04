@@ -636,7 +636,7 @@ Notas:
 
 Permiso requerido:
 
-- `ROLES/UPDATE`
+- `ROLES/ACTIVATE`
 
 Request vigente:
 
@@ -650,6 +650,7 @@ Notas:
 
 - solo acepta `ACTIVE` o `INACTIVE`
 - devuelve el rol actualizado con el mismo shape de detalle
+- si el runtime actual todavía valida `ROLES/UPDATE`, tratarlo como una transición pendiente del catálogo objetivo
 
 ### `DELETE /v1/roles/:roleId`
 
