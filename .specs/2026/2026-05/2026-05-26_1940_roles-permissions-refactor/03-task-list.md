@@ -158,11 +158,11 @@
 - [x] Mantener `JwtAuthGuard` en endpoints autenticados de `files`
   Status: done
 
-- [ ] Retirar `POST /v1/service-packages/uploads` del catálogo de operaciones de backoffice
-  Status: pending
+- [x] Retirar `POST /v1/service-packages/uploads` del catálogo de operaciones de backoffice
+  Status: done
 
-- [ ] Documentar `service_packages` solo con `READ` y `DELETE` mientras `pwa-recoleccion` siga creando records sin autenticación
-  Status: pending
+- [x] Documentar `service_packages` solo con `READ` y `DELETE` mientras `pwa-recoleccion` siga creando records sin autenticación
+  Status: done
 
 ## Phase 7. Role Management Feature
 

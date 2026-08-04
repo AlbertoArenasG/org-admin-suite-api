@@ -152,9 +152,9 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 7.5 Service packages backoffice scope cleanup
 
-- [ ] Retirar `CREATE` de `SERVICE_PACKAGES` en el modelo objetivo de backoffice
-- [ ] Sacar `POST /v1/service-packages/uploads` del catálogo funcional autenticado
-- [ ] Mantener `SERVICE_PACKAGES` como módulo de negocio solo para `READ` y `DELETE`
+- [x] Retirar `CREATE` de `SERVICE_PACKAGES` en el modelo objetivo de backoffice
+- [x] Sacar `POST /v1/service-packages/uploads` del catálogo funcional autenticado
+- [x] Mantener `SERVICE_PACKAGES` como módulo de negocio solo para `READ` y `DELETE`
 
 ## Slice 8. Migración de datos
 
