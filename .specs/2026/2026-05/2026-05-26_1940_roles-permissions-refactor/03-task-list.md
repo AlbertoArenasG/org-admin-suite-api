@@ -131,17 +131,17 @@
 - [ ] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
   Status: done
 
-- [ ] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `PROVIDERS`
-  Status: pending
+- [x] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `PROVIDERS`
+  Status: done
 
-- [ ] Definir operación explícita `PROVIDERS/READ_PUBLIC_ACCESS`
-  Status: pending
+- [x] Definir operación explícita `PROVIDERS/READ_PUBLIC_ACCESS`
+  Status: done
 
-- [ ] Crear endpoint autenticado dedicado para consultar acceso público sensible de provider
-  Status: pending
+- [x] Crear endpoint autenticado dedicado para consultar acceso público sensible de provider
+  Status: done
 
-- [ ] Ajustar presenters de providers para retirar campos sensibles del listado y detalle ordinario
-  Status: pending
+- [x] Ajustar presenters de providers para retirar campos sensibles del listado y detalle ordinario
+  Status: done
 
 - [x] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
   Status: done

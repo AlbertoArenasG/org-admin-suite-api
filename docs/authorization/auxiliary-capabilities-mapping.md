@@ -59,7 +59,7 @@ No registrar aquí:
 - tipo: capacidad auxiliar sensible
 - módulo principal relacionado: `PROVIDERS`
 - decisión de modelado: no queda absorbido por `PROVIDERS/READ`
-- operación explícita objetivo: `PROVIDERS/READ_PUBLIC_ACCESS`
+- operación explícita: `PROVIDERS/READ_PUBLIC_ACCESS`
 - razón:
   - expone `public_access_url` y `public_access_token`
   - esos campos permiten reutilizar el acceso tokenizado externo del provider profile

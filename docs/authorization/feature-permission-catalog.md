@@ -266,9 +266,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `providers.READ`
 - `GET /v1/providers/:providerId/public-access`
-  - operacion objetivo: `READ_PUBLIC_ACCESS`
-  - acceso objetivo: autenticado
-  - nota: endpoint especial pendiente para consultar `public_access_url` y `public_access_token` fuera del `READ` general del provider
+  - operacion: `READ_PUBLIC_ACCESS`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `providers.READ_PUBLIC_ACCESS`; expone `public_access_url` y `public_access_token` fuera del `READ` general del provider
 - `PATCH /v1/providers/:providerId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -286,9 +286,9 @@ Frontera complementaria:
 Decisión de evolución aprobada:
 
 - `PROVIDERS/READ` debe seguir cubriendo listado y detalle ordinario del provider
-- `public_access_url` y `public_access_token` no deben permanecer dentro del payload ordinario de `GET /v1/providers` ni `GET /v1/providers/:providerId`
-- esos dos campos deben salir a un endpoint autenticado dedicado bajo el mismo módulo `PROVIDERS`
-- esa capacidad debe modelarse como nueva operación explícita `READ_PUBLIC_ACCESS`
+- `public_access_url` y `public_access_token` no permanecen dentro del payload ordinario de `GET /v1/providers` ni `GET /v1/providers/:providerId`
+- esos dos campos salen por el endpoint autenticado dedicado `GET /v1/providers/:providerId/public-access`
+- esa capacidad quedó modelada como operación explícita `READ_PUBLIC_ACCESS`
 
 ### `service_entries`
 

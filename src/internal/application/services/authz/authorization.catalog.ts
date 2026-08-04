@@ -19,7 +19,7 @@ export const AUTHORIZATION_CATALOG = {
   PROVIDERS: {
     code: 'PROVIDERS',
     nameKey: 'AUTHORIZATION.MODULE.PROVIDERS',
-    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    operations: ['CREATE', 'READ', 'READ_PUBLIC_ACCESS', 'UPDATE', 'DELETE'],
   },
   SERVICE_ENTRIES: {
     code: 'SERVICE_ENTRIES',

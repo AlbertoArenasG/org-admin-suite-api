@@ -173,7 +173,7 @@ Ejemplo práctico:
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 - `GET /v1/customers` y `GET /v1/customers/:customerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `CUSTOMERS/READ_PUBLIC_ACCESS`
-- si `GET /v1/providers` o `GET /v1/providers/:providerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `PROVIDERS`
+- `GET /v1/providers` y `GET /v1/providers/:providerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `PROVIDERS/READ_PUBLIC_ACCESS`
 - si un capability como `FILES` solo existe para soportar uploads, metadata o descargas requeridas por otros módulos funcionales y no tiene UI ni gobierno de negocio propio, debe salir del catálogo funcional general y tratarse como infraestructura transversal
 - para `files`, la decisión aprobada no es absorber sus endpoints por permisos del módulo padre, sino dejar `JwtAuthGuard` donde hoy ya exista autenticación y retirar `PermissionsGuard` junto con cualquier permiso `FILES/*`
 

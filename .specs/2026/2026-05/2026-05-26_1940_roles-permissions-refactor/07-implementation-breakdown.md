@@ -131,10 +131,10 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 7.2 Providers sensitive public access
 
-- [ ] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `PROVIDERS`
-- [ ] Crear query/use case/controller para `GET /v1/providers/:providerId/public-access`
-- [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
-- [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de providers
+- [x] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `PROVIDERS`
+- [x] Crear query/use case/controller para `GET /v1/providers/:providerId/public-access`
+- [x] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
+- [x] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de providers
 
 ## Slice 7.3 Service entries public token cleanup
 

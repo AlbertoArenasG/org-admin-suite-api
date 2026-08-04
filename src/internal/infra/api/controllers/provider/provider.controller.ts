@@ -28,7 +28,11 @@ import {
   UpdateProviderCommandAdapter,
   DeleteProviderCommandAdapter,
 } from '@infra/cqrs/commands';
-import { GetProvidersQuery, GetProviderByIdQuery } from '@infra/cqrs/queries';
+import {
+  GetProvidersQuery,
+  GetProviderByIdQuery,
+  GetProviderPublicAccessQuery,
+} from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
 @Controller('v1/providers')
@@ -94,6 +98,26 @@ export class ProviderController {
       GetProviderByIdQuery.create(providerId),
     );
     const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get(':providerId/public-access')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('providers', 'READ_PUBLIC_ACCESS')
+  @HttpCode(HttpStatus.OK)
+  async findPublicAccess(
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
+    @Param('providerId') providerId: string,
+  ) {
+    const result = await this.queryBus.execute(
+      GetProviderPublicAccessQuery.create(providerId),
+    );
+    const data = this.presenter.toPublicAccessResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))

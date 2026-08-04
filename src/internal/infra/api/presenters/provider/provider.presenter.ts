@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import {
   CreateProviderResultDto,
+  ProviderPublicAccessViewDto,
   ProviderViewDto,
   ProviderFiscalProfileDetailsDto,
   ProviderBankingInfoDetailsDto,
@@ -38,10 +39,6 @@ export class ProviderPresenter {
       provider_status_name: this.enumNameService.getEnumName(
         `PROVIDER.STATUS.${provider.status}`,
       ),
-      public_access_token: provider.publicAccessToken,
-      public_access_url: provider.publicAccessToken
-        ? this.buildPublicUrl(provider.publicAccessToken)
-        : null,
       contact: {
         name: provider.contact.name,
         phone: provider.contact.phone,
@@ -74,6 +71,16 @@ export class ProviderPresenter {
 
   toCollection(providers: ProviderViewDto[]) {
     return providers.map((provider) => this.toViewResponse(provider));
+  }
+
+  toPublicAccessResponse(provider: ProviderPublicAccessViewDto) {
+    return {
+      provider_id: provider.providerId,
+      public_access_token: provider.publicAccessToken,
+      public_access_url: provider.publicAccessToken
+        ? this.buildPublicUrl(provider.publicAccessToken)
+        : null,
+    };
   }
 
   private toFiscalProfileResponse(

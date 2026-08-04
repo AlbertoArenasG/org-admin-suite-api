@@ -66,6 +66,11 @@ export interface ProviderViewDto {
   bankingInfo: ProviderBankingInfoDetailsDto | null;
 }
 
+export interface ProviderPublicAccessViewDto {
+  providerId: string;
+  publicAccessToken: string | null;
+}
+
 export interface GetProvidersDto extends PaginationParamsDto {
   search?: string | null;
   status?: ProviderStatus | null;
