@@ -2,12 +2,15 @@
 
 ## Phase 1. Contract Definition
 
-- [ ] Cerrar el shape final del catálogo por módulo
-      Status: pending
+- [x] Cerrar el shape final del catálogo por módulo
+      Status: done
 
 ## Phase 2. Implementation
 
-- [ ] Ajustar endpoint de módulos para incluir operaciones válidas
+- [ ] Ajustar query/presenter de `GET /v1/roles/modules` para incluir `operations[]`
+      Status: pending
+
+- [ ] Eliminar `GET /v1/roles/operations` del controller y de su wiring asociado
       Status: pending
 
 - [ ] Actualizar docs de integración frontend
@@ -16,4 +19,7 @@
 ## Phase 3. Validation
 
 - [ ] Verificar que el contrato sigue alineado con `authorization.catalog.ts`
+      Status: pending
+
+- [ ] Verificar que módulos parciales conservan exactamente sus operaciones válidas
       Status: pending
