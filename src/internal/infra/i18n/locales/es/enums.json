@@ -73,7 +73,8 @@
       "CREATE": "Crear",
       "READ": "Leer",
       "UPDATE": "Actualizar",
-      "DELETE": "Eliminar"
+      "DELETE": "Eliminar",
+      "READ_PUBLIC_ACCESS": "Leer acceso público"
     }
   }
 }

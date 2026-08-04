@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import {
   CreateCustomerFiscalProfileResultDto,
+  CustomerPublicAccessViewDto,
   CustomerFiscalProfileViewDto,
   CustomerFiscalProfileFilesMetadataDto,
   CustomerFiscalProfileFormDto,
@@ -39,10 +40,6 @@ export class CustomerFiscalProfilePresenter {
       customer_status_name: this.enumNameService.getEnumName(
         `CUSTOMER.STATUS.${profile.status}`,
       ),
-      public_access_token: profile.publicAccessToken,
-      public_access_url: profile.publicAccessToken
-        ? this.buildPublicUrl(profile.publicAccessToken)
-        : null,
       created_by: profile.createdBy
         ? {
             user_id: profile.createdBy.userId,
@@ -67,6 +64,16 @@ export class CustomerFiscalProfilePresenter {
 
   toCollection(profiles: CustomerFiscalProfileViewDto[]) {
     return profiles.map((profile) => this.toViewResponse(profile));
+  }
+
+  toPublicAccessResponse(profile: CustomerPublicAccessViewDto) {
+    return {
+      customer_id: profile.customerId,
+      public_access_token: profile.publicAccessToken,
+      public_access_url: profile.publicAccessToken
+        ? this.buildPublicUrl(profile.publicAccessToken)
+        : null,
+    };
   }
 
   private toFiscalProfileResponse(

@@ -63,6 +63,11 @@ export interface CustomerFiscalProfileViewDto {
   fiscalProfile: CustomerFiscalProfileDetailsDto | null;
 }
 
+export interface CustomerPublicAccessViewDto {
+  customerId: string;
+  publicAccessToken: string | null;
+}
+
 export interface GetCustomerFiscalProfilesDto extends PaginationParamsDto {
   search?: string | null;
   profileStatus?: CustomerFiscalProfileStatus | null;

@@ -221,9 +221,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `customers.READ`
 - `GET /v1/customers/:customerId/public-access`
-  - operacion objetivo: `READ_PUBLIC_ACCESS`
-  - acceso objetivo: autenticado
-  - nota: endpoint especial pendiente para consultar `public_access_url` y `public_access_token` fuera del `READ` general del customer
+  - operacion: `READ_PUBLIC_ACCESS`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `customers.READ_PUBLIC_ACCESS`; expone `public_access_url` y `public_access_token` fuera del `READ` general del customer
 - `PATCH /v1/customers/:customerId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -241,9 +241,9 @@ Frontera complementaria:
 Decisión de evolución aprobada:
 
 - `CUSTOMERS/READ` debe seguir cubriendo listado y detalle ordinario del customer
-- `public_access_url` y `public_access_token` no deben permanecer dentro del payload ordinario de `GET /v1/customers` ni `GET /v1/customers/:customerId`
-- esos dos campos deben salir a un endpoint autenticado dedicado bajo el mismo módulo `CUSTOMERS`
-- esa capacidad debe modelarse como nueva operación explícita `READ_PUBLIC_ACCESS`
+- `public_access_url` y `public_access_token` no permanecen dentro del payload ordinario de `GET /v1/customers` ni `GET /v1/customers/:customerId`
+- esos dos campos salen por el endpoint autenticado dedicado `GET /v1/customers/:customerId/public-access`
+- esa capacidad quedó modelada como operación explícita `READ_PUBLIC_ACCESS`
 
 ### `providers`
 

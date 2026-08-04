@@ -31,6 +31,7 @@ import {
 import {
   GetCustomerFiscalProfilesQuery,
   GetCustomerFiscalProfileByIdQuery,
+  GetCustomerPublicAccessQuery,
 } from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
@@ -97,6 +98,26 @@ export class CustomerController {
       GetCustomerFiscalProfileByIdQuery.create(customerId),
     );
     const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get(':customerId/public-access')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customers', 'READ_PUBLIC_ACCESS')
+  @HttpCode(HttpStatus.OK)
+  async findPublicAccess(
+    @CurrentUser() _currentUser: AuthenticatedUserContextDto,
+    @Param('customerId') customerId: string,
+  ) {
+    const result = await this.queryBus.execute(
+      GetCustomerPublicAccessQuery.create(customerId),
+    );
+    const data = this.presenter.toPublicAccessResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))

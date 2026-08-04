@@ -116,17 +116,17 @@
 
 ## Phase 6.1 Sensitive Auxiliary Access
 
-- [ ] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `CUSTOMERS`
-  Status: pending
+- [x] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `CUSTOMERS`
+  Status: done
 
-- [ ] Definir operación explícita `CUSTOMERS/READ_PUBLIC_ACCESS`
-  Status: pending
+- [x] Definir operación explícita `CUSTOMERS/READ_PUBLIC_ACCESS`
+  Status: done
 
-- [ ] Crear endpoint autenticado dedicado para consultar acceso público sensible de customer
-  Status: pending
+- [x] Crear endpoint autenticado dedicado para consultar acceso público sensible de customer
+  Status: done
 
-- [ ] Ajustar presenters de customers para retirar campos sensibles del listado y detalle ordinario
-  Status: pending
+- [x] Ajustar presenters de customers para retirar campos sensibles del listado y detalle ordinario
+  Status: done
 
 - [ ] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
   Status: done

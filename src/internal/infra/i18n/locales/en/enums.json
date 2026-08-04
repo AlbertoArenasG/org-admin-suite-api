@@ -73,7 +73,8 @@
       "CREATE": "Create",
       "READ": "Read",
       "UPDATE": "Update",
-      "DELETE": "Delete"
+      "DELETE": "Delete",
+      "READ_PUBLIC_ACCESS": "Read public access"
     }
   }
 }

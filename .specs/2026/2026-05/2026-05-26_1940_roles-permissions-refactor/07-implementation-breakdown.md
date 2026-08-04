@@ -123,10 +123,10 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 7.1 Customers sensitive public access
 
-- [ ] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `CUSTOMERS`
-- [ ] Crear query/use case/controller para `GET /v1/customers/:customerId/public-access`
-- [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
-- [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de customers
+- [x] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `CUSTOMERS`
+- [x] Crear query/use case/controller para `GET /v1/customers/:customerId/public-access`
+- [x] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
+- [x] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de customers
 - [x] Verificar si providers necesita el mismo patrón y documentarlo en esta misma spec
 
 ## Slice 7.2 Providers sensitive public access

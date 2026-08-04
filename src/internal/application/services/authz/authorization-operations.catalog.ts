@@ -15,6 +15,10 @@ export const AUTHORIZATION_OPERATIONS = {
     code: 'DELETE',
     nameKey: 'AUTHORIZATION.OPERATION.DELETE',
   },
+  READ_PUBLIC_ACCESS: {
+    code: 'READ_PUBLIC_ACCESS',
+    nameKey: 'AUTHORIZATION.OPERATION.READ_PUBLIC_ACCESS',
+  },
 } as const;
 
 export type AuthorizationOperationCode = keyof typeof AUTHORIZATION_OPERATIONS;

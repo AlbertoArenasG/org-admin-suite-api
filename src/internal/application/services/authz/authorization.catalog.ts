@@ -14,7 +14,7 @@ export const AUTHORIZATION_CATALOG = {
   CUSTOMERS: {
     code: 'CUSTOMERS',
     nameKey: 'AUTHORIZATION.MODULE.CUSTOMERS',
-    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    operations: ['CREATE', 'READ', 'READ_PUBLIC_ACCESS', 'UPDATE', 'DELETE'],
   },
   PROVIDERS: {
     code: 'PROVIDERS',

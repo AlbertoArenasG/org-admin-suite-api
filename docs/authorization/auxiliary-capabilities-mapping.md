@@ -47,7 +47,7 @@ No registrar aquí:
 - tipo: capacidad auxiliar sensible
 - módulo principal relacionado: `CUSTOMERS`
 - decisión de modelado: no queda absorbido por `CUSTOMERS/READ`
-- operación explícita objetivo: `CUSTOMERS/READ_PUBLIC_ACCESS`
+- operación explícita: `CUSTOMERS/READ_PUBLIC_ACCESS`
 - razón:
   - expone `public_access_url` y `public_access_token`
   - esos campos permiten reutilizar el acceso tokenizado externo del customer fiscal profile
