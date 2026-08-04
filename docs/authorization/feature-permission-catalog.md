@@ -395,9 +395,9 @@ Controller actual:
 Endpoints actuales:
 
 - `POST /v1/service-packages/uploads`
-  - operacion: `CREATE`
-  - acceso actual: actualmente sin `JwtAuthGuard`
-  - nota: ingesta de paquete; requiere definicion posterior de politica final
+  - operacion: fuera del catalogo de backoffice
+  - acceso actual: sin `JwtAuthGuard`
+  - nota: capability operativa externa consumida por `pwa-recoleccion`; se mantiene fuera del catálogo autenticado mientras ese flujo siga dependiendo de operación offline
 - `GET /v1/service-packages/records`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -410,6 +410,12 @@ Endpoints actuales:
   - operacion: `DELETE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `service_packages.DELETE`
+
+Decisión de esta spec:
+
+- `service_packages` se mantiene como módulo funcional de negocio para consulta y eliminación de records
+- `POST /v1/service-packages/uploads` no se modela por ahora como operación `CREATE` de backoffice
+- ese endpoint se mantiene fuera del catálogo autenticado mientras la creación real siga ocurriendo desde `pwa-recoleccion` sin flujo de autenticación
 
 ### `user_registration_invitations`
 

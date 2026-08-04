@@ -150,6 +150,12 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Mantener `JwtAuthGuard` en `POST /v1/files` y `GET /v1/files/:fileId`
 - [ ] Mantener sin cambios por ahora `GET /v1/files/:fileId/download` sin guard, documentado como endpoint transversal compartido entre contextos públicos y autenticados
 
+## Slice 7.5 Service packages backoffice scope cleanup
+
+- [ ] Retirar `CREATE` de `SERVICE_PACKAGES` en el modelo objetivo de backoffice
+- [ ] Sacar `POST /v1/service-packages/uploads` del catálogo funcional autenticado
+- [ ] Mantener `SERVICE_PACKAGES` como módulo de negocio solo para `READ` y `DELETE`
+
 ## Slice 8. Migración de datos
 
 - [x] Diseñar script o rutina de migración de usuarios legacy

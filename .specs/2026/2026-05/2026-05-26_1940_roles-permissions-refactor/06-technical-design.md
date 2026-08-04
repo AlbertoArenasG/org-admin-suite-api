@@ -342,6 +342,7 @@ Caso adicional aprobado:
 - `service_entries` no requiere esa misma promoción para `READ`, pero la respuesta de `CREATE` debe dejar de devolver `public_access_token` porque el acceso público ya se distribuye por correo
 - `files` no debe mantenerse como módulo funcional de negocio; debe salir del catálogo y tratarse como capability transversal consumida implícitamente por otros módulos
 - para `files`, el cierre aprobado no es reexpresar sus endpoints con permisos del módulo padre; el cierre aprobado es conservar `JwtAuthGuard` donde ya exista autenticación y retirar `PermissionsGuard` junto con `FILES/*`
+- `service_packages` se mantiene como módulo funcional, pero `POST /v1/service-packages/uploads` no forma parte del backoffice autenticado mientras la creación real siga ocurriendo desde `pwa-recoleccion` en modo offline
 
 ##### F. Interfaz exacta propuesta
 
