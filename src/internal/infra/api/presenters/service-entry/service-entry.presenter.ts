@@ -22,7 +22,7 @@ export class ServiceEntryPresenter {
   }
 
   toCreateResponse(entry: CreateServiceEntryResultDto) {
-    const base = this.toViewResponse({
+    return this.toViewResponse({
       id: entry.id,
       companyName: entry.companyName,
       contactName: entry.contactName,
@@ -40,11 +40,6 @@ export class ServiceEntryPresenter {
       filesMetadata: entry.filesMetadata,
       interactionStatus: entry.interactionStatus,
     });
-
-    return {
-      ...base,
-      public_access_token: entry.publicAccessToken,
-    };
   }
 
   toViewResponse(entry: ServiceEntryViewDto) {

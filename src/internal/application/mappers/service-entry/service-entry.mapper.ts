@@ -13,7 +13,6 @@ import {
 export class ServiceEntryMapper {
   static toCreateResultDto(
     entry: ServiceEntry,
-    publicAccessToken: string,
     filesMetadata?: ServiceEntryFilesMetadataDto,
     interactionStatus?: ServiceEntryInteractionStatusDto,
   ): CreateServiceEntryResultDto {
@@ -27,7 +26,6 @@ export class ServiceEntryMapper {
       calibrationCertificateFileId: entry.calibrationCertificateFileId,
       attachmentFileIds: entry.attachmentFileIds,
       status: entry.status,
-      publicAccessToken,
       surveyAccessId: entry.surveyAccessId,
       surveyTemplateId: entry.surveyTemplateId,
       surveyTemplateVersion: entry.surveyTemplateVersion,

@@ -143,8 +143,8 @@
 - [ ] Ajustar presenters de providers para retirar campos sensibles del listado y detalle ordinario
   Status: pending
 
-- [ ] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
-  Status: pending
+- [x] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
+  Status: done
 
 - [x] Retirar `FILES` del catálogo funcional de módulos y permisos
   Status: done

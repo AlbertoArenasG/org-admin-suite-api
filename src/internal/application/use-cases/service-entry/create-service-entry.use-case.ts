@@ -119,7 +119,6 @@ export class CreateServiceEntryUseCase {
 
     return ServiceEntryMapper.toCreateResultDto(
       data,
-      publicToken,
       filesMetadata,
       createEmptyServiceEntryInteractionStatus(),
     );

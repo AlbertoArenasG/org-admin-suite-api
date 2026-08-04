@@ -138,7 +138,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 
 ## Slice 7.3 Service entries public token cleanup
 
-- [ ] Retirar `public_access_token` de la respuesta de `POST /v1/services/service-entry`
+- [x] Retirar `public_access_token` de la respuesta de `POST /v1/services/service-entry`
 - [ ] Mantener sin cambios el `READ` ordinario de `service_entries`, ya que no expone hoy token o URL pública
 
 ## Slice 7.4 Files as transversal capability

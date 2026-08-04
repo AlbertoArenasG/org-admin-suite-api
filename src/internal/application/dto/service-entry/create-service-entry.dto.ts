@@ -24,7 +24,6 @@ export interface CreateServiceEntryResultDto {
   calibrationCertificateFileId: string | null;
   attachmentFileIds: string[];
   status: ServiceEntryStatus;
-  publicAccessToken: string;
   surveyAccessId: string | null;
   surveyTemplateId: string | null;
   surveyTemplateVersion: number | null;
