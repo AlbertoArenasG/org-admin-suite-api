@@ -5,4 +5,3 @@ export * from './update-role.use-case';
 export * from './change-role-status.use-case';
 export * from './delete-role.use-case';
 export * from './get-permission-modules.use-case';
-export * from './get-permission-operations.use-case';

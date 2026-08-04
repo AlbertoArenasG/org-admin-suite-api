@@ -16,13 +16,12 @@ export interface PermissionModuleViewDto {
   nameKey: string;
   status: string;
   isSystem: boolean;
-}
-
-export interface PermissionOperationViewDto {
-  code: string;
-  nameKey: string;
-  status: string;
-  isSystem: boolean;
+  operations: Array<{
+    code: string;
+    nameKey: string;
+    status: string;
+    isSystem: boolean;
+  }>;
 }
 
 export interface RoleViewDto {
@@ -70,7 +69,6 @@ export type GetRolesResultDto = PaginatedResultDto<RoleViewDto>;
 
 export type GetRoleByIdResultDto = RoleViewDto;
 export type GetPermissionModulesResultDto = PermissionModuleViewDto[];
-export type GetPermissionOperationsResultDto = PermissionOperationViewDto[];
 
 export interface ChangeRoleStatusDto {
   roleId: string;

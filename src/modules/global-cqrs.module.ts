@@ -56,7 +56,6 @@ import {
   GetProviderByIdHandler,
   GetProviderByTokenHandler,
   GetPermissionModulesHandler,
-  GetPermissionOperationsHandler,
   GetRolesHandler,
   GetRoleByIdHandler,
 } from '@infra/cqrs/queries';
@@ -114,7 +113,6 @@ const providers = [
   GetProviderByIdHandler,
   GetProviderByTokenHandler,
   GetPermissionModulesHandler,
-  GetPermissionOperationsHandler,
   GetRolesHandler,
   GetRoleByIdHandler,
 ];

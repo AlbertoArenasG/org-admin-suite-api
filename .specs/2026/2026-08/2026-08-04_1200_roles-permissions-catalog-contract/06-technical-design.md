@@ -52,4 +52,4 @@ type PermissionModuleViewDto = {
 
 ## Open Questions
 
-- si el orden de `operations[]` debe salir directamente del catálogo o pasar por una normalización explícita en presenter
+- ninguna para este slice

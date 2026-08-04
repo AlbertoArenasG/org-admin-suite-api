@@ -48,7 +48,7 @@ AUTHORIZATION_CATALOG.USERS = {
 
 Estado actual:
 
-- la API ya resuelve `GET /v1/roles/modules` y `GET /v1/roles/operations` desde catálogo en código
+- la API ya resuelve `GET /v1/roles/modules` desde catálogo en código, incluyendo las operaciones válidas por módulo
 - `permission_modules` y `permission_operations` ya no forman parte del runtime de la aplicación
 
 Frontera complementaria:
@@ -185,11 +185,7 @@ Endpoints actuales:
 - `GET /v1/roles/modules`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve el catálogo activo de módulos autorizables
-- `GET /v1/roles/operations`
-  - operacion: `READ`
-  - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve el catálogo activo de operaciones autorizables
+  - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve el catálogo activo de módulos autorizables con sus operaciones válidas anidadas
 
 Notas:
 

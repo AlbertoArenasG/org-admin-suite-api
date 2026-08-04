@@ -2,6 +2,10 @@
 
 ## Slice 1. Modules Contract Enrichment
 
+Status:
+
+- completed
+
 ### Objective
 
 Hacer que `GET /v1/roles/modules` exponga por módulo sus operaciones válidas derivadas directamente de `authorization.catalog.ts`.
@@ -29,6 +33,10 @@ Done when:
 
 ## Slice 2. Operations Endpoint Removal
 
+Status:
+
+- completed
+
 ### Objective
 
 Retirar la superficie HTTP redundante de `GET /v1/roles/operations`.
@@ -50,6 +58,10 @@ Done when:
 - el backend ya no expone `GET /v1/roles/operations`
 
 ## Slice 3. Validation And Handoff
+
+Status:
+
+- completed
 
 ### Objective
 

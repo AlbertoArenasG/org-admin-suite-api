@@ -4,7 +4,6 @@ import {
   ChangeRoleStatusResultDto,
   CreateRoleResultDto,
   GetPermissionModulesResultDto,
-  GetPermissionOperationsResultDto,
   GetRoleByIdResultDto,
   RoleViewDto,
 } from '@application/dto';
@@ -71,17 +70,14 @@ export class RolePresenter {
       module_name_key: result.nameKey,
       status_id: result.status,
       is_system: result.isSystem,
-    }));
-  }
-
-  toPermissionOperationsResponse(results: GetPermissionOperationsResultDto) {
-    return results.map((result) => ({
-      operation_id: result.code,
-      operation_code: result.code,
-      operation_name: this.enumNameService.getEnumName(result.nameKey),
-      operation_name_key: result.nameKey,
-      status_id: result.status,
-      is_system: result.isSystem,
+      operations: result.operations.map((operation) => ({
+        operation_id: operation.code,
+        operation_code: operation.code,
+        operation_name: this.enumNameService.getEnumName(operation.nameKey),
+        operation_name_key: operation.nameKey,
+        status_id: operation.status,
+        is_system: operation.isSystem,
+      })),
     }));
   }
 }

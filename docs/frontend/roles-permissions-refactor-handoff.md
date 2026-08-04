@@ -515,7 +515,6 @@ Endpoints:
 - `PATCH /v1/roles/:roleId/status`
 - `DELETE /v1/roles/:roleId`
 - `GET /v1/roles/modules`
-- `GET /v1/roles/operations`
 
 ### `GET /v1/roles`
 
@@ -682,37 +681,51 @@ Response vigente:
       "module_name": "Usuarios",
       "module_name_key": "AUTHORIZATION.MODULE.USERS",
       "status_id": "ACTIVE",
-      "is_system": true
+      "is_system": true,
+      "operations": [
+        {
+          "operation_id": "CREATE",
+          "operation_code": "CREATE",
+          "operation_name": "Crear",
+          "operation_name_key": "AUTHORIZATION.OPERATION.CREATE",
+          "status_id": "ACTIVE",
+          "is_system": true
+        },
+        {
+          "operation_id": "READ",
+          "operation_code": "READ",
+          "operation_name": "Leer",
+          "operation_name_key": "AUTHORIZATION.OPERATION.READ",
+          "status_id": "ACTIVE",
+          "is_system": true
+        },
+        {
+          "operation_id": "UPDATE",
+          "operation_code": "UPDATE",
+          "operation_name": "Actualizar",
+          "operation_name_key": "AUTHORIZATION.OPERATION.UPDATE",
+          "status_id": "ACTIVE",
+          "is_system": true
+        },
+        {
+          "operation_id": "DELETE",
+          "operation_code": "DELETE",
+          "operation_name": "Eliminar",
+          "operation_name_key": "AUTHORIZATION.OPERATION.DELETE",
+          "status_id": "ACTIVE",
+          "is_system": true
+        }
+      ]
     }
   ],
   "status_code": 200
 }
 ```
 
-### `GET /v1/roles/operations`
+Notas:
 
-Permiso requerido:
-
-- `ROLES/READ`
-
-Response vigente:
-
-```json
-{
-  "success_message": "DEFAULT",
-  "data": [
-    {
-      "operation_id": "CREATE",
-      "operation_code": "CREATE",
-      "operation_name": "Crear",
-      "operation_name_key": "AUTHORIZATION.OPERATION.CREATE",
-      "status_id": "ACTIVE",
-      "is_system": true
-    }
-  ],
-  "status_code": 200
-}
-```
+- este endpoint ya es la única fuente necesaria para construir el editor de permisos por módulo
+- `operations[]` sale directamente del catálogo backend y conserva el orden definido en código
 
 ## `GET /v1/users/roles`
 

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { GetPermissionModulesResultDto } from '@application/dto';
-import { getAuthorizationModules } from '@application/services/authz/authorization-catalog.utils';
+import {
+  getAuthorizationModules,
+  getAuthorizationOperation,
+} from '@application/services/authz/authorization-catalog.utils';
 
 @Injectable()
 export class GetPermissionModulesUseCase {
@@ -11,6 +14,22 @@ export class GetPermissionModulesUseCase {
       nameKey: module.nameKey,
       status: 'ACTIVE',
       isSystem: true,
+      operations: module.operations.map((operationCode) => {
+        const operation = getAuthorizationOperation(operationCode);
+
+        if (!operation) {
+          throw new Error(
+            `Authorization operation "${operationCode}" is missing from the catalog.`,
+          );
+        }
+
+        return {
+          code: operation.code,
+          nameKey: operation.nameKey,
+          status: 'ACTIVE',
+          isSystem: true,
+        };
+      }),
     }));
   }
 }

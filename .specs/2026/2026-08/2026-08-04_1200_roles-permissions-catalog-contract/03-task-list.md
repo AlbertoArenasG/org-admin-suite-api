@@ -7,19 +7,19 @@
 
 ## Phase 2. Implementation
 
-- [ ] Ajustar query/presenter de `GET /v1/roles/modules` para incluir `operations[]`
-      Status: pending
+- [x] Ajustar query/presenter de `GET /v1/roles/modules` para incluir `operations[]`
+      Status: done
 
-- [ ] Eliminar `GET /v1/roles/operations` del controller y de su wiring asociado
-      Status: pending
+- [x] Eliminar `GET /v1/roles/operations` del controller y de su wiring asociado
+      Status: done
 
-- [ ] Actualizar docs de integración frontend
-      Status: pending
+- [x] Actualizar docs de integración frontend
+      Status: done
 
 ## Phase 3. Validation
 
-- [ ] Verificar que el contrato sigue alineado con `authorization.catalog.ts`
-      Status: pending
+- [x] Verificar que el contrato sigue alineado con `authorization.catalog.ts`
+      Status: done
 
-- [ ] Verificar que módulos parciales conservan exactamente sus operaciones válidas
-      Status: pending
+- [x] Verificar que módulos parciales conservan exactamente sus operaciones válidas
+      Status: done

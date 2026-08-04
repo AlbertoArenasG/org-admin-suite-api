@@ -2362,30 +2362,6 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Get Permission Operations",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
-              }
-            ],
-            "url": {
-              "raw": "{{HOST}}/v1/roles/operations",
-              "host": [
-                "{{HOST}}"
-              ],
-              "path": [
-                "v1",
-                "roles",
-                "operations"
-              ]
-            }
-          },
-          "response": []
         }
       ]
     },

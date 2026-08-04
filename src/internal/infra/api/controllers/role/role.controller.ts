@@ -32,7 +32,6 @@ import {
 } from '@infra/cqrs/commands';
 import {
   GetPermissionModulesQuery,
-  GetPermissionOperationsQuery,
   GetRoleByIdQuery,
   GetRolesQuery,
 } from '@infra/cqrs/queries';
@@ -98,23 +97,6 @@ export class RoleController {
       GetPermissionModulesQuery.create(),
     );
     const data = this.presenter.toPermissionModulesResponse(result);
-
-    return ApiResponseBuilder.create()
-      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
-      .withData(data)
-      .withStatus(HttpStatus.OK)
-      .build();
-  }
-
-  @Get('operations')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('roles', 'READ')
-  @HttpCode(HttpStatus.OK)
-  async getOperations() {
-    const result = await this.queryBus.execute(
-      GetPermissionOperationsQuery.create(),
-    );
-    const data = this.presenter.toPermissionOperationsResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
