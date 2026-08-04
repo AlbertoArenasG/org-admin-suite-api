@@ -91,3 +91,60 @@ Se aprueba eliminar `GET /v1/roles/operations`.
 ### Status
 
 approved
+
+---
+
+## Decision 03. Shape exacto del catálogo enriquecido de módulos
+
+### Context
+
+Con `GET /v1/roles/operations` fuera del diseño objetivo, `GET /v1/roles/modules` debe exponer un shape suficientemente completo para que frontend construya el editor sin inferencias adicionales.
+
+### Options
+
+1. Adjuntar solo códigos de operación por módulo
+2. Adjuntar `operations[]` con metadata descriptiva completa
+3. Adjuntar operaciones mínimas y delegar localización o nombres a frontend
+
+### Recommendation
+
+Opcion 2.
+
+Esto deja un contrato claro, autosuficiente y consistente con el shape que ya existía en el endpoint separado.
+
+### Implications
+
+- el presenter de módulos debe incluir `operations[]`
+- frontend podrá renderizar directamente nombres, keys y códigos por módulo
+- el endpoint de módulos se convierte en el único contrato necesario para el editor
+
+### Decision Final
+
+Se aprueba que cada módulo de `GET /v1/roles/modules` incluya `operations[]` con metadata descriptiva completa.
+
+Shape aprobado por módulo:
+
+```json
+{
+  "module_id": "USERS",
+  "module_code": "USERS",
+  "module_name": "Usuarios",
+  "module_name_key": "AUTHORIZATION.MODULE.USERS",
+  "status_id": "ACTIVE",
+  "is_system": true,
+  "operations": [
+    {
+      "operation_id": "CREATE",
+      "operation_code": "CREATE",
+      "operation_name": "Crear",
+      "operation_name_key": "AUTHORIZATION.OPERATION.CREATE",
+      "status_id": "ACTIVE",
+      "is_system": true
+    }
+  ]
+}
+```
+
+### Status
+
+approved
