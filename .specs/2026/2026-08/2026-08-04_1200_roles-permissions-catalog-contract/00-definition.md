@@ -44,8 +44,12 @@ Preserva compatibilidad conceptual con el diseño actual, pero hace explícita l
 
 ### Decision Final
 
-Pendiente.
+Se aprueba enriquecer `GET /v1/roles/modules` con las operaciones válidas de cada módulo.
+
+La fuente de verdad seguirá siendo `authorization.catalog.ts`.
+
+El contrato HTTP debe exponer esa relación de forma directa para evitar que frontend reconstruya o infiera combinaciones válidas fuera del backend.
 
 ### Status
 
-pending
+approved
