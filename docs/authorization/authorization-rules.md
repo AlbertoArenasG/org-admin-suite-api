@@ -38,6 +38,12 @@ Implementación esperada para features exclusivas de `MASTER_ADMIN`:
 - controller bajo `src/internal/infra/api/controllers/master-admin`
 - protección con frontera `MASTER_ADMIN`
 - reglas complementarias en `AuthorizationService` cuando aplique
+- si crecen varias capacidades de plataforma, deben distribuirse en múltiples controllers o áreas dentro de `master-admin`, no concentrarse en un megacontroller
+
+Regla adicional:
+
+- no agregar metadata tipo `business/platform` dentro de `authorization.catalog.ts`
+- la separación correcta no es marcar ambas cosas dentro del mismo catálogo, sino dejar fuera del catálogo general toda capacidad que realmente pertenezca a plataforma
 
 Ejemplos de cosas que normalmente no deben entrar al catálogo general:
 
@@ -126,6 +132,12 @@ Usar `ensurePermission(...)` cuando:
 - el endpoint representa una acción ordinaria de negocio
 - la autorización puede expresarse con el catálogo `module + operation`
 
+Regla para endpoints de catálogo auxiliares:
+
+- un endpoint de catálogo o lookup no debe convertirse por defecto en un permiso explícito editable dentro del CRUD de roles
+- si ese endpoint solo existe para soportar una acción principal de negocio, su acceso puede quedar implícitamente cubierto por el permiso funcional principal
+- solo debe modelarse como operación explícita si expone información con sensibilidad propia o si negocio necesita gobernarlo de manera separada
+
 Usar validación estructural cuando:
 
 - interviene `systemRole`
@@ -142,10 +154,15 @@ Casos que deben resolverse con permiso genérico:
 - actualizar service entry
 - eliminar service package record
 - crear rol custom
+- consultar catálogos auxiliares necesarios para ejecutar una acción principal ya autorizada, cuando no tengan autonomía funcional propia
 
 Excepción importante:
 
 - endpoints self-service del usuario autenticado como `GET /v1/users/me` y `PATCH /v1/users/me` pueden vivir solo con `JwtAuthGuard` cuando la acción no implica backoffice ni acceso sobre otros usuarios
+
+Ejemplo práctico:
+
+- `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
 
 Casos que deben resolverse con validación estructural:
 

@@ -9,6 +9,7 @@ Redefinir el catálogo de autorización backend para que cada módulo exprese op
 - catálogo backend explícito por módulo
 - operaciones base compartidas solo donde aporten valor real
 - operaciones específicas por módulo cuando el dominio lo requiera
+- frontera explícita entre catálogo de negocio y capacidades de plataforma
 - validación y contratos HTTP coherentes con ese modelo
 
 ## Phases
@@ -17,6 +18,7 @@ Redefinir el catálogo de autorización backend para que cada módulo exprese op
 
 - revisar módulo por módulo el significado real de sus permisos
 - separar módulos CRUD genuinos de módulos con operaciones de dominio
+- detectar operaciones que realmente pertenecen a plataforma y no al catálogo general
 
 ### Phase 2. Backend Model Definition
 
@@ -43,4 +45,5 @@ Redefinir el catálogo de autorización backend para que cada módulo exprese op
 
 - cada módulo queda clasificado según su semántica real
 - el catálogo backend deja de depender conceptualmente de CRUD uniforme
+- el catálogo general excluye capacidades que realmente son de plataforma
 - la documentación deja clara la distinción entre operaciones base y operaciones específicas

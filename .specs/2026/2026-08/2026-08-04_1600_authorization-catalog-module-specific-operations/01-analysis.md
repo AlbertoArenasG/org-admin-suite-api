@@ -17,12 +17,16 @@
 - no todos los módulos representan capacidades CRUD clásicas
 - algunos módulos parecen recursos CRUD reales y otros representan flujos, eventos o capacidades operativas
 - seguir nombrando todo como CRUD puede ocultar operaciones reales del dominio
+- no toda capacidad técnica expuesta por la API pertenece al catálogo funcional de negocio
+- no todo endpoint de catálogo auxiliar merece una operación explícita propia
 - el siguiente crecimiento de permisos será más sano si se redefine ahora el modelo conceptual
 
 ## Questions To Resolve
 
 - qué módulos hoy sí son CRUD puros de forma legítima
 - qué módulos ya deberían migrar a operaciones semánticas
+- qué capacidades hoy viven en catálogo pero realmente pertenecen a plataforma
+- qué catálogos auxiliares deben quedar absorbidos por una capacidad principal y cuáles sí merecerían operación propia
 - si el sistema conservará un vocabulario base global
 - cómo impacta esto a seeds, guards, catálogos HTTP y documentación operativa
 
@@ -30,6 +34,7 @@
 
 - si se mantiene la ficción de CRUD uniforme, cada módulo nuevo tenderá a deformarse para caber ahí
 - si se migra sin análisis módulo por módulo, se puede romper consistencia o introducir nombres arbitrarios
+- si no se separa plataforma de negocio, el catálogo se llenará de permisos que solo hacen ruido en producto
 - si frontend avanza sin esta definición, volverá a consumir un contrato técnicamente correcto pero conceptualmente pobre
 
 ## Constraints

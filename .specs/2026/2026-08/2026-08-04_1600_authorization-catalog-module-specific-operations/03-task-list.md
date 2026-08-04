@@ -5,7 +5,10 @@
 - [ ] Analizar módulo por módulo el catálogo actual de autorización
       Status: pending
 
-- [ ] Clasificar qué módulos siguen siendo CRUD reales y cuáles requieren operaciones de dominio
+- [ ] Clasificar qué módulos siguen siendo cercanos a CRUD y cuáles requieren operaciones de dominio
+      Status: pending
+
+- [ ] Identificar capacidades que pertenecen a plataforma y no al catálogo general
       Status: pending
 
 ## Phase 2. Definition
