@@ -127,7 +127,14 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [ ] Crear query/use case/controller para `GET /v1/customers/:customerId/public-access`
 - [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
 - [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de customers
-- [ ] Verificar si providers necesita el mismo patrón y documentarlo en esta misma spec
+- [x] Verificar si providers necesita el mismo patrón y documentarlo en esta misma spec
+
+## Slice 7.2 Providers sensitive public access
+
+- [ ] Agregar `READ_PUBLIC_ACCESS` al catálogo del módulo `PROVIDERS`
+- [ ] Crear query/use case/controller para `GET /v1/providers/:providerId/public-access`
+- [ ] Crear presenter específico que solo devuelva `public_access_url` y `public_access_token`
+- [ ] Retirar `public_access_url` y `public_access_token` de presenters ordinarios de providers
 
 ## Slice 8. Migración de datos
 

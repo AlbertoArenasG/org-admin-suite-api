@@ -54,6 +54,18 @@ No registrar aquí:
   - por sensibilidad, no conviene mantenerlos embebidos en el read ordinario del listado o detalle
   - la UI podrá pedirlos de forma explícita cuando realmente necesite revelar ese dato
 
+### `GET /v1/providers/:providerId/public-access`
+
+- tipo: capacidad auxiliar sensible
+- módulo principal relacionado: `PROVIDERS`
+- decisión de modelado: no queda absorbido por `PROVIDERS/READ`
+- operación explícita objetivo: `PROVIDERS/READ_PUBLIC_ACCESS`
+- razón:
+  - expone `public_access_url` y `public_access_token`
+  - esos campos permiten reutilizar el acceso tokenizado externo del provider profile
+  - por sensibilidad, no conviene mantenerlos embebidos en el read ordinario del listado o detalle
+  - la UI podrá pedirlos de forma explícita cuando realmente necesite revelar ese dato
+
 ## Mantenimiento
 
 - si un endpoint auxiliar deja de ser auxiliar y adquiere autonomía funcional, debe reevaluarse para promoverlo al catálogo general

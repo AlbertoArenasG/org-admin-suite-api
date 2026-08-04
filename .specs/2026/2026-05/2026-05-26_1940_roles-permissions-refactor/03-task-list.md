@@ -129,6 +129,18 @@
   Status: pending
 
 - [ ] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
+  Status: done
+
+- [ ] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `PROVIDERS`
+  Status: pending
+
+- [ ] Definir operación explícita `PROVIDERS/READ_PUBLIC_ACCESS`
+  Status: pending
+
+- [ ] Crear endpoint autenticado dedicado para consultar acceso público sensible de provider
+  Status: pending
+
+- [ ] Ajustar presenters de providers para retirar campos sensibles del listado y detalle ordinario
   Status: pending
 
 ## Phase 7. Role Management Feature

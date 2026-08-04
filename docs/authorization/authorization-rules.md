@@ -172,6 +172,7 @@ Ejemplo práctico:
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 - si `GET /v1/customers` o `GET /v1/customers/:customerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `CUSTOMERS`
+- si `GET /v1/providers` o `GET /v1/providers/:providerId` incluyen `public_access_url` o `public_access_token`, esos campos deben salir del `READ` general y resolverse con una operación explícita separada del módulo `PROVIDERS`
 
 Casos que deben resolverse con validación estructural:
 

@@ -256,6 +256,7 @@ Uso esperado:
 - `CUSTOMERS + CREATE`
 - `CUSTOMERS + READ`
 - `CUSTOMERS + READ_PUBLIC_ACCESS`
+- `PROVIDERS + READ_PUBLIC_ACCESS`
 - `PROVIDERS + UPDATE`
 - `SERVICE_ENTRIES + DELETE`
 - `ROLES + CREATE`
@@ -337,6 +338,7 @@ Casos que deben resolverse con validación estructural:
 Caso adicional aprobado:
 
 - revelar `public_access_url` y `public_access_token` de un customer no debe quedar absorbido por `CUSTOMERS/READ`; debe convertirse en `CUSTOMERS/READ_PUBLIC_ACCESS`
+- revelar `public_access_url` y `public_access_token` de un provider no debe quedar absorbido por `PROVIDERS/READ`; debe convertirse en `PROVIDERS/READ_PUBLIC_ACCESS`
 
 ##### F. Interfaz exacta propuesta
 
@@ -1206,7 +1208,21 @@ Diseño aprobado para esta spec:
 - retirar `public_access_url` y `public_access_token` de los presenters ordinarios
 - crear un endpoint autenticado dedicado para consultar esos dos campos cuando la UI lo solicite explícitamente
 - modelar esa revelación como operación explícita `CUSTOMERS/READ_PUBLIC_ACCESS`
-- replicar el mismo criterio en `providers` si se confirma el mismo patrón de datos sensibles tokenizados
+- aplicar el mismo criterio en `providers` con la operación explícita `PROVIDERS/READ_PUBLIC_ACCESS`
+
+#### 7.4.2 Criterio específico para providers con acceso tokenizado
+
+Problema detectado:
+
+- `public_access_url` y `public_access_token` son datos sensibles
+- si viajan dentro de `GET /v1/providers` o `GET /v1/providers/:providerId`, cualquier actor con `PROVIDERS/READ` obtiene capacidad indirecta para reutilizar el flujo público tokenizado
+
+Diseño aprobado para esta spec:
+
+- mantener `PROVIDERS/READ` para listado y detalle ordinario
+- retirar `public_access_url` y `public_access_token` de los presenters ordinarios
+- crear un endpoint autenticado dedicado para consultar esos dos campos cuando la UI lo solicite explícitamente
+- modelar esa revelación como operación explícita `PROVIDERS/READ_PUBLIC_ACCESS`
 
 #### 7.5 Ejemplo aterrizado: migración de `CreateUserAndNotifyUseCase`
 
