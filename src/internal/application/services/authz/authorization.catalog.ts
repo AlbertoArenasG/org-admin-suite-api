@@ -31,11 +31,6 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.SERVICE_ENTRY_SURVEYS',
     operations: ['READ'],
   },
-  FILES: {
-    code: 'FILES',
-    nameKey: 'AUTHORIZATION.MODULE.FILES',
-    operations: ['CREATE', 'READ'],
-  },
   SERVICE_PACKAGES: {
     code: 'SERVICE_PACKAGES',
     nameKey: 'AUTHORIZATION.MODULE.SERVICE_PACKAGES',

@@ -19,13 +19,13 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Response } from 'express';
 import { memoryStorage } from 'multer';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import { CurrentUser } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { FilePresenter } from '@infra/api/presenters/file';
 import { UploadFilesCommandAdapter } from '@infra/cqrs/commands';
 import { DownloadFileQuery, GetFileByIdQuery } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import { JwtAuthGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
 @Controller('v1/files')
@@ -38,8 +38,7 @@ export class FileController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('files', 'CREATE')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FilesInterceptor('files', 10, {
       storage: memoryStorage(),
@@ -118,8 +117,7 @@ export class FileController {
   }
 
   @Get(':fileId')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('files', 'READ')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async getMetadata(@Param('fileId') fileId: string) {
     const result = await this.queryBus.execute(

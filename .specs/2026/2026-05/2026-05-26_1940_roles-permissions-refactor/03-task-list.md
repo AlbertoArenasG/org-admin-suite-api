@@ -146,17 +146,17 @@
 - [ ] Retirar `public_access_token` de la respuesta de creación de `SERVICE_ENTRIES`
   Status: pending
 
-- [ ] Retirar `FILES` del catálogo funcional de módulos y permisos
-  Status: pending
+- [x] Retirar `FILES` del catálogo funcional de módulos y permisos
+  Status: done
 
-- [ ] Documentar `files` como capability transversal absorbida por otros módulos
-  Status: pending
+- [x] Documentar `files` como capability transversal absorbida por otros módulos
+  Status: done
 
-- [ ] Retirar `PermissionsGuard` y permisos `FILES/*` de endpoints de `files`
-  Status: pending
+- [x] Retirar `PermissionsGuard` y permisos `FILES/*` de endpoints de `files`
+  Status: done
 
-- [ ] Mantener `JwtAuthGuard` en endpoints autenticados de `files`
-  Status: pending
+- [x] Mantener `JwtAuthGuard` en endpoints autenticados de `files`
+  Status: done
 
 - [ ] Retirar `POST /v1/service-packages/uploads` del catálogo de operaciones de backoffice
   Status: pending
