@@ -139,7 +139,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 ## Slice 7.3 Service entries public token cleanup
 
 - [x] Retirar `public_access_token` de la respuesta de `POST /v1/services/service-entry`
-- [ ] Mantener sin cambios el `READ` ordinario de `service_entries`, ya que no expone hoy token o URL pública
+- [x] Mantener sin cambios el `READ` ordinario de `service_entries`, ya que no expone hoy token o URL pública
 
 ## Slice 7.4 Files as transversal capability
 
@@ -148,7 +148,7 @@ Este documento baja el trabajo por slices técnicos y tareas ejecutables.
 - [x] Revisar seeds/roles por defecto para eliminar permisos `FILES/*` del modelo objetivo
 - [x] Retirar `PermissionsGuard` y decorators `@RequirePermission('files', ...)` de `POST /v1/files` y `GET /v1/files/:fileId`
 - [x] Mantener `JwtAuthGuard` en `POST /v1/files` y `GET /v1/files/:fileId`
-- [ ] Mantener sin cambios por ahora `GET /v1/files/:fileId/download` sin guard, documentado como endpoint transversal compartido entre contextos públicos y autenticados
+- [x] Mantener sin cambios por ahora `GET /v1/files/:fileId/download` sin guard, documentado como endpoint transversal compartido entre contextos públicos y autenticados
 
 ## Slice 7.5 Service packages backoffice scope cleanup
 

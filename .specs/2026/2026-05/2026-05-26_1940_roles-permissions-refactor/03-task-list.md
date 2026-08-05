@@ -128,7 +128,7 @@
 - [x] Ajustar presenters de customers para retirar campos sensibles del listado y detalle ordinario
   Status: done
 
-- [ ] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
+- [x] Documentar el mismo patrón para providers si aplica el mismo riesgo con sus campos tokenizados
   Status: done
 
 - [x] Separar `public_access_url` y `public_access_token` del `READ` ordinario de `PROVIDERS`
