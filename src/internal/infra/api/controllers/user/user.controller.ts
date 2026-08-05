@@ -7,7 +7,6 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -16,14 +15,12 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
-  CreateUserRequestDto,
   GetUsersRequestDto,
   UpdateMyProfileRequestDto,
   UpdateUserRequestDto,
 } from '@infra/api/dto/user';
 import { UserPresenter, UserRolePresenter } from '@infra/api/presenters/user';
 import {
-  CreateUserAndNotifyCommandAdapter,
   DeleteUserCommandAdapter,
   UpdateMyProfileCommandAdapter,
   UpdateUserCommandAdapter,
@@ -46,28 +43,6 @@ export class UserController {
     private readonly rolePresenter: UserRolePresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
-
-  @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('users', 'CREATE')
-  @HttpCode(HttpStatus.CREATED)
-  async create(
-    @CurrentUser() currentUser: AuthenticatedUserContextDto,
-    @Body() body: CreateUserRequestDto,
-  ) {
-    const command = CreateUserAndNotifyCommandAdapter.create(
-      body.toDomain(),
-      currentUser.systemRole,
-    );
-    const result = await this.commandBus.execute(command);
-    const data = await this.presenter.toUserResponse(result);
-
-    return ApiResponseBuilder.create()
-      .withSuccessMessage(this.successMsgService.getMsg('USER.CREATED'))
-      .withData(data)
-      .withStatus(HttpStatus.CREATED)
-      .build();
-  }
 
   @Patch('me')
   @UseGuards(JwtAuthGuard)

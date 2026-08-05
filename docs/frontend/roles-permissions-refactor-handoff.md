@@ -84,11 +84,13 @@ En responses modernas de usuarios y auth, la API expone como fuente principal:
 
 Estado:
 
-- `implemented`
+- `removed_from_normal_scope`
 
-Permiso requerido:
+Notas:
 
-- `USERS/CREATE`
+- ya no forma parte del scope normal de aplicación
+- la creación funcional de usuarios en backoffice ocurre por invitación
+- el alta directa queda reservada a `POST /v1/master-admin/users`
 
 Request vigente:
 

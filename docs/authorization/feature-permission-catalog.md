@@ -145,11 +145,11 @@ Endpoints actuales:
 
 Notas:
 
-- `POST /v1/users` ya no debe considerarse parte del catálogo funcional de negocio; la creación funcional de usuarios en aplicación vive en el flujo de invitaciones
+- `POST /v1/users` ya no forma parte del scope normal ni del catálogo funcional de negocio; la creación funcional de usuarios en aplicación vive en el flujo de invitaciones
+- el alta directa de usuarios queda reservada a `POST /v1/master-admin/users` bajo frontera estructural `MASTER_ADMIN`
 - ver usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - crear usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - promover hacia `MASTER_ADMIN` o degradar desde `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
-- `ADMIN` puede crear `USER` y `ADMIN`
 - `ADMIN` puede promover `USER -> ADMIN`
 - `ADMIN` puede degradar `ADMIN -> USER`
 
