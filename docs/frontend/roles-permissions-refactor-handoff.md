@@ -92,7 +92,7 @@ Notas:
 - la creación funcional de usuarios en backoffice ocurre por invitación
 - el alta directa queda reservada a `POST /v1/master-admin/users`
 
-Request vigente:
+Request histórico de referencia:
 
 ```json
 {
@@ -109,13 +109,13 @@ Request vigente:
 }
 ```
 
-Reglas:
+Reglas históricas del payload:
 
 - `system_role` solo acepta `ADMIN` o `USER`
 - `role_id` es obligatorio solo cuando `system_role = USER`
 - si `system_role = ADMIN`, el backend persiste el rol default de administración
 
-Ejemplo de request para `ADMIN`:
+Ejemplo histórico de request para `ADMIN`:
 
 ```json
 {
@@ -127,7 +127,7 @@ Ejemplo de request para `ADMIN`:
 }
 ```
 
-Response vigente:
+Response histórica de referencia:
 
 ```json
 {
@@ -149,6 +149,35 @@ Response vigente:
     "created_at": "2026-07-28T00:00:00.000Z"
   },
   "status_code": 201
+}
+```
+
+Frontend normal no debe consumir este endpoint.
+
+## `POST /v1/master-admin/users`
+
+Estado:
+
+- `implemented`
+
+Frontera requerida:
+
+- `MASTER_ADMIN`
+
+Notas:
+
+- este endpoint conserva el alta directa de usuarios fuera del scope normal de negocio
+- no forma parte del catálogo funcional ordinario
+
+Request vigente:
+
+```json
+{
+  "name": "Mario",
+  "lastname": "Supervisor",
+  "email": "mario.supervisor@example.com",
+  "password": "SuperSecure123!",
+  "system_role": "MASTER_ADMIN"
 }
 ```
 
