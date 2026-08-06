@@ -104,7 +104,7 @@ export class UserController {
 
   @Get('roles')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('users', 'READ')
+  @RequirePermission('user_registration_invitations', 'CREATE')
   @HttpCode(HttpStatus.OK)
   async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(

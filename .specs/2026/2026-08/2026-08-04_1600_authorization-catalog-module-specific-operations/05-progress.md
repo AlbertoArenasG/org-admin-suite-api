@@ -12,3 +12,7 @@
 - Se analizó `USERS` y se aprobó sacar `USERS/CREATE` del catálogo de negocio; la creación funcional de usuarios queda representada por invitaciones y el alta directa pasa a reevaluarse como capacidad de plataforma.
 - Se analizó `ROLES` y se aprobó modelar el cambio de estado como operación explícita `ACTIVATE`, en lugar de seguir absorbiéndolo dentro de `UPDATE`.
 - Se analizó `CUSTOMERS` y se confirmó que el módulo autenticado puede mantenerse como CRUD de backoffice; los endpoints públicos por token permanecen fuera del catálogo autenticado.
+- Se corrigió la absorción autorizativa de `GET /v1/users/roles`:
+  - el endpoint dejó de depender de `USERS/READ`
+  - ahora se protege con `USER_REGISTRATION_INVITATIONS/CREATE`, que corresponde al flujo funcional ordinario vigente en frontend
+  - se actualizaron las docs vivas de autorización y el handoff de frontend para reflejar esta corrección

@@ -35,10 +35,11 @@ No registrar aquí:
 ### `GET /v1/users/roles`
 
 - tipo: catálogo auxiliar
-- módulo principal relacionado: `USERS`
-- capacidad principal que lo absorbe: `USERS/READ`
+- módulo principal relacionado: `USER_REGISTRATION_INVITATIONS`
+- capacidad principal que lo absorbe: `USER_REGISTRATION_INVITATIONS/CREATE`
 - razón:
   - sirve para poblar selects y flujos de edit e invite de usuarios
+  - en el frontend ordinario vigente su consumo funcional principal es invitar usuarios
   - hoy no tiene autonomía funcional propia dentro del backoffice
   - no conviene introducirlo como permiso explícito independiente en el CRUD de roles
 

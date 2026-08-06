@@ -170,7 +170,7 @@ Excepción importante:
 
 Ejemplo práctico:
 
-- `GET /v1/users/roles` puede quedar absorbido por la capacidad principal de administración de usuarios mientras solo funcione como catálogo auxiliar para create/edit/invite y no requiera gobierno independiente
+- `GET /v1/users/roles` puede quedar absorbido por la capacidad funcional principal que lo consume; en el estado actual del sistema, al servir el flujo ordinario de invitaciones, queda absorbido por `USER_REGISTRATION_INVITATIONS/CREATE`
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 - `GET /v1/customers` y `GET /v1/customers/:customerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `CUSTOMERS/READ_PUBLIC_ACCESS`
 - `GET /v1/providers` y `GET /v1/providers/:providerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `PROVIDERS/READ_PUBLIC_ACCESS`

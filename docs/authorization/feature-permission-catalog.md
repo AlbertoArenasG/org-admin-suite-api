@@ -127,9 +127,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: listado general de usuarios, protegido por `users.READ`
 - `GET /v1/users/roles`
-  - operacion: `READ`
+  - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: protegido por `users.READ`; hoy resuelve roles asignables desde la colección `roles`, devolviendo metadata real del rol en lugar de una lista fija de enums legacy
+  - nota: protegido por `user_registration_invitations.CREATE`; hoy resuelve roles asignables desde la colección `roles`, devolviendo metadata real del rol en lugar de una lista fija de enums legacy
 - `GET /v1/users/:userId`
   - operacion: `READ`
   - acceso actual: autenticado

@@ -382,7 +382,7 @@ Estado:
 
 Permiso requerido:
 
-- `USERS/READ`
+- `USER_REGISTRATION_INVITATIONS/CREATE`
 
 Query params soportados:
 
