@@ -32,4 +32,5 @@ export type UpdateMyProfileResultDto = UserViewDto;
 export interface DeleteUserDto {
   userId: string;
   actorSystemRole: SystemRole;
+  actorUserId: string;
 }

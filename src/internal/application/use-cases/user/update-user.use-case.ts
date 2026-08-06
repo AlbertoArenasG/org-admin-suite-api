@@ -46,13 +46,6 @@ export class UpdateUserUseCase {
 
     const isSelfUpdate = actorUserId === userId;
 
-    if (!isSelfUpdate) {
-      this.authorizationService.ensureHasHigherPrivileges(
-        actorSystemRole,
-        user.systemRole,
-      );
-    }
-
     if (payload.systemRole !== undefined || payload.roleId !== undefined) {
       const nextSystemRole = payload.systemRole ?? user.systemRole;
 

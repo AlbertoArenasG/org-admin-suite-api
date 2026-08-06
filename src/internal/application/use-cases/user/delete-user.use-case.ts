@@ -25,7 +25,7 @@ export class DeleteUserUseCase {
   ) {}
 
   async execute(input: DeleteUserDto): Promise<void> {
-    const { userId, actorSystemRole } = input;
+    const { userId, actorSystemRole, actorUserId } = input;
 
     const { data: user } = await this.userReadRepository.findById(userId);
 
@@ -35,9 +35,10 @@ export class DeleteUserUseCase {
       });
     }
 
-    this.authorizationService.ensureHasHigherPrivileges(
+    this.authorizationService.ensureCanDeleteUser(
       actorSystemRole,
       user.systemRole,
+      actorUserId === userId,
     );
 
     if (user.status === UserStatus.DELETED) {

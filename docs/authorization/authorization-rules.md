@@ -114,6 +114,11 @@ authorizationService.ensureCanUpdateUser(actor, {
   nextSystemRole,
   nextRole,
 })
+authorizationService.ensureCanDeleteUser(
+  actorSystemRole,
+  targetSystemRole,
+  isSelfDelete,
+)
 authorizationService.ensureHasHigherPrivileges(actorSystemRole, targetSystemRole)
 ```
 
@@ -122,6 +127,7 @@ Estas validaciones deben cubrir casos como:
 - asignar un rol default del sistema
 - asignar un rol custom
 - promover `USER -> ADMIN`
+- permitir `USER -> USER` cuando exista permiso funcional suficiente
 - degradar `ADMIN -> USER`
 - tocar algo relacionado con `MASTER_ADMIN`
 - exigir `roleId` custom al convertir un usuario en `USER`
@@ -201,6 +207,7 @@ interface AuthorizationService {
   ensureCanChangeSystemRole(actor, targetSystemRole): Promise<void>;
   ensureCanCreateUser(actor, input): Promise<void>;
   ensureCanUpdateUser(actor, input): Promise<void>;
+  ensureCanDeleteUser(actorSystemRole, targetSystemRole, isSelfDelete): void;
 }
 ```
 
@@ -245,6 +252,7 @@ Su función es separar:
 - `ensureCanChangeSystemRole(...)` cubre la restricción estructural del `systemRole`
 - `ensureCanCreateUser(...)` cubre creación de usuario con coherencia entre `systemRole` y `roleId`
 - `ensureCanUpdateUser(...)` cubre promoción, degradación y reasignación
+- `ensureCanDeleteUser(...)` cubre borrado de terceros respetando frontera estructural y bloqueo de autoeliminación
 
 ## Reglas De Consistencia Del Modelo
 

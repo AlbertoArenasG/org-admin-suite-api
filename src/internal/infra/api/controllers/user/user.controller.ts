@@ -175,6 +175,7 @@ export class UserController {
     const command = DeleteUserCommandAdapter.create({
       userId,
       actorSystemRole: currentUser.systemRole,
+      actorUserId: currentUser.userId,
     });
 
     await this.commandBus.execute(command);

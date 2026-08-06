@@ -215,7 +215,9 @@ Reglas:
 - `role_id` puede enviarse cuando se quiera reasignar el rol
 - si se cambia a `USER`, debe quedar un `role_id` válido de scope `USER`
 - un usuario no puede auto-cambiarse `system_role`, `role_id` ni `status`
-- el backend valida jerarquía estructural antes de permitir promoción, degradación o reasignación
+- el backend valida frontera estructural antes de permitir promoción, degradación o reasignación
+- un `USER` con `USERS/UPDATE` sí puede editar a otro `USER`
+- ningún `USER` puede editar `ADMIN` o `MASTER_ADMIN`
 
 Response vigente:
 
@@ -455,6 +457,7 @@ Notas:
 - un usuario autenticado puede consultar su propio perfil aunque no tenga `USERS/READ`
 - un usuario autenticado puede actualizar su propio perfil aunque no tenga `USERS/UPDATE`
 - `USERS/*` sigue aplicando para operaciones sobre terceros o administración general de usuarios
+- un `USER` con `USERS/UPDATE` o `USERS/DELETE` puede operar sobre otro `USER`; la frontera estructural sigue bloqueando `ADMIN` y `MASTER_ADMIN`
 
 ## Nuevo Endpoint De Permisos
 

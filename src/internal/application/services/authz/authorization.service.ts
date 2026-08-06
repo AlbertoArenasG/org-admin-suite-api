@@ -149,7 +149,10 @@ export class AuthorizationService {
     },
   ): Promise<void> {
     if (!input.isSelfUpdate) {
-      this.ensureHasHigherPrivileges(actor.systemRole, input.currentSystemRole);
+      this.ensureCanManageTargetSystemRole(
+        actor.systemRole,
+        input.currentSystemRole,
+      );
     }
 
     this.ensureCanManageTargetSystemRole(
@@ -161,6 +164,18 @@ export class AuthorizationService {
       systemRole: input.nextSystemRole,
       roleId: input.nextRoleId,
     });
+  }
+
+  ensureCanDeleteUser(
+    actorSystemRole: SystemRole,
+    targetSystemRole: SystemRole,
+    isSelfDelete: boolean,
+  ): void {
+    if (isSelfDelete) {
+      throw AuthorizationException.rolePrivilegesInsufficient(actorSystemRole);
+    }
+
+    this.ensureCanManageTargetSystemRole(actorSystemRole, targetSystemRole);
   }
 
   ensureHasHigherPrivileges(

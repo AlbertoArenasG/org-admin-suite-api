@@ -16,3 +16,8 @@
   - el endpoint dejó de depender de `USERS/READ`
   - ahora se protege con `USER_REGISTRATION_INVITATIONS/CREATE`, que corresponde al flujo funcional ordinario vigente en frontend
   - se actualizaron las docs vivas de autorización y el handoff de frontend para reflejar esta corrección
+- Se corrigió la frontera estructural de administración de usuarios:
+  - `PATCH /v1/users/:userId` y `DELETE /v1/users/:userId` ya no exigen jerarquía estrictamente superior para el caso `USER -> USER`
+  - un `USER` con permiso funcional suficiente ya puede editar o eliminar a otro `USER`
+  - la frontera estructural se mantiene para bloquear operaciones sobre `ADMIN` y `MASTER_ADMIN`
+  - la autoeliminación sigue bloqueada
