@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -38,12 +37,8 @@ export class CreateUserRegistrationInvitationRequestDto {
   @IsIn([SystemRole.ADMIN, SystemRole.USER])
   system_role!: SystemRole;
 
-  @ValidateIf(
-    (o: CreateUserRegistrationInvitationRequestDto) =>
-      o.system_role === SystemRole.USER,
-  )
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   role_id!: string;
 
   toDomain(
@@ -53,7 +48,7 @@ export class CreateUserRegistrationInvitationRequestDto {
       scope: UserRegistrationInvitationScope.APPLICATION,
       email: this.email,
       systemRole: this.system_role,
-      roleId: this.system_role === SystemRole.USER ? this.role_id : null,
+      roleId: this.role_id,
       invitedByUserId,
       userData: this.buildUserData(),
     };
