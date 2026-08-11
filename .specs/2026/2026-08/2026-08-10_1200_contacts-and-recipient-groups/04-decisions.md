@@ -1,5 +1,11 @@
 # Decisions
 
+## Nota
+
+En esta spec, `v1` significa primera versión funcional del módulo, no una futura versión nueva del prefijo de la API.
+
+Agregar canales nuevos más adelante deberá poder ocurrir dentro del mismo prefijo actual `/v1`, salvo que exista otra razón de ruptura contractual que lo justifique.
+
 ## 2026-08-10
 
 ### Decision
@@ -108,3 +114,170 @@ No se quiere aceptar un modelo rígido de valores únicos que obligue a refactor
 - `companyName` formará parte del shape mínimo de `contact`
 - `fullName` se tratará como derivado
 - la primera UI podrá seguir siendo mínima, pero el dominio ya quedará correctamente preparado
+
+## 2026-08-10
+
+### Decision
+
+`recipient-groups` tendrá `status` desde `v1`.
+
+### Reason
+
+Aunque hoy solo se conozca la necesidad natural de eliminar grupos, ya es suficiente para justificar un ciclo de vida explícito desde el inicio y evitar un refactor posterior.
+
+### Impact
+
+- el shape mínimo de `recipient-groups` ya considera `status`
+- el conjunto inicial de estados será:
+  - `ACTIVE`
+  - `DELETED`
+- no se agregarán más estados hasta que exista una necesidad funcional concreta
+
+## 2026-08-10
+
+### Decision
+
+`recipient-groups` guardará sus contactos asociados como `contactIds[]`, preservando el orden recibido.
+
+### Reason
+
+Se quiere mantener el modelo simple desde `v1`, sin duplicar datos del contacto ni introducir metadata adicional de orden que todavía no aporta valor.
+
+Al mismo tiempo, se quiere dejar abierta la puerta a que más adelante el frontend pueda manejar orden visual personalizado.
+
+### Impact
+
+- el arreglo `contactIds[]` se persistirá y devolverá en el mismo orden
+- no existirá metadata adicional como `index`, `position` o `sortOrder` en `v1`
+- el backend no asumirá lógica especial de ordenamiento
+
+## 2026-08-10
+
+### Decision
+
+`recipient-groups` tendrá `code` desde `v1`, autogenerado a partir de `name` y no editable manualmente.
+
+### Reason
+
+Se quiere conservar un identificador técnico estable sin meter carga operativa innecesaria al usuario de negocio.
+
+### Impact
+
+- `code` forma parte del shape mínimo del grupo
+- frontend podrá tratarlo como dato derivado y no editable
+- backend deberá definir la misma regla de generación consistente desde `name`
+
+## 2026-08-10
+
+### Decision
+
+`recipient-groups` exigirá desde `v1` al menos un canal en `enabledChannels[]` y al menos un contacto en `contactIds[]`.
+
+### Reason
+
+No tiene sentido permitir grupos vacíos o incompletos desde el modelo base.
+
+### Impact
+
+- `enabledChannels[]` no podrá venir vacío
+- `contactIds[]` no podrá venir vacío
+- `enabledChannels[]` solo aceptará canales del catálogo vigente
+
+## 2026-08-11
+
+### Decision
+
+El catálogo de canales publicado en `v1` tendrá inicialmente un solo canal habilitado: `EMAIL`.
+
+### Reason
+
+Aunque el diseño ya nace multicanal, hoy el único alcance operativo real conocido es email.
+
+### Impact
+
+- `EMAIL` será el único canal publicable/usable en `v1`
+- el modelo conserva preparación para crecimiento futuro sin publicar canales prematuros
+
+## 2026-08-11
+
+### Decision
+
+Habrá sincronización automática desde `user` hacia su `contact` vinculado al crear y actualizar campos base compartidos.
+
+### Reason
+
+Se quiere mantener consistente la identidad base del contacto interno sin convertir a `user` en dueño de toda la metadata ampliada del contacto.
+
+### Impact
+
+- se sincronizarán campos base como nombre, apellido, email y celular del usuario
+- `fullName` seguirá siendo derivado
+- `companyName` inicial para contactos internos auto-generados seguirá siendo `ICSACV`
+- como `contacts` usa listas, la sincronización actualizará el primer `email` y el primer `cellPhone` correspondientes
+- metadata adicional del `contact` no quedará gobernada por `user`
+
+## 2026-08-11
+
+### Decision
+
+La distinción entre contacto vinculado a usuario y contacto externo se inferirá únicamente por `userId`.
+
+### Reason
+
+No conviene introducir desde `v1` una bandera redundante como `isUser` si la presencia de `userId` ya resuelve la necesidad actual.
+
+### Impact
+
+- no habrá bandera adicional en `v1`
+- `userId` será la única fuente de verdad para distinguir contactos vinculados a usuario
+- una clasificación futura más rica podrá añadirse después si negocio realmente la necesita
+
+## 2026-08-11
+
+### Decision
+
+`contacts` tendrá `status` desde `v1`.
+
+### Reason
+
+El catálogo base de contactos también nace como CRUD y no conviene dejar su ciclo de vida implícito.
+
+### Impact
+
+- `contacts` nacerá con `status`
+- el conjunto inicial será:
+  - `ACTIVE`
+  - `DELETED`
+- no se agregarán más estados hasta que exista necesidad funcional concreta
+
+## 2026-08-11
+
+### Decision
+
+Los catálogos base de esta iniciativa vivirán en código y no como catálogos persistidos.
+
+### Reason
+
+No conviene introducir persistencia y administración dinámica para catálogos pequeños, estables y controlados por la propia aplicación.
+
+### Impact
+
+- el catálogo de canales vivirá en código
+- agregar canales nuevos será una evolución controlada del sistema, no una operación administrativa runtime
+
+## 2026-08-11
+
+### Decision
+
+Se aprueba un contrato preliminar de endpoints para `contacts`, `recipient-groups` y el catálogo transversal de canales.
+
+### Reason
+
+La definición ya permite aterrizar el alcance HTTP base de `v1` sin esperar al diseño técnico detallado.
+
+### Impact
+
+- el catálogo de canales se expondrá como `GET /v1/communication-channels`
+- `GET /v1/contacts/search` será lookup no paginado, con límite interno controlado por backend
+- `PATCH /v1/contacts/:contactId` solo permitirá editar contactos no vinculados a `user`
+- `contacts` y `recipient-groups` ya quedan con su CRUD base visible desde definición

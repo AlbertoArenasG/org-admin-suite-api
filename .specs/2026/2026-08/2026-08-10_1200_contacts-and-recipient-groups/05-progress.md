@@ -3,6 +3,7 @@
 ## 2026-08-10
 
 - Se creó la spec `contacts-and-recipient-groups`.
+- Se registró explícitamente que en esta iniciativa `v1` significa primera versión funcional del módulo y no una futura versión nueva del prefijo de la API.
 - Se aterrizó la primera decisión de definición:
   - `contacts` será el catálogo base general y reutilizable
   - `recipient-groups` será el módulo consumidor que agrupa contactos para usos operativos
@@ -27,3 +28,41 @@
   - `emails[]`, `phones[]` y `cellPhones[]` existirán desde `v1` como colecciones en el modelo
   - `companyName` formará parte del shape mínimo
   - `fullName` se tratará como dato derivado
+- Se aterrizó la sexta decisión de definición:
+  - `recipient-groups` tendrá `status` desde `v1`
+  - el conjunto inicial de estados será `ACTIVE` y `DELETED`
+  - no se agregarán más estados mientras no exista necesidad funcional concreta
+- Se aterrizó la séptima decisión de definición:
+  - `recipient-groups` guardará sus contactos asociados como `contactIds[]`
+  - el arreglo se persistirá y retornará en el mismo orden en que se reciba
+  - no se introducirá metadata adicional de orden en `v1`
+- Se aterrizó la octava decisión de definición:
+  - `recipient-groups` tendrá `code` desde `v1`
+  - `code` será autogenerado desde `name`
+  - `code` no será editable manualmente
+- Se aterrizó la novena decisión de definición:
+  - `enabledChannels[]` exigirá al menos un canal
+  - `contactIds[]` exigirá al menos un contacto
+  - `enabledChannels[]` solo aceptará canales del catálogo vigente
+- Se aterrizó la décima decisión de definición:
+  - el catálogo publicado en `v1` tendrá inicialmente un solo canal habilitado
+  - `EMAIL` será el único canal vigente en la primera versión
+- Se aterrizó la undécima decisión de definición:
+  - habrá sincronización automática desde `user` hacia su `contact` vinculado
+  - aplicará al crear usuario y al actualizar campos base compartidos
+  - `user` no será dueño de la metadata ampliada del `contact`
+  - el `email` y el `cellPhone` del usuario actualizarán el primer elemento correspondiente en `emails[]` y `cellPhones[]`
+- Se aterrizó la duodécima decisión de definición:
+  - la distinción entre contacto vinculado a usuario y contacto externo se inferirá por `userId`
+  - no existirá bandera adicional tipo `isUser` en `v1`
+- Se aterrizó la decimotercera decisión de definición:
+  - `contacts` tendrá `status` desde `v1`
+  - el conjunto inicial de estados será `ACTIVE` y `DELETED`
+- Se aterrizó la decimocuarta decisión de definición:
+  - los catálogos base de la iniciativa vivirán en código
+  - el catálogo de canales no será persistido
+- Se aterrizó la decimoquinta decisión de definición:
+  - se aprobó un contrato preliminar de endpoints para `contacts`, `recipient-groups` y catálogo de canales
+  - el catálogo transversal de canales se expondrá como `GET /v1/communication-channels`
+  - `GET /v1/contacts/search` se tratará como lookup no paginado
+  - `PATCH /v1/contacts/:contactId` solo aplicará a contactos no vinculados a `user`
