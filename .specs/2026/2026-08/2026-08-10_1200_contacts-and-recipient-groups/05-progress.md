@@ -71,3 +71,9 @@
   - `02-plan.md`
   - `03-task-list.md`
 - La iniciativa ya quedó lista para bajar a diseño técnico y luego implementación sin depender del contexto de esta sesión.
+- Se creó `06-technical-design.md` con el diseño técnico inicial de backend para:
+  - `contacts`
+  - `recipient-groups`
+  - `communication-channels`
+  - sincronización `user -> contact`
+  - persistencia y migración inicial
