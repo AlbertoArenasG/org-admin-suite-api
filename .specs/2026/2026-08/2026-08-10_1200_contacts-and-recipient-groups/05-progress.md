@@ -66,3 +66,8 @@
   - el catálogo transversal de canales se expondrá como `GET /v1/communication-channels`
   - `GET /v1/contacts/search` se tratará como lookup no paginado
   - `PATCH /v1/contacts/:contactId` solo aplicará a contactos no vinculados a `user`
+- Se creó la siguiente capa de la spec:
+  - `01-analysis.md`
+  - `02-plan.md`
+  - `03-task-list.md`
+- La iniciativa ya quedó lista para bajar a diseño técnico y luego implementación sin depender del contexto de esta sesión.
