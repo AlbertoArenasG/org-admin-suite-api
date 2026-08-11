@@ -66,12 +66,18 @@ interface ContactProps {
   name: string;
   lastname: string;
   companyName: string | null;
-  emails: string[];
-  phones: string[];
-  cellPhones: string[];
+  emails: ContactEmailValue[];
+  phones: ContactPhoneValue[];
+  cellPhones: ContactCellPhoneValue[];
   status: ContactStatus;
   createdAt?: Date;
   updatedAt?: Date;
+}
+```
+
+```ts
+interface ContactValueObject {
+  value: string;
 }
 ```
 
@@ -96,6 +102,8 @@ Notas:
 
 - en `v1` el modelo permite multiplicidad aunque la primera UI o ciertos flujos internos solo alimenten una parte mínima
 - el email y celular provenientes de `user` sincronizarán solo el primer elemento correspondiente en `emails[]` y `cellPhones[]`
+- cada elemento de `emails[]`, `phones[]` y `cellPhones[]` tendrá en `v1` un shape mínimo `{ value }`
+- labels, flags de primario, tipo o metadata adicional no forman parte de `v1`
 
 #### 1.2 RecipientGroup
 
@@ -160,6 +168,20 @@ Notas:
 - el modelo ya nace multicanal
 - en `v1` solo se publica `EMAIL`
 - agregar nuevos canales en el futuro debe poder ocurrir dentro del mismo prefijo `/v1`
+- el catálogo debe exponer el shape necesario para respuestas multi idioma desde backend
+- el patrón debe seguir lo ya existente en `authorization.catalog.ts` y `authorization-operations.catalog.ts`
+- esta metadata de catálogo no forma parte de las entidades persistidas
+- `recipient-groups` solo persiste `enabledChannels[]` como códigos
+- `name` no vive en el catálogo base; se resuelve en presenters mediante i18n
+
+Shape mínimo esperado del catálogo:
+
+```ts
+interface CommunicationChannelCatalogItem {
+  code: string;
+  nameKey: string;
+}
+```
 
 Ubicación sugerida:
 
@@ -167,6 +189,16 @@ Ubicación sugerida:
 src/internal/application/services/communication-channels/
   communication-channels.catalog.ts
   communication-channels.utils.ts
+```
+
+Shape esperado de salida HTTP:
+
+```ts
+interface CommunicationChannelResponseItem {
+  code: string;
+  name: string;
+  name_key: string;
+}
 ```
 
 ### 2. Application
@@ -256,9 +288,9 @@ Campos conceptuales:
   name: string;
   lastname: string;
   company_name: string | null;
-  emails: string[];
-  phones: string[];
-  cell_phones: string[];
+  emails: Array<{ value: string }>;
+  phones: Array<{ value: string }>;
+  cell_phones: Array<{ value: string }>;
   status: 'ACTIVE' | 'DELETED';
   createdAt: Date;
   updatedAt: Date;
@@ -315,8 +347,8 @@ Objetivo:
   - `lastname`
   - `email`
   - `cellPhone`
-  - `companyName = ICSACV`
-  - `status = ACTIVE`
+- `companyName = ICSACV`
+- `status = ACTIVE`
 
 Recomendación:
 
@@ -411,7 +443,99 @@ Con operaciones todavía por aterrizar cuando se analice la integración con el 
 
 ## Riesgos técnicos todavía abiertos
 
-- decidir si `emails[]`, `phones[]` y `cellPhones[]` serán arrays de strings puros o arrays de objetos más ricos desde `v1`
-- decidir cómo se resuelve unicidad o deduplicación de contactos externos
-- decidir si `GET /v1/contacts/search` buscará solo en contactos activos
-- aterrizar integración futura con catálogo de autorización
+- ninguno crítico a nivel de diseño conceptual de `v1`
+
+## Decisiones técnicas cerradas dentro del diseño
+
+### 1. Shape de colecciones multivalor de contacto
+
+Se aprueba que `emails[]`, `phones[]` y `cellPhones[]` no nazcan como arrays de strings puros.
+
+Nacerán desde `v1` como arrays de objetos mínimos, para evitar refactors posteriores cuando se necesite agregar metadata como:
+
+- principalidad
+- label
+- origen
+- validación
+- sincronización con `user`
+
+Shape mínimo sugerido:
+
+```ts
+interface ContactEmailValue {
+  value: string;
+}
+
+interface ContactPhoneValue {
+  value: string;
+}
+
+interface ContactCellPhoneValue {
+  value: string;
+}
+```
+
+Consecuencia:
+
+- el modelo queda preparado para crecer sin cambiar la estructura principal de las colecciones
+- en `v1` estos objetos se mantendrán mínimos y solo tendrán `value`
+- campos como `label`, `isPrimary`, `source` o equivalentes se difieren hasta que exista una necesidad funcional concreta
+
+### 2. Deduplcación de contactos externos en v1
+
+En `v1` no se endurecerá una regla fuerte de unicidad para contactos externos por:
+
+- email
+- teléfono
+- nombre
+
+Razonamiento:
+
+- el comportamiento real todavía debe observarse cuando los módulos empiecen a usarse en práctica
+- la primera defensa contra duplicados se apoyará principalmente en UX de búsqueda y sugerencia
+- no conviene bloquear prematuramente casos legítimos con restricciones rígidas aún no validadas por negocio
+
+Consecuencia:
+
+- `GET /v1/contacts/search` será pieza importante del flujo de selección/alta
+- la prevención de duplicados en `v1` será principalmente asistida por lookup/autocomplete, no por constraints duros del dominio
+
+### 3. Alcance de `GET /v1/contacts/search`
+
+Se aprueba que `GET /v1/contacts/search` opere solo sobre contactos con `status = ACTIVE`.
+
+Razonamiento:
+
+- el endpoint está pensado como lookup operativo para selects/autocomplete
+- no conviene sugerir contactos borrados lógicamente dentro de un flujo de selección activa
+
+Consecuencia:
+
+- los contactos `DELETED` quedan fuera del lookup normal
+- si algún día se necesita búsqueda administrativa más amplia, deberá resolverse en otro endpoint o en el listado administrativo ordinario
+
+### 4. Integración inicial con catálogo de autorización
+
+Se aprueba que ambos módulos entren al catálogo de autorización con operaciones CRUD ordinarias en `v1`.
+
+Módulos previstos:
+
+- `CONTACTS`
+- `RECIPIENT_GROUPS`
+
+Operaciones iniciales:
+
+- `CREATE`
+- `READ`
+- `UPDATE`
+- `DELETE`
+
+Razonamiento:
+
+- para `v1` ambos módulos sí encajan de forma legítima en CRUD
+- no existe todavía una operación especial de dominio que justifique salir de ese vocabulario base
+
+Consecuencia:
+
+- backend podrá integrarlos al catálogo de autorización sin inventar operaciones semánticas prematuras
+- si en el futuro aparece una operación específica de dominio, podrá agregarse sin contradecir este punto

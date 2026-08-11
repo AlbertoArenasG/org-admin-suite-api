@@ -240,6 +240,37 @@ No conviene introducir desde `v1` una bandera redundante como `isUser` si la pre
 
 ### Reason
 
+Aunque hoy el ciclo de vida conocido sea mínimo, conviene dejar el estado explícito desde el inicio para evitar refactors posteriores en el catálogo base.
+
+### Impact
+
+- `contacts` nacerá con `status`
+- el conjunto inicial de estados será:
+  - `ACTIVE`
+  - `DELETED`
+
+## 2026-08-11
+
+### Decision
+
+Los address values de `contacts` se modelarán en `v1` como objetos mínimos con solo `value`, mientras que los catálogos transversales en código expondrán `code`, `nameKey` y los campos necesarios de presentación multi idioma fuera de la entidad persistida.
+
+### Reason
+
+No conviene mezclar en dominio datos persistidos de contacto con metadata de presentación o localización.
+
+Además, para los address values ya quedó decidido que `v1` no necesita aún campos extra como labels, prioridad o flags, pero sí conviene que el catálogo de canales esté listo para respuestas localizadas desde backend.
+
+### Impact
+
+- `emails[]`, `phones[]` y `cellPhones[]` usarán objetos mínimos con shape `{ value }`
+- `recipient-groups` persistirá solo códigos de canal en `enabledChannels[]`
+- `contacts` y `recipient-groups` no persistirán `name`, `nameKey` ni metadata de localización de canales
+- el catálogo transversal en código sí expondrá `code` y `nameKey`, siguiendo el patrón ya usado en `authorization.catalog.ts`
+- `name` localizado se resolverá en presenters, no en la entidad ni en la persistencia
+
+### Reason
+
 El catálogo base de contactos también nace como CRUD y no conviene dejar su ciclo de vida implícito.
 
 ### Impact
