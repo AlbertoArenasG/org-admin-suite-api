@@ -253,6 +253,29 @@ Aunque hoy el ciclo de vida conocido sea mínimo, conviene dejar el estado expl�
 
 ### Decision
 
+`contacts` persistirá auditoría base desde `v1`, siguiendo el mismo patrón ya usado en otros catálogos auditables del repo.
+
+### Reason
+
+Se quiere conservar trazabilidad operativa desde la primera versión del módulo sin introducir un formato nuevo o aislado respecto al resto del sistema.
+
+### Impact
+
+- la entidad `Contact` tendrá:
+  - `createdBy`
+  - `updatedBy`
+  - `createdAt`
+  - `updatedAt`
+- el schema persistirá:
+  - `created_by`
+  - `updated_by`
+  - `timestamps`
+- el detalle de contacto podrá devolver `created_by` y `updated_by` enriquecidos con el mismo patrón de `AuditUserDto`
+
+## 2026-08-11
+
+### Decision
+
 Los address values de `contacts` se modelarán en `v1` como objetos mínimos con solo `value`, mientras que los catálogos transversales en código expondrán `code`, `nameKey` y los campos necesarios de presentación multi idioma fuera de la entidad persistida.
 
 ### Reason

@@ -77,3 +77,57 @@
   - `communication-channels`
   - sincronización `user -> contact`
   - persistencia y migración inicial
+
+## 2026-08-11
+
+- Se aterrizó el patrón de catálogos transversales para esta iniciativa siguiendo el estilo real ya usado en backend:
+  - los catálogos en código exponen `code` y `nameKey`
+  - `name` localizado se resuelve en presenters por i18n
+  - `name` y `nameKey` no forman parte de las entidades persistidas
+- Se cerró explícitamente el shape mínimo de los value objects multivalor de `contacts`:
+  - `emails[]`
+  - `phones[]`
+  - `cellPhones[]`
+  - en `v1` todos usarán objetos mínimos `{ value }`
+- Se decidió que `contacts` persistirá auditoría base desde `v1`, siguiendo el patrón del repo con:
+  - `createdBy`
+  - `updatedBy`
+  - `createdAt`
+  - `updatedAt`
+- Se aterrizó el contrato concreto de `GET /v1/contacts`:
+  - filtro `type` con `INTERNAL | EXTERNAL`
+  - colección administrativa resumida
+  - sin auditoría enriquecida en listado
+- Se aterrizó el contrato concreto de `GET /v1/contacts/search`:
+  - lookup no paginado
+  - solo para `ACTIVE`
+  - respuesta resumida para autocomplete/select
+- Se aterrizó el contrato concreto de `GET /v1/contacts/:contactId`:
+  - detalle completo
+  - arrays completos de contacto
+  - auditoría enriquecida en `created_by` y `updated_by`
+- Se aterrizaron los contratos concretos de escritura para `contacts`:
+  - `POST /v1/contacts`
+  - `PATCH /v1/contacts/:contactId`
+  - `DELETE /v1/contacts/:contactId`
+- Quedó explícito que:
+  - solo pueden crearse y editarse contactos externos manualmente
+  - contactos ligados a `user` no podrán editarse ni eliminarse manualmente
+  - al eliminar un `user`, se desencadenará el borrado lógico de su `contact` vinculado
+- Se aterrizó el contrato concreto de `GET /v1/recipient-groups`:
+  - listado administrativo paginado
+  - respuesta resumida
+  - `enabled_channels` enriquecido para UI
+- Se aterrizó el contrato concreto de `GET /v1/recipient-groups/:groupId`:
+  - detalle completo
+  - `enabled_channels` enriquecido
+  - `contacts` expandidos respetando el orden persistido
+  - auditoría enriquecida
+- Se aterrizaron los contratos concretos de escritura para `recipient-groups`:
+  - `POST /v1/recipient-groups`
+  - `PATCH /v1/recipient-groups/:groupId`
+  - `DELETE /v1/recipient-groups/:groupId`
+- Se cerró el contrato de `GET /v1/communication-channels`:
+  - colección no paginada
+  - cada item devolverá `code`, `name`, `name_key`
+  - `EMAIL` será el único canal publicado en `v1`

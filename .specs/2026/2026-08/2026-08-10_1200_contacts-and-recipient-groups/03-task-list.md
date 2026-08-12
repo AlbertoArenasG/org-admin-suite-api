@@ -2,31 +2,31 @@
 
 ## Phase 1. Analysis
 
-- [ ] Consolidar análisis técnico del modelo `contacts`
-      Status: pending
+- [x] Consolidar análisis técnico del modelo `contacts`
+      Status: completed
 
-- [ ] Consolidar análisis técnico del modelo `recipient-groups`
-      Status: pending
+- [x] Consolidar análisis técnico del modelo `recipient-groups`
+      Status: completed
 
-- [ ] Identificar riesgos de sincronización entre `user` y `contact`
-      Status: pending
+- [x] Identificar riesgos de sincronización entre `user` y `contact`
+      Status: completed
 
-- [ ] Aterrizar impacto de migración o seed para usuarios existentes
-      Status: pending
+- [x] Aterrizar impacto de migración o seed para usuarios existentes
+      Status: completed
 
 ## Phase 2. Definition And Design
 
-- [ ] Definir shape mínimo de entidades, DTOs y catálogos base
-      Status: pending
+- [x] Definir shape mínimo de entidades, DTOs y catálogos base
+      Status: completed
 
-- [ ] Definir contratos HTTP concretos de `contacts`
-      Status: pending
+- [x] Definir contratos HTTP concretos de `contacts`
+      Status: completed
 
-- [ ] Definir contratos HTTP concretos de `recipient-groups`
-      Status: pending
+- [x] Definir contratos HTTP concretos de `recipient-groups`
+      Status: completed
 
-- [ ] Definir contrato HTTP de `GET /v1/communication-channels`
-      Status: pending
+- [x] Definir contrato HTTP de `GET /v1/communication-channels`
+      Status: completed
 
 ## Phase 3. Implementation
 

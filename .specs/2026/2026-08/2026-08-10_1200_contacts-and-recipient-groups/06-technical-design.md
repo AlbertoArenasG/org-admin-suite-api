@@ -70,6 +70,8 @@ interface ContactProps {
   phones: ContactPhoneValue[];
   cellPhones: ContactCellPhoneValue[];
   status: ContactStatus;
+  createdBy?: string | null;
+  updatedBy?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -104,6 +106,7 @@ Notas:
 - el email y celular provenientes de `user` sincronizarán solo el primer elemento correspondiente en `emails[]` y `cellPhones[]`
 - cada elemento de `emails[]`, `phones[]` y `cellPhones[]` tendrá en `v1` un shape mínimo `{ value }`
 - labels, flags de primario, tipo o metadata adicional no forman parte de `v1`
+- `contacts` persistirá auditoría base con `createdBy`, `updatedBy`, `createdAt` y `updatedAt`
 
 #### 1.2 RecipientGroup
 
@@ -292,6 +295,8 @@ Campos conceptuales:
   phones: Array<{ value: string }>;
   cell_phones: Array<{ value: string }>;
   status: 'ACTIVE' | 'DELETED';
+  created_by: string | null;
+  updated_by: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -372,17 +377,101 @@ Contrato funcional esperado:
 
 - `GET /v1/contacts`:
   - listado administrativo, probablemente paginado
+  - permitirá filtro `type` con valores:
+    - `INTERNAL`
+    - `EXTERNAL`
+  - la clasificación se inferirá por presencia o ausencia de `userId`
+  - la respuesta de colección será resumida y devolverá:
+    - `contact_id`
+    - `type`
+    - `user_id`
+    - `name`
+    - `lastname`
+    - `full_name`
+    - `company_name`
+    - `primary_email`
+    - `primary_cell_phone`
+    - `status`
+    - `created_at`
+    - `updated_at`
+  - no devolverá auditoría enriquecida en la colección
 - `GET /v1/contacts/:contactId`:
   - detalle completo
+  - devolverá auditoría enriquecida en `created_by` y `updated_by` siguiendo el patrón existente de `AuditUserDto`
+  - devolverá:
+    - `contact_id`
+    - `type`
+    - `user_id`
+    - `name`
+    - `lastname`
+    - `full_name`
+    - `company_name`
+    - `emails`
+    - `phones`
+    - `cell_phones`
+    - `status`
+    - `created_by`
+    - `updated_by`
+    - `created_at`
+    - `updated_at`
+  - `emails`, `phones` y `cell_phones` saldrán completos como arrays de `{ value }`
 - `POST /v1/contacts`:
   - crea contacto externo
+  - aceptará:
+    - `name`
+    - `lastname`
+    - `company_name`
+    - `emails`
+    - `phones`
+    - `cell_phones`
+  - no aceptará:
+    - `user_id`
+    - `status`
+    - `created_by`
+    - `updated_by`
+  - cada colección multivalor usará arrays de `{ value }`
+  - al menos una entre `emails`, `phones` o `cell_phones` deberá traer contenido
+  - `company_name` podrá ser opcional
+  - la respuesta de creación seguirá el mismo shape del detalle completo
 - `PATCH /v1/contacts/:contactId`:
   - solo permite contactos externos
+  - aceptará:
+    - `name`
+    - `lastname`
+    - `company_name`
+    - `emails`
+    - `phones`
+    - `cell_phones`
+  - no aceptará:
+    - `user_id`
+    - `status`
+    - `created_by`
+    - `updated_by`
+  - cada colección multivalor usará arrays de `{ value }`
+  - al menos una entre `emails`, `phones` o `cell_phones` deberá traer contenido
+  - si el contacto está vinculado a `user`, backend rechazará la edición
+  - la respuesta de actualización seguirá el mismo shape del detalle completo
 - `DELETE /v1/contacts/:contactId`:
   - borrado lógico
+  - cambiará `status` a `DELETED`
+  - actualizará `updated_by`
+  - actualizará `updated_at`
+  - no hará borrado físico
+  - si el contacto está vinculado a `user`, backend rechazará la eliminación manual
+  - cuando un `user` sea eliminado, se desencadenará también el borrado lógico de su `contact` vinculado
+  - la respuesta de eliminación seguirá el mismo shape del detalle completo
 - `GET /v1/contacts/search`:
   - lookup no paginado para selects/autocomplete
   - con límite interno controlado por backend
+  - devolverá una respuesta resumida con:
+    - `contact_id`
+    - `type`
+    - `user_id`
+    - `full_name`
+    - `company_name`
+    - `primary_email`
+    - `primary_cell_phone`
+  - no devolverá `status`, fechas ni auditoría
 
 #### 4.2 RecipientGroups
 
@@ -396,11 +485,104 @@ Endpoints aprobados:
 
 Contrato funcional esperado:
 
+- `GET /v1/recipient-groups`:
+  - listado administrativo paginado
+  - permitirá filtros mínimos:
+    - `search`
+    - `status`
+  - el ordenamiento inicial podrá resolverse por:
+    - `created_at`
+    - `name`
+  - la respuesta de colección será resumida y devolverá:
+    - `recipient_group_id`
+    - `name`
+    - `code`
+    - `description`
+    - `enabled_channels`
+    - `contacts_count`
+    - `status`
+    - `created_at`
+    - `updated_at`
+  - `enabled_channels` saldrá enriquecido para UI con:
+    - `code`
+    - `name`
+    - `name_key`
+  - no devolverá `contact_ids` ni contactos expandidos en la colección
+  - no devolverá auditoría enriquecida en la colección
+- `GET /v1/recipient-groups/:groupId`:
+  - devolverá:
+    - `recipient_group_id`
+    - `name`
+    - `code`
+    - `description`
+    - `enabled_channels`
+    - `contacts`
+    - `status`
+    - `created_by`
+    - `updated_by`
+    - `created_at`
+    - `updated_at`
+  - `enabled_channels` saldrá enriquecido con:
+    - `code`
+    - `name`
+    - `name_key`
+  - `contacts` saldrá expandido y respetará el orden persistido en `contactIds[]`
+  - cada item de `contacts` devolverá:
+    - `contact_id`
+    - `type`
+    - `user_id`
+    - `full_name`
+    - `company_name`
+    - `primary_email`
+    - `primary_cell_phone`
+    - `status`
+  - `created_by` y `updated_by` seguirán el patrón enriquecido de `AuditUserDto`
 - `POST` y `PATCH` deben aceptar:
   - `name`
   - `description`
   - `enabledChannels[]`
   - `contactIds[]`
+- `POST /v1/recipient-groups`:
+  - aceptará:
+    - `name`
+    - `description`
+    - `enabled_channels`
+    - `contact_ids`
+  - no aceptará:
+    - `code`
+    - `status`
+    - `created_by`
+    - `updated_by`
+  - `code` se generará automáticamente desde `name`
+  - `enabled_channels` deberá traer al menos un elemento válido del catálogo vigente
+  - `contact_ids` deberá traer al menos un contacto existente y `ACTIVE`
+  - se preservará el orden recibido en `contact_ids`
+  - backend rechazará ids de contacto duplicados dentro del mismo grupo
+  - la respuesta de creación seguirá el mismo shape del detalle completo
+- `PATCH /v1/recipient-groups/:groupId`:
+  - aceptará:
+    - `name`
+    - `description`
+    - `enabled_channels`
+    - `contact_ids`
+  - no aceptará:
+    - `code`
+    - `status`
+    - `created_by`
+    - `updated_by`
+  - si `name` cambia, backend regenerará `code`
+  - `enabled_channels` deberá traer al menos un elemento válido del catálogo vigente
+  - `contact_ids` deberá traer al menos un contacto existente y `ACTIVE`
+  - se preservará el orden recibido en `contact_ids`
+  - backend rechazará ids de contacto duplicados dentro del mismo grupo
+  - la respuesta de actualización seguirá el mismo shape del detalle completo
+- `DELETE /v1/recipient-groups/:groupId`:
+  - hará borrado lógico
+  - cambiará `status` a `DELETED`
+  - actualizará `updated_by`
+  - actualizará `updated_at`
+  - no hará borrado físico
+  - la respuesta de eliminación seguirá el mismo shape del detalle completo
 - `code` no se captura desde cliente
 - el detalle puede devolver la composición del grupo sin exigir endpoint especial adicional en `v1`
 
@@ -415,6 +597,12 @@ Contrato esperado:
 - devuelve catálogo vivo definido en código
 - en `v1` solo publica `EMAIL`
 - frontend no debe hardcodear canales
+- la respuesta será colección no paginada
+- cada item devolverá:
+  - `code`
+  - `name`
+  - `name_key`
+- `name` se resolverá por i18n en presenter siguiendo el patrón ya usado en los catálogos de autorización
 
 ### 5. Authorization impact
 
@@ -499,6 +687,24 @@ Consecuencia:
 
 - `GET /v1/contacts/search` será pieza importante del flujo de selección/alta
 - la prevención de duplicados en `v1` será principalmente asistida por lookup/autocomplete, no por constraints duros del dominio
+
+### 5. Filtro administrativo por tipo de contacto
+
+Se aprueba que `GET /v1/contacts` permita filtrar por `type` con los valores:
+
+- `INTERNAL`
+- `EXTERNAL`
+
+Razonamiento:
+
+- el filtro es útil para administración operativa del catálogo
+- `type` resulta más claro y directo que nombres más abstractos como `kind`
+- no hace falta persistir ese valor porque ya puede inferirse desde `userId`
+
+Consecuencia:
+
+- `type` existirá como filtro de request, no como campo persistido
+- la clasificación se resolverá en backend a partir de la relación con `user`
 
 ### 3. Alcance de `GET /v1/contacts/search`
 
