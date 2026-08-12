@@ -34,13 +34,24 @@ El shape exacto sigue pendiente, pero ya se asumen como mínimos conceptuales:
   - nombre
   - identificador de negocio
 - `interventionType`
-- fecha base del registro
+- fecha base del registro como fecha real de la acción documentada
 - intervalo de vigencia
 - fecha de vencimiento derivada
-- observaciones
+- observaciones del registro concreto
 - `status` persistido
 - bloque opcional de laboratorio
 - referencia a política de alerta o estrategia equivalente
+
+## Provisional Laboratory Subflow
+
+Cuando aplique el flujo de laboratorio, ya se asume como mínimo conceptual:
+
+- indicador de que el registro entró a flujo de laboratorio
+- fecha de entrega al laboratorio
+- nombre capturado del laboratorio
+- tiempo estimado del trabajo o servicio externo
+
+Todavía sigue pendiente cerrar el shape exacto y si se requerirán más timestamps o campos de seguimiento dentro de `v1`.
 
 ## Provisional Derived Logic
 
@@ -76,4 +87,3 @@ Se calculará para UI cuando:
 - relación entre registro y política
 - contratos HTTP iniciales
 - reglas exactas de derivación de semáforo y `OVERDUE`
-

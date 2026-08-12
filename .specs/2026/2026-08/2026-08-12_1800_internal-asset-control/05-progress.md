@@ -15,6 +15,8 @@
     - `registro de mantenimiento de activo interno`
     - `internal-asset-maintenance-record`
 - Se aprobó que `v1` capturará el activo directamente dentro de cada registro, sin catálogo maestro de activos por ahora.
+- Se registró explícitamente que la fecha principal del registro representa la acción concreta realizada o documentada sobre el activo.
+- Se registró explícitamente que `observaciones` pertenece al registro concreto y no al activo general.
 - Se aprobó que el registro tendrá `interventionType` desde `v1`, tomado de catálogo en código.
 - Se aprobó la separación entre:
   - `status` persistido
@@ -28,9 +30,9 @@
   serán estados persistidos iniciales.
 - Se aprobó que `OVERDUE` no se persistirá automáticamente en `v1`.
 - Se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
+- Se registró que el subflujo opcional de laboratorio, cuando aplique, requerirá al menos fecha de entrega como dato de negocio relevante.
 - La iniciativa todavía no está lista para implementación; faltan definiciones críticas de:
   - intervalo de vigencia
   - subflujo de laboratorio
   - contrato y shape del módulo de políticas
   - contratos HTTP iniciales
-

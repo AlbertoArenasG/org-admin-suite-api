@@ -19,6 +19,7 @@ Hoy el problema real se entiende mejor así:
 - cada fila representa un registro histórico
 - el activo puede repetirse en el tiempo
 - el registro documenta una acción concreta o un hito de mantenimiento sobre el activo
+- la fecha principal del registro representa la fecha real de esa acción documentada
 - la fecha de vencimiento se deriva a partir de la fecha del registro y un intervalo configurable
 - algunos registros entran en un subflujo opcional de laboratorio
 - negocio necesita alertas preventivas y visibilidad operativa del estado del registro
@@ -31,6 +32,8 @@ Hoy el problema real se entiende mejor así:
 - el activo se capturará directo en `v1`
 - mantenimiento preventivo no se manejará como bloque especial separado; será un tipo más de registro
 - el mismo patrón de alertamiento base puede reutilizarse entre tipos
+- `observaciones` corresponde al registro histórico concreto
+- el flujo de laboratorio, cuando aplique, necesitará al menos fecha de entrega además del laboratorio y el tiempo estimado del trabajo
 
 ## Risks
 
@@ -72,6 +75,8 @@ La modelación backend deberá separar al menos estos concerns:
 - política de alerta reusable
 - subflujo opcional de laboratorio
 
+También deberá dejarse margen a futuro para una UX que permita generar un nuevo registro tomando como base uno previo, sin asumir eso como parte obligatoria de `v1`.
+
 ## Questions Still Open
 
 Persisten preguntas críticas de definición que deberán cerrarse en decisiones posteriores, por ejemplo:
@@ -81,4 +86,3 @@ Persisten preguntas críticas de definición que deberán cerrarse en decisiones
 - asignación entre registros y políticas
 - catálogo definitivo de colores, severidades o niveles visuales
 - cómo modelar exactamente el subflujo de laboratorio sin sobrecomplicar `v1`
-

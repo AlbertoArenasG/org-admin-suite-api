@@ -52,6 +52,8 @@ Antes de implementación ya quedó aprobado que:
 - `interventionType` existirá desde `v1` y vendrá de catálogo en código
 - `maintenance` se usará como término paraguas del recurso en inglés, aunque el tipo concreto pueda ser calibración, verificación, mantenimiento preventivo u otro
 - el flujo de laboratorio será opcional y no aplicará a todos los registros
+- la fecha base del registro representará la fecha real de la acción realizada o documentada sobre el activo
+- `observaciones` corresponderá al registro concreto, no al activo en abstracto
 - el semáforo o nivel de alerta convivirá con el `status` operativo
 - `OVERDUE` será derivado para UI, no persistido automáticamente por backend
 - desde `v1` existirá un módulo administrable de políticas de alerta
@@ -153,6 +155,7 @@ Opción 2.
 - el recurso principal no es un catálogo maestro de activos
 - el activo puede repetirse en múltiples registros históricos
 - observaciones, vigencia y seguimiento pertenecen al registro concreto
+- la fecha base del registro representa la acción concreta realizada o documentada
 - la fecha de vencimiento sirve como referencia operativa, pero no genera por sí sola el siguiente registro
 
 ### Decision Final
@@ -162,6 +165,10 @@ Se aprueba que cada `internal-asset-maintenance-record` sea un registro históri
 El mismo activo podrá aparecer en múltiples registros a lo largo del tiempo.
 
 `v1` no modelará todavía un catálogo maestro de activos internos.
+
+La fecha principal del registro corresponderá a la acción concreta realizada o documentada sobre el activo.
+
+`observaciones` pertenecerá al registro concreto y no al activo general.
 
 ### Status
 
@@ -373,4 +380,3 @@ Las políticas deberán poder usarse para gobernar:
 ### Status
 
 approved
-
