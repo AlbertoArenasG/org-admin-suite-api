@@ -42,8 +42,8 @@
 - [x] Implementar sincronización automática `user -> contact`
       Status: completed
 
-- [ ] Implementar seed inicial para usuarios existentes
-      Status: pending
+- [x] Implementar seed inicial para usuarios existentes
+      Status: completed
 
 ## Phase 4. Validation
 
@@ -54,6 +54,9 @@
       Status: completed
 
 - [x] Validar compilación de sincronización `user -> contact`
+      Status: completed
+
+- [x] Validar compilación del seed inicial de `contacts`
       Status: completed
 
 - [ ] Validar reglas mínimas de `recipient-groups`

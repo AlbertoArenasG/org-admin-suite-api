@@ -97,19 +97,24 @@
 
 ## Slice 5. Bootstrap Seed For Existing Users
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - materializar y reconciliar `contacts` para usuarios ya existentes
-- Alcance técnico:
-  - seed idempotente
-  - creación cuando no exista `contact` por `userId`
-  - actualización parcial cuando ya exista
+- Cambios realizados:
+  - se implementó `contacts-from-users.seed.ts`
+  - se registró el seed en `catalogSeeds`
+  - se dejó integrado al runner existente `db:seed`
+- Reglas cubiertas:
+  - procesamiento idempotente por `user_id`
+  - creación cuando no existe `contact`
+  - actualización parcial cuando ya existe
+  - inclusión de usuarios de cualquier estatus
+  - reflejo de estatus equivalente en `contact`
+  - `ICSACV` como `companyName` inicial solo cuando falte
+  - no intervención sobre metadata ampliada ajena al `user`
   - log de salida operativo sin persistencia adicional
-- Reglas a cubrir:
-  - incluir usuarios de cualquier estatus
-  - reflejar estatus equivalente en `contact`
-  - usar `ICSACV` como `companyName` inicial solo cuando falte
-  - no tocar metadata ampliada ajena al `user`
+- Validación realizada:
+  - compilación satisfactoria con `npm run build`
 
 ## Slice 6. Validation And Docs Handoff
 

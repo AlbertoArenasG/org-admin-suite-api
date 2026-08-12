@@ -193,5 +193,17 @@
   - `companyName` interno inicial se mantiene como `ICSACV`
   - `status` del `contact` se deriva del `status` del `user`
 - Se validó que el backend compile correctamente después de integrar la sincronización `user -> contact` con `npm run build`.
+- Se implementó el seed inicial `contacts-from-users` siguiendo el runner real del repo:
+  - quedó registrado dentro de `catalogSeeds`
+  - es idempotente
+  - crea `contact` cuando no existe por `user_id`
+  - actualiza solo campos base gobernados por `user`
+  - respeta metadata ampliada ya existente
+  - asigna `ICSACV` como `company_name` solo si falta
+  - refleja el `status` equivalente del `user` en el `contact`
+  - procesa usuarios existentes de cualquier estatus
+  - deja log de salida operativo sin persistencia adicional
+- Se validó que el backend compile correctamente después de integrar el seed inicial de `contacts` con `npm run build`.
 - Aún quedan pendientes de esta spec:
-  - seed inicial de usuarios existentes hacia `contacts`
+  - validación funcional/manual final
+  - actualización de docs posteriores al código cuando corresponda
