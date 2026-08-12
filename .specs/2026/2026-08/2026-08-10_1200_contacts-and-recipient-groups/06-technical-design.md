@@ -88,6 +88,7 @@ Enum inicial:
 ```ts
 enum ContactStatus {
   ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   DELETED = 'DELETED',
 }
 ```
@@ -294,7 +295,7 @@ Campos conceptuales:
   emails: Array<{ value: string }>;
   phones: Array<{ value: string }>;
   cell_phones: Array<{ value: string }>;
-  status: 'ACTIVE' | 'DELETED';
+  status: 'ACTIVE' | 'INACTIVE' | 'DELETED';
   created_by: string | null;
   updated_by: string | null;
   createdAt: Date;
@@ -353,11 +354,27 @@ Objetivo:
   - `email`
   - `cellPhone`
 - `companyName = ICSACV`
-- `status = ACTIVE`
+- conservar el estatus equivalente del `user` en el `contact`
 
 Recomendación:
 
-- implementarlo como seed o migración explícita en `infra/persistence/mongoose`
+- implementarlo como `seed` explícita en `infra/persistence/mongoose`
+- la `seed` deberá ser idempotente
+- si ya existe un `contact` para el mismo `userId`, no deberá crear otro
+- si ya existe un `contact` para el mismo `userId`, actualizará solo:
+  - `name`
+  - `lastname`
+  - primer `email`
+  - primer `cellPhone`
+- `companyName = ICSACV` solo se asignará si el `contact` no tiene `companyName`
+- no tocará metadata ampliada del `contact` ni colecciones adicionales fuera del primer `email` y primer `cellPhone`
+- deberá procesar usuarios de cualquier estatus existente y reflejar el estatus equivalente en `contact`
+- deberá dejar un resumen de salida con métricas operativas como:
+  - usuarios procesados
+  - contactos creados
+  - contactos actualizados
+  - contactos omitidos
+  - errores
 - dejarlo registrado en task list como entregable obligatorio, no como tarea opcional posterior
 
 ### 4. HTTP Contracts
@@ -606,17 +623,26 @@ Contrato esperado:
 
 ### 5. Authorization impact
 
-Todavía falta definir en una siguiente capa si estos módulos:
-
-- vivirán bajo permisos propios
-- y cuáles serán sus operaciones exactas en el catálogo de autorización
-
-Punto base recomendado:
+Se aprueba que ambos módulos entren al catálogo de autorización como módulos formales independientes:
 
 - `CONTACTS`
 - `RECIPIENT_GROUPS`
 
-Con operaciones todavía por aterrizar cuando se analice la integración con el catálogo de autorización.
+Operaciones iniciales:
+
+- `CREATE`
+- `READ`
+- `UPDATE`
+- `DELETE`
+
+Notas de implementación:
+
+- backend no introducirá activaciones automáticas ni dependencias implícitas entre módulos
+- endpoints auxiliares como:
+  - `GET /v1/contacts/search`
+  - `GET /v1/communication-channels`
+  quedarán cubiertos por permisos ordinarios del flujo que los consume, sin crear operaciones especiales nuevas en `v1`
+- si en el futuro frontend necesita asistir al usuario en la configuración de permisos relacionados, esa ayuda deberá resolverse en la UX del editor de roles, no en el modelo de autorización de backend
 
 ### 6. Orden técnico recomendado de implementación
 

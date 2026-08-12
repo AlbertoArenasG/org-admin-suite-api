@@ -57,7 +57,7 @@
   - no existirá bandera adicional tipo `isUser` en `v1`
 - Se aterrizó la decimotercera decisión de definición:
   - `contacts` tendrá `status` desde `v1`
-  - el conjunto inicial de estados será `ACTIVE` y `DELETED`
+  - el conjunto inicial de estados será `ACTIVE`, `INACTIVE` y `DELETED`
 - Se aterrizó la decimocuarta decisión de definición:
   - los catálogos base de la iniciativa vivirán en código
   - el catálogo de canales no será persistido
@@ -131,3 +131,14 @@
   - colección no paginada
   - cada item devolverá `code`, `name`, `name_key`
   - `EMAIL` será el único canal publicado en `v1`
+- Se ajustó la decisión de estado de `contacts` para incluir `INACTIVE` desde `v1`:
+  - la motivación fue mantener consistencia con usuarios existentes no activos durante la seed inicial
+  - la seed deberá materializar `contacts` para usuarios de cualquier estatus, no solo activos
+- Se cerró la estrategia operativa de materialización inicial de `contacts`:
+  - se implementará como `seed`
+  - será idempotente
+  - no duplicará `contacts` por `userId`
+  - si encuentra un `contact` existente, actualizará solo campos base gobernados por `user`
+  - respetará metadata ampliada del `contact`
+  - reflejará el estatus equivalente del `user` en el `contact`
+  - dejará solo log de salida operativo, sin persistencia adicional

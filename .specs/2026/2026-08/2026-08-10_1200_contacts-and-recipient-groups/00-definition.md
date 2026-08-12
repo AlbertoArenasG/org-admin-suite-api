@@ -22,6 +22,52 @@ Regla de trabajo:
 - Definition status: `in_progress`
 - Implementation ready: `no`
 
+## Scope Summary
+
+La iniciativa queda acotada a diseñar e implementar en backend:
+
+- `contacts` como catálogo base reutilizable
+- `recipient-groups` como capability agrupadora que consume `contacts`
+- `communication-channels` como catálogo transversal definido en código
+- sincronización automática `user -> contact`
+- `seed` inicial para materializar `contacts` desde usuarios ya existentes
+
+Queda fuera de esta spec:
+
+- adaptadores reales de canales distintos a `EMAIL`
+- módulo completo de notificaciones
+- templates de mensajes
+- decisiones de UX frontend
+
+## Approved Foundations
+
+Antes de implementación ya quedó aprobado que:
+
+- `v1` significa primera versión funcional del módulo, no `/v2`
+- el modelo nace multicanal desde `v1`, pero el único canal publicado inicialmente será `EMAIL`
+- `contacts` soportará contactos internos vinculados a `user` y contactos externos
+- `contacts` y `recipient-groups` serán módulos formales del catálogo de autorización con CRUD explícito
+- los catálogos transversales seguirán el patrón actual del repo:
+  - catálogo en código con `code` y `nameKey`
+  - `name` localizado resuelto en presenters
+- `contacts` tendrá estados:
+  - `ACTIVE`
+  - `INACTIVE`
+  - `DELETED`
+- `recipient-groups` tendrá estados:
+  - `ACTIVE`
+  - `DELETED`
+- la materialización inicial de `contacts` desde `users` será por `seed` idempotente
+
+## Implementation Readiness Notes
+
+La definición conceptual, contractual y técnica de `v1` ya quedó lo suficientemente aterrizada para pasar a implementación backend.
+
+Los detalles ejecutables viven principalmente en:
+
+- [04-decisions.md](/Users/alberto/projects/icsacv/org-admin-suite-api/.specs/2026/2026-08/2026-08-10_1200_contacts-and-recipient-groups/04-decisions.md)
+- [06-technical-design.md](/Users/alberto/projects/icsacv/org-admin-suite-api/.specs/2026/2026-08/2026-08-10_1200_contacts-and-recipient-groups/06-technical-design.md)
+
 ---
 
 ## Decision 01. Nomenclatura y frontera de los dos submódulos base

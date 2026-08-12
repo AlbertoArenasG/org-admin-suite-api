@@ -247,6 +247,7 @@ Aunque hoy el ciclo de vida conocido sea mínimo, conviene dejar el estado expl�
 - `contacts` nacerá con `status`
 - el conjunto inicial de estados será:
   - `ACTIVE`
+  - `INACTIVE`
   - `DELETED`
 
 ## 2026-08-11
@@ -291,6 +292,51 @@ Además, para los address values ya quedó decidido que `v1` no necesita aún ca
 - `contacts` y `recipient-groups` no persistirán `name`, `nameKey` ni metadata de localización de canales
 - el catálogo transversal en código sí expondrá `code` y `nameKey`, siguiendo el patrón ya usado en `authorization.catalog.ts`
 - `name` localizado se resolverá en presenters, no en la entidad ni en la persistencia
+
+## 2026-08-12
+
+### Decision
+
+`contacts` y `recipient-groups` entrarán al catálogo de autorización como módulos formales independientes con operaciones CRUD explícitas, sin dependencias implícitas ni activaciones automáticas en backend.
+
+### Reason
+
+Aunque ambos módulos puedan consumirse embebidos dentro de otros flujos, siguen siendo capabilities de negocio reutilizables y conviene dejarlas explícitas desde la base para evitar refactors posteriores en catálogo, guards, seeds y documentación.
+
+Además, la ayuda para que usuarios no técnicos no olviden permisos relacionados pertenece a la UX del editor de roles en frontend, no al modelo de autorización de backend.
+
+### Impact
+
+- backend tratará a `CONTACTS` y `RECIPIENT_GROUPS` como módulos autorizables formales
+- ambos usarán operaciones CRUD ordinarias en `v1`
+- backend no introducirá activaciones automáticas cruzadas entre módulos
+- cualquier asistencia o auto-selección por dependencias operativas se resolverá más adelante en frontend, manteniendo visibles los permisos realmente otorgados
+
+## 2026-08-12
+
+### Decision
+
+La materialización inicial de `contacts` para usuarios ya existentes se implementará como `seed` idempotente, no como migración destructiva.
+
+### Reason
+
+Se quiere una pieza operativa re-ejecutable que permita bootstrap y reconciliación controlada del catálogo base sin duplicar contactos ni convertir la seed en el mecanismo normal de sincronización del sistema.
+
+### Impact
+
+- la pieza vivirá como `seed`
+- deberá ser idempotente
+- si encuentra un `contact` existente para el mismo `userId`, no creará otro
+- si encuentra un `contact` existente para el mismo `userId`, actualizará solo los campos base gobernados por `user`:
+  - `name`
+  - `lastname`
+  - primer `email`
+  - primer `cellPhone`
+- `companyName = ICSACV` solo se asignará automáticamente si el `contact` no tiene `companyName`
+- no tocará metadata ampliada del `contact`, ni teléfonos/emails adicionales
+- procesará usuarios de cualquier estatus existente y reflejará el estatus equivalente en `contact`
+- la sincronización normal de runtime seguirá viviendo en los flujos de `user`, no en la seed
+- al ejecutarse dejará solo log de salida operativo, sin persistir bitácora en base de datos
 
 ### Reason
 

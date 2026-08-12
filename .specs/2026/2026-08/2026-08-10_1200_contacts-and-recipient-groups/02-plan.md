@@ -31,7 +31,7 @@ Diseñar e implementar en backend una capability reusable de `contacts` y `recip
 - definir contratos HTTP concretos de `contacts`
 - definir contratos HTTP concretos de `recipient-groups`
 - definir respuesta de `GET /v1/communication-channels`
-- decidir impacto en migraciones/seeds y sincronización inicial de usuarios existentes
+- decidir e implementar estrategia de `seed` y sincronización inicial de usuarios existentes
 
 ### Phase 3. Backend Implementation
 
@@ -39,7 +39,7 @@ Diseñar e implementar en backend una capability reusable de `contacts` y `recip
 - implementar dominio, puertos, persistencia y casos de uso de `contacts`
 - implementar dominio, puertos, persistencia y casos de uso de `recipient-groups`
 - implementar wiring y controllers
-- implementar migración o seed para materializar contactos de usuarios existentes
+- implementar `seed` para materializar contactos de usuarios existentes
 - conectar sincronización automática `user -> contact`
 
 ### Phase 4. Validation And Handoff
@@ -53,7 +53,7 @@ Diseñar e implementar en backend una capability reusable de `contacts` y `recip
 - primero debe cerrarse backend como spec madre antes de bajar un espejo en frontend
 - `contacts` debe construirse antes o junto con `recipient-groups`, nunca después
 - el catálogo de canales se mantendrá en código desde el inicio
-- la migración/seed de usuarios existentes no debe quedar olvidada como tarea posterior informal
+- la `seed` de usuarios existentes no debe quedar olvidada como tarea posterior informal
 
 ## Exit Criteria
 

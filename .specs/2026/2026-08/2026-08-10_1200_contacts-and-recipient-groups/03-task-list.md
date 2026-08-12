@@ -42,7 +42,7 @@
 - [ ] Implementar sincronización automática `user -> contact`
       Status: pending
 
-- [ ] Implementar migración o seed inicial para usuarios existentes
+- [ ] Implementar seed inicial para usuarios existentes
       Status: pending
 
 ## Phase 4. Validation

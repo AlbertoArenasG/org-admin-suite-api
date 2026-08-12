@@ -53,6 +53,7 @@
   - `DELETED`
 - `contacts` tendrá `status` desde `v1` con:
   - `ACTIVE`
+  - `INACTIVE`
   - `DELETED`
 - `recipient-groups` tendrá `code` autogenerado a partir de `name` y no editable
 - `enabledChannels[]` exigirá al menos un elemento
@@ -60,6 +61,9 @@
 - la distinción entre contacto vinculado a usuario y contacto externo se inferirá por `userId`
 - los usuarios internos generarán automáticamente su `contact`
 - habrá sincronización automática `user -> contact` en campos base compartidos
+- `contacts` persistirá auditoría base desde `v1`
+- `CONTACTS` y `RECIPIENT_GROUPS` entrarán al catálogo de autorización como módulos formales con CRUD
+- la materialización inicial de `contacts` desde `users` se implementará como `seed` idempotente
 
 ## Risks
 
@@ -77,10 +81,11 @@
 - la primera versión funcional debe mantenerse acotada a `EMAIL` como único canal habilitado
 - la definición debe quedar suficientemente clara antes de pasar a diseño técnico e implementación
 
-## Pending Technical Clarifications
+## Clarifications Status
 
-- cómo se representarán exactamente `emails[]`, `phones[]` y `cellPhones[]` a nivel de entidad y persistencia
-- qué shape mínimo tendrán los DTOs de `contacts`
-- qué shape mínimo tendrán los DTOs de `recipient-groups`
-- cómo se resolverá la sincronización exacta entre updates de `user` y updates permitidos en `contact`
-- si ciertos endpoints de `contacts` requerirán filtros o búsquedas administrativas además del lookup liviano
+Las aclaraciones técnicas relevantes para `v1` ya quedaron cerradas en:
+
+- [04-decisions.md](/Users/alberto/projects/icsacv/org-admin-suite-api/.specs/2026/2026-08/2026-08-10_1200_contacts-and-recipient-groups/04-decisions.md)
+- [06-technical-design.md](/Users/alberto/projects/icsacv/org-admin-suite-api/.specs/2026/2026-08/2026-08-10_1200_contacts-and-recipient-groups/06-technical-design.md)
+
+No quedan clarificaciones críticas pendientes a nivel de diseño antes de pasar a implementación backend.
