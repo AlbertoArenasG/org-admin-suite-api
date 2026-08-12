@@ -30,11 +30,11 @@
 
 ## Phase 3. Implementation
 
-- [ ] Implementar catálogo en código de `communication-channels`
-      Status: pending
+- [x] Implementar catálogo en código de `communication-channels`
+      Status: completed
 
-- [ ] Implementar módulo `contacts`
-      Status: pending
+- [x] Implementar módulo `contacts`
+      Status: completed
 
 - [ ] Implementar módulo `recipient-groups`
       Status: pending
@@ -47,8 +47,8 @@
 
 ## Phase 4. Validation
 
-- [ ] Validar reglas mínimas de `contacts`
-      Status: pending
+- [x] Validar compilación de `contacts` y `communication-channels`
+      Status: completed
 
 - [ ] Validar reglas mínimas de `recipient-groups`
       Status: pending

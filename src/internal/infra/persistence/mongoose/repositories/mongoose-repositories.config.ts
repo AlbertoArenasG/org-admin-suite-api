@@ -28,6 +28,8 @@ import {
   MongooseProviderFiscalProfileWriteRepositoryImpl,
   MongooseProviderBankingInfoReadRepositoryImpl,
   MongooseProviderBankingInfoWriteRepositoryImpl,
+  MongooseContactReadRepositoryImpl,
+  MongooseContactWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -60,6 +62,8 @@ import {
   IProviderFiscalProfileWriteRepositoryToken,
   IProviderBankingInfoReadRepositoryToken,
   IProviderBankingInfoWriteRepositoryToken,
+  IContactReadRepositoryToken,
+  IContactWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -179,6 +183,14 @@ export const MongooseRepositoriesConfig = [
     provide: IProviderBankingInfoWriteRepositoryToken,
     useClass: MongooseProviderBankingInfoWriteRepositoryImpl,
   },
+  {
+    provide: IContactReadRepositoryToken,
+    useClass: MongooseContactReadRepositoryImpl,
+  },
+  {
+    provide: IContactWriteRepositoryToken,
+    useClass: MongooseContactWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -211,4 +223,6 @@ export const MongooseRepositoryTokens = [
   IProviderFiscalProfileWriteRepositoryToken,
   IProviderBankingInfoReadRepositoryToken,
   IProviderBankingInfoWriteRepositoryToken,
+  IContactReadRepositoryToken,
+  IContactWriteRepositoryToken,
 ];

@@ -10,3 +10,4 @@ export * from './service-entry-survey-template/mongoose-service-entry-survey-tem
 export * from './customer-fiscal-profile/mongoose-customer-fiscal-profile.mapper';
 export * from './customer/mongoose-customer.mapper';
 export * from './service-package/mongoose-service-package-record.mapper';
+export * from './contact';

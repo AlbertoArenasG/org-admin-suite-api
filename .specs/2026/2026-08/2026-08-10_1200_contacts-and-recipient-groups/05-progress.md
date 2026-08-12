@@ -142,3 +142,28 @@
   - respetará metadata ampliada del `contact`
   - reflejará el estatus equivalente del `user` en el `contact`
   - dejará solo log de salida operativo, sin persistencia adicional
+
+## 2026-08-12
+
+- Se implementó el catálogo en código de `communication-channels` siguiendo el patrón real del backend:
+  - catálogo en código
+  - `code` y `nameKey` como fuente base
+  - resolución de `name` localizada en capa de presentación
+  - publicación inicial limitada a `EMAIL`
+- Se implementó el módulo `contacts` de punta a punta en backend:
+  - entidad de dominio
+  - puertos de lectura y escritura
+  - schema, mapper y repositorios mongoose
+  - DTOs de aplicación
+  - mapper de aplicación
+  - casos de uso de listado, búsqueda, detalle, creación, edición y borrado lógico
+  - DTOs HTTP
+  - presenter
+  - controller autenticado
+  - handlers CQRS de commands y queries
+  - registro en `GlobalCqrsModule`
+- Se validó que el backend compile correctamente después de integrar `contacts` y `communication-channels` con `npm run build`.
+- Aún quedan pendientes de esta spec:
+  - implementación de `recipient-groups`
+  - sincronización automática `user -> contact`
+  - seed inicial de usuarios existentes hacia `contacts`

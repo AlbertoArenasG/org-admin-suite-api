@@ -41,6 +41,16 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.USER_REGISTRATION_INVITATIONS',
     operations: ['CREATE'],
   },
+  CONTACTS: {
+    code: 'CONTACTS',
+    nameKey: 'AUTHORIZATION.MODULE.CONTACTS',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
+  RECIPIENT_GROUPS: {
+    code: 'RECIPIENT_GROUPS',
+    nameKey: 'AUTHORIZATION.MODULE.RECIPIENT_GROUPS',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
 } as const satisfies Record<
   string,
   {

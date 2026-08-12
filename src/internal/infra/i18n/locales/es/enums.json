@@ -58,6 +58,18 @@
       "COMPLETED": "Completado"
     }
   },
+  "CONTACT": {
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo",
+      "DELETED": "Eliminado"
+    }
+  },
+  "COMMUNICATION": {
+    "CHANNEL": {
+      "EMAIL": "Correo electrónico"
+    }
+  },
   "AUTHORIZATION": {
     "MODULE": {
       "USERS": "Usuarios",
@@ -67,7 +79,9 @@
       "SERVICE_ENTRIES": "Registro de servicio",
       "SERVICE_ENTRY_SURVEYS": "Encuestas de servicio",
       "SERVICE_PACKAGES": "Recolección",
-      "USER_REGISTRATION_INVITATIONS": "Invitaciones de registro de usuario"
+      "USER_REGISTRATION_INVITATIONS": "Invitaciones de registro de usuario",
+      "CONTACTS": "Contactos",
+      "RECIPIENT_GROUPS": "Grupos de destinatarios"
     },
     "OPERATION": {
       "CREATE": "Crear",

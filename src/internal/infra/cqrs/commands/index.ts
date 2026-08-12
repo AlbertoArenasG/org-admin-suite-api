@@ -9,3 +9,4 @@ export * from './customer';
 export * from './service-package';
 export * from './provider';
 export * from './role';
+export * from './contact';

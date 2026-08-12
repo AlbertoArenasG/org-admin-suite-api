@@ -7,3 +7,4 @@ export * from './customer-fiscal-profile';
 export * from './service-package';
 export * from './provider';
 export * from './role';
+export * from './contact';

@@ -61,4 +61,8 @@ export const configSchemas = [
     name: schemas.ProviderBankingInfoDocument.name,
     schema: schemas.ProviderBankingInfoSchema,
   },
+  {
+    name: schemas.ContactDocument.name,
+    schema: schemas.ContactSchema,
+  },
 ];

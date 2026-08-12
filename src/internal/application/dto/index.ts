@@ -11,3 +11,4 @@ export * from './service-package';
 export * from './provider';
 export * from './shared';
 export * from './role';
+export * from './contact';

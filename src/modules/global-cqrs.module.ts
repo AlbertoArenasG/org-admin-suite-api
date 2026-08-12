@@ -32,6 +32,9 @@ import {
   UpdateRoleHandler,
   ChangeRoleStatusHandler,
   DeleteRoleHandler,
+  CreateContactHandler,
+  UpdateContactHandler,
+  DeleteContactHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -60,6 +63,9 @@ import {
   GetPermissionModulesHandler,
   GetRolesHandler,
   GetRoleByIdHandler,
+  GetContactsHandler,
+  GetContactByIdHandler,
+  SearchContactsHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -97,6 +103,9 @@ const providers = [
   UpdateRoleHandler,
   ChangeRoleStatusHandler,
   DeleteRoleHandler,
+  CreateContactHandler,
+  UpdateContactHandler,
+  DeleteContactHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -119,6 +128,9 @@ const providers = [
   GetPermissionModulesHandler,
   GetRolesHandler,
   GetRoleByIdHandler,
+  GetContactsHandler,
+  GetContactByIdHandler,
+  SearchContactsHandler,
 ];
 
 @Global()

@@ -12,3 +12,4 @@ export * from './service-package-record.entity';
 export * from './provider.entity';
 export * from './provider-fiscal-profile.entity';
 export * from './provider-banking-info.entity';
+export * from './contact.entity';

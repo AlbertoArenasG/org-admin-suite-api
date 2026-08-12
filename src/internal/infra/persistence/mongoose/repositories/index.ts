@@ -13,3 +13,4 @@ export * from './service-package';
 export * from './provider';
 export * from './provider-fiscal-profile';
 export * from './provider-banking-info';
+export * from './contact';
