@@ -25,6 +25,7 @@ import {
 import { UserResultMapper } from '@application/mappers';
 import {
   AuthorizationService,
+  SyncUserContactService,
   UserNotifierService,
 } from '@application/services';
 
@@ -37,6 +38,7 @@ export class CreateMasterUserAndNotifyUseCase {
     private readonly userWriteRepo: IUserWriteRepository,
     private readonly notifier: UserNotifierService,
     private readonly authorizationService: AuthorizationService,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   /**
@@ -80,6 +82,7 @@ export class CreateMasterUserAndNotifyUseCase {
 
     const { data } = await this.userWriteRepo.create(user);
 
+    await this.syncUserContactService.syncFromUser(data);
     await this.notifier.notify(data, NotificationType.WELCOME_USER);
     data.markAsCreated();
 

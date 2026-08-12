@@ -180,6 +180,18 @@
   - validación de `contactIds` existentes, activos y sin duplicados
 - Se extendió `contacts` con lectura por lote (`findByIds`) para soportar composición ordenada dentro de `recipient-groups`.
 - Se validó que el backend compile correctamente después de integrar `recipient-groups` con `npm run build`.
+- Se implementó la sincronización automática `user -> contact` en runtime:
+  - materialización automática del `contact` al crear `user`
+  - materialización automática del `contact` al crear `master user`
+  - sincronización de campos base compartidos al actualizar `user`
+  - sincronización de campos base compartidos al actualizar `my profile`
+  - borrado lógico del `contact` vinculado al eliminar `user`
+- Se centralizó la lógica en `SyncUserContactService` para no dispersar reglas en múltiples use cases.
+- Se respetó la regla aprobada de ownership:
+  - `user` solo gobierna campos base
+  - no se pisa metadata ampliada del `contact`
+  - `companyName` interno inicial se mantiene como `ICSACV`
+  - `status` del `contact` se deriva del `status` del `user`
+- Se validó que el backend compile correctamente después de integrar la sincronización `user -> contact` con `npm run build`.
 - Aún quedan pendientes de esta spec:
-  - sincronización automática `user -> contact`
   - seed inicial de usuarios existentes hacia `contacts`

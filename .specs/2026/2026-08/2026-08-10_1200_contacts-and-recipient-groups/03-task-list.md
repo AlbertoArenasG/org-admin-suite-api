@@ -39,8 +39,8 @@
 - [x] Implementar módulo `recipient-groups`
       Status: completed
 
-- [ ] Implementar sincronización automática `user -> contact`
-      Status: pending
+- [x] Implementar sincronización automática `user -> contact`
+      Status: completed
 
 - [ ] Implementar seed inicial para usuarios existentes
       Status: pending
@@ -51,6 +51,9 @@
       Status: completed
 
 - [x] Validar compilación de `recipient-groups`
+      Status: completed
+
+- [x] Validar compilación de sincronización `user -> contact`
       Status: completed
 
 - [ ] Validar reglas mínimas de `recipient-groups`

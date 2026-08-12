@@ -17,6 +17,7 @@ import { UserPasswordPolicy } from '@domain/policies';
 import { UpdateMyProfileDto, UpdateMyProfileResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 import { UserStatus } from '@domain/entities';
+import { SyncUserContactService } from '@application/services';
 
 @Injectable()
 export class UpdateMyProfileUseCase {
@@ -27,6 +28,7 @@ export class UpdateMyProfileUseCase {
     private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   async execute(input: UpdateMyProfileDto): Promise<UpdateMyProfileResultDto> {
@@ -78,6 +80,8 @@ export class UpdateMyProfileUseCase {
         userId,
       });
     }
+
+    await this.syncUserContactService.syncFromUser(updated);
 
     const roleName = updated.roleId
       ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??

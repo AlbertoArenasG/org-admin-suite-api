@@ -19,7 +19,10 @@ import {
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 import { UserStatus } from '@domain/entities';
-import { AuthorizationService } from '@application/services';
+import {
+  AuthorizationService,
+  SyncUserContactService,
+} from '@application/services';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -31,6 +34,7 @@ export class UpdateUserUseCase {
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
     private readonly authorizationService: AuthorizationService,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
@@ -146,6 +150,8 @@ export class UpdateUserUseCase {
         userId,
       });
     }
+
+    await this.syncUserContactService.syncFromUser(updated);
 
     const roleName = updated.roleId
       ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??

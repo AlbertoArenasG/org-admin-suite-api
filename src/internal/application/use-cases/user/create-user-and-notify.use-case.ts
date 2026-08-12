@@ -22,6 +22,7 @@ import { CreateUserDto, CreateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 import {
   AuthorizationService,
+  SyncUserContactService,
   UserNotifierService,
 } from '@application/services';
 
@@ -34,6 +35,7 @@ export class CreateUserAndNotifyUseCase {
     private readonly userWriteRepo: IUserWriteRepository,
     private readonly notifier: UserNotifierService,
     private readonly authorizationService: AuthorizationService,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   /**
@@ -95,6 +97,7 @@ export class CreateUserAndNotifyUseCase {
 
     const { data } = await this.userWriteRepo.create(user);
 
+    await this.syncUserContactService.syncFromUser(data);
     await this.notifier.notify(data, NotificationType.WELCOME_USER);
     data.markAsCreated();
 

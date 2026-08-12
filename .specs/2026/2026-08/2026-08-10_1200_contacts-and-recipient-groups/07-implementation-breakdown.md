@@ -77,17 +77,23 @@
 
 ## Slice 4. User To Contact Sync
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - conectar la sincronización automática `user -> contact` en runtime
-- Alcance técnico:
-  - materializar `contact` al crear usuario interno
-  - actualizar campos base compartidos al actualizar usuario
-  - reflejar borrado lógico del `contact` vinculado al eliminar usuario
-- Reglas a cubrir:
-  - sincronizar solo campos gobernados por `user`
-  - no sobrescribir metadata ampliada de `contact`
-  - mantener consistencia con estatus del usuario
+- Cambios realizados:
+  - se creó `SyncUserContactService`
+  - se conectó la materialización automática al crear `user`
+  - se conectó la materialización automática al crear `master user`
+  - se conectó la sincronización automática al actualizar `user`
+  - se conectó la sincronización automática al actualizar `my profile`
+  - se conectó el borrado lógico del `contact` vinculado al eliminar `user`
+- Reglas cubiertas:
+  - sincronización solo de campos gobernados por `user`
+  - no sobrescritura de metadata ampliada de `contact`
+  - consistencia de estatus `user -> contact`
+  - `companyName` interno inicial como `ICSACV`
+- Validación realizada:
+  - compilación satisfactoria con `npm run build`
 
 ## Slice 5. Bootstrap Seed For Existing Users
 

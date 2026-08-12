@@ -12,7 +12,10 @@ import {
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
 import { UserStatus } from '@domain/entities';
-import { AuthorizationService } from '@application/services';
+import {
+  AuthorizationService,
+  SyncUserContactService,
+} from '@application/services';
 
 @Injectable()
 export class DeleteUserUseCase {
@@ -22,6 +25,7 @@ export class DeleteUserUseCase {
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
     private readonly authorizationService: AuthorizationService,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   async execute(input: DeleteUserDto): Promise<void> {
@@ -47,6 +51,10 @@ export class DeleteUserUseCase {
 
     user.markAsDeleted();
 
-    await this.userWriteRepository.update(user);
+    const { data: updated } = await this.userWriteRepository.update(user);
+
+    if (updated) {
+      await this.syncUserContactService.markDeletedFromUser(updated);
+    }
   }
 }
