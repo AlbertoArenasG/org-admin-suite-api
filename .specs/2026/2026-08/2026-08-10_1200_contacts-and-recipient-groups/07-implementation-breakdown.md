@@ -46,24 +46,34 @@
 
 ## Slice 3. Recipient Groups CRUD Base
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - implementar `recipient-groups` como agrupador reusable de `contacts`
-- Alcance técnico:
-  - entidad y puertos
-  - schema, mapper y repositorios
-  - DTOs de aplicación
-  - casos de uso CRUD
-  - DTOs HTTP
-  - presenter
-  - controller autenticado
-  - handlers CQRS
-  - registro en `GlobalCqrsModule`
-- Reglas a cubrir:
+- Cambios realizados:
+  - se creó la entidad `RecipientGroup`
+  - se agregaron puertos de lectura y escritura
+  - se implementaron schema, mapper y repositorios mongoose
+  - se implementaron DTOs y mapper de aplicación
+  - se implementaron casos de uso:
+    - `GetRecipientGroupsUseCase`
+    - `GetRecipientGroupByIdUseCase`
+    - `CreateRecipientGroupUseCase`
+    - `UpdateRecipientGroupUseCase`
+    - `DeleteRecipientGroupUseCase`
+  - se implementaron DTOs HTTP de `recipient-groups`
+  - se implementaron presenter y controller autenticado
+  - se implementaron handlers CQRS de commands y queries
+  - se registró wiring en `GlobalCqrsModule`
+  - se extendió `contacts` con `findByIds` para expandir contactos en orden estable
+- Reglas cubiertas:
   - `code` autogenerado desde `name`
-  - `enabledChannels[]` con al menos un elemento válido
-  - `contactIds[]` con al menos un contacto existente y activo
+  - `enabledChannels[]` con al menos un elemento válido del catálogo
+  - `contactIds[]` con al menos un contacto existente y `ACTIVE`
+  - rechazo de `contactIds` duplicados
   - preservación del orden recibido en `contactIds[]`
+  - expansión ordenada de contactos en el detalle del grupo
+- Validación realizada:
+  - compilación satisfactoria con `npm run build`
 
 ## Slice 4. User To Contact Sync
 

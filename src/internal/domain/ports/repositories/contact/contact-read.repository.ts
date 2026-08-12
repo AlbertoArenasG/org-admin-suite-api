@@ -25,6 +25,7 @@ export interface SearchContactsParams {
 
 export interface IContactReadRepository {
   findById(contactId: string): Promise<{ data: Contact | null }>;
+  findByIds(contactIds: string[]): Promise<{ data: Contact[] }>;
   findByUserId(userId: string): Promise<{ data: Contact | null }>;
   findAll(params: FindContactsParams): Promise<FindContactsResult>;
   search(params: SearchContactsParams): Promise<{ data: Contact[] }>;

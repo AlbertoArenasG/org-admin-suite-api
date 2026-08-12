@@ -14,6 +14,7 @@ export enum EntityNotFoundExceptionCode {
   PROVIDER_BANKING_INFO = 'ENTITY_NOT_FOUND.PROVIDER_BANKING_INFO',
   ROLE = 'ENTITY_NOT_FOUND.ROLE',
   CONTACT = 'ENTITY_NOT_FOUND.CONTACT',
+  RECIPIENT_GROUP = 'ENTITY_NOT_FOUND.RECIPIENT_GROUP',
 }
 
 export class EntityNotFoundException extends DomainException {

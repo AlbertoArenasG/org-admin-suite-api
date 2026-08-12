@@ -12,3 +12,4 @@ export * from './provider';
 export * from './shared';
 export * from './role';
 export * from './contact';
+export * from './recipient-group';

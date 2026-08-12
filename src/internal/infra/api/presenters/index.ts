@@ -8,3 +8,4 @@ export * from './service-package';
 export * from './provider';
 export * from './role';
 export * from './contact';
+export * from './recipient-group';

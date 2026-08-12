@@ -163,7 +163,23 @@
   - handlers CQRS de commands y queries
   - registro en `GlobalCqrsModule`
 - Se validó que el backend compile correctamente después de integrar `contacts` y `communication-channels` con `npm run build`.
+- Se implementó el módulo `recipient-groups` de punta a punta en backend:
+  - entidad de dominio
+  - puertos de lectura y escritura
+  - schema, mapper y repositorios mongoose
+  - DTOs de aplicación
+  - mapper de aplicación
+  - casos de uso de listado, detalle, creación, edición y borrado lógico
+  - DTOs HTTP
+  - presenter
+  - controller autenticado
+  - handlers CQRS de commands y queries
+  - registro en `GlobalCqrsModule`
+  - expansión ordenada de `contacts` en el detalle
+  - validación de canales contra el catálogo de `communication-channels`
+  - validación de `contactIds` existentes, activos y sin duplicados
+- Se extendió `contacts` con lectura por lote (`findByIds`) para soportar composición ordenada dentro de `recipient-groups`.
+- Se validó que el backend compile correctamente después de integrar `recipient-groups` con `npm run build`.
 - Aún quedan pendientes de esta spec:
-  - implementación de `recipient-groups`
   - sincronización automática `user -> contact`
   - seed inicial de usuarios existentes hacia `contacts`

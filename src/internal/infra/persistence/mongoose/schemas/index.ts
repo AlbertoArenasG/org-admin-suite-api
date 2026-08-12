@@ -14,3 +14,4 @@ export * from './provider/provider.schema';
 export * from './provider-fiscal-profile/provider-fiscal-profile.schema';
 export * from './provider-banking-info/provider-banking-info.schema';
 export * from './contact';
+export * from './recipient-group';

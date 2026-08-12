@@ -65,4 +65,8 @@ export const configSchemas = [
     name: schemas.ContactDocument.name,
     schema: schemas.ContactSchema,
   },
+  {
+    name: schemas.RecipientGroupDocument.name,
+    schema: schemas.RecipientGroupSchema,
+  },
 ];

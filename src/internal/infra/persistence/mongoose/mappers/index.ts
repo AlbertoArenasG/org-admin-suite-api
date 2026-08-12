@@ -11,3 +11,4 @@ export * from './customer-fiscal-profile/mongoose-customer-fiscal-profile.mapper
 export * from './customer/mongoose-customer.mapper';
 export * from './service-package/mongoose-service-package-record.mapper';
 export * from './contact';
+export * from './recipient-group';

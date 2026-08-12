@@ -22,6 +22,22 @@ export class MongooseContactReadRepositoryImpl
     return { data: this.toDomain(document) };
   }
 
+  async findByIds(contactIds: string[]): Promise<{ data: Contact[] }> {
+    if (contactIds.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.contactModel
+      .find({ contact_id: { $in: contactIds } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((contact): contact is Contact => contact !== null),
+    };
+  }
+
   async findByUserId(userId: string): Promise<{ data: Contact | null }> {
     const document = await this.contactModel
       .findOne({ user_id: userId })
