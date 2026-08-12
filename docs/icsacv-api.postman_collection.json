@@ -7248,6 +7248,527 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "Get Contacts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/contacts?page=1&items_per_page=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "items_per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "alberto",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "INTERNAL",
+                  "disabled": true
+                },
+                {
+                  "key": "sort[0][field]",
+                  "value": "created_at",
+                  "disabled": true
+                },
+                {
+                  "key": "sort[0][direction]",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Contacts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/contacts/search?q=alberto&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "alberto"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Externo\",\n  \"company_name\": \"Empresa Ejemplo\",\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/contacts",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Contact By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
+              "variable": [
+                {
+                  "key": "CONTACT_ID",
+                  "value": "CONTACT_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Contact",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Actualizado\",\n  \"company_name\": \"Empresa Ejemplo\",\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [\n    {\n      \"value\": \"+525511112222\"\n    }\n  ],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
+              "variable": [
+                {
+                  "key": "CONTACT_ID",
+                  "value": "CONTACT_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
+              "variable": [
+                {
+                  "key": "CONTACT_ID",
+                  "value": "CONTACT_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Recipient Groups",
+      "item": [
+        {
+          "name": "List Recipient Groups",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/recipient-groups?page=1&items_per_page=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "items_per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "alertas",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "disabled": true
+                },
+                {
+                  "key": "sort[0][field]",
+                  "value": "created_at",
+                  "disabled": true
+                },
+                {
+                  "key": "sort[0][direction]",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Recipient Group",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alertas Operativas\",\n  \"description\": \"Grupo base para alertas operativas\",\n  \"enabled_channels\": [\n    \"EMAIL\"\n  ],\n  \"contact_ids\": [\n    \"CONTACT_ID_1\",\n    \"CONTACT_ID_2\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/recipient-groups",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recipient Group By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
+              "variable": [
+                {
+                  "key": "RECIPIENT_GROUP_ID",
+                  "value": "RECIPIENT_GROUP_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Recipient Group",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alertas Operativas MX\",\n  \"description\": \"Grupo actualizado\",\n  \"enabled_channels\": [\n    \"EMAIL\"\n  ],\n  \"contact_ids\": [\n    \"CONTACT_ID_1\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
+              "variable": [
+                {
+                  "key": "RECIPIENT_GROUP_ID",
+                  "value": "RECIPIENT_GROUP_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Recipient Group",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
+              "variable": [
+                {
+                  "key": "RECIPIENT_GROUP_ID",
+                  "value": "RECIPIENT_GROUP_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Communication Channels",
+      "item": [
+        {
+          "name": "Get Communication Channels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/communication-channels",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "communication-channels"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

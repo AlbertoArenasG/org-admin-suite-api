@@ -204,6 +204,12 @@
   - procesa usuarios existentes de cualquier estatus
   - deja log de salida operativo sin persistencia adicional
 - Se validó que el backend compile correctamente después de integrar el seed inicial de `contacts` con `npm run build`.
-- Aún quedan pendientes de esta spec:
-  - validación funcional/manual final
-  - actualización de docs posteriores al código cuando corresponda
+- Se expuso por API el endpoint `GET /v1/communication-channels`, cerrando el contrato HTTP que ya estaba definido en la spec.
+- Se actualizó documentación operativa posterior al código:
+  - `docs/authorization/feature-permission-catalog.md`
+  - `docs/authorization/authorization-rules.md`
+  - `docs/icsacv-api.postman_collection.json`
+- Se registró el cierre funcional/manual de la iniciativa:
+  - reglas mínimas de `recipient-groups` validadas
+  - handoff documental completado
+  - spec lista para cierre formal

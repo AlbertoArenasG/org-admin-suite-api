@@ -59,8 +59,8 @@
 - [x] Validar compilación del seed inicial de `contacts`
       Status: completed
 
-- [ ] Validar reglas mínimas de `recipient-groups`
-      Status: pending
+- [x] Validar reglas mínimas de `recipient-groups`
+      Status: completed
 
-- [ ] Actualizar progreso y breakdown conforme avance la implementación
-      Status: pending
+- [x] Actualizar progreso y breakdown conforme avance la implementación
+      Status: completed

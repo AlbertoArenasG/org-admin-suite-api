@@ -118,12 +118,18 @@
 
 ## Slice 6. Validation And Docs Handoff
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - cerrar implementación con validación y actualización documental posterior al código
-- Alcance técnico:
-  - validar contratos mínimos de `recipient-groups`
-  - validar sincronización `user -> contact`
-  - validar seed inicial
-  - actualizar `docs` relevantes cuando el código ya exista
-  - dejar lista la base para el spec espejo de frontend
+- Cambios realizados:
+  - se validó el contrato funcional mínimo de `recipient-groups`
+  - se validó el comportamiento del seed inicial de `contacts`
+  - se expuso el endpoint faltante `GET /v1/communication-channels`
+  - se actualizaron los docs operativos posteriores al código:
+    - `docs/authorization/feature-permission-catalog.md`
+    - `docs/authorization/authorization-rules.md`
+    - `docs/icsacv-api.postman_collection.json`
+  - se dejó la base lista para abrir o continuar el spec espejo de frontend
+- Validación realizada:
+  - validación manual aceptada
+  - compilación satisfactoria con `npm run build`

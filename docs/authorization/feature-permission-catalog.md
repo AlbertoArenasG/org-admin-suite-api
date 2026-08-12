@@ -91,6 +91,8 @@ Los modulos actuales del sistema son:
 - `service_entry_surveys`
 - `service_packages`
 - `user_registration_invitations`
+- `contacts`
+- `recipient_groups`
 
 Nota:
 
@@ -444,6 +446,80 @@ Endpoints publicos por token:
 - `POST /v1/user-registration-invitations/:token/complete-registration`
   - operacion: fuera del catalogo interno
   - acceso actual: publico por token
+
+### `contacts`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/contact/contact.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/contacts`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `contacts.CREATE`; crea solo contactos externos
+- `GET /v1/contacts`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `contacts.READ`; listado administrativo paginado
+- `GET /v1/contacts/search`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: lookup auxiliar no paginado, absorbido por `contacts.READ`; devuelve solo contactos `ACTIVE`
+- `GET /v1/contacts/:contactId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `contacts.READ`; detalle completo con auditoría enriquecida
+- `PATCH /v1/contacts/:contactId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `contacts.UPDATE`; solo permite editar contactos externos
+- `DELETE /v1/contacts/:contactId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `contacts.DELETE`; hace borrado lógico y rechaza contactos ligados a `user`
+
+Notas:
+
+- los contactos ligados a `user` se gobiernan por sincronización runtime y no por edición manual
+- `contacts` queda como catálogo funcional reusable de negocio
+
+### `recipient_groups`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/recipient-group/recipient-group.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/recipient-groups`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `recipient_groups.CREATE`
+- `GET /v1/recipient-groups`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `recipient_groups.READ`; listado administrativo paginado
+- `GET /v1/recipient-groups/:recipientGroupId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `recipient_groups.READ`; devuelve el grupo con contactos expandidos en orden persistido
+- `PATCH /v1/recipient-groups/:recipientGroupId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `recipient_groups.UPDATE`; regenera `code` cuando cambia `name`
+- `DELETE /v1/recipient-groups/:recipientGroupId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `recipient_groups.DELETE`; hace borrado lógico
+
+Capability auxiliar relacionada:
+
+- `GET /v1/communication-channels`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: catálogo auxiliar absorbido por `recipient_groups.READ`; hoy publica solo `EMAIL`
 
 ## Features Publicas Existentes Fuera Del Catalogo Interno
 

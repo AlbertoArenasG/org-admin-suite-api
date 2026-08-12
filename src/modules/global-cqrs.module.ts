@@ -66,6 +66,7 @@ import {
   GetContactsHandler,
   GetContactByIdHandler,
   SearchContactsHandler,
+  GetCommunicationChannelsHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -131,6 +132,7 @@ const providers = [
   GetContactsHandler,
   GetContactByIdHandler,
   SearchContactsHandler,
+  GetCommunicationChannelsHandler,
 ];
 
 @Global()
