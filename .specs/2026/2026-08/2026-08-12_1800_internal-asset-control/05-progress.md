@@ -31,6 +31,33 @@
   - `sentToProviderAt`
   - `providerLeadTime`
   - `providerNotes`
+- Se aprobó que cada registro referenciará directamente una política de alerta reutilizable.
+- Se descartó asumir una política global `default` en `v1`.
+- Se aprobó que las reglas de alerta reutilizarán `recipient-groups` para notificación.
+- Se aprobó que `recipientGroupIds[]` no será obligatorio en cada regla.
+- Se aprobó que una regla podrá existir solo para semáforo visual.
+- Se aprobó que `offset` en cada regla reutilizará exactamente el mismo shape estructurado del intervalo de vigencia.
+- Se aprobó que la severidad de cada regla será configurable con:
+  - `severityLabel`
+  - `severityColorHex`
+- Se descartó una prioridad manual configurable para severidad.
+- Se aprobó que la dominancia entre reglas se resolverá por cercanía al vencimiento usando `offset`.
+- Se aprobó que no se forzará unicidad de `offset` dentro de una política.
+- Se aprobó el shape base de la política de alerta:
+  - `name`
+  - `code` autogenerado
+  - `description` opcional
+  - `status`
+  - `rules[]`
+- Se aprobó el catálogo inicial de `status` de política:
+  - `ACTIVE`
+  - `INACTIVE`
+  - `DELETED`
+- Se aprobó que backend ordenará `rules[]` por `offset` antes de persistirlas.
+- Se aprobó que `alert-policies` tendrá CRUD completo desde `v1`.
+- Se aprobó que `alert-policies` tendrá:
+  - listado paginado administrativo
+  - colección simple no paginada para selección reusable
 - Se aprobó la separación entre:
   - `status` persistido
   - semáforo o alertamiento preventivo
@@ -45,5 +72,4 @@
 - Se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
 - Se registró que el subflujo externo opcional, cuando aplique, requerirá al menos fecha de envío como dato de negocio relevante.
 - La iniciativa todavía no está lista para implementación; faltan definiciones críticas de:
-  - contrato y shape del módulo de políticas
   - contratos HTTP iniciales

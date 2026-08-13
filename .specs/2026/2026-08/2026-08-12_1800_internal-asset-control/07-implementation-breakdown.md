@@ -24,13 +24,24 @@
 
 ## Slice 3. Alert Policies Capability
 
-- Estado: in_progress
+- Estado: completed
 - Objetivo:
   - aterrizar la capability administrable de políticas de alerta desde `v1`
-- Pendiente:
-  - definir shape conceptual
-  - definir relación con el recurso principal
-  - definir implicaciones de alertamiento y colores
+- Cambios realizados:
+  - se aprobó que las políticas serán administrables desde `v1`
+  - se aprobó que cada registro referenciará directamente una política reutilizable
+  - se descartó asumir una política global `default`
+  - se aprobó que las reglas reutilizarán `recipient-groups`
+  - se aprobó que una regla puede existir sin grupos
+  - se aprobó que `offset` reutilizará el mismo shape estructurado del intervalo principal
+  - se aprobó severidad configurable por `label` y `colorHex`
+  - se descartó prioridad manual y la dominancia se resolverá por `offset`
+  - se aprobó que no se forzará unicidad de `offset`
+  - se aprobó el shape base de la política y sus estados
+  - se aprobó ordenar `rules[]` por `offset` antes de persistir
+  - se aprobó CRUD completo para `alert-policies`
+  - se aprobó doble lectura para `alert-policies`: paginada administrativa y no paginada de selección
+  - quedó pendiente solo aterrizar el detalle fino de contratos HTTP
 
 ## Slice 4. Interval Structure Closure
 
@@ -66,6 +77,7 @@
 - Estado: pending
 - Objetivo:
   - aterrizar el shape exacto del `internal-asset-maintenance-record`
+  - aterrizar el shape exacto de la política de alerta
   - definir contratos HTTP iniciales
 
 ## Slice 7. Backend Implementation

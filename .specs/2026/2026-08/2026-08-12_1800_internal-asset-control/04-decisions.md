@@ -176,3 +176,158 @@ Aunque el cliente habló inicialmente de `laboratorio`, el dominio real también
   - `providerNotes`
 - `providerLeadTime` seguirá el mismo patrón estructurado por unidades
 - no habrá catálogo maestro de providers en `v1`
+
+## 2026-08-12
+
+### Decision
+
+Cada `internal-asset-maintenance-record` referenciará directamente una política de alerta reutilizable.
+
+### Reason
+
+Se quiere que el sistema nazca flexible desde el inicio sin depender de una política global rígida ni de una semántica especial de `default`.
+
+### Impact
+
+- la relación entre registro y política será explícita
+- si negocio solo necesita una política al principio, podrá reutilizar una sola
+- el diseño queda preparado para múltiples políticas sin introducir overrides especiales
+
+## 2026-08-12
+
+### Decision
+
+Las reglas de una política reutilizarán `recipient-groups` para resolver notificaciones y podrán existir sin grupos asociados.
+
+### Reason
+
+Los canales ya viven en `recipient-groups`, por lo que declararlos de nuevo en cada regla sería duplicación innecesaria. Además, una regla puede aportar solo severidad visual sin necesidad de enviar notificaciones.
+
+### Impact
+
+- la regla base se mantiene simple:
+  - `offset`
+  - `severity`
+  - `recipientGroupIds[]`
+- `recipientGroupIds[]` no será obligatorio
+- la política podrá tener reglas solo visuales
+- los canales se resolverán implícitamente desde los grupos asociados
+
+## 2026-08-12
+
+### Decision
+
+`offset` en cada regla de alerta reutilizará exactamente el mismo shape estructurado del intervalo de vigencia.
+
+### Reason
+
+No conviene introducir dos formatos diferentes para duraciones dentro del mismo dominio si ambos representan composiciones de años, meses, semanas y días.
+
+### Impact
+
+- backend podrá reutilizar la misma convención de duración estructurada
+- UI no necesitará aprender un segundo formato para configurar alertas
+- las reglas podrán expresar offsets complejos sin texto libre
+
+## 2026-08-12
+
+### Decision
+
+La severidad de cada regla será configurable por etiqueta y color, sin prioridad manual.
+
+### Reason
+
+Se quiere evitar un catálogo rígido de severidades y también evitar que el usuario tenga que entender o capturar prioridades numéricas que pueden resultar confusas.
+
+### Impact
+
+- cada regla podrá definir al menos:
+  - `severityLabel`
+  - `severityColorHex`
+- no existirá `severityPriority` configurable en `v1`
+- la dominancia entre reglas se resolverá por cercanía al vencimiento usando `offset`
+- `OVERDUE` seguirá por encima de cualquier severidad configurada
+
+## 2026-08-12
+
+### Decision
+
+No se forzará unicidad de `offset` dentro de una política de alerta.
+
+### Reason
+
+No conviene introducir una restricción de negocio no pedida si más adelante puede ser útil componer múltiples comportamientos sobre el mismo umbral.
+
+### Impact
+
+- una política podrá tener múltiples reglas con el mismo `offset`
+- la validación backend no asumirá conflicto automático por repetición de umbral
+
+## 2026-08-13
+
+### Decision
+
+La política de alerta tendrá metadata base administrable y `rules[]` se ordenará por `offset` antes de persistirse.
+
+### Reason
+
+Se quiere que la política sea una entidad administrable real y que backend mantenga un orden consistente de reglas sin depender del orden accidental en que lleguen desde UI.
+
+### Impact
+
+- la política tendrá como base:
+  - `name`
+  - `code`
+  - `description`
+  - `status`
+  - `rules[]`
+- `code` será autogenerado desde `name`
+- el catálogo inicial de `status` será:
+  - `ACTIVE`
+  - `INACTIVE`
+  - `DELETED`
+- backend ordenará `rules[]` por `offset` antes de persistir
+
+## 2026-08-13
+
+### Decision
+
+`alert-policies` tendrá CRUD completo desde `v1` y doble lectura para administración y selección.
+
+### Reason
+
+Si las políticas van a ser una capability administrable real, no conviene dejarlas con contratos parciales ni obligar a reutilizar un endpoint paginado para selects o relaciones simples.
+
+### Impact
+
+- se deberán definir al menos estos endpoints:
+  - `GET /v1/alert-policies`
+  - `GET /v1/alert-policies/:policyId`
+  - `POST /v1/alert-policies`
+  - `PATCH /v1/alert-policies/:policyId`
+  - `DELETE /v1/alert-policies/:policyId`
+- además deberá existir:
+  - listado paginado administrativo
+  - colección simple no paginada para selección reusable
+
+## 2026-08-12
+
+### Decision
+
+El subflujo externo opcional usará semántica de `provider` y se mantendrá embebido dentro del registro en `v1`.
+
+### Reason
+
+Aunque el cliente habló inicialmente de `laboratorio`, el dominio real también puede involucrar talleres u otros terceros externos. `provider` deja la frontera mejor definida y más reusable.
+
+### Impact
+
+- se evita acoplar el modelo a `laboratory`
+- el bloque opcional mínimo del registro deberá contemplar:
+  - `sentToProvider`
+  - `providerName`
+  - `sentToProviderAt`
+  - `providerLeadTime`
+  - `providerNotes`
+- `providerLeadTime` seguirá el mismo patrón estructurado por unidades
+- no habrá catálogo maestro de providers en `v1`

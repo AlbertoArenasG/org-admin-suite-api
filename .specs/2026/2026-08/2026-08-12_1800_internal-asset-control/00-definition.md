@@ -58,6 +58,7 @@ Antes de implementación ya quedó aprobado que:
 - el semáforo o nivel de alerta convivirá con el `status` operativo
 - `OVERDUE` será derivado para UI, no persistido automáticamente por backend
 - desde `v1` existirá un módulo administrable de políticas de alerta
+- cada registro referenciará directamente una política de alerta reutilizable
 
 ## Implementation Readiness Notes
 
@@ -427,6 +428,372 @@ Se aprueba que el intervalo de vigencia se persista como estructura compuesta po
 Cada unidad podrá existir con valor `0`, pero al menos una deberá ser mayor que `0`.
 
 Además de ese intervalo estructurado, backend también persistirá la `expirationDate` derivada.
+
+### Status
+
+approved
+
+---
+
+## Decision 09. Shape del subflujo externo opcional
+
+### Context
+
+Inicialmente el cliente habló de `laboratorio`, pero después quedó claro que no siempre se tratará estrictamente de un laboratorio.
+
+El mismo patrón puede aplicar a:
+
+- laboratorio
+- taller
+- proveedor externo
+- tercero que realiza la acción
+
+No conviene amarrar el modelo a `laboratory` si el objetivo real es representar un flujo externo opcional para algunos registros.
+
+### Options
+
+1. Modelarlo explícitamente como `laboratory`
+2. Modelarlo de forma neutral como `provider`
+3. Crear desde `v1` una subentidad separada para el flujo externo
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el modelo queda más neutral y reusable
+- se evita amarrar el dominio a calibraciones en laboratorio
+- `v1` conserva alcance simple al mantenerlo embebido dentro del registro
+
+### Decision Final
+
+Se aprueba que el subflujo externo opcional dentro de `internal-asset-maintenance-record` use semántica de `provider` y no de `laboratory`.
+
+En `v1` se modelará como un bloque opcional embebido dentro del registro, al menos con:
+
+- `sentToProvider`
+- `providerName`
+- `sentToProviderAt`
+- `providerLeadTime`
+- `providerNotes`
+
+`providerLeadTime` seguirá el mismo enfoque estructurado por unidades aprobado para los intervalos de vigencia.
+
+No existirá todavía catálogo maestro de providers ni subentidad independiente para este flujo en `v1`.
+
+### Status
+
+approved
+
+---
+
+## Decision 10. Relación entre registro y política de alerta
+
+### Context
+
+Ya se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
+
+Faltaba decidir si:
+
+- existiría una política global `default`
+- o si cada registro referenciaría explícitamente una política reutilizable
+
+Aunque hoy negocio probablemente empiece usando una sola política, se quiere evitar un diseño rígido que luego obligue a introducir overrides o refactors tempranos.
+
+### Options
+
+1. Política global única para todos los registros
+2. Política global `default` con excepciones por registro
+3. Política reutilizable asignada directamente a cada registro
+
+### Recommendation
+
+Opción 3.
+
+### Implications
+
+- el modelo nace flexible desde el inicio
+- no hace falta introducir semántica especial de `default`
+- si negocio solo necesita una política al principio, simplemente reutiliza una sola en todos los registros
+
+### Decision Final
+
+Se aprueba que cada `internal-asset-maintenance-record` referencie directamente una política de alerta reutilizable.
+
+`v1` no asumirá una política global `default`.
+
+Si negocio inicialmente solo necesita una política, podrá crear una única política y asignarla a todos los registros que correspondan.
+
+### Status
+
+approved
+
+---
+
+## Decision 11. Shape base de las reglas de alerta
+
+### Context
+
+Ya se aprobó que:
+
+- cada registro referencia directamente una política reutilizable
+- los `recipient-groups` ya son dueños de los canales habilitados
+
+Por eso no conviene duplicar canales dentro de cada regla.
+
+También se quiere permitir que una regla exista solo para semáforo visual, sin obligar notificación.
+
+### Options
+
+1. Cada regla define canales propios y exige grupos destinatarios
+2. Cada regla reutiliza `recipient-groups` y puede existir sin grupos
+3. Toda regla debe notificar siempre a algún grupo
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- se evita duplicar lógica que ya vive en `recipient-groups`
+- una regla puede servir solo para semáforo visual
+- la notificación efectiva se resuelve usando grupos cuando existan
+
+### Decision Final
+
+Se aprueba que cada regla de una política de alerta tenga, como base conceptual:
+
+- `offset`
+- `severity`
+- `recipientGroupIds[]`
+
+`recipientGroupIds[]` no será obligatorio.
+
+Si una regla no tiene grupos asociados, seguirá siendo válida como regla puramente visual para semáforo o severidad en UI.
+
+Los canales no se declararán dentro de la regla; se resolverán implícitamente desde los `recipient-groups` asociados.
+
+### Status
+
+approved
+
+---
+
+## Decision 12. Shape de `offset` en reglas de alerta
+
+### Context
+
+Cada regla de alerta necesita expresar con cuánta anticipación respecto al vencimiento debe activarse.
+
+Ya se aprobó un shape estructurado para el intervalo de vigencia del registro, por lo que introducir un segundo formato distinto para duraciones de alerta agregaría complejidad innecesaria.
+
+### Options
+
+1. Modelar `offset` como texto libre
+2. Modelar `offset` con un shape simplificado distinto al intervalo principal
+3. Reutilizar exactamente el mismo shape estructurado del intervalo de vigencia
+
+### Recommendation
+
+Opción 3.
+
+### Implications
+
+- el dominio reutiliza una sola convención de duración estructurada
+- UI y backend no tendrán que soportar dos formatos distintos para tiempos compuestos
+- las reglas de alerta podrán expresar combinaciones ricas sin introducir otro modelo paralelo
+
+### Decision Final
+
+Se aprueba que `offset` en cada regla de alerta reutilice exactamente el mismo shape estructurado del intervalo de vigencia, con:
+
+- `years`
+- `months`
+- `weeks`
+- `days`
+
+Al menos una unidad deberá ser mayor que `0`.
+
+### Status
+
+approved
+
+---
+
+## Decision 13. Shape de severidad en reglas de alerta
+
+### Context
+
+Se evaluó usar un catálogo fijo de severidades o introducir una prioridad manual por regla.
+
+Eso se descartó porque:
+
+- negocio probablemente querrá personalizar nombres y colores
+- exponer una prioridad numérica en UI podría resultar confuso
+- ya existe una jerarquía natural dada por la cercanía al vencimiento
+
+### Options
+
+1. Catálogo fijo de severidades en código
+2. Severidad configurable con prioridad manual
+3. Severidad configurable por regla, sin prioridad manual, resolviendo dominancia por cercanía al vencimiento
+
+### Recommendation
+
+Opción 3.
+
+### Implications
+
+- cada regla podrá tener identidad visual propia sin hardcode de niveles
+- frontend no tendrá que pedir al usuario una prioridad numérica
+- la severidad dominante podrá resolverse naturalmente por el `offset`
+
+### Decision Final
+
+Se aprueba que cada regla de alerta defina su severidad con al menos:
+
+- `severityLabel`
+- `severityColorHex`
+
+No existirá `severityPriority` configurable en `v1`.
+
+La severidad dominante se resolverá por cercanía al vencimiento, usando el `offset` de las reglas aplicables.
+
+`OVERDUE` seguirá teniendo prioridad visual superior por regla derivada del sistema y no por configuración de severidad.
+
+### Status
+
+approved
+
+---
+
+## Decision 14. Unicidad de `offset` dentro de una política
+
+### Context
+
+Se evaluó si debía exigirse que cada regla de una política tuviera un `offset` único.
+
+Aunque eso simplificaría algunas validaciones, también podría limitar composiciones legítimas donde múltiples comportamientos compartan el mismo umbral.
+
+### Options
+
+1. Exigir unicidad estricta de `offset` por política
+2. No forzar unicidad y permitir múltiples reglas con el mismo `offset`
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el modelo queda más flexible para composiciones futuras
+- la resolución exacta de múltiples reglas con el mismo `offset` deberá manejarse sin asumir conflicto automático
+- no se introduce una restricción de negocio que el cliente no pidió
+
+### Decision Final
+
+No se forzará unicidad de `offset` dentro de una política de alerta.
+
+Una política podrá contener múltiples reglas con el mismo `offset`.
+
+### Status
+
+approved
+
+---
+
+## Decision 15. Shape base de la política de alerta
+
+### Context
+
+Ya se cerró gran parte del shape interno de las reglas:
+
+- `offset`
+- `severityLabel`
+- `severityColorHex`
+- `recipientGroupIds[]` opcional
+
+Faltaba cerrar el shape base de la entidad política y una regla operativa importante sobre el orden de sus reglas antes de persistirlas.
+
+### Options
+
+1. Política mínima sin `status` ni `description`
+2. Política con metadata base, ciclo de vida explícito y reglas ordenadas antes de persistir
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- la política nace como entidad administrable real
+- `code` técnico no queda en manos del usuario
+- backend conserva orden consistente de reglas sin depender del orden accidental del payload
+
+### Decision Final
+
+Se aprueba que la política de alerta tenga como shape base:
+
+- `name`
+- `code` autogenerado desde `name`
+- `description` opcional
+- `status`
+- `rules[]`
+
+El catálogo inicial de `status` para políticas será:
+
+- `ACTIVE`
+- `INACTIVE`
+- `DELETED`
+
+Además, `rules[]` deberá ordenarse por `offset` antes de persistirse.
+
+### Status
+
+approved
+
+---
+
+## Decision 16. Contrato HTTP base de `alert-policies`
+
+### Context
+
+Ya se aprobó que las políticas de alerta serán una capability administrable desde `v1`.
+
+Para que eso sea real y no solo conceptual, el módulo necesita nacer con contratos HTTP suficientes para administración completa desde backend.
+
+### Options
+
+1. Exponer solo lectura y creación inicial
+2. Exponer CRUD completo desde `v1`
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el módulo de políticas nace administrable de verdad
+- frontend futuro no quedará bloqueado por faltantes básicos de escritura
+- la spec puede aterrizar el resto del contrato sobre una base estable
+
+### Decision Final
+
+Se aprueba que `alert-policies` tenga CRUD completo desde `v1`.
+
+Como mínimo deberá existir:
+
+- `GET /v1/alert-policies`
+- `GET /v1/alert-policies/:policyId`
+- `POST /v1/alert-policies`
+- `PATCH /v1/alert-policies/:policyId`
+- `DELETE /v1/alert-policies/:policyId`
+
+Además, `v1` deberá contemplar dos formas de lectura:
+
+- un listado paginado administrativo para gestión
+- una colección simple no paginada para selección o reutilización en otros recursos
 
 ### Status
 

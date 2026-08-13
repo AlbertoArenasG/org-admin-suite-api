@@ -31,8 +31,11 @@
 - [x] Definir shape exacto del subflujo externo opcional
       Status: completed
 
-- [ ] Definir contrato conceptual del módulo de políticas de alerta
-      Status: pending
+- [x] Definir contrato conceptual del módulo de políticas de alerta
+      Status: completed
+
+- [x] Definir shape base de la política de alerta
+      Status: completed
 
 - [ ] Definir contratos HTTP iniciales de backend
       Status: pending

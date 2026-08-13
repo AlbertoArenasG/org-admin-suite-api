@@ -25,6 +25,33 @@ Esta iniciativa todavía está en etapa de definición. El diseño técnico aqu�
 - existirá `status` persistido separado de estados derivados de UI
 - existirá capability administrable de políticas de alerta
 
+### Alert Policy Base Shape
+
+- `name`
+- `code` autogenerado desde `name`
+- `description` opcional
+- `status`
+- `rules[]`
+
+Estados iniciales de política:
+
+- `ACTIVE`
+- `INACTIVE`
+- `DELETED`
+
+Contratos HTTP mínimos aprobados para `alert-policies`:
+
+- `GET /v1/alert-policies`
+- `GET /v1/alert-policies/:policyId`
+- `POST /v1/alert-policies`
+- `PATCH /v1/alert-policies/:policyId`
+- `DELETE /v1/alert-policies/:policyId`
+
+Lecturas aprobadas:
+
+- listado paginado administrativo
+- colección simple no paginada para lookup o selección
+
 ## Provisional Resource Shape
 
 El shape exacto sigue pendiente, pero ya se asumen como mínimos conceptuales:
@@ -44,7 +71,7 @@ El shape exacto sigue pendiente, pero ya se asumen como mínimos conceptuales:
 - observaciones del registro concreto
 - `status` persistido
 - bloque opcional de provider
-- referencia a política de alerta o estrategia equivalente
+- referencia directa a política de alerta reutilizable
 
 ## Provisional Provider Subflow
 
@@ -82,6 +109,35 @@ El semáforo o nivel de alerta deberá derivarse con base en:
 - fecha de vencimiento
 - política aplicable
 
+Las reglas de una política no declararán canales propios.
+
+Cuando una regla tenga `recipientGroupIds[]`, la notificación efectiva se resolverá usando:
+
+- los canales habilitados del grupo
+- los datos disponibles por canal en sus contactos
+
+Una regla podrá existir sin grupos y seguir siendo válida como regla visual de severidad.
+
+`offset` de cada regla reutilizará el mismo shape estructurado de duración ya aprobado para el intervalo principal:
+
+- `years`
+- `months`
+- `weeks`
+- `days`
+
+La severidad de cada regla será configurable con:
+
+- `severityLabel`
+- `severityColorHex`
+
+No habrá `severityPriority` configurable.
+
+Cuando varias reglas pudieran competir, la severidad dominante se resolverá por cercanía al vencimiento usando el `offset`.
+
+No se asumirá unicidad obligatoria de `offset` dentro de una política.
+
+Antes de persistir la política, backend ordenará `rules[]` por `offset`.
+
 ### Overdue
 
 `OVERDUE` no será persistido en `v1`.
@@ -93,7 +149,5 @@ Se calculará para UI cuando:
 
 ## Pending Design Areas
 
-- modelado de políticas de alerta
-- relación entre registro y política
 - contratos HTTP iniciales
 - reglas exactas de derivación de semáforo y `OVERDUE`
