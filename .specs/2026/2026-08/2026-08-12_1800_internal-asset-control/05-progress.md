@@ -17,13 +17,13 @@
 - Se aprobó que `v1` capturará el activo directamente dentro de cada registro, sin catálogo maestro de activos por ahora.
 - Se registró explícitamente que la fecha principal del registro representa la acción concreta realizada o documentada sobre el activo.
 - Se registró explícitamente que `observaciones` pertenece al registro concreto y no al activo general.
-- Se aprobó que el registro tendrá `interventionType` desde `v1`, tomado de catálogo en código.
+- Se aprobó que el registro tendrá `assetMaintenanceType` desde `v1`, tomado de catálogo en código.
 - Se aprobó que el intervalo de vigencia se persistirá como estructura compuesta por unidades:
   - `years`
   - `months`
   - `weeks`
   - `days`
-- Se aprobó que backend persistirá tanto el intervalo estructurado como la `expirationDate` derivada.
+- Se aprobó que backend persistirá tanto el intervalo estructurado como la `expiration_date` vigente.
 - Se aprobó que el subflujo externo opcional usará semántica de `provider` y no de `laboratory`.
 - Se aprobó que ese subflujo seguirá embebido dentro del registro en `v1`, con al menos:
   - `sentToProvider`
@@ -58,6 +58,92 @@
 - Se aprobó que `alert-policies` tendrá:
   - listado paginado administrativo
   - colección simple no paginada para selección reusable
+- Se aprobó el shape del listado paginado administrativo de `alert-policies`, con:
+  - `id`
+  - `name`
+  - `code`
+  - `status`
+  - `rules_count`
+  - `created_at`
+  - `updated_at`
+- Se aprobó que ese endpoint soporte:
+  - paginación estándar
+  - búsqueda por `name` o `code`
+  - filtro por `status`
+- Se aprobó el shape de la colección simple no paginada de `alert-policies`, con:
+  - `id`
+  - `name`
+  - `code`
+  - `status`
+- Se aprobó que esa colección devuelva por defecto solo políticas `ACTIVE`.
+- Se aprobó el shape del detalle de `alert-policies`, con:
+  - `id`
+  - `name`
+  - `code`
+  - `description`
+  - `status`
+  - `rules[]`
+  - `created_at`
+  - `updated_at`
+- Se aprobó que cada regla del detalle expanda `recipient_groups` de forma ligera.
+- Se aprobó que `POST / PATCH / DELETE` de `alert-policies` sigan estas reglas:
+  - `code` no editable
+  - creación y edición completa de `name`, `description`, `status`, `rules[]`
+  - `DELETE` como borrado lógico hacia `DELETED`
+- Se aprobó el shape del listado paginado administrativo de `internal-asset-maintenance-records`, incluyendo resumen de follow-up a provider.
+- Se aprobó el shape del detalle de `internal-asset-maintenance-records`, incluyendo:
+  - política ligera opcional
+  - bloque `provider`
+  - subbloque `provider_follow_up`
+  - auditoría enriquecida con `created_by` y `updated_by`
+- Se aprobó el contrato de `POST /v1/internal-asset-maintenance-records`, con:
+  - campos base del registro
+  - `alert_policy_id` opcional
+  - bloque `provider` opcional
+  - bloque `provider_follow_up` opcional
+  - `expiration_date` y `derived_status` bajo responsabilidad de backend
+- Se aprobó que `PATCH /v1/internal-asset-maintenance-records/:recordId` permita editar el mismo shape base funcional del registro.
+- Se aprobó que `DELETE /v1/internal-asset-maintenance-records/:recordId` sea borrado lógico.
+- Se aprobó que el catálogo persistido de `status` del recurso principal incluya:
+  - `PENDING`
+  - `IN_PROGRESS`
+  - `COMPLETED`
+  - `CANCELLED`
+  - `DELETED`
+- Se aprobó una acción manual explícita para follow-up a provider:
+  - `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+- Se aprobó el shape base de `provider_follow_up` como subbloque opcional del registro:
+  - `enabled`
+  - `rules[]`
+  - `last_sent_at`
+- Se aprobó que cada regla de `provider_follow_up` tendrá al menos:
+  - `offset`
+  - `recipient_group_ids`
+  - `cc_recipient_group_ids` opcional
+- Se aprobó que `provider_follow_up` permanezca desacoplado de `alert-policies`.
+- Se aprobó reemplazar `performed_at` por `last_maintenance_at`.
+- Se aprobó que `last_maintenance_at` y `expiration_date` se entiendan como fechas `date-only` de negocio.
+- Se fijó `America/Mexico_City` como referencia funcional del módulo para evaluación de fechas y alertas.
+- Se aprobó que `expiration_date` sea autocalculada por defecto, pero editable por negocio.
+- Se aprobó que backend la calcule cuando no llegue en `POST` o `PATCH`, usando:
+  - `last_maintenance_at`
+  - `interval`
+- Se aprobó que todas las transiciones entre:
+  - `PENDING`
+  - `IN_PROGRESS`
+  - `COMPLETED`
+  - `CANCELLED`
+  sean manuales en `v1`.
+- Se aprobó que backend no cambie `status` automáticamente por fecha, semáforo, vencimiento ni follow-up.
+- Se aprobó que `DELETED` solo se alcance por borrado lógico.
+- Se aprobó la regla exacta de derivación de semáforo y `OVERDUE` contra la `expiration_date` persistida vigente.
+- Se aprobó que `OVERDUE` aplique solo cuando:
+  - `status` sea `PENDING` o `IN_PROGRESS`
+  - `expiration_date` sea menor que `today` en `America/Mexico_City`
+- Se aprobó que el semáforo:
+  - solo se evalúe para `PENDING` o `IN_PROGRESS`
+  - no se evalúe si el registro ya cayó en `OVERDUE`
+  - use la regla de `alert_policy` más cercana al vencimiento entre las aplicables
 - Se aprobó la separación entre:
   - `status` persistido
   - semáforo o alertamiento preventivo
@@ -71,5 +157,4 @@
 - Se aprobó que `OVERDUE` no se persistirá automáticamente en `v1`.
 - Se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
 - Se registró que el subflujo externo opcional, cuando aplique, requerirá al menos fecha de envío como dato de negocio relevante.
-- La iniciativa todavía no está lista para implementación; faltan definiciones críticas de:
-  - contratos HTTP iniciales
+- La iniciativa ya no tiene huecos críticos abiertos en definición.

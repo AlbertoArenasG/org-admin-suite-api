@@ -15,8 +15,8 @@ Regla de trabajo:
 ## Overall Status
 
 - Initiative: `internal-asset-control`
-- Definition status: `in_progress`
-- Implementation ready: `no`
+- Definition status: `completed`
+- Implementation ready: `yes`
 
 ## Scope Summary
 
@@ -29,7 +29,7 @@ La iniciativa queda acotada a diseñar e implementar en backend:
 - cálculo de vencimiento y alertamiento
 - separación entre `status` persistido y estados derivados para UI
 - un módulo administrable de políticas de alerta desde `v1`
-- soporte opcional para seguimiento de laboratorio dentro del registro cuando aplique
+- soporte opcional para seguimiento de provider dentro del registro cuando aplique
 
 Queda fuera de esta spec:
 
@@ -49,26 +49,29 @@ Antes de implementación ya quedó aprobado que:
 - cada registro será histórico
 - el mismo activo podrá aparecer en múltiples registros
 - `v1` capturará el activo directamente por nombre e identificador dentro del registro
-- `interventionType` existirá desde `v1` y vendrá de catálogo en código
+- `assetMaintenanceType` existirá desde `v1` y vendrá de catálogo en código
 - el intervalo de vigencia se persistirá como estructura compuesta por unidades
 - `maintenance` se usará como término paraguas del recurso en inglés, aunque el tipo concreto pueda ser calibración, verificación, mantenimiento preventivo u otro
-- el flujo de laboratorio será opcional y no aplicará a todos los registros
+- el flujo de provider será opcional y no aplicará a todos los registros
 - la fecha base del registro representará la fecha real de la acción realizada o documentada sobre el activo
 - `observaciones` corresponderá al registro concreto, no al activo en abstracto
 - el semáforo o nivel de alerta convivirá con el `status` operativo
 - `OVERDUE` será derivado para UI, no persistido automáticamente por backend
 - desde `v1` existirá un módulo administrable de políticas de alerta
 - cada registro referenciará directamente una política de alerta reutilizable
+- existirá un subbloque `provider_follow_up` desacoplado de `alert-policies`
 
 ## Implementation Readiness Notes
 
-La definición ya dejó cerrados varios fundamentos importantes, pero aún faltan decisiones críticas de modelado y fronteras entre:
+La definición ya quedó cerrada sin huecos críticos bloqueantes.
+
+La implementación deberá apegarse a lo ya aprobado para:
 
 - `internal-asset-maintenance-record`
-- políticas de alerta
-- estados derivados
-- seguimiento de laboratorio
-- eventuales catálogos futuros que se mantienen fuera de alcance en `v1`
+- `alert-policies`
+- estados derivados y semáforo
+- seguimiento opcional a provider
+- fronteras explícitas de `v1` frente a futuros catálogos auxiliares
 
 Los detalles ejecutables vivirán principalmente en:
 
@@ -246,7 +249,7 @@ Opción 3.
 
 ### Decision Final
 
-Se aprueba que cada `internal-asset-maintenance-record` tenga `interventionType` desde `v1`, proveniente de un catálogo definido en código.
+Se aprueba que cada `internal-asset-maintenance-record` tenga `assetMaintenanceType` desde `v1`, proveniente de un catálogo definido en código.
 
 Ese catálogo deberá soportar al menos:
 
@@ -794,6 +797,553 @@ Además, `v1` deberá contemplar dos formas de lectura:
 
 - un listado paginado administrativo para gestión
 - una colección simple no paginada para selección o reutilización en otros recursos
+
+### Status
+
+approved
+
+---
+
+## Decision 17. Shape de `GET /v1/alert-policies` paginado
+
+### Context
+
+Ya se aprobó que `alert-policies` tendrá una lectura paginada administrativa distinta de la colección simple no paginada.
+
+Faltaba cerrar qué datos devolverá esa colección paginada para gestión.
+
+### Options
+
+1. Listado mínimo con solo `id` y `name`
+2. Listado administrativo resumido con metadata operativa básica
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- la vista administrativa tendrá la información esencial sin depender del detalle
+- se mantiene una respuesta resumida y apropiada para tabla
+- frontend podrá filtrar y buscar sin cargar detalle completo
+
+### Decision Final
+
+Se aprueba que `GET /v1/alert-policies` devuelva un listado paginado administrativo.
+
+Cada item del listado deberá incluir al menos:
+
+- `id`
+- `name`
+- `code`
+- `status`
+- `rules_count`
+- `created_at`
+- `updated_at`
+
+Además, el endpoint deberá soportar:
+
+- paginación estándar del proyecto
+- búsqueda por `name` o `code`
+- filtro por `status`
+
+### Status
+
+approved
+
+---
+
+## Decision 18. Shape de la colección simple de `alert-policies`
+
+### Context
+
+Ya se aprobó que `alert-policies` tendrá una colección simple no paginada para selección o reutilización en otros recursos.
+
+Faltaba cerrar el shape exacto de esa lectura ligera.
+
+### Options
+
+1. Reutilizar el mismo shape del listado paginado administrativo
+2. Exponer una colección resumida específica para selección
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el contrato queda optimizado para selects y asociaciones simples
+- se evita traer metadata administrativa innecesaria
+- otros módulos futuros podrán reutilizar un lookup liviano y estable
+
+### Decision Final
+
+Se aprueba que la colección simple no paginada de `alert-policies` devuelva por item al menos:
+
+- `id`
+- `name`
+- `code`
+- `status`
+
+Por defecto, esta colección solo devolverá políticas `ACTIVE`.
+
+### Status
+
+approved
+
+---
+
+## Decision 19. Shape de `GET /v1/alert-policies/:policyId`
+
+### Context
+
+Ya se cerraron:
+
+- el listado paginado administrativo
+- la colección simple no paginada para selección
+
+Faltaba cerrar el contrato de detalle completo de una política.
+
+### Options
+
+1. Detalle mínimo con reglas sin expansión de grupos
+2. Detalle completo con reglas y `recipient-groups` expandidos de forma ligera
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- frontend podrá renderizar el detalle de la política sin resolver grupos por separado
+- se conserva una respuesta suficientemente rica para edición y consulta
+- la expansión sigue siendo ligera y no obliga a detalle completo de cada grupo
+
+### Decision Final
+
+Se aprueba que `GET /v1/alert-policies/:policyId` devuelva al menos:
+
+- `id`
+- `name`
+- `code`
+- `description`
+- `status`
+- `rules[]`
+- `created_at`
+- `updated_at`
+
+Cada item de `rules[]` deberá incluir al menos:
+
+- `offset`
+- `severityLabel`
+- `severityColorHex`
+- `recipient_groups`
+
+`recipient_groups` vendrá expandido de forma ligera para presentación y edición, no solo como ids planos.
+
+### Status
+
+approved
+
+---
+
+## Decision 20. Contratos de escritura de `alert-policies`
+
+### Context
+
+Ya se aprobó que `alert-policies` tendrá CRUD completo desde `v1`.
+
+Faltaba cerrar el alcance exacto de:
+
+- `POST /v1/alert-policies`
+- `PATCH /v1/alert-policies/:policyId`
+- `DELETE /v1/alert-policies/:policyId`
+
+### Options
+
+1. Permitir edición completa incluyendo `code` y borrado físico
+2. Mantener `code` no editable y usar borrado lógico
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- `code` conserva su naturaleza técnica y estable
+- el ciclo de vida de la política queda alineado con su `status`
+- se evita perder trazabilidad por borrado físico prematuro
+
+### Decision Final
+
+Se aprueba que:
+
+- `POST /v1/alert-policies` permita crear la política completa con:
+  - `name`
+  - `description`
+  - `status`
+  - `rules[]`
+- `PATCH /v1/alert-policies/:policyId` permita editar:
+  - `name`
+  - `description`
+  - `status`
+  - `rules[]`
+- `code` no será editable manualmente
+- `DELETE /v1/alert-policies/:policyId` será borrado lógico, llevando la política a `DELETED`
+
+### Status
+
+approved
+
+---
+
+## Decision 21. Shape de `GET /v1/internal-asset-maintenance-records` paginado
+
+### Context
+
+Después de cerrar los contratos base de `alert-policies`, el siguiente contrato fino es el listado administrativo del recurso principal.
+
+Ese listado debe resumir:
+
+- datos base del activo referenciado
+- datos operativos del registro
+- referencia ligera a la política
+- estado del subflujo de provider
+- resumen del follow-up a provider
+
+Sin cargar detalle completo de reglas, grupos o seguimiento.
+
+### Options
+
+1. Listado mínimo solo con campos base del registro
+2. Listado administrativo resumido con follow-up a provider incluido como resumen
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- la tabla administrativa podrá mostrar el estado operativo real del registro
+- frontend no tendrá que hacer consultas adicionales solo para saber si existe follow-up a provider
+- el endpoint sigue siendo resumido y apropiado para paginación
+
+### Decision Final
+
+Se aprueba que `GET /v1/internal-asset-maintenance-records` devuelva un listado paginado administrativo.
+
+Cada item del listado deberá incluir al menos:
+
+- `id`
+- `asset_name`
+- `asset_identifier`
+- `asset_maintenance_type`
+- `last_maintenance_at`
+- `expiration_date`
+- `status`
+- `derived_status`
+- `alert_policy`
+- `sent_to_provider`
+- `provider_name`
+- `provider_lead_time`
+- `provider_follow_up_enabled`
+- `provider_follow_up_rules_count`
+- `provider_follow_up_last_sent_at`
+- `created_at`
+- `updated_at`
+
+`alert_policy` vendrá ligero y opcional.
+
+Además, el endpoint deberá soportar:
+
+- paginación estándar del proyecto
+- búsqueda por `asset_name` o `asset_identifier`
+- filtro por `asset_maintenance_type`
+- filtro por `status`
+- filtro por `alert_policy_id`
+- filtro por `sent_to_provider`
+
+### Status
+
+approved
+
+---
+
+## Decision 22. Shape de `GET /v1/internal-asset-maintenance-records/:recordId`
+
+### Context
+
+Ya se cerró el listado paginado administrativo del recurso principal.
+
+Faltaba aterrizar el contrato de detalle completo, incluyendo:
+
+- datos base del registro
+- política de alerta asociada
+- bloque de provider
+- subbloque de follow-up a provider
+- auditoría enriquecida
+
+### Options
+
+1. Detalle mínimo con solo datos base del registro
+2. Detalle completo con expansión ligera de relaciones y auditoría enriquecida
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- frontend podrá renderizar y editar el registro sin resolver múltiples consultas extra
+- el detalle conserva suficiente contexto operativo para seguimiento y troubleshooting
+- la auditoría queda alineada con otros recursos auditables del backend
+
+### Decision Final
+
+Se aprueba que `GET /v1/internal-asset-maintenance-records/:recordId` devuelva al menos:
+
+- `id`
+- `asset_name`
+- `asset_identifier`
+- `asset_maintenance_type`
+- `last_maintenance_at`
+- `interval`
+- `expiration_date`
+- `observations`
+- `status`
+- `derived_status`
+- `alert_policy`
+- `provider`
+- `provider_follow_up`
+- `created_at`
+- `updated_at`
+- `created_by`
+- `updated_by`
+
+`alert_policy` vendrá expandida de forma ligera y opcional.
+
+`provider` incluirá el bloque operativo del flujo externo cuando aplique.
+
+`provider_follow_up` incluirá reglas configuradas y `recipient_groups` expandidos de forma ligera, además de `last_sent_at` cuando exista.
+
+`created_by` y `updated_by` deberán venir enriquecidos para presentación, no solo como ids planos.
+
+### Status
+
+approved
+
+---
+
+## Decision 23. Contrato de `POST /v1/internal-asset-maintenance-records`
+
+### Context
+
+Ya se cerraron los contratos de lectura principales del recurso.
+
+Faltaba aterrizar el shape de creación del registro, separando:
+
+- campos que captura negocio
+- datos derivados por backend
+
+### Options
+
+1. Crear el registro con shape mínimo y completar el resto después
+2. Permitir creación completa del registro con sus bloques opcionales desde `v1`
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el backend nace listo para crear registros reales sin pasos posteriores obligatorios
+- los bloques opcionales de provider y follow-up pueden capturarse desde el inicio cuando apliquen
+- `expiration_date` y estados derivados siguen bajo responsabilidad del backend
+- frontend podrá precalcular `expiration_date` por UX sin desplazar a backend como fuente de verdad
+
+### Decision Final
+
+Se aprueba que `POST /v1/internal-asset-maintenance-records` acepte al menos:
+
+- `asset_name`
+- `asset_identifier`
+- `asset_maintenance_type`
+- `last_maintenance_at`
+- `interval`
+- `expiration_date` opcional
+- `observations`
+- `status`
+- `alert_policy_id` opcional
+- `provider` opcional
+- `provider_follow_up` opcional
+
+El bloque `provider`, cuando aplique, podrá incluir al menos:
+
+- `sent_to_provider`
+- `provider_name`
+- `sent_to_provider_at`
+- `provider_lead_time`
+- `provider_notes`
+
+El bloque `provider_follow_up`, cuando aplique, podrá incluir al menos:
+
+- reglas de seguimiento
+- `recipient_group_ids`
+- grupos internos en copia cuando aplique
+
+Backend calculará, validará y controlará al menos:
+
+- `expiration_date`
+- `derived_status` para UI, no persistido
+
+Si `expiration_date` no llega, backend la calculará a partir de:
+
+- `last_maintenance_at`
+- `interval`
+
+Si `expiration_date` sí llega, backend la tomará como fecha vigente de negocio.
+
+### Status
+
+approved
+
+---
+
+## Decision 24. Contrato de `PATCH /v1/internal-asset-maintenance-records/:recordId`
+
+### Context
+
+Ya se aprobó el shape de creación del recurso principal.
+
+Faltaba decidir si la edición tendría un alcance reducido o si permitiría actualizar prácticamente el mismo shape de negocio del registro.
+
+### Options
+
+1. `PATCH` limitado a pocos campos operativos
+2. `PATCH` con el mismo alcance funcional base de `POST`
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el recurso queda realmente editable sin flujos fragmentados
+- backend conserva el control sobre datos derivados
+- frontend podrá resolver edición completa desde una sola pantalla
+
+### Decision Final
+
+Se aprueba que `PATCH /v1/internal-asset-maintenance-records/:recordId` permita editar al menos:
+
+- `asset_name`
+- `asset_identifier`
+- `asset_maintenance_type`
+- `last_maintenance_at`
+- `interval`
+- `expiration_date` opcional
+- `observations`
+- `status`
+- `alert_policy_id` opcional
+- `provider` opcional
+- `provider_follow_up` opcional
+
+Backend recalculará o validará cuando corresponda:
+
+- `expiration_date`
+- `derived_status` para UI
+
+### Status
+
+approved
+
+---
+
+## Decision 25. Contrato de `DELETE /v1/internal-asset-maintenance-records/:recordId`
+
+### Context
+
+Ya se aprobó que:
+
+- el recurso principal tendrá `status` persistido
+- `OVERDUE` será solo derivado para UI
+- `alert-policies` usa borrado lógico
+
+Faltaba cerrar si el recurso principal seguiría el mismo patrón de borrado lógico o si se permitiría borrado físico.
+
+### Options
+
+1. Borrado físico del registro
+2. Borrado lógico, integrándolo al ciclo de vida del recurso
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- se conserva trazabilidad del registro
+- el ciclo de vida del recurso queda consistente con otros catálogos del sistema
+- backend no pierde información de negocio por una eliminación prematura
+
+### Decision Final
+
+Se aprueba que `DELETE /v1/internal-asset-maintenance-records/:recordId` sea borrado lógico.
+
+El recurso principal deberá contemplar `DELETED` dentro de sus `status` persistidos:
+
+- `PENDING`
+- `IN_PROGRESS`
+- `COMPLETED`
+- `CANCELLED`
+- `DELETED`
+
+`OVERDUE` seguirá siendo solo derivado para UI y no formará parte del catálogo persistido de `status`.
+
+### Status
+
+approved
+
+---
+
+## Decision 26. Acción manual de follow-up a provider
+
+### Context
+
+Negocio pidió explícitamente que desde la UI exista un botón para enviar en ese momento una consulta de estatus al provider.
+
+Esa acción no debe:
+
+- crear un nuevo `internal-asset-maintenance-record`
+- mezclarse con `alert-policies`
+- confundirse con la configuración programable del follow-up
+
+### Options
+
+1. Reutilizar `PATCH` del registro para disparar la acción manual
+2. Exponer un endpoint explícito de acción dentro del recurso principal
+
+### Recommendation
+
+Opción 2.
+
+### Implications
+
+- el contrato expresa claramente que se trata de una acción puntual
+- se separa la configuración del follow-up de su ejecución manual
+- frontend puede conectar el botón sin ambigüedad semántica
+
+### Decision Final
+
+Se aprueba exponer una acción manual explícita para follow-up a provider:
+
+- `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+
+Esta acción:
+
+- no crea un nuevo registro de mantenimiento
+- no modifica `alert-policies`
+- dispara una consulta puntual de estatus al provider usando la configuración vigente del subbloque `provider_follow_up`
 
 ### Status
 

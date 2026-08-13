@@ -16,7 +16,7 @@
 - [x] Definir que `v1` capturará el activo directamente dentro del registro
       Status: completed
 
-- [x] Definir que el registro tendrá `interventionType` desde `v1`
+- [x] Definir que el registro tendrá `assetMaintenanceType` desde `v1`
       Status: completed
 
 - [x] Definir separación entre `status` persistido, semáforo y `OVERDUE` derivado
@@ -37,15 +37,15 @@
 - [x] Definir shape base de la política de alerta
       Status: completed
 
-- [ ] Definir contratos HTTP iniciales de backend
-      Status: pending
+- [x] Definir contratos HTTP iniciales de backend
+      Status: completed
 
 ## Phase 3. Implementation
 
 - [ ] Implementar módulo `internal-asset-control`
       Status: pending
 
-- [ ] Implementar catálogo en código de `interventionType`
+- [ ] Implementar catálogo en código de `assetMaintenanceType`
       Status: pending
 
 - [ ] Implementar módulo de políticas de alerta

@@ -17,10 +17,13 @@
 - Objetivo:
   - definir tipificación base del registro y separar status persistidos de estados derivados
 - Cambios realizados:
-  - se aprobó `interventionType` desde `v1`
+  - se aprobó `assetMaintenanceType` desde `v1`
   - se aprobó catálogo inicial en código
   - se aprobó separación entre semáforo y `status`
   - se aprobó `OVERDUE` como derivado para UI
+  - se aprobó que todas las transiciones entre `PENDING`, `IN_PROGRESS`, `COMPLETED` y `CANCELLED` sean manuales
+  - se aprobó que `DELETED` solo se alcance por borrado lógico
+  - se aprobó la regla exacta de derivación de semáforo y `OVERDUE`
 
 ## Slice 3. Alert Policies Capability
 
@@ -41,7 +44,7 @@
   - se aprobó ordenar `rules[]` por `offset` antes de persistir
   - se aprobó CRUD completo para `alert-policies`
   - se aprobó doble lectura para `alert-policies`: paginada administrativa y no paginada de selección
-  - quedó pendiente solo aterrizar el detalle fino de contratos HTTP
+  - se aprobaron los contratos HTTP base del módulo
 
 ## Slice 4. Interval Structure Closure
 
@@ -55,7 +58,7 @@
     - `months`
     - `weeks`
     - `days`
-  - se aprobó persistir también la `expirationDate` derivada
+  - se aprobó persistir también la `expiration_date` vigente
 
 ## Slice 5. Provider Subflow Closure
 
@@ -74,11 +77,30 @@
 
 ## Slice 6. Record Shape And HTTP Contract
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - aterrizar el shape exacto del `internal-asset-maintenance-record`
   - aterrizar el shape exacto de la política de alerta
   - definir contratos HTTP iniciales
+- Cambios realizados:
+  - se aprobó el shape del listado paginado de `alert-policies`
+  - se aprobó el shape de la colección simple no paginada de `alert-policies`
+  - se aprobó el shape del detalle de `alert-policies`
+  - se aprobaron los contratos de escritura de `alert-policies`
+  - se aprobó el shape del listado paginado de `internal-asset-maintenance-records`
+  - se aprobó el shape del detalle de `internal-asset-maintenance-records`
+  - se aprobó el contrato de `POST /v1/internal-asset-maintenance-records`
+  - se aprobó el contrato de `PATCH /v1/internal-asset-maintenance-records/:recordId`
+  - se aprobó el contrato de `DELETE /v1/internal-asset-maintenance-records/:recordId`
+  - se aprobó la acción manual `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+  - se aprobó el shape base del subbloque `provider_follow_up`:
+    - `enabled`
+    - `rules[]`
+    - `last_sent_at`
+  - se aprobó el shape mínimo por regla de `provider_follow_up`:
+    - `offset`
+    - `recipient_group_ids`
+    - `cc_recipient_group_ids` opcional
 
 ## Slice 7. Backend Implementation
 

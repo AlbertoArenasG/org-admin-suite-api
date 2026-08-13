@@ -9,7 +9,7 @@ El cliente inicialmente describió una sola tabla, pero el análisis posterior m
 - identificación del activo referenciado por el registro
 - la acción o mantenimiento documentado
 - la vigencia derivada de esa acción
-- seguimiento opcional a laboratorio
+- seguimiento opcional a provider
 - alertamiento preventivo
 
 ## Current Understanding
@@ -21,7 +21,7 @@ Hoy el problema real se entiende mejor así:
 - el registro documenta una acción concreta o un hito de mantenimiento sobre el activo
 - la fecha principal del registro representa la fecha real de esa acción documentada
 - la fecha de vencimiento se deriva a partir de la fecha del registro y un intervalo configurable
-- algunos registros entran en un subflujo opcional de laboratorio
+- algunos registros entran en un subflujo opcional de provider
 - negocio necesita alertas preventivas y visibilidad operativa del estado del registro
 
 ## Domain Clarifications Already Confirmed
@@ -33,7 +33,9 @@ Hoy el problema real se entiende mejor así:
 - mantenimiento preventivo no se manejará como bloque especial separado; será un tipo más de registro
 - el mismo patrón de alertamiento base puede reutilizarse entre tipos
 - `observaciones` corresponde al registro histórico concreto
-- el flujo de laboratorio, cuando aplique, necesitará al menos fecha de entrega además del laboratorio y el tiempo estimado del trabajo
+- el flujo hacia provider, cuando aplique, necesitará al menos fecha de envío, nombre del provider y tiempo estimado del trabajo
+- el seguimiento a provider será concern separado del alertamiento preventivo
+- el seguimiento a provider reutilizará `recipient-groups` y podrá contemplar grupos internos en copia
 
 ## Risks
 
@@ -56,7 +58,7 @@ el módulo puede terminar con lógica inconsistente y UI confusa.
 Ya se decidió no crear todavía:
 
 - catálogo maestro de activos internos
-- catálogo maestro de laboratorios
+- catálogo maestro de providers
 
 Hay que preservar esa frontera para que `v1` no se infle de alcance.
 
@@ -69,20 +71,17 @@ Como negocio probablemente evolucionará rápido, el diseño de políticas no de
 La modelación backend deberá separar al menos estos concerns:
 
 - `internal-asset-maintenance-record`
-- catálogo de `interventionType`
+- catálogo de `assetMaintenanceType`
 - `status` persistido
 - estado derivado de UI
 - política de alerta reusable
-- subflujo opcional de laboratorio
+- subflujo opcional de provider
+- subbloque de seguimiento a provider separado de `alert-policies`
 
 También deberá dejarse margen a futuro para una UX que permita generar un nuevo registro tomando como base uno previo, sin asumir eso como parte obligatoria de `v1`.
 
 ## Questions Still Open
 
-Persisten preguntas críticas de definición que deberán cerrarse en decisiones posteriores, por ejemplo:
+No quedaron preguntas críticas abiertas de definición.
 
-- shape exacto del intervalo de vigencia
-- shape y alcance exacto de las políticas de alerta
-- asignación entre registros y políticas
-- catálogo definitivo de colores, severidades o niveles visuales
-- cómo modelar exactamente el subflujo de laboratorio sin sobrecomplicar `v1`
+Los siguientes pasos ya pertenecen a implementación y validación del módulo.
