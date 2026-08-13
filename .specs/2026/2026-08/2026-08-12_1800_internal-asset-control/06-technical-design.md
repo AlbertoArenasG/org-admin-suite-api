@@ -35,21 +35,26 @@ El shape exacto sigue pendiente, pero ya se asumen como mínimos conceptuales:
   - identificador de negocio
 - `interventionType`
 - fecha base del registro como fecha real de la acción documentada
-- intervalo de vigencia
+- intervalo de vigencia estructurado:
+  - `years`
+  - `months`
+  - `weeks`
+  - `days`
 - fecha de vencimiento derivada
 - observaciones del registro concreto
 - `status` persistido
-- bloque opcional de laboratorio
+- bloque opcional de provider
 - referencia a política de alerta o estrategia equivalente
 
-## Provisional Laboratory Subflow
+## Provisional Provider Subflow
 
-Cuando aplique el flujo de laboratorio, ya se asume como mínimo conceptual:
+Cuando aplique el flujo externo hacia provider, ya se asume como mínimo conceptual:
 
-- indicador de que el registro entró a flujo de laboratorio
-- fecha de entrega al laboratorio
-- nombre capturado del laboratorio
+- indicador de que el registro entró a flujo externo hacia provider
+- fecha de envío al provider
+- nombre capturado del provider
 - tiempo estimado del trabajo o servicio externo
+- notas opcionales del flujo externo
 
 Todavía sigue pendiente cerrar el shape exacto y si se requerirán más timestamps o campos de seguimiento dentro de `v1`.
 
@@ -61,6 +66,13 @@ La fecha de vencimiento deberá derivarse a partir de:
 
 - fecha base del registro
 - intervalo de vigencia
+
+El intervalo no será texto libre y no será concern exclusivo de UI.
+
+Backend persistirá:
+
+- el intervalo estructurado original
+- la `expirationDate` derivada
 
 ### Alertamiento
 
@@ -81,8 +93,6 @@ Se calculará para UI cuando:
 
 ## Pending Design Areas
 
-- shape exacto del intervalo de vigencia
-- shape exacto del bloque de laboratorio
 - modelado de políticas de alerta
 - relación entre registro y política
 - contratos HTTP iniciales

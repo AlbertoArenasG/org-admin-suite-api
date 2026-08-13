@@ -50,6 +50,7 @@ Antes de implementación ya quedó aprobado que:
 - el mismo activo podrá aparecer en múltiples registros
 - `v1` capturará el activo directamente por nombre e identificador dentro del registro
 - `interventionType` existirá desde `v1` y vendrá de catálogo en código
+- el intervalo de vigencia se persistirá como estructura compuesta por unidades
 - `maintenance` se usará como término paraguas del recurso en inglés, aunque el tipo concreto pueda ser calibración, verificación, mantenimiento preventivo u otro
 - el flujo de laboratorio será opcional y no aplicará a todos los registros
 - la fecha base del registro representará la fecha real de la acción realizada o documentada sobre el activo
@@ -376,6 +377,56 @@ Las políticas deberán poder usarse para gobernar:
 - correos o alertas disparadas por cercanía a vencimiento
 
 `OVERDUE` no forma parte de la política; se deriva por regla separada.
+
+### Status
+
+approved
+
+---
+
+## Decision 08. Shape del intervalo de vigencia
+
+### Context
+
+El negocio necesita configurar intervalos flexibles para el vencimiento de un registro.
+
+Los ejemplos ya mencionados incluyen combinaciones como:
+
+- `12 meses`
+- `3 meses`
+- `1 semana`
+- `1 año + 6 meses + 3 semanas + 3 días`
+
+También se discutió si ese intervalo podía resolverse solo en UI y persistir únicamente la fecha de vencimiento derivada.
+
+### Options
+
+1. Persistir solo `expirationDate` y tratar el intervalo como concern de UI
+2. Persistir el intervalo como texto libre
+3. Persistir el intervalo como estructura compuesta por unidades y además persistir `expirationDate` derivada
+
+### Recommendation
+
+Opción 3.
+
+### Implications
+
+- la UI podrá reconstruir y editar correctamente la configuración original
+- backend conservará la intención de negocio que originó la fecha de vencimiento
+- se evita perder trazabilidad si más adelante se requiere recalcular o explicar el vencimiento
+
+### Decision Final
+
+Se aprueba que el intervalo de vigencia se persista como estructura compuesta por unidades, al menos con:
+
+- `years`
+- `months`
+- `weeks`
+- `days`
+
+Cada unidad podrá existir con valor `0`, pero al menos una deberá ser mayor que `0`.
+
+Además de ese intervalo estructurado, backend también persistirá la `expirationDate` derivada.
 
 ### Status
 

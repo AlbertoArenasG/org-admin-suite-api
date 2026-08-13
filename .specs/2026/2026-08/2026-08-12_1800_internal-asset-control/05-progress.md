@@ -18,6 +18,19 @@
 - Se registró explícitamente que la fecha principal del registro representa la acción concreta realizada o documentada sobre el activo.
 - Se registró explícitamente que `observaciones` pertenece al registro concreto y no al activo general.
 - Se aprobó que el registro tendrá `interventionType` desde `v1`, tomado de catálogo en código.
+- Se aprobó que el intervalo de vigencia se persistirá como estructura compuesta por unidades:
+  - `years`
+  - `months`
+  - `weeks`
+  - `days`
+- Se aprobó que backend persistirá tanto el intervalo estructurado como la `expirationDate` derivada.
+- Se aprobó que el subflujo externo opcional usará semántica de `provider` y no de `laboratory`.
+- Se aprobó que ese subflujo seguirá embebido dentro del registro en `v1`, con al menos:
+  - `sentToProvider`
+  - `providerName`
+  - `sentToProviderAt`
+  - `providerLeadTime`
+  - `providerNotes`
 - Se aprobó la separación entre:
   - `status` persistido
   - semáforo o alertamiento preventivo
@@ -30,9 +43,7 @@
   serán estados persistidos iniciales.
 - Se aprobó que `OVERDUE` no se persistirá automáticamente en `v1`.
 - Se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
-- Se registró que el subflujo opcional de laboratorio, cuando aplique, requerirá al menos fecha de entrega como dato de negocio relevante.
+- Se registró que el subflujo externo opcional, cuando aplique, requerirá al menos fecha de envío como dato de negocio relevante.
 - La iniciativa todavía no está lista para implementación; faltan definiciones críticas de:
-  - intervalo de vigencia
-  - subflujo de laboratorio
   - contrato y shape del módulo de políticas
   - contratos HTTP iniciales

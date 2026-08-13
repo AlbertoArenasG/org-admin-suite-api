@@ -138,3 +138,41 @@ Se anticipa una evolución rápida de reglas de alerta y no conviene hardcodear 
 - el semáforo y el envío de correos quedarán gobernados por políticas configurables
 - `OVERDUE` seguirá siendo una regla derivada separada de esas políticas
 
+## 2026-08-12
+
+### Decision
+
+El intervalo de vigencia se persistirá como estructura compuesta por unidades y backend también persistirá la `expirationDate` derivada.
+
+### Reason
+
+Negocio necesita intervalos flexibles y la UI debe poder reconstruir la configuración original del registro sin depender solo de una fecha derivada.
+
+### Impact
+
+- el modelo conservará la intención original del usuario
+- se podrán soportar combinaciones como años, meses, semanas y días
+- la entidad deberá contemplar un value object estructurado para el intervalo
+- la `expirationDate` seguirá existiendo como dato derivado persistido
+
+## 2026-08-12
+
+### Decision
+
+El subflujo externo opcional usará semántica de `provider` y se mantendrá embebido dentro del registro en `v1`.
+
+### Reason
+
+Aunque el cliente habló inicialmente de `laboratorio`, el dominio real también puede involucrar talleres u otros terceros externos. `provider` deja la frontera mejor definida y más reusable.
+
+### Impact
+
+- se evita acoplar el modelo a `laboratory`
+- el bloque opcional mínimo del registro deberá contemplar:
+  - `sentToProvider`
+  - `providerName`
+  - `sentToProviderAt`
+  - `providerLeadTime`
+  - `providerNotes`
+- `providerLeadTime` seguirá el mismo patrón estructurado por unidades
+- no habrá catálogo maestro de providers en `v1`

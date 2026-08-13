@@ -25,11 +25,11 @@
 - [x] Definir que existirán políticas de alerta administrables desde `v1`
       Status: completed
 
-- [ ] Definir shape exacto del intervalo de vigencia
-      Status: pending
+- [x] Definir shape exacto del intervalo de vigencia
+      Status: completed
 
-- [ ] Definir shape exacto del subflujo opcional de laboratorio
-      Status: pending
+- [x] Definir shape exacto del subflujo externo opcional
+      Status: completed
 
 - [ ] Definir contrato conceptual del módulo de políticas de alerta
       Status: pending
@@ -61,4 +61,3 @@
 
 - [ ] Actualizar docs y progreso conforme avance la iniciativa
       Status: pending
-

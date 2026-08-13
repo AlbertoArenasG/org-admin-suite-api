@@ -32,23 +32,50 @@
   - definir relación con el recurso principal
   - definir implicaciones de alertamiento y colores
 
-## Slice 4. Record Shape And HTTP Contract
+## Slice 4. Interval Structure Closure
+
+- Estado: completed
+- Objetivo:
+  - cerrar el shape exacto del intervalo de vigencia
+- Cambios realizados:
+  - se aprobó persistir el intervalo como estructura compuesta
+  - se aprobaron las unidades:
+    - `years`
+    - `months`
+    - `weeks`
+    - `days`
+  - se aprobó persistir también la `expirationDate` derivada
+
+## Slice 5. Provider Subflow Closure
+
+- Estado: completed
+- Objetivo:
+  - cerrar el shape exacto del subflujo externo opcional
+- Cambios realizados:
+  - se reemplazó semántica de `laboratory` por `provider`
+  - se aprobó mantener el flujo embebido dentro del registro
+  - se aprobó el bloque mínimo:
+    - `sentToProvider`
+    - `providerName`
+    - `sentToProviderAt`
+    - `providerLeadTime`
+    - `providerNotes`
+
+## Slice 6. Record Shape And HTTP Contract
 
 - Estado: pending
 - Objetivo:
   - aterrizar el shape exacto del `internal-asset-maintenance-record`
-  - aterrizar el subflujo opcional de laboratorio
   - definir contratos HTTP iniciales
 
-## Slice 5. Backend Implementation
+## Slice 7. Backend Implementation
 
 - Estado: pending
 - Objetivo:
   - implementar módulos, catálogos, derivaciones y wiring backend
 
-## Slice 6. Validation And Handoff
+## Slice 8. Validation And Handoff
 
 - Estado: pending
 - Objetivo:
   - validar reglas mínimas, actualizar docs y dejar lista la base para frontend
-
