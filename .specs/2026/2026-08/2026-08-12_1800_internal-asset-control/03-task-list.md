@@ -2,7 +2,7 @@
 
 ## Phase 1. Analysis
 
-- [x] Consolidar el entendimiento del problema real del módulo
+- [x] Consolidar el entendimiento real del problema de negocio
       Status: completed
 
 - [x] Redefinir el recurso principal como registro histórico y no como activo único
@@ -22,7 +22,7 @@
 - [x] Definir separación entre `status` persistido, semáforo y `OVERDUE` derivado
       Status: completed
 
-- [x] Definir que existirán políticas de alerta administrables desde `v1`
+- [x] Definir que existirán dos políticas reutilizables desde `v1`
       Status: completed
 
 - [x] Definir shape exacto del intervalo de vigencia
@@ -31,10 +31,10 @@
 - [x] Definir shape exacto del subflujo externo opcional
       Status: completed
 
-- [x] Definir contrato conceptual del módulo de políticas de alerta
+- [x] Definir contrato conceptual de `expiration-status-policy`
       Status: completed
 
-- [x] Definir shape base de la política de alerta
+- [x] Definir contrato conceptual de `expiration-notification-policy`
       Status: completed
 
 - [x] Definir contratos HTTP iniciales de backend
@@ -48,10 +48,22 @@
 - [ ] Implementar catálogo en código de `assetMaintenanceType`
       Status: pending
 
-- [ ] Implementar módulo de políticas de alerta
+- [ ] Implementar módulo `expiration-status-policy`
       Status: pending
 
-- [ ] Integrar cálculo de vencimiento, alertamiento y `OVERDUE` derivado
+- [ ] Implementar módulo `expiration-notification-policy`
+      Status: pending
+
+- [ ] Implementar `expiration_status_materialization`
+      Status: pending
+
+- [ ] Implementar `expiration_notification_materialization`
+      Status: pending
+
+- [ ] Integrar cálculo de vencimiento, semáforo y `OVERDUE` derivado
+      Status: pending
+
+- [ ] Integrar subflujo opcional de provider y `provider_follow_up`
       Status: pending
 
 ## Phase 4. Validation
@@ -59,7 +71,10 @@
 - [ ] Validar reglas mínimas del recurso principal
       Status: pending
 
-- [ ] Validar reglas mínimas de políticas de alerta
+- [ ] Validar reglas mínimas de `expiration-status-policy`
+      Status: pending
+
+- [ ] Validar reglas mínimas de `expiration-notification-policy`
       Status: pending
 
 - [ ] Actualizar docs y progreso conforme avance la iniciativa

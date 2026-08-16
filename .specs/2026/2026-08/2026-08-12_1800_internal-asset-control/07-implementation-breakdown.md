@@ -25,32 +25,22 @@
   - se aprobó que `DELETED` solo se alcance por borrado lógico
   - se aprobó la regla exacta de derivación de semáforo y `OVERDUE`
 
-## Slice 3. Alert Policies Capability
+## Slice 3. Expiration Policies Split
 
 - Estado: completed
 - Objetivo:
-  - aterrizar la capability administrable de políticas de alerta desde `v1`
+  - separar formalmente el diseño de alertamiento en dos capabilities reutilizables
 - Cambios realizados:
-  - se aprobó que las políticas serán administrables desde `v1`
-  - se aprobó que cada registro referenciará directamente una política reutilizable
-  - se descartó asumir una política global `default`
-  - se aprobó que las reglas reutilizarán `recipient-groups`
-  - se aprobó que una regla puede existir sin grupos
-  - se aprobó que `offset` reutilizará el mismo shape estructurado del intervalo principal
-  - se aprobó severidad configurable por `label` y `colorHex`
-  - se descartó prioridad manual y la dominancia se resolverá por `offset`
-  - se aprobó que no se forzará unicidad de `offset`
-  - se aprobó el shape base de la política y sus estados
-  - se aprobó ordenar `rules[]` por `offset` antes de persistir
-  - se aprobó CRUD completo para `alert-policies`
-  - se aprobó doble lectura para `alert-policies`: paginada administrativa y no paginada de selección
-  - se aprobaron los contratos HTTP base del módulo
+  - se descartó el enfoque genérico previo de una sola política de alertamiento
+  - se aprobó `expiration-status-policy`
+  - se aprobó `expiration-notification-policy`
+  - se aprobó que el recurso principal referencie ambas de forma independiente
 
-## Slice 4. Interval Structure Closure
+## Slice 4. Interval And Date Semantics
 
 - Estado: completed
 - Objetivo:
-  - cerrar el shape exacto del intervalo de vigencia
+  - cerrar el shape exacto del intervalo y la semántica de fechas de negocio
 - Cambios realizados:
   - se aprobó persistir el intervalo como estructura compuesta
   - se aprobaron las unidades:
@@ -59,6 +49,8 @@
     - `weeks`
     - `days`
   - se aprobó persistir también la `expiration_date` vigente
+  - se aprobó `America/Mexico_City` como referencia funcional
+  - se aprobó que `expiration_date` sea autocalculada por defecto pero editable
 
 ## Slice 5. Provider Subflow Closure
 
@@ -74,41 +66,57 @@
     - `sentToProviderAt`
     - `providerLeadTime`
     - `providerNotes`
+  - se aprobó el subbloque `provider_follow_up`
 
-## Slice 6. Record Shape And HTTP Contract
+## Slice 6. HTTP Contracts Closure
 
 - Estado: completed
 - Objetivo:
-  - aterrizar el shape exacto del `internal-asset-maintenance-record`
-  - aterrizar el shape exacto de la política de alerta
-  - definir contratos HTTP iniciales
+  - aterrizar contratos HTTP y shapes de lectura/escritura
 - Cambios realizados:
-  - se aprobó el shape del listado paginado de `alert-policies`
-  - se aprobó el shape de la colección simple no paginada de `alert-policies`
-  - se aprobó el shape del detalle de `alert-policies`
-  - se aprobaron los contratos de escritura de `alert-policies`
-  - se aprobó el shape del listado paginado de `internal-asset-maintenance-records`
-  - se aprobó el shape del detalle de `internal-asset-maintenance-records`
-  - se aprobó el contrato de `POST /v1/internal-asset-maintenance-records`
-  - se aprobó el contrato de `PATCH /v1/internal-asset-maintenance-records/:recordId`
-  - se aprobó el contrato de `DELETE /v1/internal-asset-maintenance-records/:recordId`
+  - se aprobó CRUD completo para `expiration-status-policy`
+  - se aprobó CRUD completo para `expiration-notification-policy`
+  - se aprobó doble lectura para ambas:
+    - paginada administrativa
+    - no paginada de selección
+  - se aprobó el shape del listado paginado del recurso principal
+  - se aprobó el shape del detalle del recurso principal
+  - se aprobó el contrato de `POST / PATCH / DELETE` del recurso principal
   - se aprobó la acción manual `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
-  - se aprobó el shape base del subbloque `provider_follow_up`:
-    - `enabled`
-    - `rules[]`
-    - `last_sent_at`
-  - se aprobó el shape mínimo por regla de `provider_follow_up`:
-    - `offset`
-    - `recipient_group_ids`
-    - `cc_recipient_group_ids` opcional
 
-## Slice 7. Backend Implementation
+## Slice 7. Materializations Closure
+
+- Estado: completed
+- Objetivo:
+  - cerrar el modelo técnico persistido para evitar recálculo costoso por fila y soportar el mecanismo diario de notificaciones
+- Cambios realizados:
+  - se aprobó `expiration_status_materialization`
+  - se aprobó `expiration_notification_materialization`
+  - se aprobó `effective_start_date` por record
+  - se aprobó `next_trigger_date` como resumen útil
+  - se aprobó `trigger_events[]` por regla materializada
+  - se aprobó `source_rule_id` para trazabilidad
+  - se aprobó `last_triggered_at` global y por regla
+  - se aprobó `last_materialized_at`
+  - se aprobó límite de `10` repeticiones materializadas por regla recurrente
+  - se aprobó ausencia de reintentos automáticos en `v1`
+
+## Slice 8. Backend Implementation
 
 - Estado: pending
 - Objetivo:
   - implementar módulos, catálogos, derivaciones y wiring backend
+- Subtareas:
+  - implementar `internal-asset-control`
+  - implementar catálogo `assetMaintenanceType`
+  - implementar `expiration-status-policy`
+  - implementar `expiration-notification-policy`
+  - implementar `expiration_status_materialization`
+  - implementar `expiration_notification_materialization`
+  - integrar derivación de semáforo y `OVERDUE`
+  - integrar `provider_follow_up`
 
-## Slice 8. Validation And Handoff
+## Slice 9. Validation And Handoff
 
 - Estado: pending
 - Objetivo:

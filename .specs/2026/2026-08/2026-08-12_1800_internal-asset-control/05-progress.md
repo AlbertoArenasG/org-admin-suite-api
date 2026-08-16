@@ -3,158 +3,164 @@
 ## 2026-08-12
 
 - Se creó la spec `internal-asset-control`.
-- Se consolidó el cambio más importante de entendimiento del dominio:
+- Se consolidó el cambio principal de entendimiento del dominio:
   - el recurso principal no será un activo interno único
   - cada fila será un registro histórico
   - el mismo activo podrá aparecer en múltiples registros
-- Se aprobó el naming base de la iniciativa:
+- Se aprobó el naming base:
   - módulo:
     - `control de activos internos`
     - `internal-asset-control`
   - recurso principal:
     - `registro de mantenimiento de activo interno`
     - `internal-asset-maintenance-record`
-- Se aprobó que `v1` capturará el activo directamente dentro de cada registro, sin catálogo maestro de activos por ahora.
-- Se registró explícitamente que la fecha principal del registro representa la acción concreta realizada o documentada sobre el activo.
-- Se registró explícitamente que `observaciones` pertenece al registro concreto y no al activo general.
-- Se aprobó que el registro tendrá `assetMaintenanceType` desde `v1`, tomado de catálogo en código.
-- Se aprobó que el intervalo de vigencia se persistirá como estructura compuesta por unidades:
+- Se aprobó captura directa del activo en `v1`, sin catálogo maestro por ahora.
+- Se aprobó `assetMaintenanceType` desde `v1`, tomado de catálogo en código.
+- Se aprobó que el intervalo de vigencia se persista como estructura compuesta por unidades:
   - `years`
   - `months`
   - `weeks`
   - `days`
 - Se aprobó que backend persistirá tanto el intervalo estructurado como la `expiration_date` vigente.
-- Se aprobó que el subflujo externo opcional usará semántica de `provider` y no de `laboratory`.
-- Se aprobó que ese subflujo seguirá embebido dentro del registro en `v1`, con al menos:
-  - `sentToProvider`
-  - `providerName`
-  - `sentToProviderAt`
-  - `providerLeadTime`
-  - `providerNotes`
-- Se aprobó que cada registro referenciará directamente una política de alerta reutilizable.
-- Se descartó asumir una política global `default` en `v1`.
-- Se aprobó que las reglas de alerta reutilizarán `recipient-groups` para notificación.
-- Se aprobó que `recipientGroupIds[]` no será obligatorio en cada regla.
-- Se aprobó que una regla podrá existir solo para semáforo visual.
-- Se aprobó que `offset` en cada regla reutilizará exactamente el mismo shape estructurado del intervalo de vigencia.
-- Se aprobó que la severidad de cada regla será configurable con:
-  - `severityLabel`
-  - `severityColorHex`
-- Se descartó una prioridad manual configurable para severidad.
-- Se aprobó que la dominancia entre reglas se resolverá por cercanía al vencimiento usando `offset`.
-- Se aprobó que no se forzará unicidad de `offset` dentro de una política.
-- Se aprobó el shape base de la política de alerta:
-  - `name`
-  - `code` autogenerado
-  - `description` opcional
-  - `status`
-  - `rules[]`
-- Se aprobó el catálogo inicial de `status` de política:
-  - `ACTIVE`
-  - `INACTIVE`
-  - `DELETED`
-- Se aprobó que backend ordenará `rules[]` por `offset` antes de persistirlas.
-- Se aprobó que `alert-policies` tendrá CRUD completo desde `v1`.
-- Se aprobó que `alert-policies` tendrá:
-  - listado paginado administrativo
-  - colección simple no paginada para selección reusable
-- Se aprobó el shape del listado paginado administrativo de `alert-policies`, con:
-  - `id`
-  - `name`
-  - `code`
-  - `status`
-  - `rules_count`
-  - `created_at`
-  - `updated_at`
-- Se aprobó que ese endpoint soporte:
-  - paginación estándar
-  - búsqueda por `name` o `code`
-  - filtro por `status`
-- Se aprobó el shape de la colección simple no paginada de `alert-policies`, con:
-  - `id`
-  - `name`
-  - `code`
-  - `status`
-- Se aprobó que esa colección devuelva por defecto solo políticas `ACTIVE`.
-- Se aprobó el shape del detalle de `alert-policies`, con:
-  - `id`
-  - `name`
-  - `code`
-  - `description`
-  - `status`
-  - `rules[]`
-  - `created_at`
-  - `updated_at`
-- Se aprobó que cada regla del detalle expanda `recipient_groups` de forma ligera.
-- Se aprobó que `POST / PATCH / DELETE` de `alert-policies` sigan estas reglas:
-  - `code` no editable
-  - creación y edición completa de `name`, `description`, `status`, `rules[]`
-  - `DELETE` como borrado lógico hacia `DELETED`
-- Se aprobó el shape del listado paginado administrativo de `internal-asset-maintenance-records`, incluyendo resumen de follow-up a provider.
-- Se aprobó el shape del detalle de `internal-asset-maintenance-records`, incluyendo:
-  - política ligera opcional
-  - bloque `provider`
-  - subbloque `provider_follow_up`
-  - auditoría enriquecida con `created_by` y `updated_by`
-- Se aprobó el contrato de `POST /v1/internal-asset-maintenance-records`, con:
-  - campos base del registro
-  - `alert_policy_id` opcional
-  - bloque `provider` opcional
-  - bloque `provider_follow_up` opcional
-  - `expiration_date` y `derived_status` bajo responsabilidad de backend
-- Se aprobó que `PATCH /v1/internal-asset-maintenance-records/:recordId` permita editar el mismo shape base funcional del registro.
-- Se aprobó que `DELETE /v1/internal-asset-maintenance-records/:recordId` sea borrado lógico.
-- Se aprobó que el catálogo persistido de `status` del recurso principal incluya:
-  - `PENDING`
-  - `IN_PROGRESS`
-  - `COMPLETED`
-  - `CANCELLED`
-  - `DELETED`
-- Se aprobó una acción manual explícita para follow-up a provider:
-  - `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
-- Se aprobó el shape base de `provider_follow_up` como subbloque opcional del registro:
-  - `enabled`
-  - `rules[]`
-  - `last_sent_at`
-- Se aprobó que cada regla de `provider_follow_up` tendrá al menos:
-  - `offset`
-  - `recipient_group_ids`
-  - `cc_recipient_group_ids` opcional
-- Se aprobó que `provider_follow_up` permanezca desacoplado de `alert-policies`.
+- Se aprobó que el subflujo externo opcional usará semántica de `provider`.
+- Se aprobó que ese subflujo seguirá embebido dentro del registro en `v1`.
+- Se aprobó la separación entre:
+  - `status` persistido
+  - semáforo preventivo
+  - `OVERDUE` derivado para UI
+
+## 2026-08-13
+
 - Se aprobó reemplazar `performed_at` por `last_maintenance_at`.
-- Se aprobó que `last_maintenance_at` y `expiration_date` se entiendan como fechas `date-only` de negocio.
-- Se fijó `America/Mexico_City` como referencia funcional del módulo para evaluación de fechas y alertas.
+- Se aprobó que `last_maintenance_at` y `expiration_date` se entiendan como fechas `date-only`.
+- Se fijó `America/Mexico_City` como referencia funcional del módulo.
 - Se aprobó que `expiration_date` sea autocalculada por defecto, pero editable por negocio.
-- Se aprobó que backend la calcule cuando no llegue en `POST` o `PATCH`, usando:
-  - `last_maintenance_at`
-  - `interval`
 - Se aprobó que todas las transiciones entre:
   - `PENDING`
   - `IN_PROGRESS`
   - `COMPLETED`
   - `CANCELLED`
   sean manuales en `v1`.
-- Se aprobó que backend no cambie `status` automáticamente por fecha, semáforo, vencimiento ni follow-up.
 - Se aprobó que `DELETED` solo se alcance por borrado lógico.
-- Se aprobó la regla exacta de derivación de semáforo y `OVERDUE` contra la `expiration_date` persistida vigente.
-- Se aprobó que `OVERDUE` aplique solo cuando:
-  - `status` sea `PENDING` o `IN_PROGRESS`
-  - `expiration_date` sea menor que `today` en `America/Mexico_City`
-- Se aprobó que el semáforo:
-  - solo se evalúe para `PENDING` o `IN_PROGRESS`
-  - no se evalúe si el registro ya cayó en `OVERDUE`
-  - use la regla de `alert_policy` más cercana al vencimiento entre las aplicables
-- Se aprobó la separación entre:
-  - `status` persistido
-  - semáforo o alertamiento preventivo
-  - `OVERDUE` derivado para UI
-- Se aprobó que:
-  - `PENDING`
-  - `IN_PROGRESS`
+- Se aprobó el shape base de `provider_follow_up` como subbloque opcional del registro:
+  - `enabled`
+  - `rules[]`
+  - `last_sent_at`
+- Se aprobó que cada regla de `provider_follow_up` tenga al menos:
+  - `offset`
+  - `recipient_group_ids`
+  - `cc_recipient_group_ids` opcional
+
+## 2026-08-14
+
+- Se descartó definitivamente el enfoque genérico previo de una sola política de alertamiento.
+- Se aprobó dividir la antigua responsabilidad en dos entities reutilizables y administrables desde `v1`:
+  - `expiration-status-policy`
+  - `expiration-notification-policy`
+- Se aprobó que cada `internal-asset-maintenance-record` podrá referenciar:
+  - `expiration_status_policy_id` opcional
+  - `expiration_notification_policy_id` opcional
+- Se aprobó el shape base de `expiration-status-policy`:
+  - `name`
+  - `code` autogenerado
+  - `description` opcional
+  - `status`
+  - `rules[]`
+- Se aprobó el catálogo inicial de `status` para políticas de expiración:
+  - `ACTIVE`
+  - `INACTIVE`
+  - `DELETED`
+- Se aprobó que cada regla de `expiration-status-policy` tenga al menos:
+  - `start_offset`
+  - `label`
+  - `color_hex`
+- Se aprobó que `expiration-status-policy` tenga CRUD completo y doble lectura:
+  - paginada administrativa
+  - simple no paginada para selección
+- Se aprobó el shape base de `expiration-notification-policy`:
+  - `name`
+  - `code` autogenerado
+  - `description` opcional
+  - `status`
+  - `rules[]`
+- Se aprobó que cada regla de `expiration-notification-policy` tenga al menos:
+  - `anchor`
+  - `start_offset`
+  - `trigger_mode`
+  - `recipient_group_ids[]`
+- Se aprobó soporte de recurrencia con:
+  - `repeat_every`
+  - `repeat_until`
+  - `repeat_for`
+- Se aprobó que `recipient_group_ids[]` no sea obligatorio.
+- Se aprobó que `expiration-notification-policy` tenga CRUD completo y doble lectura:
+  - paginada administrativa
+  - simple no paginada para selección
+- Se aprobó que `start_offset`, `repeat_every`, `repeat_for` y `provider_follow_up.rules[].offset` reutilicen el mismo shape estructurado del intervalo principal.
+- Se aprobó que no se forzará unicidad de umbral dentro de ninguna política de expiración.
+- Se aprobó el shape del listado paginado de `internal-asset-maintenance-records`, incluyendo:
+  - `expiration_status_policy`
+  - `expiration_notification_policy`
+  - resumen de `provider_follow_up`
+- Se aprobó el shape del detalle de `internal-asset-maintenance-records`, incluyendo:
+  - ambas políticas expandidas de forma ligera
+  - `provider`
+  - `provider_follow_up`
+  - `created_by`
+  - `updated_by`
+- Se aprobó el contrato de `POST / PATCH / DELETE` del recurso principal con ambos policy ids opcionales.
+- Se aprobó la acción manual:
+  - `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+- Se aprobó que `OVERDUE` domine visualmente sobre cualquier regla de `expiration-status-policy`.
+- Se aprobó que las fechas absolutas derivadas de reglas de expiración vivan en materializaciones técnicas persistidas por registro y no en la policy reusable.
+- Se aprobó usar:
+  - `expiration_status_materialization.effective_start_date`
+  - `expiration_notification_materialization.next_trigger_date`
+- Se corrigió que, para notificaciones, la base operativa real no será solo `next_trigger_date`, sino los eventos materializados por regla dentro de `expiration_notification_materialization`.
+- Se aprobó agregar `last_triggered_at` dentro de `expiration_notification_materialization`.
+- Se aprobó que cada regla materializada de notificación también conserve su propio `last_triggered_at`.
+- Se aprobó agregar `last_materialized_at` en ambas materializaciones de expiración.
+- Se aprobó que la materialización de notificaciones cubra todos los disparos aplicables de cada regla dentro del horizonte permitido.
+- Se aprobó que las reglas recurrentes tendrán un límite explícito de repeticiones para evitar crecimiento descontrolado.
+- Se fijó el límite de `10` repeticiones materializadas por regla recurrente en `v1`.
+- Se aprobó que cada regla materializada conserve una referencia estable hacia su regla fuente en la policy.
+- Se aprobó que esa referencia estable sea `rule_id` técnico por regla dentro de la policy.
+- Se aprobó reemplazar el arreglo plano de fechas por `trigger_events[]` con estado de procesamiento por disparo.
+- Se aprobó que `trigger_events[]` se persista ordenado ascendentemente por `trigger_date` dentro de cada regla materializada.
+- Se aprobó que en `v1` no existirán reintentos automáticos para `trigger_events` en estado `FAILED`.
+- Se aprobó que el mecanismo diario procese todos los `trigger_events` con `status = PENDING` y `trigger_date <= today` en `America/Mexico_City`.
+- Se aprobó que al pasar el record a `COMPLETED`, `CANCELLED` o `DELETED`, los `trigger_events` pendientes se invaliden.
+- Se aprobó que esa invalidación se modele con `status = INVALIDATED` y no borrando eventos.
+- Se aprobó que, si el record vuelve a `PENDING` o `IN_PROGRESS`, se recalculen:
+  - `expiration_status_materialization`
+  - `expiration_notification_materialization`
+  y se regeneren los eventos aplicables de notificación.
+- Se aprobó que las materializaciones de expiración se recalculen cada vez que cambie un input efectivo del record o de las policies asociadas.
+- Se aprobó la cascada de recálculo cuando se edite, inactive o elimine lógicamente una policy usada por records.
+- Se dejó explícito que asignar o desasignar una policy en el record también dispara recálculo de la materialización correspondiente.
+- Se aprobó el shape mínimo de `expiration_status_materialization`, con:
+  - `effective_start_date`
+  - `label`
+  - `color_hex`
+  - `matched_rule.source_rule_id`
+  - `matched_rule.start_offset`
+- Se aprobó reutilizar ese mismo criterio de trazabilidad en `expiration_status_materialization.matched_rule.source_rule_id`.
+- Se aprobó que `expiration_status_materialization` use el mismo contrato para estados visuales de sistema y de policy.
+- Se aprobó agregar `source` con valores:
+  - `SYSTEM`
+  - `POLICY`
+- Se aprobó agregar también:
+  - `code`
+  - `label_key`
+- Se registraron como estados visuales derivados del sistema:
+  - `ON_TIME`
+  - `OVERDUE`
   - `COMPLETED`
   - `CANCELLED`
-  serán estados persistidos iniciales.
-- Se aprobó que `OVERDUE` no se persistirá automáticamente en `v1`.
-- Se aprobó que las políticas de alerta existirán como capability administrable desde `v1`.
-- Se registró que el subflujo externo opcional, cuando aplique, requerirá al menos fecha de envío como dato de negocio relevante.
-- La iniciativa ya no tiene huecos críticos abiertos en definición.
+- Se registró que los estados visuales derivados del sistema deben tener código neutral estable y estar localizados en backend al menos para español e inglés.
+- Se fijaron los `color_hex` de los estados visuales derivados del sistema:
+  - `ON_TIME`: `#22C55E`
+  - `OVERDUE`: `#EF4444`
+  - `COMPLETED`: `#2563EB`
+  - `CANCELLED`: `#6B7280`
+- La definición quedó nuevamente alineada sin contratos vigentes del enfoque anterior.

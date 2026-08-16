@@ -20,7 +20,7 @@ Hoy el problema real se entiende mejor así:
 - el activo puede repetirse en el tiempo
 - el registro documenta una acción concreta o un hito de mantenimiento sobre el activo
 - la fecha principal del registro representa la fecha real de esa acción documentada
-- la fecha de vencimiento se deriva a partir de la fecha del registro y un intervalo configurable
+- la fecha de vencimiento se autocalcula por defecto a partir de la fecha del registro y un intervalo configurable, pero puede ajustarse manualmente por negocio
 - algunos registros entran en un subflujo opcional de provider
 - negocio necesita alertas preventivas y visibilidad operativa del estado del registro
 
@@ -74,9 +74,9 @@ La modelación backend deberá separar al menos estos concerns:
 - catálogo de `assetMaintenanceType`
 - `status` persistido
 - estado derivado de UI
-- política de alerta reusable
+- políticas reutilizables de expiración
 - subflujo opcional de provider
-- subbloque de seguimiento a provider separado de `alert-policies`
+- subbloque de seguimiento a provider separado de las políticas de expiración
 
 También deberá dejarse margen a futuro para una UX que permita generar un nuevo registro tomando como base uno previo, sin asumir eso como parte obligatoria de `v1`.
 
