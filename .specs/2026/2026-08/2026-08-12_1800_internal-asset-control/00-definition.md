@@ -35,6 +35,11 @@ Queda fuera de esta spec:
 - catálogo maestro de activos internos
 - catálogo maestro de providers para este flujo
 - automatizaciones batch o jobs que persistan cambios de estado
+- el mecanismo técnico concreto de procesamiento automatizado diario de notificaciones:
+  - scheduler
+  - cron
+  - comando programado por infraestructura
+  - observabilidad operativa asociada
 - UI frontend
 - módulo espejo para activos externos o equipos de clientes
 
@@ -84,6 +89,18 @@ Antes de implementación ya quedó aprobado que:
 - `expiration_status_materialization` evita recálculo por fila para lectura operativa del semáforo
 - `expiration_notification_materialization` evita recálculo por fila y alimenta el mecanismo diario de notificaciones
 - `provider_follow_up` no es una política reusable global
+
+## Deferred Follow Up
+
+Esta spec sí deja definida la base de datos, reglas y materializaciones necesarias para soportar envíos automáticos diarios, pero no cierra todavía el mecanismo técnico de ejecución.
+
+Ese tema se trabajará en una spec backend posterior enfocada en:
+
+- scheduler o estrategia de ejecución diaria
+- procesamiento operativo de `trigger_events`
+- observabilidad mínima del proceso
+- manejo de fallos operativos
+- consideraciones de despliegue e infraestructura
 
 ## HTTP Contract Summary
 

@@ -48,12 +48,14 @@ Diseñar e implementar en backend el módulo `internal-asset-control` para regis
 - validar contratos y reglas de derivación
 - actualizar documentación viva cuando ya existan contratos implementados
 - dejar lista la base backend para el módulo frontend consumidor futuro
+- dejar explícitamente diferido el mecanismo técnico de procesamiento diario a una spec backend posterior
 
 ## Sequencing Notes
 
 - primero debe cerrarse por completo la definición backend
 - no debe introducirse todavía un catálogo maestro de activos
 - no deben introducirse jobs para mutación automática de `status` en `v1`
+- no debe cerrarse en esta spec el mecanismo técnico final de scheduler o proceso diario
 - `expiration-status-policy` y `expiration-notification-policy` deben quedar listas desde el inicio como capabilities administrables reutilizables
 - `provider_follow_up` no debe mezclarse con las políticas de expiración
 
@@ -67,3 +69,4 @@ Diseñar e implementar en backend el módulo `internal-asset-control` para regis
   - `expiration-status-policy`
   - `expiration-notification-policy`
 - la base backend queda lista para consumo de frontend desde un módulo futuro
+- queda documentado que el procesamiento automatizado diario será materia de una spec backend posterior

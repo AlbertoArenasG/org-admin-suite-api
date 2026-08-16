@@ -190,6 +190,8 @@
   - `catalog` para enums y metadata localizada de formulario
   - `options` para selección ligera de entidades reutilizables
 - Se aprobó que `internal-asset-maintenance-record` exponga `catalog`, pero no `options` en `v1`.
+- Se dejó explícito que esta spec solo cierra la base de datos, reglas y materializaciones para soportar el procesamiento diario, pero no el mecanismo técnico concreto de scheduler o ejecución automatizada.
+- Se registró que ese mecanismo se trabajará después en una spec backend separada.
 - Se fijaron los `color_hex` de los estados visuales derivados del sistema:
   - `ON_TIME`: `#22C55E`
   - `OVERDUE`: `#EF4444`
