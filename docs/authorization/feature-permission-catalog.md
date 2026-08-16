@@ -93,6 +93,9 @@ Los modulos actuales del sistema son:
 - `user_registration_invitations`
 - `contacts`
 - `recipient_groups`
+- `expiration_status_policies`
+- `expiration_notification_policies`
+- `internal_asset_maintenance_records`
 
 Nota:
 
@@ -521,6 +524,117 @@ Capability auxiliar relacionada:
   - acceso actual: autenticado
   - nota: catálogo auxiliar absorbido por `recipient_groups.READ`; hoy publica solo `EMAIL`
 
+### `expiration_status_policies`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/expiration-status-policy/expiration-status-policy.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/expiration-status-policies`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_status_policies.CREATE`
+- `GET /v1/expiration-status-policies`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_status_policies.READ`; listado administrativo paginado
+- `GET /v1/expiration-status-policies/catalog`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: catálogo auxiliar absorbido por `expiration_status_policies.READ`; expone estados y shape base para construir políticas visuales
+- `GET /v1/expiration-status-policies/options`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: lookup auxiliar absorbido por `expiration_status_policies.READ`; devuelve opciones reutilizables para selects
+- `GET /v1/expiration-status-policies/:expirationStatusPolicyId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_status_policies.READ`; devuelve detalle completo de la política
+- `PATCH /v1/expiration-status-policies/:expirationStatusPolicyId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_status_policies.UPDATE`; actualiza nombre, estado y reglas
+- `DELETE /v1/expiration-status-policies/:expirationStatusPolicyId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_status_policies.DELETE`; hace borrado lógico
+
+### `expiration_notification_policies`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/expiration-notification-policy/expiration-notification-policy.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/expiration-notification-policies`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_notification_policies.CREATE`
+- `GET /v1/expiration-notification-policies`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_notification_policies.READ`; listado administrativo paginado
+- `GET /v1/expiration-notification-policies/catalog`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: catálogo auxiliar absorbido por `expiration_notification_policies.READ`; expone estados y enums necesarios para construir políticas de notificación
+- `GET /v1/expiration-notification-policies/options`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: lookup auxiliar absorbido por `expiration_notification_policies.READ`; devuelve opciones reutilizables para selects
+- `GET /v1/expiration-notification-policies/:expirationNotificationPolicyId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_notification_policies.READ`; devuelve detalle completo de la política
+- `PATCH /v1/expiration-notification-policies/:expirationNotificationPolicyId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_notification_policies.UPDATE`; actualiza nombre, estado y reglas
+- `DELETE /v1/expiration-notification-policies/:expirationNotificationPolicyId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `expiration_notification_policies.DELETE`; hace borrado lógico
+
+### `internal_asset_maintenance_records`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/internal-asset-maintenance-record/internal-asset-maintenance-record.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/internal-asset-maintenance-records`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.CREATE`
+- `GET /v1/internal-asset-maintenance-records`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.READ`; listado administrativo paginado con filtros por tipo, status y envío a proveedor
+- `GET /v1/internal-asset-maintenance-records/catalog`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: catálogo auxiliar absorbido por `internal_asset_maintenance_records.READ`; expone tipos, statuses y estados visuales derivados del sistema
+- `GET /v1/internal-asset-maintenance-records/:recordId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.READ`; devuelve detalle del registro con materializaciones y `provider_follow_up`
+- `PATCH /v1/internal-asset-maintenance-records/:recordId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.UPDATE`; actualiza datos del registro, proveedor, políticas y configuraciones de seguimiento
+- `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: acción manual absorbida por `internal_asset_maintenance_records.UPDATE`; dispara el correo de seguimiento al proveedor usando la configuración vigente del registro
+- `DELETE /v1/internal-asset-maintenance-records/:recordId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.DELETE`; hace borrado lógico
+
 ## Features Publicas Existentes Fuera Del Catalogo Interno
 
 Las siguientes features existen en el repo, pero no se incluyen dentro del catalogo de permisos internos porque operan como endpoints publicos o de autenticacion:
@@ -541,10 +655,11 @@ Las siguientes features existen en el repo, pero no se incluyen dentro del catal
 ## Observaciones Del Estado Actual
 
 - `customer.controller`, `provider.controller`, `service-entry.controller`, `user.controller` y las invitaciones internas ya fueron migrados al patrón con `PermissionsGuard`
+- `contacts`, `recipient_groups`, `expiration_status_policies`, `expiration_notification_policies` e `internal_asset_maintenance_records` ya siguen el patrón con `PermissionsGuard`
 - `master-admin/user` y `master-admin/user-registration-invitations` siguen una frontera estructural separada con `MasterScopeGuard`, pero ya conviven con `PermissionsGuard` para declarar el permiso funcional del endpoint
 - `GET /v1/files/:fileId/download` hoy no tiene guard activo
 - `POST /v1/service-packages/uploads` hoy no tiene `JwtAuthGuard`
-- el modulo `roles` aun no tiene controllers reales; su implementacion forma parte de este refactor
+- el modulo `roles` ya cuenta con controllers reales y operaciones propias por módulo
 
 ## Catalogo De Capacidades Exclusivas De `MASTER_ADMIN`
 
