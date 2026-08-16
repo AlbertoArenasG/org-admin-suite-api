@@ -20,9 +20,12 @@ import {
   IInternalAssetMaintenanceRecordReadRepositoryToken,
   IInternalAssetMaintenanceRecordWriteRepository,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
+  IRecipientGroupReadRepository,
+  IRecipientGroupReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   applyInternalAssetMaintenanceRecordMaterializations,
+  collectProviderFollowUpRecipientGroupIds,
   normalizeInternalAssetMaintenanceRecordInput,
 } from './internal-asset-maintenance-record.shared';
 
@@ -37,6 +40,8 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
     private readonly expirationStatusPolicyReadRepository: IExpirationStatusPolicyReadRepository,
     @Inject(IExpirationNotificationPolicyReadRepositoryToken)
     private readonly expirationNotificationPolicyReadRepository: IExpirationNotificationPolicyReadRepository,
+    @Inject(IRecipientGroupReadRepositoryToken)
+    private readonly recipientGroupReadRepository: IRecipientGroupReadRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -50,6 +55,7 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
           this.expirationStatusPolicyReadRepository,
         expirationNotificationPolicyReadRepository:
           this.expirationNotificationPolicyReadRepository,
+        recipientGroupReadRepository: this.recipientGroupReadRepository,
       },
     );
 
@@ -91,12 +97,22 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
         ? [normalized.expirationNotificationPolicyId]
         : [],
     });
+    const { data: recipientGroups } =
+      await this.recipientGroupReadRepository.findByIds(
+        collectProviderFollowUpRecipientGroupIds(data ? [data] : []),
+      );
     const createdBy = await this.auditUserFetcher.fetchAuditUser(
       input.actorUserId,
     );
 
     return InternalAssetMaintenanceRecordMapper.toViewDto(data!, {
       ...policiesById,
+      recipientGroupsById: new Map(
+        recipientGroups.map((recipientGroup) => [
+          recipientGroup.id,
+          recipientGroup,
+        ]),
+      ),
       createdBy,
       updatedBy: createdBy,
     });

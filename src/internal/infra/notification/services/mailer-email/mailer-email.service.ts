@@ -4,6 +4,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
+  GenericEmailDto,
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserPasswordResetEmailDto,
@@ -25,6 +26,17 @@ export class MailerEmailService implements IEmailService {
   constructor(private readonly mailerService: MailerService) {
     this.templates = emailTemplates;
     this.subjects = emailSubjects;
+  }
+
+  async sendGenericEmail(payload: GenericEmailDto): Promise<void> {
+    await this.mailerService.sendMail({
+      to: payload.to,
+      cc: payload.cc && payload.cc.length > 0 ? payload.cc : undefined,
+      subject: payload.subject,
+      html: payload.html,
+    });
+
+    this.logger.debug(`Generic email sent to ${payload.to.join(', ')}`);
   }
 
   async sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void> {

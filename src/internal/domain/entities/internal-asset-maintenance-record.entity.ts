@@ -42,6 +42,18 @@ export interface InternalAssetMaintenanceProviderProps {
   providerNotes: string | null;
 }
 
+export interface InternalAssetMaintenanceProviderFollowUpRuleProps {
+  offset: InternalAssetMaintenanceIntervalProps;
+  recipientGroupIds: string[];
+  ccRecipientGroupIds: string[];
+}
+
+export interface InternalAssetMaintenanceProviderFollowUpProps {
+  enabled: boolean;
+  rules: InternalAssetMaintenanceProviderFollowUpRuleProps[];
+  lastSentAt: Date | null;
+}
+
 export interface InternalAssetExpirationStatusMaterializationMatchedRuleProps {
   sourceRuleId: string;
   startOffset: InternalAssetMaintenanceIntervalProps;
@@ -99,6 +111,7 @@ export interface InternalAssetMaintenanceRecordProps {
   expirationStatusPolicyId?: string | null;
   expirationNotificationPolicyId?: string | null;
   provider?: InternalAssetMaintenanceProviderProps | null;
+  providerFollowUp?: InternalAssetMaintenanceProviderFollowUpProps | null;
   expirationStatusMaterialization?: InternalAssetExpirationStatusMaterializationProps | null;
   expirationNotificationMaterialization?: InternalAssetExpirationNotificationMaterializationProps | null;
   createdBy?: string | null;
@@ -118,6 +131,10 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
     props.provider = InternalAssetMaintenanceRecord.normalizeProvider(
       props.provider ?? null,
     );
+    props.providerFollowUp =
+      InternalAssetMaintenanceRecord.normalizeProviderFollowUp(
+        props.providerFollowUp ?? null,
+      );
     props.expirationStatusMaterialization =
       InternalAssetMaintenanceRecord.normalizeExpirationStatusMaterialization(
         props.expirationStatusMaterialization ?? null,
@@ -181,6 +198,20 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
 
   get provider(): InternalAssetMaintenanceProviderProps | null {
     return this.props.provider ? { ...this.props.provider } : null;
+  }
+
+  get providerFollowUp(): InternalAssetMaintenanceProviderFollowUpProps | null {
+    return this.props.providerFollowUp
+      ? {
+          ...this.props.providerFollowUp,
+          rules: this.props.providerFollowUp.rules.map((rule) => ({
+            ...rule,
+            offset: { ...rule.offset },
+            recipientGroupIds: [...rule.recipientGroupIds],
+            ccRecipientGroupIds: [...rule.ccRecipientGroupIds],
+          })),
+        }
+      : null;
   }
 
   get expirationStatusMaterialization(): InternalAssetExpirationStatusMaterializationProps | null {
@@ -253,6 +284,7 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
       expirationStatusPolicyId?: string | null;
       expirationNotificationPolicyId?: string | null;
       provider?: InternalAssetMaintenanceProviderProps | null;
+      providerFollowUp?: InternalAssetMaintenanceProviderFollowUpProps | null;
       expirationStatusMaterialization?: InternalAssetExpirationStatusMaterializationProps | null;
       expirationNotificationMaterialization?: InternalAssetExpirationNotificationMaterializationProps | null;
     },
@@ -305,6 +337,13 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
       this.props.provider = InternalAssetMaintenanceRecord.normalizeProvider(
         details.provider,
       );
+    }
+
+    if (details.providerFollowUp !== undefined) {
+      this.props.providerFollowUp =
+        InternalAssetMaintenanceRecord.normalizeProviderFollowUp(
+          details.providerFollowUp,
+        );
     }
 
     if (details.expirationStatusMaterialization !== undefined) {
@@ -365,6 +404,28 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
           )
         : null,
       providerNotes: provider.providerNotes ?? null,
+    };
+  }
+
+  private static normalizeProviderFollowUp(
+    providerFollowUp: InternalAssetMaintenanceProviderFollowUpProps | null,
+  ): InternalAssetMaintenanceProviderFollowUpProps | null {
+    if (!providerFollowUp) {
+      return null;
+    }
+
+    return {
+      enabled: Boolean(providerFollowUp.enabled),
+      rules: providerFollowUp.rules.map((rule) => ({
+        offset: InternalAssetMaintenanceRecord.normalizeInterval(rule.offset),
+        recipientGroupIds: rule.recipientGroupIds
+          .map((value) => value.trim())
+          .filter(Boolean),
+        ccRecipientGroupIds: rule.ccRecipientGroupIds
+          .map((value) => value.trim())
+          .filter(Boolean),
+      })),
+      lastSentAt: providerFollowUp.lastSentAt ?? null,
     };
   }
 

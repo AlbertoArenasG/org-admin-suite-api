@@ -4,12 +4,14 @@ import {
   ExpirationStatusPolicyOptionDto,
   InternalAssetMaintenanceRecordCatalogDto,
   InternalAssetMaintenanceRecordListItemDto,
+  InternalAssetMaintenanceRecipientGroupSummaryDto,
   InternalAssetMaintenanceRecordViewDto,
 } from '@application/dto';
 import {
   ExpirationNotificationPolicy,
   ExpirationStatusPolicy,
   InternalAssetMaintenanceRecord,
+  RecipientGroup,
 } from '@domain/entities';
 import {
   getInternalAssetMaintenanceStatuses,
@@ -46,6 +48,9 @@ export class InternalAssetMaintenanceRecordMapper {
       sentToProvider: record.provider?.sentToProvider ?? false,
       providerName: record.provider?.providerName ?? null,
       providerLeadTime: record.provider?.providerLeadTime ?? null,
+      providerFollowUpEnabled: record.providerFollowUp?.enabled ?? false,
+      providerFollowUpRulesCount: record.providerFollowUp?.rules.length ?? 0,
+      providerFollowUpLastSentAt: record.providerFollowUp?.lastSentAt ?? null,
       createdAt: record.createdAt ?? new Date(),
       updatedAt: record.updatedAt,
     };
@@ -59,6 +64,7 @@ export class InternalAssetMaintenanceRecordMapper {
         string,
         ExpirationNotificationPolicy
       >;
+      recipientGroupsById?: Map<string, RecipientGroup>;
       createdBy?: AuditUserDto | null;
       updatedBy?: AuditUserDto | null;
     },
@@ -83,6 +89,35 @@ export class InternalAssetMaintenanceRecordMapper {
         input?.expirationNotificationPoliciesById,
       ),
       provider: record.provider,
+      providerFollowUp: record.providerFollowUp
+        ? {
+            enabled: record.providerFollowUp.enabled,
+            rules: record.providerFollowUp.rules.map((rule) => ({
+              offset: { ...rule.offset },
+              recipientGroupIds: [...rule.recipientGroupIds],
+              ccRecipientGroupIds: [...rule.ccRecipientGroupIds],
+              recipientGroups: rule.recipientGroupIds
+                .map((id) => input?.recipientGroupsById?.get(id) ?? null)
+                .filter(
+                  (recipientGroup): recipientGroup is RecipientGroup =>
+                    recipientGroup !== null,
+                )
+                .map((recipientGroup) =>
+                  this.toRecipientGroupSummary(recipientGroup),
+                ),
+              ccRecipientGroups: rule.ccRecipientGroupIds
+                .map((id) => input?.recipientGroupsById?.get(id) ?? null)
+                .filter(
+                  (recipientGroup): recipientGroup is RecipientGroup =>
+                    recipientGroup !== null,
+                )
+                .map((recipientGroup) =>
+                  this.toRecipientGroupSummary(recipientGroup),
+                ),
+            })),
+            lastSentAt: record.providerFollowUp.lastSentAt,
+          }
+        : null,
       createdBy: input?.createdBy ?? null,
       updatedBy: input?.updatedBy ?? null,
       createdAt: record.createdAt ?? new Date(),
@@ -170,6 +205,18 @@ export class InternalAssetMaintenanceRecordMapper {
       labelKey: materialization.labelKey,
       colorHex: materialization.colorHex,
       source: materialization.source,
+    };
+  }
+
+  private static toRecipientGroupSummary(
+    recipientGroup: RecipientGroup,
+  ): InternalAssetMaintenanceRecipientGroupSummaryDto {
+    return {
+      id: recipientGroup.id,
+      name: recipientGroup.name,
+      code: recipientGroup.code,
+      status: recipientGroup.status,
+      enabledChannels: recipientGroup.enabledChannels.map((code) => ({ code })),
     };
   }
 }

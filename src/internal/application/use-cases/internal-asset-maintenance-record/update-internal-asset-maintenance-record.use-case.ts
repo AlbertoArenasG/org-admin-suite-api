@@ -23,9 +23,12 @@ import {
   IInternalAssetMaintenanceRecordReadRepositoryToken,
   IInternalAssetMaintenanceRecordWriteRepository,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
+  IRecipientGroupReadRepository,
+  IRecipientGroupReadRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   applyInternalAssetMaintenanceRecordMaterializations,
+  collectProviderFollowUpRecipientGroupIds,
   normalizeInternalAssetMaintenanceRecordInput,
 } from './internal-asset-maintenance-record.shared';
 
@@ -40,6 +43,8 @@ export class UpdateInternalAssetMaintenanceRecordUseCase {
     private readonly expirationStatusPolicyReadRepository: IExpirationStatusPolicyReadRepository,
     @Inject(IExpirationNotificationPolicyReadRepositoryToken)
     private readonly expirationNotificationPolicyReadRepository: IExpirationNotificationPolicyReadRepository,
+    @Inject(IRecipientGroupReadRepositoryToken)
+    private readonly recipientGroupReadRepository: IRecipientGroupReadRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -62,21 +67,33 @@ export class UpdateInternalAssetMaintenanceRecordUseCase {
           this.expirationStatusPolicyReadRepository,
         expirationNotificationPolicyReadRepository:
           this.expirationNotificationPolicyReadRepository,
+        recipientGroupReadRepository: this.recipientGroupReadRepository,
       },
     );
+    const normalizedWithFollowUpHistory = {
+      ...normalized,
+      providerFollowUp: normalized.providerFollowUp
+        ? {
+            ...normalized.providerFollowUp,
+            lastSentAt: record.providerFollowUp?.lastSentAt ?? null,
+          }
+        : null,
+    };
 
-    record.updateDetails(normalized, input.actorUserId);
+    record.updateDetails(normalizedWithFollowUpHistory, input.actorUserId);
 
     const [expirationStatusPolicy, expirationNotificationPolicy] =
       await Promise.all([
-        normalized.expirationStatusPolicyId
+        normalizedWithFollowUpHistory.expirationStatusPolicyId
           ? this.expirationStatusPolicyReadRepository
-              .findById(normalized.expirationStatusPolicyId)
+              .findById(normalizedWithFollowUpHistory.expirationStatusPolicyId)
               .then((result) => result.data)
           : Promise.resolve<ExpirationStatusPolicy | null>(null),
-        normalized.expirationNotificationPolicyId
+        normalizedWithFollowUpHistory.expirationNotificationPolicyId
           ? this.expirationNotificationPolicyReadRepository
-              .findById(normalized.expirationNotificationPolicyId)
+              .findById(
+                normalizedWithFollowUpHistory.expirationNotificationPolicyId,
+              )
               .then((result) => result.data)
           : Promise.resolve<ExpirationNotificationPolicy | null>(null),
       ]);
@@ -91,13 +108,19 @@ export class UpdateInternalAssetMaintenanceRecordUseCase {
     const { data } = await this.writeRepository.update(record);
 
     const policiesById = await this.readRepository.findPoliciesByIds({
-      expirationStatusPolicyIds: normalized.expirationStatusPolicyId
-        ? [normalized.expirationStatusPolicyId]
-        : [],
-      expirationNotificationPolicyIds: normalized.expirationNotificationPolicyId
-        ? [normalized.expirationNotificationPolicyId]
-        : [],
+      expirationStatusPolicyIds:
+        normalizedWithFollowUpHistory.expirationStatusPolicyId
+          ? [normalizedWithFollowUpHistory.expirationStatusPolicyId]
+          : [],
+      expirationNotificationPolicyIds:
+        normalizedWithFollowUpHistory.expirationNotificationPolicyId
+          ? [normalizedWithFollowUpHistory.expirationNotificationPolicyId]
+          : [],
     });
+    const { data: recipientGroups } =
+      await this.recipientGroupReadRepository.findByIds(
+        collectProviderFollowUpRecipientGroupIds(data ? [data] : []),
+      );
     const [createdBy, updatedBy] = await Promise.all([
       this.auditUserFetcher.fetchAuditUser(record.createdBy),
       this.auditUserFetcher.fetchAuditUser(input.actorUserId),
@@ -105,6 +128,12 @@ export class UpdateInternalAssetMaintenanceRecordUseCase {
 
     return InternalAssetMaintenanceRecordMapper.toViewDto(data!, {
       ...policiesById,
+      recipientGroupsById: new Map(
+        recipientGroups.map((recipientGroup) => [
+          recipientGroup.id,
+          recipientGroup,
+        ]),
+      ),
       createdBy,
       updatedBy,
     });

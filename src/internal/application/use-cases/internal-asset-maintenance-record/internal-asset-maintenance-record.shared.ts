@@ -1,4 +1,5 @@
 import {
+  InternalAssetMaintenanceProviderFollowUpProps,
   ExpirationNotificationPolicy,
   ExpirationNotificationPolicyStatus,
   ExpirationStatusPolicy,
@@ -10,6 +11,7 @@ import {
   InternalAssetMaintenanceRecord,
   InternalAssetMaintenanceRecordStatus,
   InternalAssetMaintenanceType,
+  RecipientGroupStatus,
 } from '@domain/entities';
 import {
   InvalidValueException,
@@ -18,6 +20,7 @@ import {
 import {
   IExpirationNotificationPolicyReadRepository,
   IExpirationStatusPolicyReadRepository,
+  IRecipientGroupReadRepository,
 } from '@domain/ports/repositories';
 import {
   addOffsetToDateOnly,
@@ -39,6 +42,7 @@ interface NormalizeBaseInput {
   expirationStatusPolicyId: string | null;
   expirationNotificationPolicyId: string | null;
   provider: InternalAssetMaintenanceProviderProps | null;
+  providerFollowUp: InternalAssetMaintenanceProviderFollowUpProps | null;
 }
 
 export async function normalizeInternalAssetMaintenanceRecordInput(
@@ -46,6 +50,7 @@ export async function normalizeInternalAssetMaintenanceRecordInput(
   policies: {
     expirationStatusPolicyReadRepository: IExpirationStatusPolicyReadRepository;
     expirationNotificationPolicyReadRepository: IExpirationNotificationPolicyReadRepository;
+    recipientGroupReadRepository: IRecipientGroupReadRepository;
   },
 ): Promise<NormalizeBaseInput> {
   const assetName = normalizeRequiredString(input.assetName, 'asset_name');
@@ -69,6 +74,10 @@ export async function normalizeInternalAssetMaintenanceRecordInput(
   const observations = normalizeOptionalString(input.observations);
   const status = normalizeStatus(input.status);
   const provider = normalizeProvider(input.provider);
+  const providerFollowUp = await normalizeProviderFollowUp(
+    input.providerFollowUp,
+    policies.recipientGroupReadRepository,
+  );
   const expirationStatusPolicyId = await normalizeExpirationStatusPolicyId(
     input.expirationStatusPolicyId,
     policies.expirationStatusPolicyReadRepository,
@@ -91,6 +100,7 @@ export async function normalizeInternalAssetMaintenanceRecordInput(
     expirationStatusPolicyId,
     expirationNotificationPolicyId,
     provider,
+    providerFollowUp,
   };
 }
 
@@ -136,6 +146,21 @@ export function collectPolicyIds(records: InternalAssetMaintenanceRecord[]) {
       ),
     ),
   };
+}
+
+export function collectProviderFollowUpRecipientGroupIds(
+  records: InternalAssetMaintenanceRecord[],
+): string[] {
+  return Array.from(
+    new Set(
+      records.flatMap((record) =>
+        (record.providerFollowUp?.rules ?? []).flatMap((rule) => [
+          ...rule.recipientGroupIds,
+          ...rule.ccRecipientGroupIds,
+        ]),
+      ),
+    ),
+  );
 }
 
 export interface InternalAssetMaintenanceRecordMaterializations {
@@ -370,4 +395,109 @@ async function normalizeExpirationNotificationPolicyId(
   }
 
   return normalizedPolicyId;
+}
+
+async function normalizeProviderFollowUp(
+  providerFollowUp: InternalAssetMaintenanceProviderFollowUpProps | null,
+  repository: IRecipientGroupReadRepository,
+): Promise<InternalAssetMaintenanceProviderFollowUpProps | null> {
+  if (!providerFollowUp) {
+    return null;
+  }
+
+  const rules = providerFollowUp.rules.map((rule, index) => {
+    const recipientGroupIds = normalizeRecipientGroupIds(
+      rule.recipientGroupIds,
+      `provider_follow_up.rules.${index}.recipient_group_ids`,
+      true,
+    );
+    const ccRecipientGroupIds = normalizeRecipientGroupIds(
+      rule.ccRecipientGroupIds,
+      `provider_follow_up.rules.${index}.cc_recipient_group_ids`,
+      false,
+    );
+
+    return {
+      offset: normalizeInterval(
+        rule.offset,
+        `provider_follow_up.rules.${index}.offset`,
+        true,
+      ),
+      recipientGroupIds,
+      ccRecipientGroupIds,
+    };
+  });
+
+  if (providerFollowUp.enabled && rules.length === 0) {
+    throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+      field: 'provider_follow_up.rules',
+      reason: 'FOLLOW_UP_RULES_REQUIRED_WHEN_ENABLED',
+    });
+  }
+
+  const allRecipientGroupIds = Array.from(
+    new Set(
+      rules.flatMap((rule) => [
+        ...rule.recipientGroupIds,
+        ...rule.ccRecipientGroupIds,
+      ]),
+    ),
+  );
+
+  if (allRecipientGroupIds.length > 0) {
+    const { data: recipientGroups } =
+      await repository.findByIds(allRecipientGroupIds);
+
+    const recipientGroupsById = new Map(
+      recipientGroups.map((recipientGroup) => [
+        recipientGroup.id,
+        recipientGroup,
+      ]),
+    );
+
+    for (const recipientGroupId of allRecipientGroupIds) {
+      const recipientGroup = recipientGroupsById.get(recipientGroupId);
+
+      if (
+        !recipientGroup ||
+        recipientGroup.status !== RecipientGroupStatus.ACTIVE
+      ) {
+        throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+          field: 'provider_follow_up',
+          value: recipientGroupId,
+          reason: 'RECIPIENT_GROUP_NOT_ACTIVE',
+        });
+      }
+    }
+  }
+
+  return {
+    enabled: Boolean(providerFollowUp.enabled),
+    rules,
+    lastSentAt: providerFollowUp.lastSentAt ?? null,
+  };
+}
+
+function normalizeRecipientGroupIds(
+  values: string[],
+  field: string,
+  requireNonEmpty: boolean,
+): string[] {
+  const normalized = values.map((value) => value.trim()).filter(Boolean);
+
+  if (requireNonEmpty && normalized.length === 0) {
+    throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+      field,
+      reason: 'RECIPIENT_GROUP_IDS_REQUIRED',
+    });
+  }
+
+  if (new Set(normalized).size !== normalized.length) {
+    throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+      field,
+      reason: 'DUPLICATED_RECIPIENT_GROUP_IDS',
+    });
+  }
+
+  return normalized;
 }

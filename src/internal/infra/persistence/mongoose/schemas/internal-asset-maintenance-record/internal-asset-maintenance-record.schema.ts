@@ -46,6 +46,38 @@ export class InternalAssetMaintenanceProviderDocument {
 }
 
 @Schema({ _id: false })
+export class InternalAssetMaintenanceProviderFollowUpRuleDocument {
+  @Prop({
+    type: InternalAssetMaintenanceIntervalDocument,
+    required: true,
+    default: {},
+  })
+  offset: InternalAssetMaintenanceIntervalDocument;
+
+  @Prop({ type: [String], required: true, default: [] })
+  recipient_group_ids: string[];
+
+  @Prop({ type: [String], required: true, default: [] })
+  cc_recipient_group_ids: string[];
+}
+
+@Schema({ _id: false })
+export class InternalAssetMaintenanceProviderFollowUpDocument {
+  @Prop({ type: Boolean, required: true, default: false })
+  enabled: boolean;
+
+  @Prop({
+    type: [InternalAssetMaintenanceProviderFollowUpRuleDocument],
+    required: true,
+    default: [],
+  })
+  rules: InternalAssetMaintenanceProviderFollowUpRuleDocument[];
+
+  @Prop({ type: Date, required: false, default: null })
+  last_sent_at?: Date | null;
+}
+
+@Schema({ _id: false })
 export class InternalAssetExpirationStatusMatchedRuleDocument {
   @Prop({ type: String, required: true })
   source_rule_id: string;
@@ -253,6 +285,13 @@ export class InternalAssetMaintenanceRecordDocument extends Document {
     default: null,
   })
   provider?: InternalAssetMaintenanceProviderDocument | null;
+
+  @Prop({
+    type: InternalAssetMaintenanceProviderFollowUpDocument,
+    required: false,
+    default: null,
+  })
+  provider_follow_up?: InternalAssetMaintenanceProviderFollowUpDocument | null;
 
   @Prop({
     type: InternalAssetExpirationStatusMaterializationDocument,

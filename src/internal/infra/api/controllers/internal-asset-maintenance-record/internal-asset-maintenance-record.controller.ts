@@ -26,6 +26,7 @@ import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateInternalAssetMaintenanceRecordCommandAdapter,
   DeleteInternalAssetMaintenanceRecordCommandAdapter,
+  SendInternalAssetMaintenanceProviderFollowUpCommandAdapter,
   UpdateInternalAssetMaintenanceRecordCommandAdapter,
 } from '@infra/cqrs/commands';
 import {
@@ -159,6 +160,29 @@ export class InternalAssetMaintenanceRecordController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(null)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Post(':recordId/provider-follow-up/send')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('internal_asset_maintenance_records', 'UPDATE')
+  @HttpCode(HttpStatus.OK)
+  async sendProviderFollowUp(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+  ) {
+    const result = await this.commandBus.execute(
+      SendInternalAssetMaintenanceProviderFollowUpCommandAdapter.create({
+        actorUserId: currentUser.userId,
+        recordId,
+      }),
+    );
+    const data = this.presenter.toViewResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }

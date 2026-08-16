@@ -138,7 +138,16 @@
     - completado el domingo 16 de agosto de 2026
     - el presenter ahora distingue estados derivados del sistema vs labels libres de policy
   - integrar `provider_follow_up`
+    - completado el domingo 16 de agosto de 2026
+    - persistencia en entity, schema y mapper del record
+    - validación de reglas, grupos destinatarios y conservación de `last_sent_at`
+    - expansión ligera de `recipient_groups` en detalle del record
   - integrar envío manual `provider-follow-up/send`
+    - completado el domingo 16 de agosto de 2026
+    - acción manual vía CQRS y controller
+    - validación de `sent_to_provider` y `provider_follow_up.enabled`
+    - envío por email a destinatarios efectivos resueltos desde `recipient_groups`
+    - actualización de `provider_follow_up.last_sent_at` al completar el envío
 
 ## Slice 9. Validation And Handoff
 

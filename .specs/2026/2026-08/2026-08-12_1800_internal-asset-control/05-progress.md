@@ -318,10 +318,28 @@
   - `OVERDUE`
   - `COMPLETED`
   - `CANCELLED`
-- Se dejó explícitamente fuera de esta entrega:
-  - `expiration_status_materialization`
-  - `expiration_notification_materialization`
-  - `provider_follow_up`
 - Se validó este slice con:
+  - `npm run build`
+  - `npm run lint`
+- Se implementó `provider_follow_up` dentro de `internal-asset-maintenance-record`.
+- Se agregó al shape persistido del record:
+  - `provider_follow_up.enabled`
+  - `provider_follow_up.rules[]`
+  - `provider_follow_up.last_sent_at`
+- Se implementó validación de `provider_follow_up` para:
+  - exigir al menos un `recipient_group_id` por regla
+  - conservar `cc_recipient_group_ids` aunque venga vacío
+  - exigir al menos una regla cuando `enabled = true`
+  - validar que los `recipient_groups` referenciados existan y estén activos
+- Se implementó el resumen de `provider_follow_up` en el listado paginado del recurso principal.
+- Se implementó la expansión ligera de `recipient_groups` dentro del detalle del record.
+- Se implementó la acción manual:
+  - `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+- Se implementó la resolución efectiva de destinatarios email a partir de:
+  - `recipient_groups`
+  - `contacts` activos con email primario
+- Se implementó actualización de `provider_follow_up.last_sent_at` tras envío manual exitoso.
+- Se extendió el puerto de email con una capacidad genérica mínima para soportar este flujo sin acoplarlo a templates preexistentes.
+- Se validó este slice el domingo 16 de agosto de 2026 con:
   - `npm run build`
   - `npm run lint`

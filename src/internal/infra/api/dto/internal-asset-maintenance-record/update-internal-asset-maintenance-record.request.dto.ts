@@ -51,6 +51,27 @@ class InternalAssetMaintenanceProviderRequestDto {
   provider_notes?: string;
 }
 
+class InternalAssetMaintenanceProviderFollowUpRuleRequestDto {
+  @ValidateNested()
+  @Type(() => InternalAssetMaintenanceIntervalRequestDto)
+  offset!: InternalAssetMaintenanceIntervalRequestDto;
+
+  @IsString({ each: true })
+  recipient_group_ids!: string[];
+
+  @IsString({ each: true })
+  cc_recipient_group_ids!: string[];
+}
+
+class InternalAssetMaintenanceProviderFollowUpRequestDto {
+  @IsBoolean()
+  enabled!: boolean;
+
+  @ValidateNested({ each: true })
+  @Type(() => InternalAssetMaintenanceProviderFollowUpRuleRequestDto)
+  rules!: InternalAssetMaintenanceProviderFollowUpRuleRequestDto[];
+}
+
 export class UpdateInternalAssetMaintenanceRecordRequestDto {
   @IsString()
   asset_name!: string;
@@ -93,6 +114,11 @@ export class UpdateInternalAssetMaintenanceRecordRequestDto {
   @Type(() => InternalAssetMaintenanceProviderRequestDto)
   provider?: InternalAssetMaintenanceProviderRequestDto;
 
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InternalAssetMaintenanceProviderFollowUpRequestDto)
+  provider_follow_up?: InternalAssetMaintenanceProviderFollowUpRequestDto;
+
   toDomain(
     recordId: string,
     actorUserId: string,
@@ -130,6 +156,22 @@ export class UpdateInternalAssetMaintenanceRecordRequestDto {
                 }
               : null,
             providerNotes: this.provider.provider_notes ?? null,
+          }
+        : null,
+      providerFollowUp: this.provider_follow_up
+        ? {
+            enabled: this.provider_follow_up.enabled,
+            rules: (this.provider_follow_up.rules ?? []).map((rule) => ({
+              offset: {
+                years: Number(rule.offset.years ?? 0),
+                months: Number(rule.offset.months ?? 0),
+                weeks: Number(rule.offset.weeks ?? 0),
+                days: Number(rule.offset.days ?? 0),
+              },
+              recipientGroupIds: rule.recipient_group_ids ?? [],
+              ccRecipientGroupIds: rule.cc_recipient_group_ids ?? [],
+            })),
+            lastSentAt: null,
           }
         : null,
     };

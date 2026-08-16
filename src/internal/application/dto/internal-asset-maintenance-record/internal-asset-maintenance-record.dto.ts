@@ -23,6 +23,40 @@ export interface InternalAssetMaintenanceProviderDto {
   providerNotes: string | null;
 }
 
+export interface InternalAssetMaintenanceRecipientGroupSummaryDto {
+  id: string;
+  name: string;
+  code: string;
+  status: string;
+  enabledChannels: Array<{ code: string }>;
+}
+
+export interface InternalAssetMaintenanceProviderFollowUpRuleDto {
+  offset: InternalAssetMaintenanceIntervalDto;
+  recipientGroupIds: string[];
+  ccRecipientGroupIds: string[];
+  recipientGroups: InternalAssetMaintenanceRecipientGroupSummaryDto[];
+  ccRecipientGroups: InternalAssetMaintenanceRecipientGroupSummaryDto[];
+}
+
+export interface InternalAssetMaintenanceProviderFollowUpDto {
+  enabled: boolean;
+  rules: InternalAssetMaintenanceProviderFollowUpRuleDto[];
+  lastSentAt: Date | null;
+}
+
+export interface InternalAssetMaintenanceProviderFollowUpRuleInputDto {
+  offset: InternalAssetMaintenanceIntervalDto;
+  recipientGroupIds: string[];
+  ccRecipientGroupIds: string[];
+}
+
+export interface InternalAssetMaintenanceProviderFollowUpInputDto {
+  enabled: boolean;
+  rules: InternalAssetMaintenanceProviderFollowUpRuleInputDto[];
+  lastSentAt: Date | null;
+}
+
 export interface InternalAssetMaintenanceDerivedStatusDto {
   code: string;
   label: string;
@@ -63,6 +97,9 @@ export interface InternalAssetMaintenanceRecordListItemDto {
   sentToProvider: boolean;
   providerName: string | null;
   providerLeadTime: InternalAssetMaintenanceIntervalDto | null;
+  providerFollowUpEnabled: boolean;
+  providerFollowUpRulesCount: number;
+  providerFollowUpLastSentAt: Date | null;
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -81,6 +118,7 @@ export interface InternalAssetMaintenanceRecordViewDto {
   expirationStatusPolicy: InternalAssetMaintenancePolicySummaryDto | null;
   expirationNotificationPolicy: InternalAssetMaintenancePolicySummaryDto | null;
   provider: InternalAssetMaintenanceProviderDto | null;
+  providerFollowUp: InternalAssetMaintenanceProviderFollowUpDto | null;
   createdBy: AuditUserDto | null;
   updatedBy: AuditUserDto | null;
   createdAt: Date;
@@ -120,6 +158,7 @@ export interface CreateInternalAssetMaintenanceRecordDto {
   expirationStatusPolicyId: string | null;
   expirationNotificationPolicyId: string | null;
   provider: InternalAssetMaintenanceProviderDto | null;
+  providerFollowUp: InternalAssetMaintenanceProviderFollowUpInputDto | null;
 }
 
 export interface UpdateInternalAssetMaintenanceRecordDto
@@ -128,6 +167,11 @@ export interface UpdateInternalAssetMaintenanceRecordDto
 }
 
 export interface DeleteInternalAssetMaintenanceRecordDto {
+  actorUserId: string;
+  recordId: string;
+}
+
+export interface SendInternalAssetMaintenanceProviderFollowUpDto {
   actorUserId: string;
   recordId: string;
 }
@@ -141,4 +185,6 @@ export type GetInternalAssetMaintenanceRecordCatalogResultDto =
 export type CreateInternalAssetMaintenanceRecordResultDto =
   InternalAssetMaintenanceRecordViewDto;
 export type UpdateInternalAssetMaintenanceRecordResultDto =
+  InternalAssetMaintenanceRecordViewDto;
+export type SendInternalAssetMaintenanceProviderFollowUpResultDto =
   InternalAssetMaintenanceRecordViewDto;

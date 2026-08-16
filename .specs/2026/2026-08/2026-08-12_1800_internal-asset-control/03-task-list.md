@@ -69,8 +69,8 @@
 - [x] Integrar cálculo base de vencimiento y `OVERDUE` derivado en runtime
       Status: completed
 
-- [ ] Integrar subflujo opcional completo de provider y `provider_follow_up`
-      Status: pending
+- [x] Integrar subflujo opcional completo de provider y `provider_follow_up`
+      Status: completed
 
 ## Phase 4. Validation
 

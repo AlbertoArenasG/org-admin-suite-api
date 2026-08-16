@@ -5,6 +5,7 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
+  GenericEmailDto,
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserPasswordResetEmailDto,
@@ -34,6 +35,25 @@ export class SesEmailService implements IEmailService {
 
     this.templates = emailTemplates;
     this.subjects = emailSubjects;
+  }
+
+  async sendGenericEmail(payload: GenericEmailDto): Promise<void> {
+    const command = new SendEmailCommand({
+      Source: this.envService.get('AWS_SES_FROM_EMAIL'),
+      Destination: {
+        ToAddresses: payload.to,
+        CcAddresses: payload.cc && payload.cc.length > 0 ? payload.cc : [],
+      },
+      Message: {
+        Subject: { Data: payload.subject, Charset: 'UTF-8' },
+        Body: {
+          Html: { Data: payload.html, Charset: 'UTF-8' },
+        },
+      },
+    });
+
+    await this.ses.send(command);
+    this.logger.debug(`SES generic email sent to ${payload.to.join(', ')}`);
   }
 
   async sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void> {

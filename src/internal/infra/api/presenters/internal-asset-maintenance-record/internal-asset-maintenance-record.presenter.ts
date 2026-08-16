@@ -74,6 +74,33 @@ export class InternalAssetMaintenanceRecordPresenter {
             provider_notes: result.provider.providerNotes,
           }
         : null,
+      provider_follow_up: result.providerFollowUp
+        ? {
+            enabled: result.providerFollowUp.enabled,
+            rules: result.providerFollowUp.rules.map((rule) => ({
+              offset: rule.offset,
+              recipient_group_ids: rule.recipientGroupIds,
+              cc_recipient_group_ids: rule.ccRecipientGroupIds,
+              recipient_groups: rule.recipientGroups.map((recipientGroup) => ({
+                recipient_group_id: recipientGroup.id,
+                name: recipientGroup.name,
+                code: recipientGroup.code,
+                status_id: recipientGroup.status,
+                enabled_channels: recipientGroup.enabledChannels,
+              })),
+              cc_recipient_groups: rule.ccRecipientGroups.map(
+                (recipientGroup) => ({
+                  recipient_group_id: recipientGroup.id,
+                  name: recipientGroup.name,
+                  code: recipientGroup.code,
+                  status_id: recipientGroup.status,
+                  enabled_channels: recipientGroup.enabledChannels,
+                }),
+              ),
+            })),
+            last_sent_at: result.providerFollowUp.lastSentAt,
+          }
+        : null,
       created_by: result.createdBy
         ? {
             user_id: result.createdBy.userId,
@@ -140,6 +167,9 @@ export class InternalAssetMaintenanceRecordPresenter {
       sent_to_provider: result.sentToProvider,
       provider_name: result.providerName,
       provider_lead_time: result.providerLeadTime,
+      provider_follow_up_enabled: result.providerFollowUpEnabled,
+      provider_follow_up_rules_count: result.providerFollowUpRulesCount,
+      provider_follow_up_last_sent_at: result.providerFollowUpLastSentAt,
       created_at: result.createdAt,
       updated_at: result.updatedAt ?? null,
     }));

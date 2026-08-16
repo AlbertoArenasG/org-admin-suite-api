@@ -43,6 +43,22 @@ export class MongooseInternalAssetMaintenanceRecordMapper {
             providerNotes: document.provider.provider_notes ?? null,
           }
         : null,
+      providerFollowUp: document.provider_follow_up
+        ? {
+            enabled: document.provider_follow_up.enabled,
+            rules: document.provider_follow_up.rules.map((rule) => ({
+              offset: {
+                years: rule.offset?.years ?? 0,
+                months: rule.offset?.months ?? 0,
+                weeks: rule.offset?.weeks ?? 0,
+                days: rule.offset?.days ?? 0,
+              },
+              recipientGroupIds: rule.recipient_group_ids ?? [],
+              ccRecipientGroupIds: rule.cc_recipient_group_ids ?? [],
+            })),
+            lastSentAt: document.provider_follow_up.last_sent_at ?? null,
+          }
+        : null,
       expirationStatusMaterialization:
         document.expiration_status_materialization
           ? {
@@ -174,6 +190,22 @@ export class MongooseInternalAssetMaintenanceRecordMapper {
                 }
               : null,
             provider_notes: record.provider.providerNotes,
+          }
+        : null,
+      provider_follow_up: record.providerFollowUp
+        ? {
+            enabled: record.providerFollowUp.enabled,
+            rules: record.providerFollowUp.rules.map((rule) => ({
+              offset: {
+                years: rule.offset.years,
+                months: rule.offset.months,
+                weeks: rule.offset.weeks,
+                days: rule.offset.days,
+              },
+              recipient_group_ids: rule.recipientGroupIds,
+              cc_recipient_group_ids: rule.ccRecipientGroupIds,
+            })),
+            last_sent_at: record.providerFollowUp.lastSentAt,
           }
         : null,
       expiration_status_materialization: record.expirationStatusMaterialization

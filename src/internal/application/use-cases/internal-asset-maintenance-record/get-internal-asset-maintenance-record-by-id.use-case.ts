@@ -10,13 +10,18 @@ import {
 import {
   IInternalAssetMaintenanceRecordReadRepository,
   IInternalAssetMaintenanceRecordReadRepositoryToken,
+  IRecipientGroupReadRepository,
+  IRecipientGroupReadRepositoryToken,
 } from '@domain/ports/repositories';
+import { collectProviderFollowUpRecipientGroupIds } from './internal-asset-maintenance-record.shared';
 
 @Injectable()
 export class GetInternalAssetMaintenanceRecordByIdUseCase {
   constructor(
     @Inject(IInternalAssetMaintenanceRecordReadRepositoryToken)
     private readonly readRepository: IInternalAssetMaintenanceRecordReadRepository,
+    @Inject(IRecipientGroupReadRepositoryToken)
+    private readonly recipientGroupReadRepository: IRecipientGroupReadRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -40,6 +45,10 @@ export class GetInternalAssetMaintenanceRecordByIdUseCase {
         ? [record.expirationNotificationPolicyId]
         : [],
     });
+    const { data: recipientGroups } =
+      await this.recipientGroupReadRepository.findByIds(
+        collectProviderFollowUpRecipientGroupIds([record]),
+      );
     const [createdBy, updatedBy] = await Promise.all([
       this.auditUserFetcher.fetchAuditUser(record.createdBy),
       this.auditUserFetcher.fetchAuditUser(record.updatedBy),
@@ -47,6 +56,12 @@ export class GetInternalAssetMaintenanceRecordByIdUseCase {
 
     return InternalAssetMaintenanceRecordMapper.toViewDto(record, {
       ...policiesById,
+      recipientGroupsById: new Map(
+        recipientGroups.map((recipientGroup) => [
+          recipientGroup.id,
+          recipientGroup,
+        ]),
+      ),
       createdBy,
       updatedBy,
     });

@@ -1,4 +1,5 @@
 import {
+  GenericEmailDto,
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserPasswordResetEmailDto,
@@ -6,6 +7,7 @@ import {
 } from '@application/dto/notification';
 
 export interface IEmailService {
+  sendGenericEmail(payload: GenericEmailDto): Promise<void>;
   sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void>;
   sendUserRegistrationInvitation(
     payload: UserRegistrationInvitationEmailDto,
