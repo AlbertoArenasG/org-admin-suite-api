@@ -35,6 +35,9 @@ import {
   CreateContactHandler,
   UpdateContactHandler,
   DeleteContactHandler,
+  CreateExpirationStatusPolicyHandler,
+  UpdateExpirationStatusPolicyHandler,
+  DeleteExpirationStatusPolicyHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -67,6 +70,10 @@ import {
   GetContactByIdHandler,
   SearchContactsHandler,
   GetCommunicationChannelsHandler,
+  GetExpirationStatusPoliciesHandler,
+  GetExpirationStatusPolicyByIdHandler,
+  GetExpirationStatusPolicyOptionsHandler,
+  GetExpirationStatusPolicyCatalogHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -107,6 +114,9 @@ const providers = [
   CreateContactHandler,
   UpdateContactHandler,
   DeleteContactHandler,
+  CreateExpirationStatusPolicyHandler,
+  UpdateExpirationStatusPolicyHandler,
+  DeleteExpirationStatusPolicyHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -133,6 +143,10 @@ const providers = [
   GetContactByIdHandler,
   SearchContactsHandler,
   GetCommunicationChannelsHandler,
+  GetExpirationStatusPoliciesHandler,
+  GetExpirationStatusPolicyByIdHandler,
+  GetExpirationStatusPolicyOptionsHandler,
+  GetExpirationStatusPolicyCatalogHandler,
 ];
 
 @Global()

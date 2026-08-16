@@ -32,6 +32,8 @@ import {
   MongooseContactWriteRepositoryImpl,
   MongooseRecipientGroupReadRepositoryImpl,
   MongooseRecipientGroupWriteRepositoryImpl,
+  MongooseExpirationStatusPolicyReadRepositoryImpl,
+  MongooseExpirationStatusPolicyWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -68,6 +70,8 @@ import {
   IContactWriteRepositoryToken,
   IRecipientGroupReadRepositoryToken,
   IRecipientGroupWriteRepositoryToken,
+  IExpirationStatusPolicyReadRepositoryToken,
+  IExpirationStatusPolicyWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -203,6 +207,14 @@ export const MongooseRepositoriesConfig = [
     provide: IRecipientGroupWriteRepositoryToken,
     useClass: MongooseRecipientGroupWriteRepositoryImpl,
   },
+  {
+    provide: IExpirationStatusPolicyReadRepositoryToken,
+    useClass: MongooseExpirationStatusPolicyReadRepositoryImpl,
+  },
+  {
+    provide: IExpirationStatusPolicyWriteRepositoryToken,
+    useClass: MongooseExpirationStatusPolicyWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -239,4 +251,6 @@ export const MongooseRepositoryTokens = [
   IContactWriteRepositoryToken,
   IRecipientGroupReadRepositoryToken,
   IRecipientGroupWriteRepositoryToken,
+  IExpirationStatusPolicyReadRepositoryToken,
+  IExpirationStatusPolicyWriteRepositoryToken,
 ];

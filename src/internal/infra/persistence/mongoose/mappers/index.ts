@@ -12,3 +12,4 @@ export * from './customer/mongoose-customer.mapper';
 export * from './service-package/mongoose-service-package-record.mapper';
 export * from './contact';
 export * from './recipient-group';
+export * from './expiration-status-policy';

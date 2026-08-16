@@ -15,6 +15,7 @@ export enum EntityNotFoundExceptionCode {
   ROLE = 'ENTITY_NOT_FOUND.ROLE',
   CONTACT = 'ENTITY_NOT_FOUND.CONTACT',
   RECIPIENT_GROUP = 'ENTITY_NOT_FOUND.RECIPIENT_GROUP',
+  EXPIRATION_STATUS_POLICY = 'ENTITY_NOT_FOUND.EXPIRATION_STATUS_POLICY',
 }
 
 export class EntityNotFoundException extends DomainException {

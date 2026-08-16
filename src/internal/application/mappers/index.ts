@@ -9,3 +9,4 @@ export * from './provider';
 export * from './role';
 export * from './contact';
 export * from './recipient-group';
+export * from './expiration-status-policy';

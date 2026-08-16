@@ -14,3 +14,4 @@ export * from './provider-fiscal-profile.entity';
 export * from './provider-banking-info.entity';
 export * from './contact.entity';
 export * from './recipient-group.entity';
+export * from './expiration-status-policy.entity';

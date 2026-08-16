@@ -69,4 +69,8 @@ export const configSchemas = [
     name: schemas.RecipientGroupDocument.name,
     schema: schemas.RecipientGroupSchema,
   },
+  {
+    name: schemas.ExpirationStatusPolicyDocument.name,
+    schema: schemas.ExpirationStatusPolicySchema,
+  },
 ];

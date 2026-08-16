@@ -198,3 +198,33 @@
   - `COMPLETED`: `#2563EB`
   - `CANCELLED`: `#6B7280`
 - La definición quedó nuevamente alineada sin contratos vigentes del enfoque anterior.
+
+## 2026-08-16
+
+- Se implementó el módulo backend `expiration-status-policy` siguiendo el patrón CRUD existente del repo.
+- Se implementaron los endpoints:
+  - `GET /v1/expiration-status-policies`
+  - `GET /v1/expiration-status-policies/catalog`
+  - `GET /v1/expiration-status-policies/options`
+  - `GET /v1/expiration-status-policies/:policyId`
+  - `POST /v1/expiration-status-policies`
+  - `PATCH /v1/expiration-status-policies/:policyId`
+  - `DELETE /v1/expiration-status-policies/:policyId`
+- Se implementó el wiring completo en:
+  - domain entity
+  - read/write repositories
+  - mongoose schema + mapper + repos
+  - application DTOs + mapper + use cases
+  - CQRS commands y queries
+  - controller + request DTOs + presenter
+- Se agregó el módulo `EXPIRATION_STATUS_POLICIES` al catálogo de autorización con operaciones:
+  - `CREATE`
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+- Se agregaron catálogos i18n backend para:
+  - `EXPIRATION_STATUS_POLICY.STATUS`
+  - `AUTHORIZATION.MODULE.EXPIRATION_STATUS_POLICIES`
+- Se validó el slice con:
+  - `npm run build`
+  - `npm run lint`

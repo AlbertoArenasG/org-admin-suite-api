@@ -65,6 +65,13 @@
       "DELETED": "Eliminado"
     }
   },
+  "EXPIRATION_STATUS_POLICY": {
+    "STATUS": {
+      "ACTIVE": "Activa",
+      "INACTIVE": "Inactiva",
+      "DELETED": "Eliminada"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Correo electrónico"
@@ -81,7 +88,8 @@
       "SERVICE_PACKAGES": "Recolección",
       "USER_REGISTRATION_INVITATIONS": "Invitaciones de registro de usuario",
       "CONTACTS": "Contactos",
-      "RECIPIENT_GROUPS": "Grupos de destinatarios"
+      "RECIPIENT_GROUPS": "Grupos de destinatarios",
+      "EXPIRATION_STATUS_POLICIES": "Políticas de estatus por vencimiento"
     },
     "OPERATION": {
       "CREATE": "Crear",

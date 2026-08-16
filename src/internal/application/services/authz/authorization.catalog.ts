@@ -51,6 +51,11 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.RECIPIENT_GROUPS',
     operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
   },
+  EXPIRATION_STATUS_POLICIES: {
+    code: 'EXPIRATION_STATUS_POLICIES',
+    nameKey: 'AUTHORIZATION.MODULE.EXPIRATION_STATUS_POLICIES',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
 } as const satisfies Record<
   string,
   {

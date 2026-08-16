@@ -10,3 +10,4 @@ export * from './role';
 export * from './contact';
 export * from './recipient-group';
 export * from './communication-channel';
+export * from './expiration-status-policy';

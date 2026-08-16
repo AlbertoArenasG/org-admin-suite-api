@@ -65,6 +65,13 @@
       "DELETED": "Deleted"
     }
   },
+  "EXPIRATION_STATUS_POLICY": {
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "DELETED": "Deleted"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Email"
@@ -81,7 +88,8 @@
       "SERVICE_PACKAGES": "Collection",
       "USER_REGISTRATION_INVITATIONS": "User registration invitations",
       "CONTACTS": "Contacts",
-      "RECIPIENT_GROUPS": "Recipient groups"
+      "RECIPIENT_GROUPS": "Recipient groups",
+      "EXPIRATION_STATUS_POLICIES": "Expiration status policies"
     },
     "OPERATION": {
       "CREATE": "Create",

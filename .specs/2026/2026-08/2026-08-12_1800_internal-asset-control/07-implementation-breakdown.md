@@ -103,7 +103,7 @@
 
 ## Slice 8. Backend Implementation
 
-- Estado: pending
+- Estado: in_progress
 - Objetivo:
   - implementar módulos, catálogos, derivaciones y wiring backend
 - Subtareas:
@@ -111,6 +111,8 @@
   - implementar catálogo `assetMaintenanceType`
   - implementar `GET /v1/internal-asset-maintenance-records/catalog`
   - implementar `expiration-status-policy`
+    - completado el 16 de agosto de 2026
+    - incluye CRUD, `catalog`, `options`, autorización e i18n base
   - implementar `expiration-notification-policy`
   - implementar:
     - `GET /v1/expiration-status-policies/catalog`

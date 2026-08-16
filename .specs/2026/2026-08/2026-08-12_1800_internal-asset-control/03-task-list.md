@@ -51,8 +51,8 @@
 - [ ] Implementar endpoint catálogo localizado de `internal-asset-maintenance-record`
       Status: pending
 
-- [ ] Implementar módulo `expiration-status-policy`
-      Status: pending
+- [x] Implementar módulo `expiration-status-policy`
+      Status: completed
 
 - [ ] Implementar módulo `expiration-notification-policy`
       Status: pending
@@ -77,8 +77,8 @@
 - [ ] Validar reglas mínimas del recurso principal
       Status: pending
 
-- [ ] Validar reglas mínimas de `expiration-status-policy`
-      Status: pending
+- [x] Validar reglas mínimas de `expiration-status-policy`
+      Status: completed
 
 - [ ] Validar reglas mínimas de `expiration-notification-policy`
       Status: pending
