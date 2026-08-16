@@ -23,6 +23,27 @@ export class MongooseRecipientGroupReadRepositoryImpl
     return { data: this.toDomain(document) };
   }
 
+  async findByIds(
+    recipientGroupIds: string[],
+  ): Promise<{ data: RecipientGroup[] }> {
+    if (recipientGroupIds.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.recipientGroupModel
+      .find({ recipient_group_id: { $in: recipientGroupIds } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter(
+          (recipientGroup): recipientGroup is RecipientGroup =>
+            recipientGroup !== null,
+        ),
+    };
+  }
+
   async findByName(name: string): Promise<{ data: RecipientGroup | null }> {
     const document = await this.recipientGroupModel.findOne({ name }).exec();
 

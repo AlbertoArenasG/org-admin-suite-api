@@ -15,3 +15,4 @@ export * from './provider-banking-info.entity';
 export * from './contact.entity';
 export * from './recipient-group.entity';
 export * from './expiration-status-policy.entity';
+export * from './expiration-notification-policy.entity';

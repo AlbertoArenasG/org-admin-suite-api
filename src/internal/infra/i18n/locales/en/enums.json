@@ -72,6 +72,26 @@
       "DELETED": "Deleted"
     }
   },
+  "EXPIRATION_NOTIFICATION_POLICY": {
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "DELETED": "Deleted"
+    },
+    "ANCHOR": {
+      "BEFORE_EXPIRATION": "Before expiration",
+      "AFTER_EXPIRATION": "After expiration"
+    },
+    "TRIGGER_MODE": {
+      "ONE_TIME": "One time",
+      "RECURRING": "Recurring"
+    },
+    "REPEAT_UNTIL": {
+      "EXPIRATION_DATE": "Until expiration date",
+      "STATUS_CHANGES": "Until status changes",
+      "FIXED_DURATION": "For a fixed duration"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Email"
@@ -89,7 +109,8 @@
       "USER_REGISTRATION_INVITATIONS": "User registration invitations",
       "CONTACTS": "Contacts",
       "RECIPIENT_GROUPS": "Recipient groups",
-      "EXPIRATION_STATUS_POLICIES": "Expiration status policies"
+      "EXPIRATION_STATUS_POLICIES": "Expiration status policies",
+      "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies"
     },
     "OPERATION": {
       "CREATE": "Create",

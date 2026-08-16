@@ -16,3 +16,4 @@ export * from './provider-banking-info/provider-banking-info.schema';
 export * from './contact';
 export * from './recipient-group';
 export * from './expiration-status-policy';
+export * from './expiration-notification-policy';

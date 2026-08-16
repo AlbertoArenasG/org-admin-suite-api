@@ -228,3 +228,34 @@
 - Se validó el slice con:
   - `npm run build`
   - `npm run lint`
+- Se implementó el módulo backend `expiration-notification-policy` siguiendo el mismo patrón CRUD del repo.
+- Se implementaron los endpoints:
+  - `GET /v1/expiration-notification-policies`
+  - `GET /v1/expiration-notification-policies/catalog`
+  - `GET /v1/expiration-notification-policies/options`
+  - `GET /v1/expiration-notification-policies/:policyId`
+  - `POST /v1/expiration-notification-policies`
+  - `PATCH /v1/expiration-notification-policies/:policyId`
+  - `DELETE /v1/expiration-notification-policies/:policyId`
+- Se implementó el wiring completo en:
+  - domain entity
+  - read/write repositories
+  - mongoose schema + mapper + repos
+  - application DTOs + mapper + use cases
+  - CQRS commands y queries
+  - controller + request DTOs + presenter
+- Se agregó el módulo `EXPIRATION_NOTIFICATION_POLICIES` al catálogo de autorización con operaciones:
+  - `CREATE`
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+- Se agregaron catálogos i18n backend para:
+  - `EXPIRATION_NOTIFICATION_POLICY.STATUS`
+  - `EXPIRATION_NOTIFICATION_POLICY.ANCHOR`
+  - `EXPIRATION_NOTIFICATION_POLICY.TRIGGER_MODE`
+  - `EXPIRATION_NOTIFICATION_POLICY.REPEAT_UNTIL`
+  - `AUTHORIZATION.MODULE.EXPIRATION_NOTIFICATION_POLICIES`
+- Se añadió `findByIds` al read repository de `recipient-group` para soportar validación y expansión ligera de grupos asociados.
+- Se validó el slice con:
+  - `npm run build`
+  - `npm run lint`

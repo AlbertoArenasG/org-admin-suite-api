@@ -54,11 +54,11 @@
 - [x] Implementar módulo `expiration-status-policy`
       Status: completed
 
-- [ ] Implementar módulo `expiration-notification-policy`
-      Status: pending
+- [x] Implementar módulo `expiration-notification-policy`
+      Status: completed
 
-- [ ] Implementar endpoints catálogo localizados de policies de expiración
-      Status: pending
+- [x] Implementar endpoints catálogo localizados de policies de expiración
+      Status: completed
 
 - [ ] Implementar `expiration_status_materialization`
       Status: pending
@@ -80,8 +80,8 @@
 - [x] Validar reglas mínimas de `expiration-status-policy`
       Status: completed
 
-- [ ] Validar reglas mínimas de `expiration-notification-policy`
-      Status: pending
+- [x] Validar reglas mínimas de `expiration-notification-policy`
+      Status: completed
 
 - [ ] Actualizar docs y progreso conforme avance la iniciativa
       Status: pending

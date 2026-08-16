@@ -114,6 +114,8 @@
     - completado el 16 de agosto de 2026
     - incluye CRUD, `catalog`, `options`, autorización e i18n base
   - implementar `expiration-notification-policy`
+    - completado el 16 de agosto de 2026
+    - incluye CRUD, `catalog`, `options`, validación de recurrencia y expansión ligera de `recipient_groups`
   - implementar:
     - `GET /v1/expiration-status-policies/catalog`
     - `GET /v1/expiration-notification-policies/catalog`

@@ -56,6 +56,11 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.EXPIRATION_STATUS_POLICIES',
     operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
   },
+  EXPIRATION_NOTIFICATION_POLICIES: {
+    code: 'EXPIRATION_NOTIFICATION_POLICIES',
+    nameKey: 'AUTHORIZATION.MODULE.EXPIRATION_NOTIFICATION_POLICIES',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  },
 } as const satisfies Record<
   string,
   {

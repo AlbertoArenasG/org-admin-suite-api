@@ -21,6 +21,7 @@ export interface FindRecipientGroupsResult {
 
 export interface IRecipientGroupReadRepository {
   findById(recipientGroupId: string): Promise<{ data: RecipientGroup | null }>;
+  findByIds(recipientGroupIds: string[]): Promise<{ data: RecipientGroup[] }>;
   findByName(name: string): Promise<{ data: RecipientGroup | null }>;
   findByCode(code: string): Promise<{ data: RecipientGroup | null }>;
   findAll(
