@@ -339,7 +339,14 @@
   - `recipient_groups`
   - `contacts` activos con email primario
 - Se implementó actualización de `provider_follow_up.last_sent_at` tras envío manual exitoso.
-- Se extendió el puerto de email con una capacidad genérica mínima para soportar este flujo sin acoplarlo a templates preexistentes.
+- Se corrigió el envío manual de `provider_follow_up` para alinearlo al patrón existente de notificaciones del proyecto.
+- Se agregó un `NotificationType` específico para `INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP`.
+- Se agregó un notifier específico en application para el follow up de proveedor.
+- Se movió el template HTML y el subject a la capa de `infra/notification/services/templates`.
+- Se eliminó el approach temporal con HTML inline en el use case.
+- Se eliminó la capacidad genérica de email para este flujo y se reemplazó por un método explícito de `IEmailService` con propósito específico.
 - Se validó este slice el domingo 16 de agosto de 2026 con:
+  - `npm run build`
+  - `npm run lint`
   - `npm run build`
   - `npm run lint`

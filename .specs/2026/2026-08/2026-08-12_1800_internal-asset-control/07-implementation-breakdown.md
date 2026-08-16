@@ -103,7 +103,7 @@
 
 ## Slice 8. Backend Implementation
 
-- Estado: in_progress
+- Estado: completed
 - Objetivo:
   - implementar módulos, catálogos, derivaciones y wiring backend
 - Subtareas:
@@ -148,9 +148,28 @@
     - validación de `sent_to_provider` y `provider_follow_up.enabled`
     - envío por email a destinatarios efectivos resueltos desde `recipient_groups`
     - actualización de `provider_follow_up.last_sent_at` al completar el envío
+    - refactorizado para alinearse al patrón de notificaciones existente:
+      - notifier específico en application
+      - `NotificationType` específico
+      - template y subject en infra
+      - sin HTML inline en use case
+      - sin capacidad genérica de email
 
 ## Slice 9. Validation And Handoff
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - validar reglas mínimas, actualizar docs y dejar lista la base para frontend
+- Cambios realizados:
+  - se validó backend con:
+    - `npm run build`
+    - `npm run lint`
+  - se actualizó la colección Postman con los módulos:
+    - `Expiration Status Policies`
+    - `Expiration Notification Policies`
+    - `Internal Asset Maintenance Records`
+  - se actualizó `docs/authorization/feature-permission-catalog.md` con:
+    - nuevos módulos
+    - endpoints reales
+    - capability auxiliar `provider-follow-up/send`
+  - se dejó explícito que el mecanismo automático diario queda fuera de esta spec y se trabajará en una spec backend separada
