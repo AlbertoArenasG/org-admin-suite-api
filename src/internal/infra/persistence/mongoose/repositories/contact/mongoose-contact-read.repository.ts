@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-import { Contact, ContactStatus } from '@domain/entities';
+import { Contact, ContactStatus, SystemRole } from '@domain/entities';
 import {
   ContactTypeFilter,
   FindContactsParams,
@@ -8,12 +10,23 @@ import {
   IContactReadRepository,
 } from '@domain/ports/repositories';
 import { MongooseContactBaseRepository } from './mongoose-contact-base.repository';
+import { ContactDocument } from '@infra/persistence/mongoose/schemas/contact/contact.schema';
+import { UserDocument } from '@infra/persistence/mongoose/schemas/user/user.schema';
 
 @Injectable()
 export class MongooseContactReadRepositoryImpl
   extends MongooseContactBaseRepository
   implements IContactReadRepository
 {
+  constructor(
+    @InjectModel(ContactDocument.name)
+    contactModel: Model<ContactDocument>,
+    @InjectModel(UserDocument.name)
+    private readonly userModel: Model<UserDocument>,
+  ) {
+    super(contactModel);
+  }
+
   async findById(contactId: string): Promise<{ data: Contact | null }> {
     const document = await this.contactModel
       .findOne({ contact_id: contactId })
@@ -50,14 +63,22 @@ export class MongooseContactReadRepositoryImpl
     const { page, perPage, search, status, type, sorts } = params;
     const skip = (page - 1) * perPage;
     const filter: Record<string, unknown> = {};
+    const masterAdminUserIds = await this.userModel.distinct('user_id', {
+      system_role: SystemRole.MASTER_ADMIN,
+    });
+    const constraints: Record<string, unknown>[] = [];
 
     if (search && search.trim().length > 0) {
-      filter.$or = [
-        { full_name: { $regex: escapeRegex(search), $options: 'i' } },
-        { company_name: { $regex: escapeRegex(search), $options: 'i' } },
-        { 'emails.value': { $regex: escapeRegex(search), $options: 'i' } },
-      ];
+      constraints.push({
+        $or: [
+          { full_name: { $regex: escapeRegex(search), $options: 'i' } },
+          { company_name: { $regex: escapeRegex(search), $options: 'i' } },
+          { 'emails.value': { $regex: escapeRegex(search), $options: 'i' } },
+        ],
+      });
     }
+
+    constraints.push(this.buildUserScopeCriteria(masterAdminUserIds, type));
 
     if (status) {
       filter.status = status;
@@ -65,8 +86,8 @@ export class MongooseContactReadRepositoryImpl
       filter.status = { $ne: ContactStatus.DELETED };
     }
 
-    if (type) {
-      Object.assign(filter, this.buildTypeFilter(type));
+    if (constraints.length > 0) {
+      filter.$and = constraints;
     }
 
     const sortCriteria = this.buildSortCriteria(sorts);
@@ -93,12 +114,26 @@ export class MongooseContactReadRepositoryImpl
     q: string;
     limit: number;
   }): Promise<{ data: Contact[] }> {
-    const filter = {
+    const masterAdminUserIds = await this.userModel.distinct('user_id', {
+      system_role: SystemRole.MASTER_ADMIN,
+    });
+
+    const filter: Record<string, unknown> = {
       status: ContactStatus.ACTIVE,
-      $or: [
-        { full_name: { $regex: escapeRegex(params.q), $options: 'i' } },
-        { company_name: { $regex: escapeRegex(params.q), $options: 'i' } },
-        { 'emails.value': { $regex: escapeRegex(params.q), $options: 'i' } },
+      $and: [
+        {
+          $or: [
+            { full_name: { $regex: escapeRegex(params.q), $options: 'i' } },
+            { company_name: { $regex: escapeRegex(params.q), $options: 'i' } },
+            {
+              'emails.value': {
+                $regex: escapeRegex(params.q),
+                $options: 'i',
+              },
+            },
+          ],
+        },
+        this.buildUserScopeCriteria(masterAdminUserIds),
       ],
     };
 
@@ -115,12 +150,26 @@ export class MongooseContactReadRepositoryImpl
     };
   }
 
-  private buildTypeFilter(type: ContactTypeFilter): Record<string, unknown> {
+  private buildUserScopeCriteria(
+    masterAdminUserIds: string[],
+    type?: ContactTypeFilter,
+  ): Record<string, unknown> {
     if (type === 'INTERNAL') {
-      return { user_id: { $ne: null } };
+      return {
+        user_id: {
+          $ne: null,
+          $nin: masterAdminUserIds,
+        },
+      };
     }
 
-    return { user_id: null };
+    if (type === 'EXTERNAL') {
+      return { user_id: null };
+    }
+
+    return {
+      $or: [{ user_id: null }, { user_id: { $nin: masterAdminUserIds } }],
+    };
   }
 
   private buildSortCriteria(
