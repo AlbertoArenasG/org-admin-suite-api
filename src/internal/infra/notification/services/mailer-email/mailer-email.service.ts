@@ -4,7 +4,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
-  GenericEmailDto,
+  InternalAssetMaintenanceProviderFollowUpNotificationDto,
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserPasswordResetEmailDto,
@@ -28,15 +28,40 @@ export class MailerEmailService implements IEmailService {
     this.subjects = emailSubjects;
   }
 
-  async sendGenericEmail(payload: GenericEmailDto): Promise<void> {
+  async sendInternalAssetMaintenanceProviderFollowUp(
+    payload: InternalAssetMaintenanceProviderFollowUpNotificationDto,
+  ): Promise<void> {
+    const template =
+      this.templates[
+        NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP
+      ];
+    const subjectTemplate =
+      this.subjects[
+        NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP
+      ];
+
+    const context = {
+      providerName: payload.providerName ?? null,
+      assetName: payload.assetName,
+      assetIdentifier: payload.assetIdentifier,
+      assetMaintenanceType: payload.assetMaintenanceType,
+      expirationDate: payload.expirationDate,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+    const subject = subjectTemplate(context);
+
     await this.mailerService.sendMail({
       to: payload.to,
       cc: payload.cc && payload.cc.length > 0 ? payload.cc : undefined,
-      subject: payload.subject,
-      html: payload.html,
+      subject,
+      html,
     });
 
-    this.logger.debug(`Generic email sent to ${payload.to.join(', ')}`);
+    this.logger.debug(
+      `Provider follow-up email sent to ${payload.to.join(', ')}`,
+    );
   }
 
   async sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void> {

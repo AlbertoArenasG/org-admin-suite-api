@@ -5,7 +5,10 @@ import {
   SendInternalAssetMaintenanceProviderFollowUpDto,
 } from '@application/dto';
 import { InternalAssetMaintenanceRecordMapper } from '@application/mappers';
-import { AuditUserFetcherService } from '@application/services';
+import {
+  AuditUserFetcherService,
+  InternalAssetMaintenanceProviderFollowUpNotifierService,
+} from '@application/services';
 import {
   collectPolicyIds,
   collectProviderFollowUpRecipientGroupIds,
@@ -13,7 +16,6 @@ import {
 import {
   Contact,
   ContactStatus,
-  InternalAssetMaintenanceRecord,
   NotificationChannel,
   RecipientGroup,
   RecipientGroupStatus,
@@ -34,7 +36,6 @@ import {
   IRecipientGroupReadRepository,
   IRecipientGroupReadRepositoryToken,
 } from '@domain/ports/repositories';
-import { IEmailService, IEmailServiceToken } from '@domain/ports/services';
 
 @Injectable()
 export class SendInternalAssetMaintenanceProviderFollowUpUseCase {
@@ -47,9 +48,8 @@ export class SendInternalAssetMaintenanceProviderFollowUpUseCase {
     private readonly recipientGroupReadRepository: IRecipientGroupReadRepository,
     @Inject(IContactReadRepositoryToken)
     private readonly contactReadRepository: IContactReadRepository,
-    @Inject(IEmailServiceToken)
-    private readonly emailService: IEmailService,
     private readonly auditUserFetcher: AuditUserFetcherService,
+    private readonly notifier: InternalAssetMaintenanceProviderFollowUpNotifierService,
   ) {}
 
   async execute(
@@ -151,11 +151,14 @@ export class SendInternalAssetMaintenanceProviderFollowUpUseCase {
       });
     }
 
-    await this.emailService.sendGenericEmail({
+    await this.notifier.send({
       to: Array.from(toEmails),
       cc: Array.from(ccEmails),
-      subject: `Seguimiento de activo interno ${record.assetIdentifier}`,
-      html: this.buildEmailHtmlFromRecord(record),
+      providerName: record.provider?.providerName ?? null,
+      assetName: record.assetName,
+      assetIdentifier: record.assetIdentifier,
+      assetMaintenanceType: record.assetMaintenanceType,
+      expirationDate: record.expirationDate,
     });
 
     record.updateDetails(
@@ -213,31 +216,5 @@ export class SendInternalAssetMaintenanceProviderFollowUpUseCase {
         target.add(email);
       }
     }
-  }
-
-  private buildEmailHtml(record: {
-    assetName: string;
-    assetIdentifier: string;
-    assetMaintenanceType: string;
-    provider: { providerName: string | null } | null;
-    expirationDate: string;
-  }): string {
-    return `
-      <p>Hola${record.provider?.providerName ? `, ${record.provider.providerName}` : ''}.</p>
-      <p>Solicitamos seguimiento del activo interno <strong>${record.assetName}</strong> con identificador <strong>${record.assetIdentifier}</strong>.</p>
-      <p>Tipo de mantenimiento: <strong>${record.assetMaintenanceType}</strong>.</p>
-      <p>Fecha de vencimiento vigente: <strong>${record.expirationDate}</strong>.</p>
-      <p>Favor de compartir el estatus actualizado cuando sea posible.</p>
-    `;
-  }
-
-  private buildEmailHtmlFromRecord(record: InternalAssetMaintenanceRecord) {
-    return this.buildEmailHtml({
-      assetName: record.assetName,
-      assetIdentifier: record.assetIdentifier,
-      assetMaintenanceType: record.assetMaintenanceType,
-      provider: record.provider,
-      expirationDate: record.expirationDate,
-    });
   }
 }

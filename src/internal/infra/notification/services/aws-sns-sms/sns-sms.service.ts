@@ -38,6 +38,10 @@ export class SnsSmsService implements ISmsService {
       [NotificationType.SERVICE_ENTRY_CREATED]: Handlebars.compile(
         'Se registró un nuevo servicio: {{serviceOrderIdentifier}}',
       ),
+      [NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP]:
+        Handlebars.compile(
+          'Seguimiento de activo interno: {{assetIdentifier}}',
+        ),
     };
   }
 

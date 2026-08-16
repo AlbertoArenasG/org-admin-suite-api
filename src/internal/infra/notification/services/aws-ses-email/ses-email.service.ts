@@ -5,7 +5,7 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { NotificationType } from '@domain/entities';
 import { IEmailService } from '@domain/ports/services';
 import {
-  GenericEmailDto,
+  InternalAssetMaintenanceProviderFollowUpNotificationDto,
   ServiceEntryCreatedNotificationDto,
   UserRegistrationInvitationEmailDto,
   UserPasswordResetEmailDto,
@@ -37,7 +37,30 @@ export class SesEmailService implements IEmailService {
     this.subjects = emailSubjects;
   }
 
-  async sendGenericEmail(payload: GenericEmailDto): Promise<void> {
+  async sendInternalAssetMaintenanceProviderFollowUp(
+    payload: InternalAssetMaintenanceProviderFollowUpNotificationDto,
+  ): Promise<void> {
+    const template =
+      this.templates[
+        NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP
+      ];
+    const subjectTemplate =
+      this.subjects[
+        NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP
+      ];
+
+    const context = {
+      providerName: payload.providerName ?? null,
+      assetName: payload.assetName,
+      assetIdentifier: payload.assetIdentifier,
+      assetMaintenanceType: payload.assetMaintenanceType,
+      expirationDate: payload.expirationDate,
+      year: new Date().getFullYear(),
+    };
+
+    const html = template(context);
+    const subject = subjectTemplate(context);
+
     const command = new SendEmailCommand({
       Source: this.envService.get('AWS_SES_FROM_EMAIL'),
       Destination: {
@@ -45,15 +68,17 @@ export class SesEmailService implements IEmailService {
         CcAddresses: payload.cc && payload.cc.length > 0 ? payload.cc : [],
       },
       Message: {
-        Subject: { Data: payload.subject, Charset: 'UTF-8' },
+        Subject: { Data: subject, Charset: 'UTF-8' },
         Body: {
-          Html: { Data: payload.html, Charset: 'UTF-8' },
+          Html: { Data: html, Charset: 'UTF-8' },
         },
       },
     });
 
     await this.ses.send(command);
-    this.logger.debug(`SES generic email sent to ${payload.to.join(', ')}`);
+    this.logger.debug(
+      `SES provider follow-up email sent to ${payload.to.join(', ')}`,
+    );
   }
 
   async sendUserWelcome(payload: UserWelcomeEmailDto): Promise<void> {

@@ -132,12 +132,8 @@ const userPasswordResetTemplate = Handlebars.compile(
 </html>`,
 );
 
-export const emailTemplates: NotificationTemplateRegistry = {
-  [NotificationType.WELCOME_USER]: welcomeTemplate,
-  [NotificationType.USER_REGISTRATION_INVITATION]:
-    userRegistrationInvitationTemplate,
-  [NotificationType.USER_PASSWORD_RESET]: userPasswordResetTemplate,
-  [NotificationType.SERVICE_ENTRY_CREATED]: Handlebars.compile(`<!DOCTYPE html>
+const serviceEntryCreatedTemplate = Handlebars.compile(
+  `<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -177,7 +173,60 @@ export const emailTemplates: NotificationTemplateRegistry = {
       </tr>
     </table>
   </body>
-</html>`),
+</html>`,
+);
+
+const internalAssetMaintenanceProviderFollowUpTemplate = Handlebars.compile(
+  `<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seguimiento con proveedor</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f5f7fb;">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#f5f7fb;padding:32px 0;">
+      <tr>
+        <td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(15,23,42,0.12);">
+            <tr>
+              <td style="font-family:'Helvetica Neue',Arial,sans-serif;padding:40px 48px 32px;">
+                <h1 style="margin:0;font-size:26px;color:#0b4abf;">Hola{{#if providerName}}, {{providerName}}{{/if}},</h1>
+                <p style="margin:16px 0 24px;font-size:16px;line-height:1.6;color:#475569;">
+                  Solicitamos seguimiento del activo interno <strong>{{assetName}}</strong> con identificador <strong>{{assetIdentifier}}</strong>.
+                </p>
+                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#475569;">
+                  Tipo de mantenimiento: <strong>{{assetMaintenanceType}}</strong>.
+                </p>
+                <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#475569;">
+                  Fecha de vencimiento vigente: <strong>{{expirationDate}}</strong>.
+                </p>
+                <p style="margin:0;font-size:16px;line-height:1.6;color:#475569;">
+                  Favor de compartir el estatus actualizado cuando sea posible.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-family:'Helvetica Neue',Arial,sans-serif;padding:24px 48px;background-color:#f8fafc;color:#94a3b8;font-size:13px;text-align:center;">
+                © {{year}} Org Admin Suite. Todos los derechos reservados.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`,
+);
+
+export const emailTemplates: NotificationTemplateRegistry = {
+  [NotificationType.WELCOME_USER]: welcomeTemplate,
+  [NotificationType.USER_REGISTRATION_INVITATION]:
+    userRegistrationInvitationTemplate,
+  [NotificationType.USER_PASSWORD_RESET]: userPasswordResetTemplate,
+  [NotificationType.SERVICE_ENTRY_CREATED]: serviceEntryCreatedTemplate,
+  [NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP]:
+    internalAssetMaintenanceProviderFollowUpTemplate,
 };
 
 export const emailSubjects: NotificationTemplateRegistry = {
@@ -193,4 +242,6 @@ export const emailSubjects: NotificationTemplateRegistry = {
   [NotificationType.SERVICE_ENTRY_CREATED]: Handlebars.compile(
     'Se registró un nuevo servicio',
   ),
+  [NotificationType.INTERNAL_ASSET_MAINTENANCE_PROVIDER_FOLLOW_UP]:
+    Handlebars.compile('Seguimiento de activo interno {{assetIdentifier}}'),
 };
