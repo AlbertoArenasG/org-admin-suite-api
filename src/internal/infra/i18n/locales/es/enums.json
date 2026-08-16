@@ -65,6 +65,12 @@
       "DELETED": "Eliminado"
     }
   },
+  "RECIPIENT_GROUP": {
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "DELETED": "Eliminado"
+    }
+  },
   "EXPIRATION_STATUS_POLICY": {
     "STATUS": {
       "ACTIVE": "Activa",
