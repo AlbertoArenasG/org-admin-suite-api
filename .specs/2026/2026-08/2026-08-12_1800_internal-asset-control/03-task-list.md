@@ -48,10 +48,16 @@
 - [ ] Implementar catálogo en código de `assetMaintenanceType`
       Status: pending
 
+- [ ] Implementar endpoint catálogo localizado de `internal-asset-maintenance-record`
+      Status: pending
+
 - [ ] Implementar módulo `expiration-status-policy`
       Status: pending
 
 - [ ] Implementar módulo `expiration-notification-policy`
+      Status: pending
+
+- [ ] Implementar endpoints catálogo localizados de policies de expiración
       Status: pending
 
 - [ ] Implementar `expiration_status_materialization`

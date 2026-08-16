@@ -86,11 +86,32 @@ Reglas:
 ### HTTP Contracts
 
 - `GET /v1/expiration-status-policies`
+- `GET /v1/expiration-status-policies/catalog`
 - `GET /v1/expiration-status-policies/options`
 - `GET /v1/expiration-status-policies/:policyId`
 - `POST /v1/expiration-status-policies`
 - `PATCH /v1/expiration-status-policies/:policyId`
 - `DELETE /v1/expiration-status-policies/:policyId`
+
+### Catalog Shape
+
+- `statuses`
+
+Cada item:
+
+- `code`
+- `name`
+- `name_key`
+
+Seguridad:
+
+- se tratará como capability auxiliar de `expiration-status-policy`
+- no define permiso dedicado adicional
+
+Responsabilidad:
+
+- `catalog` expone enums y metadata localizada de formulario
+- `options` se conserva aparte para selección ligera de policies reutilizables
 
 ### Paged List Shape
 
@@ -200,11 +221,35 @@ Reglas:
 ### HTTP Contracts
 
 - `GET /v1/expiration-notification-policies`
+- `GET /v1/expiration-notification-policies/catalog`
 - `GET /v1/expiration-notification-policies/options`
 - `GET /v1/expiration-notification-policies/:policyId`
 - `POST /v1/expiration-notification-policies`
 - `PATCH /v1/expiration-notification-policies/:policyId`
 - `DELETE /v1/expiration-notification-policies/:policyId`
+
+### Catalog Shape
+
+- `statuses`
+- `anchors`
+- `trigger_modes`
+- `repeat_until_values`
+
+Cada item:
+
+- `code`
+- `name`
+- `name_key`
+
+Seguridad:
+
+- se tratará como capability auxiliar de `expiration-notification-policy`
+- no define permiso dedicado adicional
+
+Responsabilidad:
+
+- `catalog` expone enums y metadata localizada de formulario
+- `options` se conserva aparte para selección ligera de policies reutilizables
 
 ### Paged List Shape
 
@@ -297,6 +342,36 @@ Restricciones:
 - `provider` opcional
 - `provider_follow_up` opcional
 
+### HTTP Contracts
+
+- `GET /v1/internal-asset-maintenance-records/catalog`
+- `GET /v1/internal-asset-maintenance-records`
+- `GET /v1/internal-asset-maintenance-records/:recordId`
+- `POST /v1/internal-asset-maintenance-records`
+- `PATCH /v1/internal-asset-maintenance-records/:recordId`
+- `DELETE /v1/internal-asset-maintenance-records/:recordId`
+- `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
+
+### Catalog Shape
+
+- `asset_maintenance_types`
+- `statuses`
+
+Cada item:
+
+- `code`
+- `name`
+- `name_key`
+
+Responsabilidad:
+
+- este recurso expone `catalog`, pero no requiere `options` en `v1`
+
+Seguridad:
+
+- se tratará como capability auxiliar del recurso principal
+- no define permiso dedicado adicional
+
 ### Provider Block
 
 - `sentToProvider`
@@ -304,6 +379,14 @@ Restricciones:
 - `sentToProviderAt`
 - `providerLeadTime`
 - `providerNotes`
+
+Reglas:
+
+- cuando `sentToProvider = true`, `providerName` es obligatorio
+- cuando `sentToProvider = true`, `sentToProviderAt` sigue siendo opcional
+- cuando `sentToProvider = true`, `providerLeadTime` sigue siendo opcional
+- `providerNotes` sigue siendo opcional en cualquier caso
+- cuando `sentToProvider = false`, backend conserva los datos ya capturados del bloque `provider` y no limpia automáticamente ningún campo
 
 ### Provider Follow Up Block
 
@@ -315,13 +398,20 @@ Cada regla:
 
 - `offset`
 - `recipient_group_ids`
-- `cc_recipient_group_ids` opcional
+- `cc_recipient_group_ids`
 
 Reglas:
 
+- cada regla debe contener al menos un `recipient_group_id`
+- `cc_recipient_group_ids` puede venir vacío, pero no debe omitirse del shape
 - sigue usando offset simple en `v1`
 - no reutiliza `expiration-notification-policy`
 - resuelve canales implícitamente desde `recipient-groups`
+- cuando `enabled = true`, `rules[]` debe contener al menos una regla
+- cuando `enabled = false`, backend conserva `rules[]` y solo desactiva su ejecución
+- cuando `enabled = false`, backend también conserva `last_sent_at`
+- puede persistirse aunque `sentToProvider = false`
+- mientras `sentToProvider = false`, su configuración se considera preconfigurada y no ejecutable
 
 ### Paged List Shape
 
@@ -406,6 +496,7 @@ Backend:
 - calcula `expiration_date` si no llega
 - valida `expiration_date` si sí llega
 - deriva `derived_status` para UI
+- acepta cualquier `status` persistido válido excepto `DELETED`
 
 ### PATCH Contract
 
@@ -449,6 +540,8 @@ Comportamiento:
 - usa la configuración vigente del subbloque `provider_follow_up`
 - no modifica políticas de expiración
 - no crea un nuevo registro
+- si `sentToProvider = false`, backend debe rechazar la acción
+- si `provider_follow_up.enabled = false`, backend también debe rechazar la acción
 
 ## Status And Expiration Evaluation
 

@@ -109,8 +109,12 @@
 - Subtareas:
   - implementar `internal-asset-control`
   - implementar catálogo `assetMaintenanceType`
+  - implementar `GET /v1/internal-asset-maintenance-records/catalog`
   - implementar `expiration-status-policy`
   - implementar `expiration-notification-policy`
+  - implementar:
+    - `GET /v1/expiration-status-policies/catalog`
+    - `GET /v1/expiration-notification-policies/catalog`
   - implementar `expiration_status_materialization`
   - implementar `expiration_notification_materialization`
   - integrar derivación de semáforo y `OVERDUE`

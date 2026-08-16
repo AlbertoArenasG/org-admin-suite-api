@@ -73,7 +73,6 @@ Ya se confirmó que no todos los registros son calibración y que mantenimiento 
   - `CALIBRATION`
   - `VERIFICATION`
   - `PREVENTIVE_MAINTENANCE`
-  - `OTHER`
 
 ## 2026-08-12
 
@@ -129,6 +128,26 @@ El módulo nace como control operativo flexible y negocio todavía está explora
 - backend no cambiará automáticamente `status` por fecha, semáforo, vencimiento ni follow-up
 - `DELETED` solo podrá alcanzarse mediante borrado lógico
 - `COMPLETED` y `CANCELLED` excluyen semáforo y `OVERDUE`
+
+## 2026-08-13
+
+### Decision
+
+En `POST`, `internal-asset-maintenance-record` podrá nacer en cualquier `status` persistido válido, excepto `DELETED`.
+
+### Reason
+
+Negocio probablemente cargará registros históricos y no conviene forzar que todo alta nazca en `PENDING` si el dato real ya corresponde a un trabajo en proceso, completado o cancelado.
+
+### Impact
+
+- `POST` aceptará:
+  - `PENDING`
+  - `IN_PROGRESS`
+  - `COMPLETED`
+  - `CANCELLED`
+- `POST` no aceptará `DELETED`
+- la carga histórica no requerirá pasos artificiales posteriores para ajustar `status`
 
 ## 2026-08-13
 
@@ -195,6 +214,15 @@ Aunque el cliente habló inicialmente de `laboratorio`, el dominio real también
 - se evita acoplar el modelo a `laboratory`
 - el bloque opcional mínimo del registro deberá contemplar:
   - `sentToProvider`
+  - `providerName`
+  - `sentToProviderAt`
+  - `providerLeadTime`
+  - `providerNotes`
+- cuando `sentToProvider = true`, `providerName` será obligatorio
+- cuando `sentToProvider = true`, `sentToProviderAt` seguirá siendo opcional
+- cuando `sentToProvider = true`, `providerLeadTime` seguirá siendo opcional
+- `providerNotes` seguirá siendo opcional en cualquier caso
+- cuando `sentToProvider = false`, backend conservará los datos ya capturados del bloque `provider` y no limpiará automáticamente:
   - `providerName`
   - `sentToProviderAt`
   - `providerLeadTime`
@@ -335,6 +363,76 @@ No conviene introducir una restricción de negocio no pedida si más adelante pu
 
 ### Decision
 
+Los catálogos localizados de enums y opciones de UI para este dominio se expondrán agrupados por recurso o capability, no como endpoints unitarios por cada enum.
+
+### Reason
+
+El frontend no debe hardcodear estos catálogos, pero tampoco conviene multiplicar endpoints demasiado pequeños para cada lista técnica aislada.
+
+### Impact
+
+- `internal-asset-maintenance-record` tendrá un endpoint catálogo agrupado para al menos:
+  - `assetMaintenanceType`
+  - `status`
+- `expiration-status-policy` tendrá un endpoint catálogo agrupado para al menos:
+  - `status`
+- `expiration-notification-policy` tendrá un endpoint catálogo agrupado para al menos:
+  - `status`
+  - `anchor`
+  - `trigger_mode`
+  - `repeat_until`
+- los ítems de esos catálogos deberán devolverse localizados desde backend con al menos:
+  - `code`
+  - `name`
+  - `name_key`
+
+## 2026-08-14
+
+### Decision
+
+Los endpoints catálogo de este dominio se tratarán como capabilities auxiliares y no introducirán permisos dedicados nuevos.
+
+### Reason
+
+Estos endpoints existen para soportar formularios y renderizado de UI del mismo módulo o capability administrable. Darles permisos independientes agregaría fricción innecesaria y haría más tediosa la configuración de roles.
+
+### Impact
+
+- `GET /v1/internal-asset-maintenance-records/catalog` se protegerá como capability auxiliar de `internal-asset-maintenance-record`
+- `GET /v1/expiration-status-policies/catalog` se protegerá como capability auxiliar de `expiration-status-policy`
+- `GET /v1/expiration-notification-policies/catalog` se protegerá como capability auxiliar de `expiration-notification-policy`
+- estos endpoints no agregarán operaciones nuevas al catálogo funcional de autorización
+- su acceso quedará cubierto por el permiso funcional correspondiente del módulo al que sirven
+
+## 2026-08-14
+
+### Decision
+
+`catalog` y `options` convivirán con responsabilidades distintas.
+
+### Reason
+
+No cumplen la misma función. `catalog` resuelve enums y metadata localizada de formulario; `options` resuelve selección ligera de entidades reutilizables existentes.
+
+### Impact
+
+- `catalog` se usará para enums, estados y listas controladas del sistema
+- `options` se reservará para lookups ligeros de entidades administrables reutilizables
+- en este dominio:
+  - `internal-asset-maintenance-record` tendrá `catalog`, pero no `options`
+  - `expiration-status-policy` tendrá:
+    - `catalog`
+    - `options`
+  - `expiration-notification-policy` tendrá:
+    - `catalog`
+    - `options`
+- `options` seguirá devolviendo selección ligera de entidades, no enums
+- `catalog` no sustituye a `options`
+
+## 2026-08-14
+
+### Decision
+
 `expiration-status-policy` tendrá CRUD completo desde `v1` y doble lectura para administración y selección.
 
 ### Reason
@@ -350,9 +448,11 @@ Si será una capability administrable real, no conviene dejarla con contratos pa
   - `PATCH /v1/expiration-status-policies/:policyId`
   - `DELETE /v1/expiration-status-policies/:policyId`
   - `GET /v1/expiration-status-policies/options`
+  - `GET /v1/expiration-status-policies/catalog`
 - tendrá:
   - listado paginado administrativo
-  - colección simple no paginada para selección reusable
+  - colección simple no paginada para selección reusable mediante `options`
+  - catálogo localizado de enums y metadata de formulario mediante `catalog`
 
 ## 2026-08-14
 
@@ -373,9 +473,11 @@ Su propósito reusable exige contratos completos y diferenciados para gestión a
   - `PATCH /v1/expiration-notification-policies/:policyId`
   - `DELETE /v1/expiration-notification-policies/:policyId`
   - `GET /v1/expiration-notification-policies/options`
+  - `GET /v1/expiration-notification-policies/catalog`
 - tendrá:
   - listado paginado administrativo
-  - colección simple no paginada para selección reusable
+  - colección simple no paginada para selección reusable mediante `options`
+  - catálogo localizado de enums y metadata de formulario mediante `catalog`
 
 ## 2026-08-14
 
@@ -644,9 +746,16 @@ El seguimiento programable al provider no representa una política global reutil
 - cada regla tendrá al menos:
   - `offset`
   - `recipient_group_ids`
-  - `cc_recipient_group_ids` opcional
+  - `cc_recipient_group_ids`
+- cada regla deberá contener al menos un `recipient_group_id`
+- `cc_recipient_group_ids` podrá venir vacío, pero no se omitirá del shape
 - a diferencia de `expiration-notification-policy`, `provider_follow_up` mantiene `offset` simple en `v1`
 - el bloque será opcional dentro del registro principal
+- cuando `provider_follow_up.enabled = true`, `rules[]` deberá contener al menos una regla
+- cuando `provider_follow_up.enabled = false`, backend conservará `rules[]` y solo desactivará su ejecución
+- cuando `provider_follow_up.enabled = false`, `last_sent_at` también se conservará como dato histórico
+- `provider_follow_up` podrá existir aunque `sentToProvider = false`
+- mientras `sentToProvider = false`, la configuración de `provider_follow_up` se considera preconfigurada, pero no activa para ejecución
 
 ## 2026-08-14
 
@@ -809,6 +918,8 @@ Negocio necesita un botón que dispare una consulta inmediata de estatus al prov
   - `POST /v1/internal-asset-maintenance-records/:recordId/provider-follow-up/send`
 - esa acción usará la configuración vigente del subbloque `provider_follow_up`
 - no creará un nuevo registro ni modificará políticas de expiración
+- si `sentToProvider = false`, backend rechazará la acción manual
+- si `provider_follow_up.enabled = false`, backend también rechazará la acción manual
 
 ## 2026-08-14
 

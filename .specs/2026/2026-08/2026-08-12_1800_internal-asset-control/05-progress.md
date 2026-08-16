@@ -16,6 +16,10 @@
     - `internal-asset-maintenance-record`
 - Se aprobó captura directa del activo en `v1`, sin catálogo maestro por ahora.
 - Se aprobó `assetMaintenanceType` desde `v1`, tomado de catálogo en código.
+- Se acotó el catálogo inicial de `assetMaintenanceType` a:
+  - `CALIBRATION`
+  - `VERIFICATION`
+  - `PREVENTIVE_MAINTENANCE`
 - Se aprobó que el intervalo de vigencia se persista como estructura compuesta por unidades:
   - `years`
   - `months`
@@ -42,6 +46,7 @@
   - `CANCELLED`
   sean manuales en `v1`.
 - Se aprobó que `DELETED` solo se alcance por borrado lógico.
+- Se aprobó que `POST` de `internal-asset-maintenance-record` acepte cualquier `status` persistido válido excepto `DELETED`, para soportar carga histórica.
 - Se aprobó el shape base de `provider_follow_up` como subbloque opcional del registro:
   - `enabled`
   - `rules[]`
@@ -49,7 +54,20 @@
 - Se aprobó que cada regla de `provider_follow_up` tenga al menos:
   - `offset`
   - `recipient_group_ids`
-  - `cc_recipient_group_ids` opcional
+  - `cc_recipient_group_ids`
+- Se aprobó que cada regla de `provider_follow_up` deba contener al menos un `recipient_group_id`.
+- Se aprobó que `cc_recipient_group_ids` pueda venir vacío, pero no omitirse del shape.
+- Se aprobó que, si `provider_follow_up.enabled = true`, `rules[]` debe contener al menos una regla.
+- Se corrigió que, si `provider_follow_up.enabled = false`, backend conservará `rules[]` y solo desactivará su ejecución.
+- Se aprobó que `provider_follow_up.last_sent_at` también se conserve al desactivar `enabled`.
+- Se aprobó que `provider_follow_up` pueda existir aunque `sentToProvider = false`, quedando como configuración prearmada.
+- Se aprobó que el envío manual `provider-follow-up/send` se rechace mientras `sentToProvider = false`.
+- Se aprobó que el envío manual `provider-follow-up/send` también se rechace cuando `provider_follow_up.enabled = false`.
+- Se aprobó que `providerName` sea obligatorio cuando `sentToProvider = true`.
+- Se aprobó que `sentToProviderAt` permanezca opcional incluso cuando `sentToProvider = true`.
+- Se aprobó que `providerLeadTime` permanezca opcional incluso cuando `sentToProvider = true`.
+- Se aprobó que `providerNotes` permanezca opcional en cualquier caso.
+- Se aprobó que, si `sentToProvider = false`, backend conserve los datos ya capturados del bloque `provider` y no limpie esos campos automáticamente.
 
 ## 2026-08-14
 
@@ -158,6 +176,20 @@
   - `COMPLETED`
   - `CANCELLED`
 - Se registró que los estados visuales derivados del sistema deben tener código neutral estable y estar localizados en backend al menos para español e inglés.
+- Se aprobó que los enums y catálogos de UI de este dominio se expondrán como endpoints catálogo agrupados por recurso o capability, no como endpoints unitarios por enum.
+- Se aprobó agregar:
+  - `GET /v1/internal-asset-maintenance-records/catalog`
+  - `GET /v1/expiration-status-policies/catalog`
+  - `GET /v1/expiration-notification-policies/catalog`
+- Se aprobó que esos catálogos devuelvan ítems localizados con:
+  - `code`
+  - `name`
+  - `name_key`
+- Se aprobó que esos endpoints catálogo se tratarán como capabilities auxiliares y no crearán permisos nuevos dedicados.
+- Se aprobó separar responsabilidades entre:
+  - `catalog` para enums y metadata localizada de formulario
+  - `options` para selección ligera de entidades reutilizables
+- Se aprobó que `internal-asset-maintenance-record` exponga `catalog`, pero no `options` en `v1`.
 - Se fijaron los `color_hex` de los estados visuales derivados del sistema:
   - `ON_TIME`: `#22C55E`
   - `OVERDUE`: `#EF4444`
