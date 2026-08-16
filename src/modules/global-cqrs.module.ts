@@ -41,6 +41,9 @@ import {
   CreateExpirationNotificationPolicyHandler,
   UpdateExpirationNotificationPolicyHandler,
   DeleteExpirationNotificationPolicyHandler,
+  CreateInternalAssetMaintenanceRecordHandler,
+  UpdateInternalAssetMaintenanceRecordHandler,
+  DeleteInternalAssetMaintenanceRecordHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -81,6 +84,9 @@ import {
   GetExpirationNotificationPolicyByIdHandler,
   GetExpirationNotificationPolicyOptionsHandler,
   GetExpirationNotificationPolicyCatalogHandler,
+  GetInternalAssetMaintenanceRecordsHandler,
+  GetInternalAssetMaintenanceRecordByIdHandler,
+  GetInternalAssetMaintenanceRecordCatalogHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -127,6 +133,9 @@ const providers = [
   CreateExpirationNotificationPolicyHandler,
   UpdateExpirationNotificationPolicyHandler,
   DeleteExpirationNotificationPolicyHandler,
+  CreateInternalAssetMaintenanceRecordHandler,
+  UpdateInternalAssetMaintenanceRecordHandler,
+  DeleteInternalAssetMaintenanceRecordHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -161,6 +170,9 @@ const providers = [
   GetExpirationNotificationPolicyByIdHandler,
   GetExpirationNotificationPolicyOptionsHandler,
   GetExpirationNotificationPolicyCatalogHandler,
+  GetInternalAssetMaintenanceRecordsHandler,
+  GetInternalAssetMaintenanceRecordByIdHandler,
+  GetInternalAssetMaintenanceRecordCatalogHandler,
 ];
 
 @Global()

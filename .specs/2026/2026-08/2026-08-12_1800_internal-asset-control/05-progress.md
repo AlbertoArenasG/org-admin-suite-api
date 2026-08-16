@@ -259,3 +259,51 @@
 - Se validó el slice con:
   - `npm run build`
   - `npm run lint`
+- Se implementó la base backend de `internal-asset-maintenance-record`.
+- Se implementaron los endpoints:
+  - `GET /v1/internal-asset-maintenance-records`
+  - `GET /v1/internal-asset-maintenance-records/catalog`
+  - `GET /v1/internal-asset-maintenance-records/:recordId`
+  - `POST /v1/internal-asset-maintenance-records`
+  - `PATCH /v1/internal-asset-maintenance-records/:recordId`
+  - `DELETE /v1/internal-asset-maintenance-records/:recordId`
+- Se implementó el wiring completo en:
+  - domain entity
+  - read/write repositories
+  - mongoose schema + mapper + repos
+  - application DTOs + mapper + use cases
+  - CQRS commands y queries
+  - controller + request DTOs + presenter
+- Se implementó el catálogo en código de `assetMaintenanceType` con:
+  - `CALIBRATION`
+  - `VERIFICATION`
+  - `PREVENTIVE_MAINTENANCE`
+- Se implementó el catálogo localizado de backend para:
+  - `assetMaintenanceType`
+  - `status` persistido del record
+  - `derived_status` de sistema
+- Se agregó el módulo `INTERNAL_ASSET_MAINTENANCE_RECORDS` al catálogo de autorización con operaciones:
+  - `CREATE`
+  - `READ`
+  - `UPDATE`
+  - `DELETE`
+- Se implementó la validación y normalización base de:
+  - `last_maintenance_at` como `date-only`
+  - `expiration_date` como `date-only`
+  - `interval`
+  - bloque opcional `provider`
+  - references opcionales a `expiration_status_policy_id`
+  - references opcionales a `expiration_notification_policy_id`
+- Se implementó el cálculo backend de `expiration_date` cuando el payload no la envía.
+- Se implementó la derivación runtime de `derived_status` del sistema con:
+  - `ON_TIME`
+  - `OVERDUE`
+  - `COMPLETED`
+  - `CANCELLED`
+- Se dejó explícitamente fuera de esta entrega:
+  - `expiration_status_materialization`
+  - `expiration_notification_materialization`
+  - `provider_follow_up`
+- Se validó este slice con:
+  - `npm run build`
+  - `npm run lint`

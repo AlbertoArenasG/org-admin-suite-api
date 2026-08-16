@@ -77,4 +77,8 @@ export const configSchemas = [
     name: schemas.ExpirationNotificationPolicyDocument.name,
     schema: schemas.ExpirationNotificationPolicySchema,
   },
+  {
+    name: schemas.InternalAssetMaintenanceRecordDocument.name,
+    schema: schemas.InternalAssetMaintenanceRecordSchema,
+  },
 ];

@@ -42,14 +42,14 @@
 
 ## Phase 3. Implementation
 
-- [ ] Implementar módulo `internal-asset-control`
-      Status: pending
+- [x] Implementar base backend de `internal-asset-control`
+      Status: completed
 
-- [ ] Implementar catálogo en código de `assetMaintenanceType`
-      Status: pending
+- [x] Implementar catálogo en código de `assetMaintenanceType`
+      Status: completed
 
-- [ ] Implementar endpoint catálogo localizado de `internal-asset-maintenance-record`
-      Status: pending
+- [x] Implementar endpoint catálogo localizado de `internal-asset-maintenance-record`
+      Status: completed
 
 - [x] Implementar módulo `expiration-status-policy`
       Status: completed
@@ -66,16 +66,16 @@
 - [ ] Implementar `expiration_notification_materialization`
       Status: pending
 
-- [ ] Integrar cálculo de vencimiento, semáforo y `OVERDUE` derivado
-      Status: pending
+- [x] Integrar cálculo base de vencimiento y `OVERDUE` derivado en runtime
+      Status: completed
 
-- [ ] Integrar subflujo opcional de provider y `provider_follow_up`
+- [ ] Integrar subflujo opcional completo de provider y `provider_follow_up`
       Status: pending
 
 ## Phase 4. Validation
 
-- [ ] Validar reglas mínimas del recurso principal
-      Status: pending
+- [x] Validar reglas mínimas del recurso principal
+      Status: completed
 
 - [x] Validar reglas mínimas de `expiration-status-policy`
       Status: completed
@@ -83,5 +83,5 @@
 - [x] Validar reglas mínimas de `expiration-notification-policy`
       Status: completed
 
-- [ ] Actualizar docs y progreso conforme avance la iniciativa
-      Status: pending
+- [x] Actualizar docs y progreso conforme avance la iniciativa
+      Status: completed

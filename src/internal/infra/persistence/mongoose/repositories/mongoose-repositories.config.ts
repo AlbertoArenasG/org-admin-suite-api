@@ -36,6 +36,8 @@ import {
   MongooseExpirationStatusPolicyWriteRepositoryImpl,
   MongooseExpirationNotificationPolicyReadRepositoryImpl,
   MongooseExpirationNotificationPolicyWriteRepositoryImpl,
+  MongooseInternalAssetMaintenanceRecordReadRepositoryImpl,
+  MongooseInternalAssetMaintenanceRecordWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -76,6 +78,8 @@ import {
   IExpirationStatusPolicyWriteRepositoryToken,
   IExpirationNotificationPolicyReadRepositoryToken,
   IExpirationNotificationPolicyWriteRepositoryToken,
+  IInternalAssetMaintenanceRecordReadRepositoryToken,
+  IInternalAssetMaintenanceRecordWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 export const MongooseRepositoriesConfig = [
@@ -227,6 +231,14 @@ export const MongooseRepositoriesConfig = [
     provide: IExpirationNotificationPolicyWriteRepositoryToken,
     useClass: MongooseExpirationNotificationPolicyWriteRepositoryImpl,
   },
+  {
+    provide: IInternalAssetMaintenanceRecordReadRepositoryToken,
+    useClass: MongooseInternalAssetMaintenanceRecordReadRepositoryImpl,
+  },
+  {
+    provide: IInternalAssetMaintenanceRecordWriteRepositoryToken,
+    useClass: MongooseInternalAssetMaintenanceRecordWriteRepositoryImpl,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -267,4 +279,6 @@ export const MongooseRepositoryTokens = [
   IExpirationStatusPolicyWriteRepositoryToken,
   IExpirationNotificationPolicyReadRepositoryToken,
   IExpirationNotificationPolicyWriteRepositoryToken,
+  IInternalAssetMaintenanceRecordReadRepositoryToken,
+  IInternalAssetMaintenanceRecordWriteRepositoryToken,
 ];

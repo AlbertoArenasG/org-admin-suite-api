@@ -92,6 +92,26 @@
       "FIXED_DURATION": "For a fixed duration"
     }
   },
+  "INTERNAL_ASSET_MAINTENANCE_RECORD": {
+    "TYPE": {
+      "CALIBRATION": "Calibration",
+      "VERIFICATION": "Verification",
+      "PREVENTIVE_MAINTENANCE": "Preventive maintenance"
+    },
+    "STATUS": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "DELETED": "Deleted"
+    },
+    "DERIVED_STATUS": {
+      "ON_TIME": "On time",
+      "OVERDUE": "Overdue",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Email"
@@ -110,7 +130,8 @@
       "CONTACTS": "Contacts",
       "RECIPIENT_GROUPS": "Recipient groups",
       "EXPIRATION_STATUS_POLICIES": "Expiration status policies",
-      "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies"
+      "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies",
+      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control"
     },
     "OPERATION": {
       "CREATE": "Create",

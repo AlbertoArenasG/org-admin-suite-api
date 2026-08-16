@@ -108,8 +108,12 @@
   - implementar módulos, catálogos, derivaciones y wiring backend
 - Subtareas:
   - implementar `internal-asset-control`
+    - base backend del recurso principal completada el 16 de agosto de 2026
+    - incluye CRUD base, catálogo, autorización, i18n y derivación runtime de `derived_status`
   - implementar catálogo `assetMaintenanceType`
+    - completado el 16 de agosto de 2026
   - implementar `GET /v1/internal-asset-maintenance-records/catalog`
+    - completado el 16 de agosto de 2026
   - implementar `expiration-status-policy`
     - completado el 16 de agosto de 2026
     - incluye CRUD, `catalog`, `options`, autorización e i18n base
@@ -121,8 +125,9 @@
     - `GET /v1/expiration-notification-policies/catalog`
   - implementar `expiration_status_materialization`
   - implementar `expiration_notification_materialization`
-  - integrar derivación de semáforo y `OVERDUE`
+  - integrar derivación persistida de semáforo
   - integrar `provider_follow_up`
+  - integrar envío manual `provider-follow-up/send`
 
 ## Slice 9. Validation And Handoff
 

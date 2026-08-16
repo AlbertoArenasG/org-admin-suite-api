@@ -11,3 +11,4 @@ export * from './contact';
 export * from './recipient-group';
 export * from './expiration-status-policy';
 export * from './expiration-notification-policy';
+export * from './internal-asset-maintenance-record';
