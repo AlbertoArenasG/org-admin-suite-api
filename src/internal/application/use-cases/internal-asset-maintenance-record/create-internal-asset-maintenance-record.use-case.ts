@@ -6,7 +6,11 @@ import {
 } from '@application/dto';
 import { InternalAssetMaintenanceRecordMapper } from '@application/mappers';
 import { AuditUserFetcherService } from '@application/services';
-import { InternalAssetMaintenanceRecord } from '@domain/entities';
+import {
+  ExpirationNotificationPolicy,
+  ExpirationStatusPolicy,
+  InternalAssetMaintenanceRecord,
+} from '@domain/entities';
 import {
   IExpirationNotificationPolicyReadRepository,
   IExpirationNotificationPolicyReadRepositoryToken,
@@ -17,7 +21,10 @@ import {
   IInternalAssetMaintenanceRecordWriteRepository,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
 } from '@domain/ports/repositories';
-import { normalizeInternalAssetMaintenanceRecordInput } from './internal-asset-maintenance-record.shared';
+import {
+  applyInternalAssetMaintenanceRecordMaterializations,
+  normalizeInternalAssetMaintenanceRecordInput,
+} from './internal-asset-maintenance-record.shared';
 
 @Injectable()
 export class CreateInternalAssetMaintenanceRecordUseCase {
@@ -52,6 +59,27 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
       updatedBy: input.actorUserId,
       createdAt: new Date(),
       updatedAt: new Date(),
+    });
+
+    const [expirationStatusPolicy, expirationNotificationPolicy] =
+      await Promise.all([
+        normalized.expirationStatusPolicyId
+          ? this.expirationStatusPolicyReadRepository
+              .findById(normalized.expirationStatusPolicyId)
+              .then((result) => result.data)
+          : Promise.resolve<ExpirationStatusPolicy | null>(null),
+        normalized.expirationNotificationPolicyId
+          ? this.expirationNotificationPolicyReadRepository
+              .findById(normalized.expirationNotificationPolicyId)
+              .then((result) => result.data)
+          : Promise.resolve<ExpirationNotificationPolicy | null>(null),
+      ]);
+
+    applyInternalAssetMaintenanceRecordMaterializations({
+      record,
+      expirationStatusPolicy,
+      expirationNotificationPolicy,
+      actorUserId: input.actorUserId,
     });
 
     const { data } = await this.writeRepository.create(record);

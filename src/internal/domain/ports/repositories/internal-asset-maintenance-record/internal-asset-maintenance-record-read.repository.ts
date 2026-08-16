@@ -44,6 +44,12 @@ export interface IInternalAssetMaintenanceRecordReadRepository {
   findById(
     recordId: string,
   ): Promise<{ data: InternalAssetMaintenanceRecord | null }>;
+  findByExpirationStatusPolicyId(
+    expirationStatusPolicyId: string,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }>;
+  findByExpirationNotificationPolicyId(
+    expirationNotificationPolicyId: string,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }>;
   findAll(
     params: FindInternalAssetMaintenanceRecordsParams,
   ): Promise<FindInternalAssetMaintenanceRecordsResult>;

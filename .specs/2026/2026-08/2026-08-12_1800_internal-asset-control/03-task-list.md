@@ -60,11 +60,11 @@
 - [x] Implementar endpoints catálogo localizados de policies de expiración
       Status: completed
 
-- [ ] Implementar `expiration_status_materialization`
-      Status: pending
+- [x] Implementar `expiration_status_materialization`
+      Status: completed
 
-- [ ] Implementar `expiration_notification_materialization`
-      Status: pending
+- [x] Implementar `expiration_notification_materialization`
+      Status: completed
 
 - [x] Integrar cálculo base de vencimiento y `OVERDUE` derivado en runtime
       Status: completed

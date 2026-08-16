@@ -12,11 +12,9 @@ import {
   InternalAssetMaintenanceRecord,
 } from '@domain/entities';
 import {
-  getDerivedInternalAssetStatus,
   getInternalAssetMaintenanceStatuses,
   getInternalAssetMaintenanceType,
   getInternalAssetMaintenanceTypes,
-  getTodayDateOnlyInMexicoCity,
 } from '@application/services/internal-asset-maintenance';
 
 export class InternalAssetMaintenanceRecordMapper {
@@ -36,11 +34,7 @@ export class InternalAssetMaintenanceRecordMapper {
       lastMaintenanceAt: record.lastMaintenanceAt,
       expirationDate: record.expirationDate,
       status: record.status,
-      derivedStatus: getDerivedInternalAssetStatus({
-        status: record.status,
-        expirationDate: record.expirationDate,
-        today: getTodayDateOnlyInMexicoCity(),
-      }),
+      derivedStatus: this.toDerivedStatusDto(record),
       expirationStatusPolicy: this.toStatusPolicySummary(
         record.expirationStatusPolicyId,
         expirationStatusPoliciesById,
@@ -79,11 +73,7 @@ export class InternalAssetMaintenanceRecordMapper {
       expirationDate: record.expirationDate,
       observations: record.observations,
       status: record.status,
-      derivedStatus: getDerivedInternalAssetStatus({
-        status: record.status,
-        expirationDate: record.expirationDate,
-        today: getTodayDateOnlyInMexicoCity(),
-      }),
+      derivedStatus: this.toDerivedStatusDto(record),
       expirationStatusPolicy: this.toStatusPolicySummary(
         record.expirationStatusPolicyId,
         input?.expirationStatusPoliciesById,
@@ -158,6 +148,28 @@ export class InternalAssetMaintenanceRecordMapper {
       name: policy.name,
       code: policy.code,
       status: policy.status,
+    };
+  }
+
+  private static toDerivedStatusDto(record: InternalAssetMaintenanceRecord) {
+    const materialization = record.expirationStatusMaterialization;
+
+    if (!materialization) {
+      return {
+        code: 'ON_TIME',
+        label: 'On time',
+        labelKey: 'INTERNAL_ASSET_MAINTENANCE_RECORD.DERIVED_STATUS.ON_TIME',
+        colorHex: '#22C55E',
+        source: 'SYSTEM' as const,
+      };
+    }
+
+    return {
+      code: materialization.code,
+      label: materialization.label,
+      labelKey: materialization.labelKey,
+      colorHex: materialization.colorHex,
+      source: materialization.source,
     };
   }
 }

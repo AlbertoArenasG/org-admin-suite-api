@@ -228,6 +228,24 @@
 - Se validó el slice con:
   - `npm run build`
   - `npm run lint`
+- Se implementó la persistencia de `expiration_status_materialization` dentro de `internal-asset-maintenance-record`.
+- Se implementó la persistencia de `expiration_notification_materialization` dentro de `internal-asset-maintenance-record`.
+- Se integró el recálculo de ambas materializaciones en:
+  - creación del record
+  - edición del record
+  - borrado lógico del record
+- Se integró la propagación de recálculo cuando se actualiza o elimina una `expiration-status-policy` usada por records.
+- Se integró la propagación de recálculo cuando se actualiza o elimina una `expiration-notification-policy` usada por records.
+- Se agregó búsqueda de records afectados por:
+  - `expiration_status_policy_id`
+  - `expiration_notification_policy_id`
+- Se corrigió el contrato de `derived_status` para soportar:
+  - estados derivados del sistema
+  - estados derivados por policy con label libre definida por negocio
+- Se validó el slice de materializaciones el domingo 16 de agosto de 2026 con:
+  - `npm run build`
+  - `npm run lint`
+  - `npm run lint`
 - Se implementó el módulo backend `expiration-notification-policy` siguiendo el mismo patrón CRUD del repo.
 - Se implementaron los endpoints:
   - `GET /v1/expiration-notification-policies`

@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import {
+  InternalAssetExpirationStatusMaterializationSource,
+  InternalAssetNotificationTriggerEventStatus,
   InternalAssetMaintenanceRecordStatus,
   InternalAssetMaintenanceType,
 } from '@domain/entities';
@@ -41,6 +43,148 @@ export class InternalAssetMaintenanceProviderDocument {
 
   @Prop({ type: String, required: false, default: null })
   provider_notes?: string | null;
+}
+
+@Schema({ _id: false })
+export class InternalAssetExpirationStatusMatchedRuleDocument {
+  @Prop({ type: String, required: true })
+  source_rule_id: string;
+
+  @Prop({
+    type: InternalAssetMaintenanceIntervalDocument,
+    required: true,
+    default: {},
+  })
+  start_offset: InternalAssetMaintenanceIntervalDocument;
+}
+
+@Schema({ _id: false })
+export class InternalAssetExpirationStatusMaterializationDocument {
+  @Prop({
+    type: String,
+    enum: Object.values(InternalAssetExpirationStatusMaterializationSource),
+    required: true,
+  })
+  source: InternalAssetExpirationStatusMaterializationSource;
+
+  @Prop({ type: String, required: true })
+  code: string;
+
+  @Prop({ type: String, required: false, default: null })
+  effective_start_date?: string | null;
+
+  @Prop({ type: String, required: true })
+  label: string;
+
+  @Prop({ type: String, required: false, default: null })
+  label_key?: string | null;
+
+  @Prop({ type: String, required: true })
+  color_hex: string;
+
+  @Prop({
+    type: InternalAssetExpirationStatusMatchedRuleDocument,
+    required: false,
+    default: null,
+  })
+  matched_rule?: InternalAssetExpirationStatusMatchedRuleDocument | null;
+
+  @Prop({ type: Date, required: true })
+  last_materialized_at: Date;
+}
+
+@Schema({ _id: false })
+export class InternalAssetNotificationTriggerEventDocument {
+  @Prop({ type: String, required: true })
+  trigger_date: string;
+
+  @Prop({
+    type: String,
+    enum: Object.values(InternalAssetNotificationTriggerEventStatus),
+    required: true,
+  })
+  status: InternalAssetNotificationTriggerEventStatus;
+
+  @Prop({ type: Date, required: false, default: null })
+  triggered_at?: Date | null;
+
+  @Prop({ type: String, required: false, default: null })
+  failure_reason?: string | null;
+}
+
+@Schema({ _id: false })
+export class InternalAssetNotificationMaterializedRuleDocument {
+  @Prop({ type: String, required: true })
+  source_rule_id: string;
+
+  @Prop({ type: String, required: true })
+  anchor: string;
+
+  @Prop({
+    type: InternalAssetMaintenanceIntervalDocument,
+    required: true,
+    default: {},
+  })
+  start_offset: InternalAssetMaintenanceIntervalDocument;
+
+  @Prop({ type: String, required: true })
+  trigger_mode: string;
+
+  @Prop({
+    type: InternalAssetMaintenanceIntervalDocument,
+    required: false,
+    default: null,
+  })
+  repeat_every?: InternalAssetMaintenanceIntervalDocument | null;
+
+  @Prop({ type: String, required: false, default: null })
+  repeat_until?: string | null;
+
+  @Prop({
+    type: InternalAssetMaintenanceIntervalDocument,
+    required: false,
+    default: null,
+  })
+  repeat_for?: InternalAssetMaintenanceIntervalDocument | null;
+
+  @Prop({
+    type: [InternalAssetNotificationTriggerEventDocument],
+    required: true,
+    default: [],
+  })
+  trigger_events: InternalAssetNotificationTriggerEventDocument[];
+
+  @Prop({ type: Date, required: false, default: null })
+  last_triggered_at?: Date | null;
+}
+
+@Schema({ _id: false })
+export class InternalAssetExpirationNotificationMaterializationDocument {
+  @Prop({
+    type: String,
+    enum: Object.values(InternalAssetExpirationStatusMaterializationSource),
+    required: true,
+  })
+  source: InternalAssetExpirationStatusMaterializationSource;
+
+  @Prop({ type: String, required: false, default: null })
+  next_trigger_date?: string | null;
+
+  @Prop({ type: Date, required: false, default: null })
+  last_triggered_at?: Date | null;
+
+  @Prop({ type: Number, required: true, default: 0 })
+  materialized_rules_count: number;
+
+  @Prop({
+    type: [InternalAssetNotificationMaterializedRuleDocument],
+    required: true,
+    default: [],
+  })
+  materialized_rules: InternalAssetNotificationMaterializedRuleDocument[];
+
+  @Prop({ type: Date, required: true })
+  last_materialized_at: Date;
 }
 
 @Schema({
@@ -109,6 +253,20 @@ export class InternalAssetMaintenanceRecordDocument extends Document {
     default: null,
   })
   provider?: InternalAssetMaintenanceProviderDocument | null;
+
+  @Prop({
+    type: InternalAssetExpirationStatusMaterializationDocument,
+    required: false,
+    default: null,
+  })
+  expiration_status_materialization?: InternalAssetExpirationStatusMaterializationDocument | null;
+
+  @Prop({
+    type: InternalAssetExpirationNotificationMaterializationDocument,
+    required: false,
+    default: null,
+  })
+  expiration_notification_materialization?: InternalAssetExpirationNotificationMaterializationDocument | null;
 
   @Prop({ type: String, required: false, default: null, index: true })
   created_by?: string | null;

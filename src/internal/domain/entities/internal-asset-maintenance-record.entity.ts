@@ -15,6 +15,18 @@ export enum InternalAssetMaintenanceRecordStatus {
   DELETED = 'DELETED',
 }
 
+export enum InternalAssetExpirationStatusMaterializationSource {
+  SYSTEM = 'SYSTEM',
+  POLICY = 'POLICY',
+}
+
+export enum InternalAssetNotificationTriggerEventStatus {
+  PENDING = 'PENDING',
+  TRIGGERED = 'TRIGGERED',
+  FAILED = 'FAILED',
+  INVALIDATED = 'INVALIDATED',
+}
+
 export interface InternalAssetMaintenanceIntervalProps {
   years: number;
   months: number;
@@ -30,6 +42,50 @@ export interface InternalAssetMaintenanceProviderProps {
   providerNotes: string | null;
 }
 
+export interface InternalAssetExpirationStatusMaterializationMatchedRuleProps {
+  sourceRuleId: string;
+  startOffset: InternalAssetMaintenanceIntervalProps;
+}
+
+export interface InternalAssetExpirationStatusMaterializationProps {
+  source: InternalAssetExpirationStatusMaterializationSource;
+  code: string;
+  effectiveStartDate: string | null;
+  label: string;
+  labelKey: string | null;
+  colorHex: string;
+  matchedRule: InternalAssetExpirationStatusMaterializationMatchedRuleProps | null;
+  lastMaterializedAt: Date;
+}
+
+export interface InternalAssetNotificationTriggerEventProps {
+  triggerDate: string;
+  status: InternalAssetNotificationTriggerEventStatus;
+  triggeredAt: Date | null;
+  failureReason: string | null;
+}
+
+export interface InternalAssetNotificationMaterializedRuleProps {
+  sourceRuleId: string;
+  anchor: string;
+  startOffset: InternalAssetMaintenanceIntervalProps;
+  triggerMode: string;
+  repeatEvery: InternalAssetMaintenanceIntervalProps | null;
+  repeatUntil: string | null;
+  repeatFor: InternalAssetMaintenanceIntervalProps | null;
+  triggerEvents: InternalAssetNotificationTriggerEventProps[];
+  lastTriggeredAt: Date | null;
+}
+
+export interface InternalAssetExpirationNotificationMaterializationProps {
+  source: InternalAssetExpirationStatusMaterializationSource;
+  nextTriggerDate: string | null;
+  lastTriggeredAt: Date | null;
+  materializedRulesCount: number;
+  materializedRules: InternalAssetNotificationMaterializedRuleProps[];
+  lastMaterializedAt: Date;
+}
+
 export interface InternalAssetMaintenanceRecordProps {
   id?: string;
   assetName: string;
@@ -43,6 +99,8 @@ export interface InternalAssetMaintenanceRecordProps {
   expirationStatusPolicyId?: string | null;
   expirationNotificationPolicyId?: string | null;
   provider?: InternalAssetMaintenanceProviderProps | null;
+  expirationStatusMaterialization?: InternalAssetExpirationStatusMaterializationProps | null;
+  expirationNotificationMaterialization?: InternalAssetExpirationNotificationMaterializationProps | null;
   createdBy?: string | null;
   updatedBy?: string | null;
   createdAt?: Date;
@@ -60,6 +118,14 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
     props.provider = InternalAssetMaintenanceRecord.normalizeProvider(
       props.provider ?? null,
     );
+    props.expirationStatusMaterialization =
+      InternalAssetMaintenanceRecord.normalizeExpirationStatusMaterialization(
+        props.expirationStatusMaterialization ?? null,
+      );
+    props.expirationNotificationMaterialization =
+      InternalAssetMaintenanceRecord.normalizeExpirationNotificationMaterialization(
+        props.expirationNotificationMaterialization ?? null,
+      );
     props.interval = InternalAssetMaintenanceRecord.normalizeInterval(
       props.interval,
     );
@@ -117,6 +183,43 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
     return this.props.provider ? { ...this.props.provider } : null;
   }
 
+  get expirationStatusMaterialization(): InternalAssetExpirationStatusMaterializationProps | null {
+    return this.props.expirationStatusMaterialization
+      ? {
+          ...this.props.expirationStatusMaterialization,
+          matchedRule: this.props.expirationStatusMaterialization.matchedRule
+            ? {
+                ...this.props.expirationStatusMaterialization.matchedRule,
+                startOffset: {
+                  ...this.props.expirationStatusMaterialization.matchedRule
+                    .startOffset,
+                },
+              }
+            : null,
+        }
+      : null;
+  }
+
+  get expirationNotificationMaterialization(): InternalAssetExpirationNotificationMaterializationProps | null {
+    return this.props.expirationNotificationMaterialization
+      ? {
+          ...this.props.expirationNotificationMaterialization,
+          materializedRules:
+            this.props.expirationNotificationMaterialization.materializedRules.map(
+              (rule) => ({
+                ...rule,
+                startOffset: { ...rule.startOffset },
+                repeatEvery: rule.repeatEvery ? { ...rule.repeatEvery } : null,
+                repeatFor: rule.repeatFor ? { ...rule.repeatFor } : null,
+                triggerEvents: rule.triggerEvents.map((event) => ({
+                  ...event,
+                })),
+              }),
+            ),
+        }
+      : null;
+  }
+
   get createdBy(): string | null {
     return this.props.createdBy ?? null;
   }
@@ -150,6 +253,8 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
       expirationStatusPolicyId?: string | null;
       expirationNotificationPolicyId?: string | null;
       provider?: InternalAssetMaintenanceProviderProps | null;
+      expirationStatusMaterialization?: InternalAssetExpirationStatusMaterializationProps | null;
+      expirationNotificationMaterialization?: InternalAssetExpirationNotificationMaterializationProps | null;
     },
     updatedBy?: string | null,
   ): void {
@@ -202,6 +307,20 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
       );
     }
 
+    if (details.expirationStatusMaterialization !== undefined) {
+      this.props.expirationStatusMaterialization =
+        InternalAssetMaintenanceRecord.normalizeExpirationStatusMaterialization(
+          details.expirationStatusMaterialization,
+        );
+    }
+
+    if (details.expirationNotificationMaterialization !== undefined) {
+      this.props.expirationNotificationMaterialization =
+        InternalAssetMaintenanceRecord.normalizeExpirationNotificationMaterialization(
+          details.expirationNotificationMaterialization,
+        );
+    }
+
     this.touch(updatedBy);
   }
 
@@ -246,6 +365,75 @@ export class InternalAssetMaintenanceRecord extends Entity<InternalAssetMaintena
           )
         : null,
       providerNotes: provider.providerNotes ?? null,
+    };
+  }
+
+  private static normalizeExpirationStatusMaterialization(
+    materialization: InternalAssetExpirationStatusMaterializationProps | null,
+  ): InternalAssetExpirationStatusMaterializationProps | null {
+    if (!materialization) {
+      return null;
+    }
+
+    return {
+      source: materialization.source,
+      code: materialization.code,
+      effectiveStartDate: materialization.effectiveStartDate ?? null,
+      label: materialization.label,
+      labelKey: materialization.labelKey,
+      colorHex: materialization.colorHex,
+      matchedRule: materialization.matchedRule
+        ? {
+            sourceRuleId: materialization.matchedRule.sourceRuleId,
+            startOffset: InternalAssetMaintenanceRecord.normalizeInterval(
+              materialization.matchedRule.startOffset,
+            ),
+          }
+        : null,
+      lastMaterializedAt: materialization.lastMaterializedAt,
+    };
+  }
+
+  private static normalizeExpirationNotificationMaterialization(
+    materialization: InternalAssetExpirationNotificationMaterializationProps | null,
+  ): InternalAssetExpirationNotificationMaterializationProps | null {
+    if (!materialization) {
+      return null;
+    }
+
+    return {
+      source: materialization.source,
+      nextTriggerDate: materialization.nextTriggerDate ?? null,
+      lastTriggeredAt: materialization.lastTriggeredAt ?? null,
+      materializedRulesCount: Math.max(
+        0,
+        Math.trunc(materialization.materializedRulesCount ?? 0),
+      ),
+      materializedRules: materialization.materializedRules.map((rule) => ({
+        sourceRuleId: rule.sourceRuleId,
+        anchor: rule.anchor,
+        startOffset: InternalAssetMaintenanceRecord.normalizeInterval(
+          rule.startOffset,
+        ),
+        triggerMode: rule.triggerMode,
+        repeatEvery: rule.repeatEvery
+          ? InternalAssetMaintenanceRecord.normalizeInterval(rule.repeatEvery)
+          : null,
+        repeatUntil: rule.repeatUntil ?? null,
+        repeatFor: rule.repeatFor
+          ? InternalAssetMaintenanceRecord.normalizeInterval(rule.repeatFor)
+          : null,
+        triggerEvents: [...rule.triggerEvents]
+          .map((event) => ({
+            triggerDate: event.triggerDate,
+            status: event.status,
+            triggeredAt: event.triggeredAt ?? null,
+            failureReason: event.failureReason ?? null,
+          }))
+          .sort((a, b) => a.triggerDate.localeCompare(b.triggerDate)),
+        lastTriggeredAt: rule.lastTriggeredAt ?? null,
+      })),
+      lastMaterializedAt: materialization.lastMaterializedAt,
     };
   }
 }

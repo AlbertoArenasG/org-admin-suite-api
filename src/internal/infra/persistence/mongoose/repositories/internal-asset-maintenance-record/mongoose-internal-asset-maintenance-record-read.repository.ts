@@ -29,6 +29,44 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
     return { data: this.toDomain(document) };
   }
 
+  async findByExpirationStatusPolicyId(
+    expirationStatusPolicyId: string,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }> {
+    const documents = await this.internalAssetMaintenanceRecordModel
+      .find({
+        expiration_status_policy_id: expirationStatusPolicyId,
+        status: { $ne: InternalAssetMaintenanceRecordStatus.DELETED },
+      })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter(
+          (record): record is InternalAssetMaintenanceRecord => record !== null,
+        ),
+    };
+  }
+
+  async findByExpirationNotificationPolicyId(
+    expirationNotificationPolicyId: string,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }> {
+    const documents = await this.internalAssetMaintenanceRecordModel
+      .find({
+        expiration_notification_policy_id: expirationNotificationPolicyId,
+        status: { $ne: InternalAssetMaintenanceRecordStatus.DELETED },
+      })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter(
+          (record): record is InternalAssetMaintenanceRecord => record !== null,
+        ),
+    };
+  }
+
   async findAll(
     params: FindInternalAssetMaintenanceRecordsParams,
   ): Promise<FindInternalAssetMaintenanceRecordsResult> {

@@ -6,6 +6,10 @@ import {
 } from '@application/dto';
 import { ExpirationStatusPolicyMapper } from '@application/mappers';
 import { AuditUserFetcherService } from '@application/services';
+import {
+  applyInternalAssetMaintenanceRecordMaterializations,
+  collectPolicyIds,
+} from '@application/use-cases/internal-asset-maintenance-record/internal-asset-maintenance-record.shared';
 import { ExpirationStatusPolicyOffsetProps } from '@domain/entities';
 import {
   EntityAlreadyExistsException,
@@ -20,6 +24,10 @@ import {
   IExpirationStatusPolicyReadRepositoryToken,
   IExpirationStatusPolicyWriteRepository,
   IExpirationStatusPolicyWriteRepositoryToken,
+  IInternalAssetMaintenanceRecordReadRepository,
+  IInternalAssetMaintenanceRecordReadRepositoryToken,
+  IInternalAssetMaintenanceRecordWriteRepository,
+  IInternalAssetMaintenanceRecordWriteRepositoryToken,
 } from '@domain/ports/repositories';
 
 @Injectable()
@@ -29,6 +37,10 @@ export class UpdateExpirationStatusPolicyUseCase {
     private readonly readRepository: IExpirationStatusPolicyReadRepository,
     @Inject(IExpirationStatusPolicyWriteRepositoryToken)
     private readonly writeRepository: IExpirationStatusPolicyWriteRepository,
+    @Inject(IInternalAssetMaintenanceRecordReadRepositoryToken)
+    private readonly internalAssetMaintenanceRecordReadRepository: IInternalAssetMaintenanceRecordReadRepository,
+    @Inject(IInternalAssetMaintenanceRecordWriteRepositoryToken)
+    private readonly internalAssetMaintenanceRecordWriteRepository: IInternalAssetMaintenanceRecordWriteRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -64,6 +76,30 @@ export class UpdateExpirationStatusPolicyUseCase {
     );
 
     const { data: updated } = await this.writeRepository.update(policy);
+    const { data: affectedRecords } =
+      await this.internalAssetMaintenanceRecordReadRepository.findByExpirationStatusPolicyId(
+        updated!.id,
+      );
+    const policiesById =
+      await this.internalAssetMaintenanceRecordReadRepository.findPoliciesByIds(
+        collectPolicyIds(affectedRecords),
+      );
+
+    for (const record of affectedRecords) {
+      applyInternalAssetMaintenanceRecordMaterializations({
+        record,
+        expirationStatusPolicy: updated!,
+        expirationNotificationPolicy:
+          record.expirationNotificationPolicyId != null
+            ? (policiesById.expirationNotificationPoliciesById.get(
+                record.expirationNotificationPolicyId,
+              ) ?? null)
+            : null,
+        actorUserId: input.actorUserId,
+      });
+      await this.internalAssetMaintenanceRecordWriteRepository.update(record);
+    }
+
     const { createdByUser, updatedByUser } =
       await this.auditUserFetcher.fetchAuditUsers({
         createdBy: updated!.createdBy,

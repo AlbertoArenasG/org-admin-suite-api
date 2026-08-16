@@ -24,10 +24,11 @@ export interface InternalAssetMaintenanceProviderDto {
 }
 
 export interface InternalAssetMaintenanceDerivedStatusDto {
-  code: 'ON_TIME' | 'OVERDUE' | 'COMPLETED' | 'CANCELLED';
-  labelKey: string;
+  code: string;
+  label: string;
+  labelKey: string | null;
   colorHex: string;
-  source: 'SYSTEM';
+  source: 'SYSTEM' | 'POLICY';
 }
 
 export interface InternalAssetMaintenanceCatalogItemDto {

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { DeleteInternalAssetMaintenanceRecordDto } from '@application/dto';
+import { applyInternalAssetMaintenanceRecordMaterializations } from './internal-asset-maintenance-record.shared';
 import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
@@ -32,6 +33,12 @@ export class DeleteInternalAssetMaintenanceRecordUseCase {
     }
 
     record.markAsDeleted(input.actorUserId);
+    applyInternalAssetMaintenanceRecordMaterializations({
+      record,
+      expirationStatusPolicy: null,
+      expirationNotificationPolicy: null,
+      actorUserId: input.actorUserId,
+    });
     await this.writeRepository.update(record);
   }
 }

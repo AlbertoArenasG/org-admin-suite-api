@@ -1,6 +1,10 @@
 import {
+  ExpirationNotificationPolicy,
   ExpirationNotificationPolicyStatus,
+  ExpirationStatusPolicy,
   ExpirationStatusPolicyStatus,
+  InternalAssetExpirationNotificationMaterializationProps,
+  InternalAssetExpirationStatusMaterializationProps,
   InternalAssetMaintenanceIntervalProps,
   InternalAssetMaintenanceProviderProps,
   InternalAssetMaintenanceRecord,
@@ -19,6 +23,8 @@ import {
   addOffsetToDateOnly,
   isValidDateOnly,
   isValidInternalAssetMaintenanceType,
+  materializeInternalAssetExpirationNotification,
+  materializeInternalAssetExpirationStatus,
 } from '@application/services/internal-asset-maintenance';
 
 interface NormalizeBaseInput {
@@ -130,6 +136,53 @@ export function collectPolicyIds(records: InternalAssetMaintenanceRecord[]) {
       ),
     ),
   };
+}
+
+export interface InternalAssetMaintenanceRecordMaterializations {
+  expirationStatusMaterialization: InternalAssetExpirationStatusMaterializationProps | null;
+  expirationNotificationMaterialization: InternalAssetExpirationNotificationMaterializationProps | null;
+}
+
+export function buildInternalAssetMaintenanceRecordMaterializations(input: {
+  record: InternalAssetMaintenanceRecord;
+  expirationStatusPolicy: ExpirationStatusPolicy | null;
+  expirationNotificationPolicy: ExpirationNotificationPolicy | null;
+}): InternalAssetMaintenanceRecordMaterializations {
+  return {
+    expirationStatusMaterialization: materializeInternalAssetExpirationStatus({
+      record: input.record,
+      policy: input.expirationStatusPolicy,
+    }),
+    expirationNotificationMaterialization:
+      materializeInternalAssetExpirationNotification({
+        record: input.record,
+        policy: input.expirationNotificationPolicy,
+        previous: input.record.expirationNotificationMaterialization,
+      }),
+  };
+}
+
+export function applyInternalAssetMaintenanceRecordMaterializations(input: {
+  record: InternalAssetMaintenanceRecord;
+  expirationStatusPolicy: ExpirationStatusPolicy | null;
+  expirationNotificationPolicy: ExpirationNotificationPolicy | null;
+  actorUserId: string;
+}): void {
+  const materializations = buildInternalAssetMaintenanceRecordMaterializations({
+    record: input.record,
+    expirationStatusPolicy: input.expirationStatusPolicy,
+    expirationNotificationPolicy: input.expirationNotificationPolicy,
+  });
+
+  input.record.updateDetails(
+    {
+      expirationStatusMaterialization:
+        materializations.expirationStatusMaterialization,
+      expirationNotificationMaterialization:
+        materializations.expirationNotificationMaterialization,
+    },
+    input.actorUserId,
+  );
 }
 
 function normalizeRequiredString(value: string, field: string): string {

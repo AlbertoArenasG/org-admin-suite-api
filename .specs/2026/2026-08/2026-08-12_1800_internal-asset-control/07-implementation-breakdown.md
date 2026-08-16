@@ -124,8 +124,19 @@
     - `GET /v1/expiration-status-policies/catalog`
     - `GET /v1/expiration-notification-policies/catalog`
   - implementar `expiration_status_materialization`
+    - completado el domingo 16 de agosto de 2026
+    - persistencia en entity, schema, mapper y write path del record
+    - recálculo en create, update y delete del record
+    - propagación de recálculo al editar o eliminar `expiration-status-policy`
   - implementar `expiration_notification_materialization`
+    - completado el domingo 16 de agosto de 2026
+    - persistencia en entity, schema, mapper y write path del record
+    - materialización de `trigger_events[]` por regla
+    - invalidación al borrar lógicamente el record
+    - propagación de recálculo al editar o eliminar `expiration-notification-policy`
   - integrar derivación persistida de semáforo
+    - completado el domingo 16 de agosto de 2026
+    - el presenter ahora distingue estados derivados del sistema vs labels libres de policy
   - integrar `provider_follow_up`
   - integrar envío manual `provider-follow-up/send`
 

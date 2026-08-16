@@ -40,7 +40,10 @@ export class InternalAssetMaintenanceRecordPresenter {
       ),
       derived_status: {
         code: result.derivedStatus.code,
-        name: this.enumNameService.getEnumName(result.derivedStatus.labelKey),
+        name:
+          result.derivedStatus.source === 'POLICY'
+            ? result.derivedStatus.label
+            : this.enumNameService.getEnumName(result.derivedStatus.labelKey!),
         name_key: result.derivedStatus.labelKey,
         color_hex: result.derivedStatus.colorHex,
         source: result.derivedStatus.source,
@@ -109,7 +112,10 @@ export class InternalAssetMaintenanceRecordPresenter {
       ),
       derived_status: {
         code: result.derivedStatus.code,
-        name: this.enumNameService.getEnumName(result.derivedStatus.labelKey),
+        name:
+          result.derivedStatus.source === 'POLICY'
+            ? result.derivedStatus.label
+            : this.enumNameService.getEnumName(result.derivedStatus.labelKey!),
         name_key: result.derivedStatus.labelKey,
         color_hex: result.derivedStatus.colorHex,
         source: result.derivedStatus.source,
