@@ -229,18 +229,38 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
               branches: [
                 {
                   case: {
-                    $eq: [
-                      '$status',
-                      InternalAssetMaintenanceRecordStatus.IN_PROGRESS,
+                    $and: [
+                      {
+                        $eq: [
+                          '$status',
+                          InternalAssetMaintenanceRecordStatus.PENDING,
+                        ],
+                      },
+                      {
+                        $eq: [
+                          '$expiration_status_materialization.code',
+                          'OVERDUE',
+                        ],
+                      },
                     ],
                   },
                   then: 1,
                 },
                 {
                   case: {
-                    $eq: [
-                      '$status',
-                      InternalAssetMaintenanceRecordStatus.PENDING,
+                    $and: [
+                      {
+                        $eq: [
+                          '$status',
+                          InternalAssetMaintenanceRecordStatus.IN_PROGRESS,
+                        ],
+                      },
+                      {
+                        $eq: [
+                          '$expiration_status_materialization.code',
+                          'OVERDUE',
+                        ],
+                      },
                     ],
                   },
                   then: 2,
@@ -249,7 +269,7 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
                   case: {
                     $eq: [
                       '$status',
-                      InternalAssetMaintenanceRecordStatus.COMPLETED,
+                      InternalAssetMaintenanceRecordStatus.PENDING,
                     ],
                   },
                   then: 3,
@@ -258,7 +278,7 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
                   case: {
                     $eq: [
                       '$status',
-                      InternalAssetMaintenanceRecordStatus.CANCELLED,
+                      InternalAssetMaintenanceRecordStatus.IN_PROGRESS,
                     ],
                   },
                   then: 4,
@@ -267,10 +287,28 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
                   case: {
                     $eq: [
                       '$status',
-                      InternalAssetMaintenanceRecordStatus.DELETED,
+                      InternalAssetMaintenanceRecordStatus.COMPLETED,
                     ],
                   },
                   then: 5,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.CANCELLED,
+                    ],
+                  },
+                  then: 6,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.DELETED,
+                    ],
+                  },
+                  then: 7,
                 },
               ],
               default: 999,
