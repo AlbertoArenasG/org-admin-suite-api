@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PipelineStage } from 'mongoose';
 
 import {
   ExpirationNotificationPolicy,
@@ -111,15 +112,19 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
       filter['provider.sent_to_provider'] = params.sentToProvider;
     }
 
-    const sortCriteria = this.buildSortCriteria(sorts);
+    const shouldUseOperationalStatusSort = (sorts ?? []).some(
+      (sort) => sort.field === 'status',
+    );
 
     const [documents, total] = await Promise.all([
-      this.internalAssetMaintenanceRecordModel
-        .find(filter)
-        .sort(sortCriteria)
-        .skip(skip)
-        .limit(perPage)
-        .exec(),
+      shouldUseOperationalStatusSort
+        ? this.findAllWithOperationalStatusSort(filter, sorts, skip, perPage)
+        : this.internalAssetMaintenanceRecordModel
+            .find(filter)
+            .sort(this.buildSortCriteria(sorts))
+            .skip(skip)
+            .limit(perPage)
+            .exec(),
       this.internalAssetMaintenanceRecordModel.countDocuments(filter).exec(),
     ]);
 
@@ -192,6 +197,112 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
       last_maintenance_at: 'last_maintenance_at',
       expiration_date: 'expiration_date',
       status: 'status',
+      created_at: 'createdAt',
+    };
+
+    const criteria: Record<string, 1 | -1> = {};
+
+    for (const sort of sorts) {
+      const field = mapping[sort.field] ?? 'createdAt';
+      criteria[field] = sort.direction === 'desc' ? -1 : 1;
+    }
+
+    if (!criteria.createdAt) {
+      criteria.createdAt = -1;
+    }
+
+    return criteria;
+  }
+
+  private async findAllWithOperationalStatusSort(
+    filter: Record<string, unknown>,
+    sorts: FindInternalAssetMaintenanceRecordsParams['sorts'],
+    skip: number,
+    perPage: number,
+  ) {
+    const pipeline: PipelineStage[] = [
+      { $match: filter },
+      {
+        $addFields: {
+          status_sort_rank: {
+            $switch: {
+              branches: [
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.IN_PROGRESS,
+                    ],
+                  },
+                  then: 1,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.PENDING,
+                    ],
+                  },
+                  then: 2,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.COMPLETED,
+                    ],
+                  },
+                  then: 3,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.CANCELLED,
+                    ],
+                  },
+                  then: 4,
+                },
+                {
+                  case: {
+                    $eq: [
+                      '$status',
+                      InternalAssetMaintenanceRecordStatus.DELETED,
+                    ],
+                  },
+                  then: 5,
+                },
+              ],
+              default: 999,
+            },
+          },
+        },
+      },
+      { $sort: this.buildOperationalSortCriteria(sorts) },
+      { $skip: skip },
+      { $limit: perPage },
+    ];
+
+    return this.internalAssetMaintenanceRecordModel.aggregate(pipeline).exec();
+  }
+
+  private buildOperationalSortCriteria(
+    sorts: FindInternalAssetMaintenanceRecordsParams['sorts'],
+  ): Record<string, 1 | -1> {
+    if (!sorts || sorts.length === 0) {
+      return {
+        status_sort_rank: 1,
+        expiration_date: 1,
+        createdAt: -1,
+      };
+    }
+
+    const mapping: Record<string, string> = {
+      asset_name: 'asset_name',
+      asset_identifier: 'asset_identifier',
+      last_maintenance_at: 'last_maintenance_at',
+      expiration_date: 'expiration_date',
+      status: 'status_sort_rank',
       created_at: 'createdAt',
     };
 
