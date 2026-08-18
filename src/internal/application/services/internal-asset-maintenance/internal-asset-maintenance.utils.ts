@@ -255,7 +255,7 @@ export function materializeInternalAssetExpirationStatus(input: {
       }),
     }))
     .filter((item) => item.effectiveStartDate <= today)
-    .sort((a, b) => compareOffsetsDesc(a.rule.startOffset, b.rule.startOffset));
+    .sort((a, b) => compareOffsetsAsc(a.rule.startOffset, b.rule.startOffset));
 
   const matched = applicableRules[0];
 
@@ -545,7 +545,7 @@ function getSystemDerivedStatusLabel(
   }
 }
 
-function compareOffsetsDesc(
+function compareOffsetsAsc(
   left: {
     years: number;
     months: number;
@@ -559,7 +559,7 @@ function compareOffsetsDesc(
     days: number;
   },
 ): number {
-  return toComparableOffset(right) - toComparableOffset(left);
+  return toComparableOffset(left) - toComparableOffset(right);
 }
 
 function toComparableOffset(offset: {
