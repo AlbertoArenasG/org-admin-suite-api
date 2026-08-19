@@ -119,7 +119,7 @@
 
 ## Slice 7. Validation And Documentation
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - validar flujo end-to-end y dejar continuidad documentada
 

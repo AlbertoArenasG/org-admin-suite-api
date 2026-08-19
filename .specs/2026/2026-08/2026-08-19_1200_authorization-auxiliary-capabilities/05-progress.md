@@ -141,4 +141,6 @@
   - se actualizó `docs/frontend/roles-permissions-refactor-handoff.md` para dejar explícito que frontend no consume `auxiliaryCapabilities` por ahora
   - `npm run db:seed` sí corrió contra Mongo real
   - el seed reportó `system-roles: created=0 updated=2 unchanged=0`
-  - la inspección directa de los documentos en Mongo quedó pendiente porque la consulta adicional no fue aprobada
+- Se cerró el `Slice 7`:
+  - se verificó manualmente en Mongo que `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` quedaron correctos
+  - la validación final de seed y persistencia queda completada
