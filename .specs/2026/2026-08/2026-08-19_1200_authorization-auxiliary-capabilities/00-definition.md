@@ -19,7 +19,7 @@ Regla de trabajo:
 
 - Initiative: `authorization-auxiliary-capabilities`
 - Definition status: `completed`
-- Implementation ready: `no`
+- Implementation ready: `yes`
 
 ---
 
