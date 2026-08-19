@@ -81,7 +81,7 @@
 
 ## Slice 5. HTTP Enforcement Layer
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - introducir decorator y guard específicos para `auxiliary capabilities`
 

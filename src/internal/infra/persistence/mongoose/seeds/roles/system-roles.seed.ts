@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 
 import { AUTHORIZATION_CATALOG } from '@application/services/authz/authorization.catalog';
-import { AuxiliaryCapabilitiesService } from '@application/services';
+import { deriveAuxiliaryCapabilitiesFromPermissions } from '@application/services/authz/auxiliary-capabilities/auxiliary-capabilities.service';
 import { RoleScope, RoleStatus } from '@domain/entities';
 import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
 import {
@@ -37,9 +37,8 @@ const BASE_PERMISSIONS: RolePermissionSeedItem[] = Object.values(
   })),
 );
 
-const auxiliaryCapabilitiesService = new AuxiliaryCapabilitiesService();
 const BASE_AUXILIARY_CAPABILITIES =
-  auxiliaryCapabilitiesService.deriveFromPermissions(BASE_PERMISSIONS);
+  deriveAuxiliaryCapabilitiesFromPermissions(BASE_PERMISSIONS);
 
 const SYSTEM_ROLES: SystemRoleSeedItem[] = [
   {
@@ -104,7 +103,6 @@ function hasSameAuxiliaryCapabilities(
 export const systemRolesSeed: MongooseSeedDefinition = {
   name: 'system-roles',
   async run(context: MongooseSeedContext): Promise<SeedReportItem> {
-    auxiliaryCapabilitiesService.validateConfiguration();
     const roleModel = getRoleModel(context.connection);
 
     const report: SeedReportItem = {

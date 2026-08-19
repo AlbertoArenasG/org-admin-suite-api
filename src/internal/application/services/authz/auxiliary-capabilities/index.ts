@@ -1,1 +1,1 @@
-export * from './auxiliary-capabilities.service';
+export { AuxiliaryCapabilitiesService } from './auxiliary-capabilities.service';

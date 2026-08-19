@@ -1,2 +1,2 @@
-export * from './authorization.service';
-export * from './auxiliary-capabilities';
+export { AuthorizationService } from './authorization.service';
+export { AuxiliaryCapabilitiesService } from './auxiliary-capabilities';

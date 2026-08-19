@@ -125,3 +125,8 @@
   - el runner de seeds de roles ya no ejecuta `legacyStaffRoleSeed`
   - `STAFF_LEGACY` y los roles custom quedan sin tocar por este flujo
   - `npm run build` volvió a pasar correctamente
+- Se implementó el `Slice 5`:
+  - existe `@RequireAuxiliaryCapability(...)`
+  - existe `AuxiliaryCapabilitiesGuard`
+  - `AuxiliaryCapabilitiesService` ya resuelve actor y valida acceso a capabilities auxiliares
+  - `npm run build` volvió a pasar correctamente
