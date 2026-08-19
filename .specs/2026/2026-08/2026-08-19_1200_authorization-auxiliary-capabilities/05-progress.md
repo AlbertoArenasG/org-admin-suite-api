@@ -116,3 +116,7 @@
   - se creó la capa `authz/auxiliary-capabilities` con catálogo maestro, mapa de derivación y servicio
   - la validación de integridad quedó conectada al arranque mediante `OnModuleInit`
   - `npm run build` pasó correctamente
+- Se implementó el `Slice 4`:
+  - `create-role` ya deriva y persiste `auxiliaryCapabilities[]`
+  - `update-role` ya recalcula desde cero y reemplaza completo `auxiliaryCapabilities[]`
+  - `npm run build` volvió a pasar correctamente

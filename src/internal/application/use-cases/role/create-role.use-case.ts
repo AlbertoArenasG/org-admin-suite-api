@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateRoleDto, CreateRoleResultDto } from '@application/dto';
 import { RoleMapper } from '@application/mappers';
-import { AuditUserFetcherService } from '@application/services';
+import {
+  AuditUserFetcherService,
+  AuxiliaryCapabilitiesService,
+} from '@application/services';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
@@ -29,11 +32,14 @@ export class CreateRoleUseCase {
     @Inject(IRoleWriteRepositoryToken)
     private readonly roleWriteRepository: IRoleWriteRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
+    private readonly auxiliaryCapabilitiesService: AuxiliaryCapabilitiesService,
   ) {}
 
   async execute(input: CreateRoleDto): Promise<CreateRoleResultDto> {
     const code = this.generateCode(input.name);
     const permissions = this.normalizePermissions(input.permissions);
+    const auxiliaryCapabilities =
+      this.auxiliaryCapabilitiesService.deriveFromPermissions(permissions);
 
     await this.ensureNameUnique(input.name);
     await this.ensureCodeUnique(code);
@@ -46,6 +52,7 @@ export class CreateRoleUseCase {
       isImmutable: false,
       isDefault: false,
       permissions,
+      auxiliaryCapabilities,
       createdBy: input.actorUserId,
       updatedBy: input.actorUserId,
       createdAt: new Date(),

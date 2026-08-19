@@ -36,7 +36,7 @@
 
 ## Slice 4. Role Mutation Integration
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - integrar derivación automática en creación y actualización de roles
 

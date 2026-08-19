@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { RoleMapper } from '@application/mappers';
-import { AuditUserFetcherService } from '@application/services';
+import {
+  AuditUserFetcherService,
+  AuxiliaryCapabilitiesService,
+} from '@application/services';
 import { UpdateRoleDto, UpdateRoleResultDto } from '@application/dto';
 import {
   InvalidValueException,
@@ -27,6 +30,7 @@ export class UpdateRoleUseCase {
     @Inject(IRoleWriteRepositoryToken)
     private readonly roleWriteRepository: IRoleWriteRepository,
     private readonly auditUserFetcher: AuditUserFetcherService,
+    private readonly auxiliaryCapabilitiesService: AuxiliaryCapabilitiesService,
   ) {}
 
   async execute(input: UpdateRoleDto): Promise<UpdateRoleResultDto> {
@@ -38,31 +42,36 @@ export class UpdateRoleUseCase {
     RoleMutationPolicy.ensureMutable(role);
 
     if (permissions !== undefined) {
-      role.replacePermissions(
-        permissions.map((permission) => {
-          const normalized = normalizeAuthorizationPermission(permission);
+      const normalizedPermissions = permissions.map((permission) => {
+        const normalized = normalizeAuthorizationPermission(permission);
 
-          if (
-            !isValidAuthorizationPermission(
-              normalized.module,
-              normalized.operation,
-            )
-          ) {
-            throw InvalidValueException.create(
-              InvalidValueExceptionCode.DEFAULT,
-              {
-                field: 'permissions',
-                module: permission.module,
-                operation: permission.operation,
-                reason: 'INVALID_ROLE_PERMISSION',
-              },
-            );
-          }
+        if (
+          !isValidAuthorizationPermission(
+            normalized.module,
+            normalized.operation,
+          )
+        ) {
+          throw InvalidValueException.create(
+            InvalidValueExceptionCode.DEFAULT,
+            {
+              field: 'permissions',
+              module: permission.module,
+              operation: permission.operation,
+              reason: 'INVALID_ROLE_PERMISSION',
+            },
+          );
+        }
 
-          return normalized;
-        }),
-        actorUserId,
-      );
+        return normalized;
+      });
+
+      const auxiliaryCapabilities =
+        this.auxiliaryCapabilitiesService.deriveFromPermissions(
+          normalizedPermissions,
+        );
+
+      role.replacePermissions(normalizedPermissions, actorUserId);
+      role.replaceAuxiliaryCapabilities(auxiliaryCapabilities, actorUserId);
     }
 
     const { data: updated } = await this.roleWriteRepository.update(role);
