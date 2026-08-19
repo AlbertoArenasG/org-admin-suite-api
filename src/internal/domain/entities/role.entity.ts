@@ -7,6 +7,11 @@ export interface RolePermissionProps {
   operation: string;
 }
 
+export interface RoleAuxiliaryCapabilityProps {
+  module: string;
+  capability: string;
+}
+
 export interface RoleProps {
   id?: string;
   name: string;
@@ -17,6 +22,7 @@ export interface RoleProps {
   isDefault: boolean;
   status?: RoleStatus;
   permissions?: RolePermissionProps[];
+  auxiliaryCapabilities?: RoleAuxiliaryCapabilityProps[];
   createdBy?: string | null;
   updatedBy?: string | null;
   createdAt?: Date;
@@ -51,6 +57,9 @@ export class Role extends Entity<RoleProps> {
     props.id = props.id ?? props.code;
     props.status = props.status ?? RoleStatus.ACTIVE;
     props.permissions = Role.ensureUniquePermissions(props.permissions ?? []);
+    props.auxiliaryCapabilities = Role.ensureUniqueAuxiliaryCapabilities(
+      props.auxiliaryCapabilities ?? [],
+    );
     props.createdBy = props.createdBy ?? null;
     props.updatedBy = props.updatedBy ?? null;
 
@@ -94,6 +103,10 @@ export class Role extends Entity<RoleProps> {
     return [...(this.props.permissions ?? [])];
   }
 
+  get auxiliaryCapabilities(): RoleAuxiliaryCapabilityProps[] {
+    return [...(this.props.auxiliaryCapabilities ?? [])];
+  }
+
   get createdBy(): string | null {
     return this.props.createdBy ?? null;
   }
@@ -134,6 +147,16 @@ export class Role extends Entity<RoleProps> {
     updatedBy?: string | null,
   ): void {
     this.props.permissions = Role.ensureUniquePermissions(permissions);
+    this.touch(updatedBy);
+  }
+
+  replaceAuxiliaryCapabilities(
+    auxiliaryCapabilities: RoleAuxiliaryCapabilityProps[],
+    updatedBy?: string | null,
+  ): void {
+    this.props.auxiliaryCapabilities = Role.ensureUniqueAuxiliaryCapabilities(
+      auxiliaryCapabilities,
+    );
     this.touch(updatedBy);
   }
 
@@ -193,6 +216,27 @@ export class Role extends Entity<RoleProps> {
 
       seen.add(key);
       return permission;
+    });
+  }
+
+  private static ensureUniqueAuxiliaryCapabilities(
+    auxiliaryCapabilities: RoleAuxiliaryCapabilityProps[],
+  ): RoleAuxiliaryCapabilityProps[] {
+    const seen = new Set<string>();
+
+    return auxiliaryCapabilities.map((auxiliaryCapability) => {
+      const key = `${auxiliaryCapability.module}:${auxiliaryCapability.capability}`;
+
+      if (seen.has(key)) {
+        throw InvalidValueException.create(undefined, {
+          message: 'Duplicated role auxiliary capability',
+          module: auxiliaryCapability.module,
+          capability: auxiliaryCapability.capability,
+        });
+      }
+
+      seen.add(key);
+      return auxiliaryCapability;
     });
   }
 }

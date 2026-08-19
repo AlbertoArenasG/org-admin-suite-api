@@ -8,6 +8,11 @@ export interface IRolePermissionSchema {
   operation: string;
 }
 
+export interface IRoleAuxiliaryCapabilitySchema {
+  module: string;
+  capability: string;
+}
+
 @Schema({
   collection: 'roles',
   timestamps: true,
@@ -65,6 +70,17 @@ export class RoleDocument extends Document {
     default: [],
   })
   permissions: IRolePermissionSchema[];
+
+  @Prop({
+    type: [
+      {
+        module: { type: String, required: true },
+        capability: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
+  auxiliary_capabilities: IRoleAuxiliaryCapabilitySchema[];
 
   @Prop({ type: String, required: false, default: null, index: true })
   created_by?: string | null;

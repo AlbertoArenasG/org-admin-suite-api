@@ -101,6 +101,18 @@
 - Se aprobó el patrón de enforcement HTTP de la nueva capa:
   - habrá un decorator específico para `auxiliary capabilities`
   - habrá un guard específico separado de `PermissionsGuard`
+- Se identificó el seed relevante para roles existentes:
+  - `src/internal/infra/persistence/mongoose/seeds/roles/system-roles.seed.ts`
+  - deberá actualizar también `auxiliaryCapabilities[]` para `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`
+  - deberá ignorar `STAFF_LEGACY` y cualquier rol custom existente
+  - ignorar aquí significa no borrar, no recrear y no mutar esos roles
+  - la validación final de esta spec deberá incluir correr `npm run db:seed` y verificar la base de datos
 - Se cerró formalmente la fase de definición de la spec:
   - `Definition status` pasa a `completed`
   - `Slice 1. Definition Closure` queda cerrado
+- Se implementó el `Slice 3`:
+  - `Role` ahora soporta `auxiliaryCapabilities[]`
+  - el schema y mapper de roles persisten el nuevo campo
+  - se creó la capa `authz/auxiliary-capabilities` con catálogo maestro, mapa de derivación y servicio
+  - la validación de integridad quedó conectada al arranque mediante `OnModuleInit`
+  - `npm run build` pasó correctamente

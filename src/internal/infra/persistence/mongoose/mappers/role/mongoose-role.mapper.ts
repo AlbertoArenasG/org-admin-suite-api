@@ -20,6 +20,12 @@ export class MongooseRoleMapper {
         module: permission.module,
         operation: permission.operation,
       })),
+      auxiliaryCapabilities: (document.auxiliary_capabilities ?? []).map(
+        (auxiliaryCapability) => ({
+          module: auxiliaryCapability.module,
+          capability: auxiliaryCapability.capability,
+        }),
+      ),
       createdBy: document.created_by ?? null,
       updatedBy: document.updated_by ?? null,
       createdAt: document.createdAt ?? undefined,
@@ -41,6 +47,12 @@ export class MongooseRoleMapper {
         module: permission.module,
         operation: permission.operation,
       })),
+      auxiliary_capabilities: role.auxiliaryCapabilities.map(
+        (auxiliaryCapability) => ({
+          module: auxiliaryCapability.module,
+          capability: auxiliaryCapability.capability,
+        }),
+      ),
       created_by: role.createdBy,
       updated_by: role.updatedBy,
     };
