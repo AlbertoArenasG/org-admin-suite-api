@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
-import { RequirePermission } from '@src/common/decorators';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import { RequireAuxiliaryCapability } from '@src/common/decorators';
+import { AuxiliaryCapabilitiesGuard, JwtAuthGuard } from '@infra/api/guards';
 import { CommunicationChannelPresenter } from '@infra/api/presenters/communication-channel';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { GetCommunicationChannelsQuery } from '@infra/cqrs/queries';
@@ -23,8 +23,8 @@ export class CommunicationChannelController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('recipient_groups', 'READ')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('communication_channels', 'read_options')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     const result = await this.queryBus.execute(

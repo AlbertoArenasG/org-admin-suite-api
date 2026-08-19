@@ -130,3 +130,10 @@
   - existe `AuxiliaryCapabilitiesGuard`
   - `AuxiliaryCapabilitiesService` ya resuelve actor y valida acceso a capabilities auxiliares
   - `npm run build` volvió a pasar correctamente
+- Se implementó el `Slice 6`:
+  - `GET /v1/contacts/search` ya usa la nueva capa auxiliar
+  - `GET /v1/communication-channels` ya usa la nueva capa auxiliar
+  - `GET /v1/expiration-status-policies/options` ya usa la nueva capa auxiliar
+  - `GET /v1/expiration-notification-policies/options` ya usa la nueva capa auxiliar
+  - los endpoints locales que debían seguir en `module + operation` no fueron migrados
+  - `npm run build` volvió a pasar correctamente

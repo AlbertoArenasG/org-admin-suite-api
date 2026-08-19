@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import {
   CreateContactRequestDto,
@@ -21,7 +25,11 @@ import {
   SearchContactsRequestDto,
   UpdateContactRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { ContactPresenter } from '@infra/api/presenters/contact';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -85,8 +93,8 @@ export class ContactController {
   }
 
   @Get('search')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('contacts', 'READ')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('contacts', 'search')
   @HttpCode(HttpStatus.OK)
   async search(@Query() query: SearchContactsRequestDto) {
     const result = await this.queryBus.execute(

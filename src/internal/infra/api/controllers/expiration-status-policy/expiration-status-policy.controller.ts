@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import {
   CreateExpirationStatusPolicyRequestDto,
@@ -21,7 +25,11 @@ import {
   GetExpirationStatusPolicyOptionsRequestDto,
   UpdateExpirationStatusPolicyRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { ExpirationStatusPolicyPresenter } from '@infra/api/presenters/expiration-status-policy';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -104,8 +112,8 @@ export class ExpirationStatusPolicyController {
   }
 
   @Get('options')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('expiration_status_policies', 'READ')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('expiration_status_policies', 'read_options')
   @HttpCode(HttpStatus.OK)
   async getOptions(@Query() query: GetExpirationStatusPolicyOptionsRequestDto) {
     const result = await this.queryBus.execute(

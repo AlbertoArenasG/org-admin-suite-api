@@ -97,7 +97,7 @@
 
 ## Slice 6. Endpoint Migration
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - migrar los endpoints reutilizables iniciales al nuevo enforcement
 

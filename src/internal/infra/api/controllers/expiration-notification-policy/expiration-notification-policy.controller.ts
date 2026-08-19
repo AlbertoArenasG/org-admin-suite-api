@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import {
   CreateExpirationNotificationPolicyRequestDto,
@@ -21,7 +25,11 @@ import {
   GetExpirationNotificationPolicyOptionsRequestDto,
   UpdateExpirationNotificationPolicyRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { ExpirationNotificationPolicyPresenter } from '@infra/api/presenters/expiration-notification-policy';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -104,8 +112,11 @@ export class ExpirationNotificationPolicyController {
   }
 
   @Get('options')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('expiration_notification_policies', 'READ')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability(
+    'expiration_notification_policies',
+    'read_options',
+  )
   @HttpCode(HttpStatus.OK)
   async getOptions(
     @Query() query: GetExpirationNotificationPolicyOptionsRequestDto,
