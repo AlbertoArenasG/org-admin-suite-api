@@ -137,3 +137,8 @@
   - `GET /v1/expiration-notification-policies/options` ya usa la nueva capa auxiliar
   - los endpoints locales que debían seguir en `module + operation` no fueron migrados
   - `npm run build` volvió a pasar correctamente
+- Se avanzó el `Slice 7`:
+  - se actualizó `docs/frontend/roles-permissions-refactor-handoff.md` para dejar explícito que frontend no consume `auxiliaryCapabilities` por ahora
+  - `npm run db:seed` sí corrió contra Mongo real
+  - el seed reportó `system-roles: created=0 updated=2 unchanged=0`
+  - la inspección directa de los documentos en Mongo quedó pendiente porque la consulta adicional no fue aprobada

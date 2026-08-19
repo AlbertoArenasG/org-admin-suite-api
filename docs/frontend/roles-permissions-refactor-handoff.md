@@ -893,6 +893,24 @@ Notas:
 - `ADMIN` representa administración de negocio
 - `USER` representa una categoría amplia cuyo comportamiento depende del rol asignado
 
+## Nota De Integración: Auxiliary Capabilities
+
+Estado:
+
+- implementado solo en backend
+- no expuesto en responses ordinarios de roles
+- frontend no debe consumir esta capa por ahora
+
+Reglas:
+
+- backend ya deriva y persiste `auxiliaryCapabilities` internamente en los roles
+- frontend debe seguir usando únicamente:
+  - `systemRole`
+  - `roleId`
+  - permisos ordinarios por `module + operation`
+- frontend no debe agregar gating fino de controles basado en `auxiliaryCapabilities`
+- si en el futuro frontend necesitara visualizar o consumir esta capa, eso deberá abrirse en una spec posterior específica
+
 ## Documentos De Referencia Para Otra Sesión
 
 - catálogo funcional y permisos:
