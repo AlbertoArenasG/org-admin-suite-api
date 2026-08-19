@@ -1,0 +1,106 @@
+# Progress
+
+## 2026-08-19
+
+- Se creó la spec `authorization-auxiliary-capabilities`.
+- Se registró el problema nuevo de autorización introducido por módulos consumidores como `internal_asset_maintenance_records`.
+- Se dejó explícito que:
+  - frontend no debe convertirse en fuente de verdad de dependencias
+  - no conviene sobrecargar el significado de `READ` administrativo
+  - tampoco conviene abrir indiscriminadamente todos los auxiliares a cualquier autenticado
+- Se dejaron abiertas las primeras decisiones críticas sobre:
+  - modelo base
+  - frontera de riesgo
+  - lugar de derivación
+  - representación persistida
+- Se aprobó como modelo base una segunda capa explícita de autorización para capacidades auxiliares reutilizables, separada del catálogo funcional principal de `module + operation`.
+- Se registró explícitamente la frontera de esta iniciativa dentro de la API:
+  - `MASTER_ADMIN` como frontera estructural de plataforma o soporte
+  - backoffice protegido de negocio como frontera objetivo de esta spec
+  - endpoints públicos o tokenizados fuera del alcance de esta iniciativa
+- Se dejó explícito que esta iniciativa no se limitará a `internal_asset_maintenance_records` y que el objetivo es dejar uniforme el tratamiento de auxiliares reutilizables en todo el backoffice protegido de negocio.
+- Se aclaró dentro del inventario inicial que `GET /v1/roles/modules` no entra a la nueva capa:
+  - queda tratado como auxiliar local del dominio `roles`
+  - permanece absorbido por `ROLES/READ`
+- Se aclaró también que `GET /v1/users/roles` no entra a la nueva capa:
+  - queda tratado como auxiliar local del dominio `users` dentro del flujo de invitaciones
+  - permanece fuera del modelo de capacidades auxiliares reutilizables
+- Se identificó `GET /v1/contacts/search` como primer auxiliar claramente transversal:
+  - pertenece al dominio `contacts`, pero ya hoy es consumido por `recipient_groups`
+  - se perfila como candidato real para entrar a la nueva capa auxiliar reutilizable
+- Se identificó también `GET /v1/communication-channels` como candidato auxiliar reutilizable:
+  - aunque hoy esté ligado a `recipient_groups`, su naturaleza puede servir a otros módulos de comunicación o notificación del backoffice
+- Se registró una distinción de trabajo entre `catalog` y `options`:
+  - `catalog` queda entendido como soporte local del módulo proveedor para create/edit y lectura de enums o tipos fijos
+  - `options` queda entendido como lectura resumida y reutilizable de instancias reales seleccionables
+- Bajo esa distinción:
+  - `expiration-status-policies/catalog` y `expiration-notification-policies/catalog` quedan fuera de la nueva capa
+  - `expiration-status-policies/options` y `expiration-notification-policies/options` sí entran como candidatos claros a la nueva capa auxiliar
+- Se aprobó la frontera arquitectónica de la iniciativa:
+  - toda capability auxiliar reutilizable del backoffice quedará gobernada por la nueva capa auxiliar
+  - todo auxiliar local del módulo proveedor quedará fuera de esa capa
+  - no se usará una mezcla runtime de auxiliares reutilizables abiertos para unos casos y gobernados para otros dentro del backoffice
+- Se cerró el hueco de autorización para los auxiliares locales que quedan fuera de la nueva capa:
+  - no pasarán a un modelo `authenticated-only`
+  - permanecerán protegidos por `module + operation`
+  - `module + operation` queda entendido como frontera funcional del módulo, no como mapeo rígido `1 permiso = 1 endpoint exacto`
+  - la nueva capa auxiliar queda reservada para endpoints reutilizables entre módulos
+- Se aprobó que la derivación automática de capacidades auxiliares:
+  - vive exclusivamente en backend
+  - se ejecuta durante `create-role` y `update-role`
+  - deja la evaluación de esta capa como preocupación de backend, no como una nueva matriz de rendering condicional en frontend
+  - no se resolverá solo on-the-fly en runtime
+  - quedará persistida en el rol o en una representación equivalente
+  - permitirá reutilizar el mismo patrón general de evaluación explícita ya usado para permisos directos
+- Se aprobó la representación persistida base dentro de `Role`:
+  - `permissions[]` permanece intacto para permisos funcionales directos
+  - se agrega un campo separado `auxiliaryCapabilities[]`
+  - backend controla la escritura de ese campo
+  - la evaluación de esta capa se hará con una guardia específica separada de `PermissionsGuard`
+  - queda pendiente definir la forma exacta de cada elemento del arreglo
+- Se aprobó el shape conceptual de cada elemento de `auxiliaryCapabilities[]`:
+  - será un objeto pequeño con `module` y `capability`
+  - no se reutilizará el nombre `action`
+  - el par `module + capability` funcionará como identidad natural del elemento
+- Se aprobó la ubicación estructural de la nueva capa:
+  - no se moverán `permissions.decorator.ts` ni `permissions.guard.ts`
+  - el catálogo maestro y el mapa de derivación vivirán en `authz`
+  - el decorator nuevo se agregará junto al decorator actual de permisos
+  - el guard nuevo se agregará junto al guard actual de permisos
+  - la responsabilidad no se repartirá dentro de módulos de negocio proveedores
+- Se aprobó el shape del catálogo maestro de `auxiliary capabilities`:
+  - cada entry tendrá `module`, `capability` y `description`
+  - el catálogo será declarativo
+  - no incluirá por ahora metadata de consumidores, transporte HTTP o sensibilidad
+  - su responsabilidad será definir qué capabilities existen
+- Se aprobó el shape del mapa de derivación:
+  - cada regla se expresará por `consumerModule`
+  - cada regla listará `auxiliaryCapabilities`
+  - la derivación se activará si el rol tiene al menos un permiso funcional directo del módulo consumidor
+  - no se distinguirá por operación específica en la derivación base
+- Se aprobó la estrategia de recálculo:
+  - `auxiliaryCapabilities[]` se recalcula desde cero y se reemplaza completo
+  - aplica tanto en `create-role` como en `update-role`
+  - no habrá merge incremental ni preservación manual
+- Se aprobó la validación de integridad:
+  - la relación entre catálogo maestro y mapa de derivación se validará al arrancar la app
+  - toda capability referenciada por el mapa deberá existir en el catálogo
+  - una inconsistencia provocará falla temprana
+- Se aprobó no exponer `auxiliaryCapabilities` por ahora:
+  - seguirá siendo una preocupación interna de backend
+  - no se forzará trabajo equivalente en frontend en esta primera fase
+  - una eventual exposición futura quedará para una spec posterior específica
+- Se aprobó el catálogo maestro inicial:
+  - `CONTACTS + SEARCH`
+  - `COMMUNICATION_CHANNELS + READ_OPTIONS`
+  - `EXPIRATION_STATUS_POLICIES + READ_OPTIONS`
+  - `EXPIRATION_NOTIFICATION_POLICIES + READ_OPTIONS`
+- Se aprobó el mapa inicial de derivaciones:
+  - `RECIPIENT_GROUPS` deriva `CONTACTS + SEARCH` y `COMMUNICATION_CHANNELS + READ_OPTIONS`
+  - `INTERNAL_ASSET_MAINTENANCE_RECORDS` deriva `EXPIRATION_STATUS_POLICIES + READ_OPTIONS` y `EXPIRATION_NOTIFICATION_POLICIES + READ_OPTIONS`
+- Se aprobó el patrón de enforcement HTTP de la nueva capa:
+  - habrá un decorator específico para `auxiliary capabilities`
+  - habrá un guard específico separado de `PermissionsGuard`
+- Se cerró formalmente la fase de definición de la spec:
+  - `Definition status` pasa a `completed`
+  - `Slice 1. Definition Closure` queda cerrado

@@ -1,0 +1,182 @@
+# Decisions
+
+## Decision Log
+
+- Decision 01:
+  - tema: modelo base para capacidades auxiliares reutilizables
+  - estado: approved
+  - resultado:
+    - se aprueba una segunda capa explícita de autorización separada del catálogo funcional principal
+    - el catálogo `module + operation` conserva su semántica actual para capacidades visibles de negocio o backoffice
+    - las capacidades auxiliares reutilizables no equivalen a acceso administrativo completo del módulo proveedor
+    - esta nueva capa no sustituye al catálogo actual ni redefine `READ/CREATE/UPDATE/DELETE`
+    - no se resolverá por combinaciones ad hoc de permisos de módulos consumidores
+    - frontend no será fuente de verdad de dependencias
+
+- Decision 02:
+  - tema: frontera entre auxiliares locales del módulo y capabilities auxiliares reutilizables del backoffice
+  - estado: approved
+  - resultado:
+    - la frontera aprobada es arquitectónica, no basada en sensibilidad momentánea del payload
+    - toda capability auxiliar reutilizable del backoffice queda gobernada por la nueva capa auxiliar
+    - todo auxiliar local del módulo proveedor queda fuera de esa capa
+    - endpoints públicos/tokenizados y frontera `MASTER_ADMIN` permanecen fuera de esta iniciativa
+    - catálogos locales de enums, statuses o tipos fijos para create/edit del propio módulo no entran a la nueva capa
+    - lookups resumidos de instancias reales reutilizables entre módulos sí son candidatos naturales a esta capa
+    - aplicación inicial ya aclarada:
+      - fuera:
+        - `GET /v1/roles/modules`
+        - `GET /v1/users/roles`
+        - `GET /v1/expiration-status-policies/catalog`
+        - `GET /v1/expiration-notification-policies/catalog`
+      - candidatos claros dentro:
+        - `GET /v1/contacts/search`
+        - `GET /v1/communication-channels`
+        - `GET /v1/expiration-status-policies/options`
+        - `GET /v1/expiration-notification-policies/options`
+
+- Decision 02.a:
+  - tema: frontera de autorización para auxiliares locales fuera de la nueva capa
+  - estado: approved
+  - resultado:
+    - dentro del backoffice protegido, todo endpoint no público debe pertenecer explícitamente a una de dos fronteras:
+      - permiso funcional `module + operation`
+      - `auxiliary capability`
+    - los auxiliares locales que queden fuera de la nueva capa permanecen protegidos por `module + operation`
+    - `module + operation` deja de interpretarse como mapeo estricto `1 permiso = 1 endpoint exacto`
+    - pasa a entenderse como frontera funcional del módulo, capaz de cubrir:
+      - endpoints operativos principales
+      - endpoints auxiliares locales del mismo dominio
+    - `authenticated-only` no se adopta como patrón normal del backoffice
+    - solo podrá existir como excepción estructural explícita, documentada y justificada
+
+- Decision 03:
+  - tema: lugar de la derivación automática de capacidades auxiliares
+  - estado: approved
+  - resultado:
+    - la derivación automática vive exclusivamente en backend
+    - se ejecuta durante las mutaciones del rol, principalmente `create-role` y `update-role`
+    - frontend sigue enviando solo permisos funcionales directos
+    - la evaluación de esta nueva capa queda como preocupación de backend, no como una nueva matriz de gating/rendering en frontend
+    - las capacidades auxiliares derivadas no se recalcularán únicamente en runtime
+    - quedarán persistidas en el rol o en una representación persistida equivalente
+    - esto permite reutilizar el mismo patrón general de evaluación explícita ya usado para permisos directos
+
+- Decision 04:
+  - tema: representación persistida de capacidades auxiliares en roles
+  - estado: approved
+  - resultado:
+    - se agrega en `Role` un campo persistido separado para `auxiliaryCapabilities`
+    - `permissions[]` conserva intacta su semántica actual de permisos funcionales directos `module + operation`
+    - no se mezclarán auxiliary capabilities dentro de `permissions[]`
+    - la escritura de `auxiliaryCapabilities[]` será controlada por backend
+    - los contratos públicos ordinarios de create/update role no aceptarán edición libre de ese campo
+    - la evaluación de esta capa se resolverá con una guardia específica separada de `PermissionsGuard`
+    - queda pendiente definir la forma exacta de cada elemento dentro del arreglo
+
+- Decision 05:
+  - tema: shape de cada elemento de `auxiliaryCapabilities[]`
+  - estado: approved
+  - resultado:
+    - cada elemento será un objeto pequeño con:
+      - `module`
+      - `capability`
+    - no se reutilizará el nombre `action` para esta segunda dimensión
+    - el par `module + capability` funcionará como identidad natural de cada elemento
+    - este shape deja espacio para crecer con nuevos campos si hiciera falta en el futuro
+
+- Decision 06:
+  - tema: ubicación del catálogo, derivación y piezas HTTP de la nueva capa
+  - estado: approved
+  - resultado:
+    - no se moverán las piezas existentes de permisos solo por esta iniciativa
+    - el catálogo maestro de `auxiliary capabilities` vivirá en `authz`
+    - el mapa de derivación vivirá también en `authz`, separado del catálogo maestro
+    - el decorator nuevo se agregará junto a `permissions.decorator.ts`
+    - el guard nuevo se agregará junto a `permissions.guard.ts`
+    - esta responsabilidad no se distribuirá dentro de módulos de negocio proveedores
+
+- Decision 07:
+  - tema: shape del catálogo maestro de `auxiliary capabilities`
+  - estado: approved
+  - resultado:
+    - cada entry del catálogo tendrá:
+      - `module`
+      - `capability`
+      - `description`
+    - el catálogo será declarativo
+    - no incluirá por ahora metadata como `consumerModules`, `endpoint`, `method`, `sensitive` o `derivedBy`
+    - su responsabilidad será responder qué capabilities auxiliares existen, no quién las recibe automáticamente
+
+- Decision 08:
+  - tema: shape del mapa de derivación de `auxiliary capabilities`
+  - estado: approved
+  - resultado:
+    - el mapa se expresará por `consumerModule`
+    - cada regla tendrá:
+      - `consumerModule`
+      - `auxiliaryCapabilities`
+    - la derivación se activará si el rol tiene al menos un permiso funcional directo del módulo consumidor
+    - no se distinguirá por operación específica para esta derivación base
+    - los casos excepcionales más granulares no se diseñarán por adelantado
+
+- Decision 09:
+  - tema: estrategia de recálculo de `auxiliaryCapabilities[]`
+  - estado: approved
+  - resultado:
+    - `auxiliaryCapabilities[]` se recalculará desde cero y se reemplazará completo
+    - esto ocurrirá tanto en `create-role` como en `update-role`
+    - no habrá merge incremental
+    - no habrá preservación manual de elementos previos
+
+- Decision 10:
+  - tema: validación de integridad entre catálogo y mapa de derivación
+  - estado: approved
+  - resultado:
+    - la integridad entre catálogo y mapa se validará al arrancar la aplicación
+    - toda capability referenciada por el mapa deberá existir en el catálogo maestro
+    - una inconsistencia provocará falla temprana de inicialización
+    - no se confiará solo en revisión manual o tests para garantizar esa integridad
+
+- Decision 11:
+  - tema: exposición de `auxiliaryCapabilities` en responses de roles
+  - estado: approved
+  - resultado:
+    - `auxiliaryCapabilities` no se expondrá por ahora en los responses ordinarios de roles
+    - esta primera implementación no forzará trabajo equivalente en frontend
+    - la capa seguirá siendo interna de backend mientras no exista una necesidad real de consumo desde interfaz
+    - si en el futuro se requiere exponerla, se trabajará en una spec posterior específica
+
+- Decision 12:
+  - tema: catálogo maestro inicial de `auxiliary capabilities`
+  - estado: approved
+  - resultado:
+    - el catálogo maestro inicial incluirá exactamente:
+      - `CONTACTS + SEARCH`
+      - `COMMUNICATION_CHANNELS + READ_OPTIONS`
+      - `EXPIRATION_STATUS_POLICIES + READ_OPTIONS`
+      - `EXPIRATION_NOTIFICATION_POLICIES + READ_OPTIONS`
+    - este inventario corresponde al catálogo maestro inicial, no al mapa de derivaciones
+    - cualquier capability adicional futura deberá agregarse explícitamente en una ampliación posterior
+
+- Decision 13:
+  - tema: mapa inicial de derivaciones por módulo consumidor
+  - estado: approved
+  - resultado:
+    - `RECIPIENT_GROUPS` derivará:
+      - `CONTACTS + SEARCH`
+      - `COMMUNICATION_CHANNELS + READ_OPTIONS`
+    - `INTERNAL_ASSET_MAINTENANCE_RECORDS` derivará:
+      - `EXPIRATION_STATUS_POLICIES + READ_OPTIONS`
+      - `EXPIRATION_NOTIFICATION_POLICIES + READ_OPTIONS`
+    - este inventario corresponde al mapa inicial de derivaciones, no al catálogo maestro
+    - cualquier derivación futura deberá agregarse explícitamente en una ampliación posterior
+
+- Decision 14:
+  - tema: patrón del guard y decorator auxiliar
+  - estado: approved
+  - resultado:
+    - se implementará un decorator específico con patrón conceptual `@RequireAuxiliaryCapability(module, capability)`
+    - se implementará un guard específico `AuxiliaryCapabilitiesGuard`
+    - `PermissionsGuard` no absorberá esta lógica
+    - `@RequirePermission(...)` conservará intacta su semántica actual
