@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 
 import { AUTHORIZATION_CATALOG } from '@application/services/authz/authorization.catalog';
+import { AuxiliaryCapabilitiesService } from '@application/services';
 import { RoleScope, RoleStatus } from '@domain/entities';
 import { RoleDocument, RoleSchema } from '@infra/persistence/mongoose/schemas';
 import {
@@ -14,11 +15,17 @@ interface RolePermissionSeedItem {
   operation: string;
 }
 
+interface RoleAuxiliaryCapabilitySeedItem {
+  module: string;
+  capability: string;
+}
+
 interface SystemRoleSeedItem {
   name: string;
   code: string;
   scope: RoleScope;
   permissions: RolePermissionSeedItem[];
+  auxiliaryCapabilities: RoleAuxiliaryCapabilitySeedItem[];
 }
 
 const BASE_PERMISSIONS: RolePermissionSeedItem[] = Object.values(
@@ -30,18 +37,24 @@ const BASE_PERMISSIONS: RolePermissionSeedItem[] = Object.values(
   })),
 );
 
+const auxiliaryCapabilitiesService = new AuxiliaryCapabilitiesService();
+const BASE_AUXILIARY_CAPABILITIES =
+  auxiliaryCapabilitiesService.deriveFromPermissions(BASE_PERMISSIONS);
+
 const SYSTEM_ROLES: SystemRoleSeedItem[] = [
   {
     name: 'Master Admin',
     code: 'MASTER_ADMIN_DEFAULT',
     scope: RoleScope.MASTER_ADMIN,
     permissions: BASE_PERMISSIONS,
+    auxiliaryCapabilities: BASE_AUXILIARY_CAPABILITIES,
   },
   {
     name: 'Administrador',
     code: 'ADMIN_DEFAULT',
     scope: RoleScope.ADMIN,
     permissions: BASE_PERMISSIONS,
+    auxiliaryCapabilities: BASE_AUXILIARY_CAPABILITIES,
   },
 ];
 
@@ -71,9 +84,27 @@ function hasSamePermissions(
   return leftKeys.every((key, index) => key === rightKeys[index]);
 }
 
+function hasSameAuxiliaryCapabilities(
+  left: RoleAuxiliaryCapabilitySeedItem[],
+  right: RoleAuxiliaryCapabilitySeedItem[],
+): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  const toKey = (capability: RoleAuxiliaryCapabilitySeedItem) =>
+    `${capability.module}:${capability.capability}`;
+
+  const leftKeys = left.map(toKey).sort();
+  const rightKeys = right.map(toKey).sort();
+
+  return leftKeys.every((key, index) => key === rightKeys[index]);
+}
+
 export const systemRolesSeed: MongooseSeedDefinition = {
   name: 'system-roles',
   async run(context: MongooseSeedContext): Promise<SeedReportItem> {
+    auxiliaryCapabilitiesService.validateConfiguration();
     const roleModel = getRoleModel(context.connection);
 
     const report: SeedReportItem = {
@@ -99,6 +130,7 @@ export const systemRolesSeed: MongooseSeedDefinition = {
           is_default: true,
           status: RoleStatus.ACTIVE,
           permissions: role.permissions,
+          auxiliary_capabilities: role.auxiliaryCapabilities,
           created_by: null,
           updated_by: null,
         });
@@ -145,8 +177,25 @@ export const systemRolesSeed: MongooseSeedDefinition = {
         }),
       );
 
+      const existingAuxiliaryCapabilities = (
+        existing.auxiliary_capabilities ?? []
+      ).map((capability) => ({
+        module: capability.module,
+        capability: capability.capability,
+      }));
+
       if (!hasSamePermissions(existingPermissions, role.permissions)) {
         existing.permissions = role.permissions;
+        shouldUpdate = true;
+      }
+
+      if (
+        !hasSameAuxiliaryCapabilities(
+          existingAuxiliaryCapabilities,
+          role.auxiliaryCapabilities,
+        )
+      ) {
+        existing.auxiliary_capabilities = role.auxiliaryCapabilities;
         shouldUpdate = true;
       }
 

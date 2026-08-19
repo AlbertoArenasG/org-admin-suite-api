@@ -120,3 +120,8 @@
   - `create-role` ya deriva y persiste `auxiliaryCapabilities[]`
   - `update-role` ya recalcula desde cero y reemplaza completo `auxiliaryCapabilities[]`
   - `npm run build` volvió a pasar correctamente
+- Se implementó el `Slice 4.a`:
+  - `system-roles.seed.ts` ya recalcula también `auxiliaryCapabilities[]`
+  - el runner de seeds de roles ya no ejecuta `legacyStaffRoleSeed`
+  - `STAFF_LEGACY` y los roles custom quedan sin tocar por este flujo
+  - `npm run build` volvió a pasar correctamente

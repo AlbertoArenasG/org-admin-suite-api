@@ -51,7 +51,7 @@
 
 ## Slice 4.a. System Roles Seeder Update
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - sincronizar también `auxiliaryCapabilities[]` en roles del sistema ya existentes en base de datos
 
