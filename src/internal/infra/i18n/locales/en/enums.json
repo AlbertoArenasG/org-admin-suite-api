@@ -137,7 +137,7 @@
       "RECIPIENT_GROUPS": "Recipient groups",
       "EXPIRATION_STATUS_POLICIES": "Expiration status policies",
       "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies",
-      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control"
+      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control and payments"
     },
     "OPERATION": {
       "CREATE": "Create",

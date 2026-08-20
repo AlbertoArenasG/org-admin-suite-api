@@ -137,7 +137,7 @@
       "RECIPIENT_GROUPS": "Grupos de destinatarios",
       "EXPIRATION_STATUS_POLICIES": "Políticas de estatus por vencimiento",
       "EXPIRATION_NOTIFICATION_POLICIES": "Políticas de notificación por vencimiento",
-      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Control de activos internos"
+      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Control de activos y pagos"
     },
     "OPERATION": {
       "CREATE": "Crear",
