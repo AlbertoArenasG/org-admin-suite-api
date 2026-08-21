@@ -102,7 +102,9 @@
     "TYPE": {
       "CALIBRATION": "Calibración",
       "VERIFICATION": "Verificación",
-      "PREVENTIVE_MAINTENANCE": "Mantenimiento preventivo"
+      "PREVENTIVE_MAINTENANCE": "Mantenimiento preventivo",
+      "PROVIDER_PAYMENT": "Pago a proveedor",
+      "QUOTATION_DELIVERY": "Envío de cotización"
     },
     "STATUS": {
       "PENDING": "Pendiente",
