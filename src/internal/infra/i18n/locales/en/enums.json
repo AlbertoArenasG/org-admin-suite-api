@@ -142,7 +142,7 @@
     "OPERATION": {
       "CREATE": "Create",
       "READ": "Read",
-      "UPDATE": "Update",
+      "UPDATE": "Edit",
       "DELETE": "Delete",
       "READ_PUBLIC_ACCESS": "Read public access"
     }
