@@ -917,6 +917,8 @@ Reglas:
   - [feature-permission-catalog.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/feature-permission-catalog.md:1)
 - reglas de autorización:
   - [authorization-rules.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/authorization-rules.md:1)
+- capabilities auxiliares reutilizables:
+  - [auxiliary-capabilities-mapping.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/auxiliary-capabilities-mapping.md:1)
 - pipeline general de la API:
   - [api-pipeline.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/api-pipeline.md:1)
 - spec del refactor actual:

@@ -12,7 +12,10 @@ Su objetivo es evitar que el proyecto vuelva a caer en:
 
 ## Principios
 
-- la autorización operativa debe resolverse por `module + operation`
+- el backoffice protegido debe autorizar cada endpoint funcional mediante una de dos fronteras: `module + operation` o capability auxiliar
+- `module + operation` cubre operaciones de negocio y endpoints auxiliares locales de su mismo módulo
+- las capabilities auxiliares cubren lookups reutilizables entre módulos y no forman parte de los permisos directos editables de un rol
+- las capabilities auxiliares se derivan y persisten exclusivamente en backend a partir de los módulos directos del rol
 - la autorización estructural debe resolverse por `systemRole` y reglas explícitas
 - los controllers declaran permisos; no deben decidir permisos por sí mismos
 - los use cases pueden conservar validaciones defensivas, pero deben apoyarse en un servicio central de autorización
@@ -68,7 +71,7 @@ Eso volvería a hardcodear la aplicación por feature y no escalaría con roles 
 
 ## Modelo Correcto
 
-La autorización se divide en dos niveles.
+La autorización se divide en tres niveles.
 
 ### 1. Validación Genérica Por Permiso
 
@@ -96,7 +99,22 @@ Ejemplos:
 - `SERVICE_ENTRIES + DELETE`
 - `ROLES + CREATE`
 
-### 2. Validaciones Estructurales Específicas
+### 2. Capabilities Auxiliares Reutilizables
+
+Se usan para endpoints auxiliares que requieren gobernanza, pero pueden ser consumidos por varios módulos de negocio.
+
+Reglas:
+
+- su catálogo y reglas de derivación viven en backend
+- el editor de roles solo envía `permissions`; nunca recibe ni edita capabilities auxiliares
+- al crear o actualizar un rol, backend reemplaza `auxiliaryCapabilities` por el resultado derivado de sus módulos directos
+- cada elemento persistido tiene la forma `{ module, capability }`
+- el acceso se valida con `AuxiliaryCapabilitiesGuard` y `AuxiliaryCapabilitiesService`, de forma separada a `PermissionsGuard`
+- frontend no debe condicionar vistas, selects ni controles con estas capabilities; si una vista autorizada necesita un lookup, backend resuelve el acceso
+
+La referencia de catálogo, derivación y endpoints protegidos vive en [auxiliary-capabilities-mapping.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/auxiliary-capabilities-mapping.md:1).
+
+### 3. Validaciones Estructurales Específicas
 
 Solo deben existir cuando la regla no puede expresarse correctamente con `module + operation`.
 
@@ -139,11 +157,18 @@ Usar `ensurePermission(...)` cuando:
 - el endpoint representa una acción ordinaria de negocio
 - la autorización puede expresarse con el catálogo `module + operation`
 
-Regla para endpoints de catálogo auxiliares:
+Regla para endpoints de catálogo auxiliares locales:
 
 - un endpoint de catálogo o lookup no debe convertirse por defecto en un permiso explícito editable dentro del CRUD de roles
-- si ese endpoint solo existe para soportar una acción principal de negocio, su acceso puede quedar implícitamente cubierto por el permiso funcional principal
-- solo debe modelarse como operación explícita si expone información con sensibilidad propia o si negocio necesita gobernarlo de manera separada
+- si el endpoint solo sirve a su propio módulo, debe protegerse con la combinación funcional `module + operation` que corresponda
+- ejemplos: `GET /v1/roles/modules` con `ROLES/READ`, `GET /v1/users/roles` con `USER_REGISTRATION_INVITATIONS/CREATE` y los endpoints `/catalog` locales de cada módulo
+
+Regla para endpoints auxiliares reutilizables:
+
+- si el mismo lookup es consumido por más de un módulo o está diseñado para reutilizarse, debe modelarse como capability auxiliar
+- no se modela como una operación adicional del módulo que administra el recurso ni se absorbe por el permiso de lectura de ese recurso
+- su acceso debe pasar por `AuxiliaryCapabilitiesGuard` y una capability `{ module, capability }` derivada en backend
+- no se deben introducir endpoints funcionales de backoffice protegidos solo por autenticación, salvo una excepción estructural documentada
 
 Regla para datos sensibles dentro de un módulo:
 
@@ -168,7 +193,7 @@ Casos que deben resolverse con permiso genérico:
 - actualizar service entry
 - eliminar service package record
 - crear rol custom
-- consultar catálogos auxiliares necesarios para ejecutar una acción principal ya autorizada, cuando no tengan autonomía funcional propia
+- consultar catálogos auxiliares locales de un módulo
 
 Excepción importante:
 
@@ -177,7 +202,10 @@ Excepción importante:
 Ejemplo práctico:
 
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad funcional principal que lo consume; en el estado actual del sistema, al servir el flujo ordinario de invitaciones, queda absorbido por `USER_REGISTRATION_INVITATIONS/CREATE`
-- `GET /v1/communication-channels` queda absorbido por la capacidad funcional principal que hoy lo consume; en el estado actual del sistema, al servir la administración de grupos de destinatarios, queda absorbido por `RECIPIENT_GROUPS/READ`
+- `GET /v1/roles/modules` queda protegido como auxiliar local por `ROLES/READ`
+- `GET /v1/contacts/search` se protege con `CONTACTS/SEARCH`, capability auxiliar derivada para `RECIPIENT_GROUPS`
+- `GET /v1/communication-channels` se protege con `COMMUNICATION_CHANNELS/READ_OPTIONS`, capability auxiliar derivada para `RECIPIENT_GROUPS`
+- los endpoints `/options` de políticas de vencimiento se protegen con capabilities auxiliares derivadas para `INTERNAL_ASSET_MAINTENANCE_RECORDS`
 - si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
 - `GET /v1/customers` y `GET /v1/customers/:customerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `CUSTOMERS/READ_PUBLIC_ACCESS`
 - `GET /v1/providers` y `GET /v1/providers/:providerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `PROVIDERS/READ_PUBLIC_ACCESS`

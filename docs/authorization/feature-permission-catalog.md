@@ -13,6 +13,7 @@ No es una spec historica. Es una referencia operativa permanente del proyecto y 
 Complemento normativo:
 
 - las reglas permanentes de diseño de autorización viven en [authorization-rules.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/authorization-rules.md:1)
+- las capabilities auxiliares reutilizables viven en un catálogo separado y se documentan en [auxiliary-capabilities-mapping.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/auxiliary-capabilities-mapping.md:1)
 
 ## Reglas De Uso
 
@@ -23,6 +24,7 @@ Complemento normativo:
 - toda feature exclusiva de `MASTER_ADMIN` debe vivir bajo `src/internal/infra/api/controllers/master-admin`
 - los endpoints `auth`, `health` y `public/*` no forman parte del catalogo de permisos internos de negocio
 - este documento describe el catálogo funcional general; no pretende listar por defecto utilidades técnicas o de soporte exclusivas de `MASTER_ADMIN`
+- las capabilities auxiliares no son módulos funcionales ni operaciones editables en el CRUD de roles; su catálogo y derivación pertenecen a backend
 
 ## Fuente De Verdad Del Catálogo
 
@@ -106,6 +108,8 @@ Nota:
 - el modulo representa la capacidad funcional de negocio
 - la operacion representa la accion autorizable
 - un mismo modulo puede tener varios endpoints asociados a una misma operacion
+- un endpoint auxiliar local se asocia a la combinación `module + operation` de su módulo consumidor
+- un endpoint auxiliar reutilizable se asocia a una capability auxiliar y no debe forzarse dentro de una operación funcional existente
 - si un endpoint es estructural y reservado a plataforma, debe marcarse como exclusivo de `MASTER_ADMIN`
 - si un endpoint hoy existe pero su permiso fino aun no se ha migrado al nuevo modelo, debe seguir apareciendo aqui para no perder trazabilidad
 
@@ -467,9 +471,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `contacts.READ`; listado administrativo paginado
 - `GET /v1/contacts/search`
-  - operacion: `READ`
+  - frontera: capability auxiliar `CONTACTS/SEARCH`
   - acceso actual: autenticado
-  - nota: lookup auxiliar no paginado, absorbido por `contacts.READ`; devuelve solo contactos `ACTIVE`
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; lookup reutilizable no paginado que devuelve solo contactos `ACTIVE`
 - `GET /v1/contacts/:contactId`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -520,9 +524,9 @@ Endpoints actuales:
 Capability auxiliar relacionada:
 
 - `GET /v1/communication-channels`
-  - operacion: `READ`
+  - frontera: capability auxiliar `COMMUNICATION_CHANNELS/READ_OPTIONS`
   - acceso actual: autenticado
-  - nota: catálogo auxiliar absorbido por `recipient_groups.READ`; hoy publica solo `EMAIL`
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; catálogo reutilizable de opciones, hoy publica solo `EMAIL`
 
 ### `expiration_status_policies`
 
@@ -543,11 +547,11 @@ Endpoints actuales:
 - `GET /v1/expiration-status-policies/catalog`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: catálogo auxiliar absorbido por `expiration_status_policies.READ`; expone estados y shape base para construir políticas visuales
+  - nota: catálogo local protegido por `expiration_status_policies.READ`; expone estados y shape base para construir políticas visuales
 - `GET /v1/expiration-status-policies/options`
-  - operacion: `READ`
+  - frontera: capability auxiliar `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`
   - acceso actual: autenticado
-  - nota: lookup auxiliar absorbido por `expiration_status_policies.READ`; devuelve opciones reutilizables para selects
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; devuelve opciones reutilizables para selects
 - `GET /v1/expiration-status-policies/:expirationStatusPolicyId`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -580,11 +584,11 @@ Endpoints actuales:
 - `GET /v1/expiration-notification-policies/catalog`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: catálogo auxiliar absorbido por `expiration_notification_policies.READ`; expone estados y enums necesarios para construir políticas de notificación
+  - nota: catálogo local protegido por `expiration_notification_policies.READ`; expone estados y enums necesarios para construir políticas de notificación
 - `GET /v1/expiration-notification-policies/options`
-  - operacion: `READ`
+  - frontera: capability auxiliar `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS`
   - acceso actual: autenticado
-  - nota: lookup auxiliar absorbido por `expiration_notification_policies.READ`; devuelve opciones reutilizables para selects
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; devuelve opciones reutilizables para selects
 - `GET /v1/expiration-notification-policies/:expirationNotificationPolicyId`
   - operacion: `READ`
   - acceso actual: autenticado
