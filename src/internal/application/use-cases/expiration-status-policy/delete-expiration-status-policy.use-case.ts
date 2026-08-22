@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { DeleteExpirationStatusPolicyDto } from '@application/dto';
-import {
-  applyInternalAssetMaintenanceRecordMaterializations,
-  collectPolicyIds,
-} from '@application/use-cases/internal-asset-maintenance-record/internal-asset-maintenance-record.shared';
+import { InternalAssetStatusMaterializationRefresher } from '@application/services';
+import { isRecordOperational } from '@application/services/internal-asset-maintenance';
 import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
@@ -31,6 +29,7 @@ export class DeleteExpirationStatusPolicyUseCase {
     private readonly internalAssetMaintenanceRecordReadRepository: IInternalAssetMaintenanceRecordReadRepository,
     @Inject(IInternalAssetMaintenanceRecordWriteRepositoryToken)
     private readonly internalAssetMaintenanceRecordWriteRepository: IInternalAssetMaintenanceRecordWriteRepository,
+    private readonly statusMaterializationRefresher: InternalAssetStatusMaterializationRefresher,
   ) {}
 
   async execute(input: DeleteExpirationStatusPolicyDto): Promise<void> {
@@ -51,28 +50,22 @@ export class DeleteExpirationStatusPolicyUseCase {
       await this.internalAssetMaintenanceRecordReadRepository.findByExpirationStatusPolicyId(
         deletedPolicy!.id,
       );
-    const policiesById =
-      await this.internalAssetMaintenanceRecordReadRepository.findPoliciesByIds(
-        collectPolicyIds(affectedRecords),
-      );
-
     for (const record of affectedRecords) {
-      record.updateDetails(
-        { expirationStatusPolicyId: null },
-        input.actorUserId,
+      await this.internalAssetMaintenanceRecordWriteRepository.updateSystemManagedFields(
+        {
+          recordId: record.id,
+          expirationStatusPolicyId: null,
+          ...(isRecordOperational(record.status)
+            ? {
+                expirationStatusMaterialization:
+                  this.statusMaterializationRefresher.refresh({
+                    record,
+                    policy: null,
+                  }),
+              }
+            : {}),
+        },
       );
-      applyInternalAssetMaintenanceRecordMaterializations({
-        record,
-        expirationStatusPolicy: null,
-        expirationNotificationPolicy:
-          record.expirationNotificationPolicyId != null
-            ? (policiesById.expirationNotificationPoliciesById.get(
-                record.expirationNotificationPolicyId,
-              ) ?? null)
-            : null,
-        actorUserId: input.actorUserId,
-      });
-      await this.internalAssetMaintenanceRecordWriteRepository.update(record);
     }
   }
 }

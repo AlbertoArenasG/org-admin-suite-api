@@ -5,7 +5,11 @@ import {
   CreateInternalAssetMaintenanceRecordResultDto,
 } from '@application/dto';
 import { InternalAssetMaintenanceRecordMapper } from '@application/mappers';
-import { AuditUserFetcherService } from '@application/services';
+import {
+  AuditUserFetcherService,
+  InternalAssetNotificationMaterializationRefresher,
+  InternalAssetStatusMaterializationRefresher,
+} from '@application/services';
 import {
   ExpirationNotificationPolicy,
   ExpirationStatusPolicy,
@@ -42,6 +46,8 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
     private readonly expirationNotificationPolicyReadRepository: IExpirationNotificationPolicyReadRepository,
     @Inject(IRecipientGroupReadRepositoryToken)
     private readonly recipientGroupReadRepository: IRecipientGroupReadRepository,
+    private readonly statusMaterializationRefresher: InternalAssetStatusMaterializationRefresher,
+    private readonly notificationMaterializationRefresher: InternalAssetNotificationMaterializationRefresher,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -83,8 +89,18 @@ export class CreateInternalAssetMaintenanceRecordUseCase {
 
     applyInternalAssetMaintenanceRecordMaterializations({
       record,
-      expirationStatusPolicy,
-      expirationNotificationPolicy,
+      materializations: {
+        expirationStatusMaterialization:
+          this.statusMaterializationRefresher.refresh({
+            record,
+            policy: expirationStatusPolicy,
+          }),
+        expirationNotificationMaterialization:
+          this.notificationMaterializationRefresher.refresh({
+            record,
+            policy: expirationNotificationPolicy,
+          }),
+      },
       actorUserId: input.actorUserId,
     });
 

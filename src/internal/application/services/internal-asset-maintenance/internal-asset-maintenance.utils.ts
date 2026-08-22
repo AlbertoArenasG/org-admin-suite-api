@@ -573,7 +573,9 @@ function toComparableOffset(offset: {
   );
 }
 
-function isRecordOperational(status: InternalAssetMaintenanceRecordStatus) {
+export function isRecordOperational(
+  status: InternalAssetMaintenanceRecordStatus,
+) {
   return (
     status === InternalAssetMaintenanceRecordStatus.PENDING ||
     status === InternalAssetMaintenanceRecordStatus.IN_PROGRESS

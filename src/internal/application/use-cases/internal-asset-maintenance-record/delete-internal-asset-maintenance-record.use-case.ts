@@ -1,6 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { DeleteInternalAssetMaintenanceRecordDto } from '@application/dto';
+import {
+  InternalAssetNotificationMaterializationRefresher,
+  InternalAssetStatusMaterializationRefresher,
+} from '@application/services';
 import { applyInternalAssetMaintenanceRecordMaterializations } from './internal-asset-maintenance-record.shared';
 import {
   EntityNotFoundException,
@@ -20,6 +24,8 @@ export class DeleteInternalAssetMaintenanceRecordUseCase {
     private readonly readRepository: IInternalAssetMaintenanceRecordReadRepository,
     @Inject(IInternalAssetMaintenanceRecordWriteRepositoryToken)
     private readonly writeRepository: IInternalAssetMaintenanceRecordWriteRepository,
+    private readonly statusMaterializationRefresher: InternalAssetStatusMaterializationRefresher,
+    private readonly notificationMaterializationRefresher: InternalAssetNotificationMaterializationRefresher,
   ) {}
 
   async execute(input: DeleteInternalAssetMaintenanceRecordDto): Promise<void> {
@@ -35,8 +41,15 @@ export class DeleteInternalAssetMaintenanceRecordUseCase {
     record.markAsDeleted(input.actorUserId);
     applyInternalAssetMaintenanceRecordMaterializations({
       record,
-      expirationStatusPolicy: null,
-      expirationNotificationPolicy: null,
+      materializations: {
+        expirationStatusMaterialization:
+          this.statusMaterializationRefresher.refresh({ record, policy: null }),
+        expirationNotificationMaterialization:
+          this.notificationMaterializationRefresher.refresh({
+            record,
+            policy: null,
+          }),
+      },
       actorUserId: input.actorUserId,
     });
     await this.writeRepository.update(record);

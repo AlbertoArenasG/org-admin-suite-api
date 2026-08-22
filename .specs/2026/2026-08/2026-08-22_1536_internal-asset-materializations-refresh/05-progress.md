@@ -10,7 +10,6 @@
   - eliminar una policy hoy actualiza auditoría de records afectados
   - ambos efectos son cascadas técnicas y quedarán fuera de `updatedBy` y `updatedAt`
 - Se aprobó el contrato técnico ampliado `updateSystemManagedFields` para materializaciones y limpieza de asociaciones a policies sin auditoría de backoffice.
-- No se ha modificado código de aplicación para esta spec.
 - Se implementó el Slice 1:
   - `INTERNAL_JOBS_TOKEN` quedó incorporado al environment validado y al ejemplo de configuración.
   - `InternalJobsAuthGuard` quedó disponible para la nueva frontera técnica.
@@ -24,3 +23,9 @@
   - `updateSystemManagedFields` persiste exclusivamente campos técnicos con `timestamps: false`.
   - el mapper de records expone conversiones reutilizables para materializaciones parciales.
 - `npm run build` pasó correctamente después del Slice 2.
+- Se implementó el Slice 3:
+  - se separaron refreshers de estatus y notificaciones, además del orquestador técnico por lotes.
+  - los flujos directos de create, update y delete de records reutilizan los refreshers y conservan su auditoría ordinaria.
+  - editar una policy refresca únicamente su materialización en records operativos, sin modificar `updatedAt` ni `updatedBy`.
+  - eliminar una policy limpia su asociación en todos los records afectados y solo rematerializa los operativos.
+- `npm run build` pasó correctamente después del Slice 3.
