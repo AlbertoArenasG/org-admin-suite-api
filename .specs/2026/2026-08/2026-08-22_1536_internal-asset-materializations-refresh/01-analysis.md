@@ -41,9 +41,9 @@ The new controller group can follow the existing controller export and global mo
 
 ### Job Lock
 
-Cross-instance coordination requires a persistence-backed abstraction. The application layer must depend on a lock port, while Mongo atomic acquisition and release remain in the Mongoose implementation.
+Cross-instance coordination requires a persistence-backed abstraction. The application layer will depend on `IInternalJobLockRepository`, while Mongo atomic acquisition and release remain in the Mongoose implementation.
 
-The exact shape and placement of that port, schema and repository remains the first technical-structure decision before implementation.
+The lock is technical coordination rather than a business entity. It will not be modeled as an internal-asset domain entity.
 
 ### Refresh Flow
 
@@ -67,4 +67,3 @@ Policy update use cases will reuse the refresh orchestration without depending o
 - Cursor predicates must be based on `createdAt` and domain record ID to match the approved stable sort.
 - A compound index must support the operational status filter and cursor ordering.
 - Errors after partially processing a batch must preserve retry from the last confirmed cursor, as approved.
-

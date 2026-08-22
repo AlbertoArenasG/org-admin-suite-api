@@ -16,11 +16,17 @@
 - [x] Audit the existing controller, configuration, CQRS, repository and materialization structure.
       Status: completed
 
-- [ ] Approve the lock port, entity model and Mongoose persistence structure.
-      Status: pending
+- [x] Approve the reusable lock port and Mongoose persistence structure.
+      Status: completed
 
-- [ ] Finalize concrete contracts for cursor DTO, refresh result, technical materialization update and operational query.
-      Status: pending
+- [x] Finalize the concrete refresh result, endpoint DTO and presenter contracts.
+      Status: completed
+
+- [x] Define the independent refreshers and shared technical refresh orchestration.
+      Status: completed
+
+- [x] Revise and approve the expanded technical write contract for policy-deletion cascades.
+      Status: completed
 
 ## Phase 3. Implementation
 
