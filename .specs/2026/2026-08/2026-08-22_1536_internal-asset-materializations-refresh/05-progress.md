@@ -18,3 +18,9 @@
   - el puerto y la persistencia Mongo de locks reutilizables quedaron registrados globalmente.
 - Se cerró formalmente el diseño técnico y comenzó la implementación.
 - `npm run build` pasó correctamente después del Slice 1.
+- Se implementó el Slice 2:
+  - `findOperational` consulta únicamente records operativos por cursor estable.
+  - el schema de records incorpora el índice compuesto de status y cursor.
+  - `updateSystemManagedFields` persiste exclusivamente campos técnicos con `timestamps: false`.
+  - el mapper de records expone conversiones reutilizables para materializaciones parciales.
+- `npm run build` pasó correctamente después del Slice 2.

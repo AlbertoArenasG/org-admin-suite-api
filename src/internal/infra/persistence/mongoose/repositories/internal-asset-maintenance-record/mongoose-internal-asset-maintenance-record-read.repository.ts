@@ -10,6 +10,7 @@ import {
 import {
   FindInternalAssetMaintenanceRecordsParams,
   FindInternalAssetMaintenanceRecordsResult,
+  FindOperationalInternalAssetMaintenanceRecordsParams,
   IInternalAssetMaintenanceRecordReadRepository,
   InternalAssetMaintenancePoliciesByIdResult,
 } from '@domain/ports/repositories';
@@ -57,6 +58,54 @@ export class MongooseInternalAssetMaintenanceRecordReadRepositoryImpl
         expiration_notification_policy_id: expirationNotificationPolicyId,
         status: { $ne: InternalAssetMaintenanceRecordStatus.DELETED },
       })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter(
+          (record): record is InternalAssetMaintenanceRecord => record !== null,
+        ),
+    };
+  }
+
+  async findOperational(
+    params: FindOperationalInternalAssetMaintenanceRecordsParams,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }> {
+    const filter: Record<string, unknown> = {
+      status: {
+        $in: [
+          InternalAssetMaintenanceRecordStatus.PENDING,
+          InternalAssetMaintenanceRecordStatus.IN_PROGRESS,
+        ],
+      },
+    };
+
+    if (params.expirationStatusPolicyId) {
+      filter.expiration_status_policy_id = params.expirationStatusPolicyId;
+    }
+
+    if (params.expirationNotificationPolicyId) {
+      filter.expiration_notification_policy_id =
+        params.expirationNotificationPolicyId;
+    }
+
+    if (params.after) {
+      filter.$or = [
+        { createdAt: { $gt: params.after.createdAt } },
+        {
+          createdAt: params.after.createdAt,
+          internal_asset_maintenance_record_id: {
+            $gt: params.after.recordId,
+          },
+        },
+      ];
+    }
+
+    const documents = await this.internalAssetMaintenanceRecordModel
+      .find(filter)
+      .sort({ createdAt: 1, internal_asset_maintenance_record_id: 1 })
+      .limit(params.limit)
       .exec();
 
     return {

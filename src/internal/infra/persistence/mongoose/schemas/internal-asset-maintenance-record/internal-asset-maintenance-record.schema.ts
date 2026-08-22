@@ -322,3 +322,9 @@ export class InternalAssetMaintenanceRecordDocument extends Document {
 
 export const InternalAssetMaintenanceRecordSchema =
   SchemaFactory.createForClass(InternalAssetMaintenanceRecordDocument);
+
+InternalAssetMaintenanceRecordSchema.index({
+  status: 1,
+  createdAt: 1,
+  internal_asset_maintenance_record_id: 1,
+});

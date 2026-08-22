@@ -36,8 +36,11 @@
 - [x] Implement lock persistence and atomic lease acquisition.
       Status: completed
 
-- [ ] Refactor materialization refreshers, operational query and technical persistence.
+- [ ] Refactor materialization refreshers and policy triggers.
       Status: pending
+
+- [x] Implement the operational query and technical persistence.
+      Status: completed
 
 - [ ] Integrate policy update and deletion triggers with the approved criteria.
       Status: pending

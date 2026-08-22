@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import { InternalAssetMaintenanceRecord } from '@domain/entities';
-import { IInternalAssetMaintenanceRecordWriteRepository } from '@domain/ports/repositories';
+import {
+  IInternalAssetMaintenanceRecordWriteRepository,
+  UpdateInternalAssetMaintenanceRecordSystemManagedFieldsParams,
+} from '@domain/ports/repositories';
+import { MongooseInternalAssetMaintenanceRecordMapper } from '@infra/persistence/mongoose/mappers/internal-asset-maintenance-record';
 import { MongooseInternalAssetMaintenanceRecordBaseRepository } from './mongoose-internal-asset-maintenance-record-base.repository';
 
 @Injectable()
@@ -40,5 +44,56 @@ export class MongooseInternalAssetMaintenanceRecordWriteRepositoryImpl
     return {
       data: this.toDomain(updated),
     };
+  }
+
+  async updateSystemManagedFields(
+    params: UpdateInternalAssetMaintenanceRecordSystemManagedFieldsParams,
+  ): Promise<{ updated: boolean }> {
+    const fields = this.toSystemManagedFields(params);
+
+    const updated = await this.internalAssetMaintenanceRecordModel
+      .findOneAndUpdate(
+        { internal_asset_maintenance_record_id: params.recordId },
+        { $set: fields },
+        { new: false, timestamps: false },
+      )
+      .exec();
+
+    return { updated: Boolean(updated) };
+  }
+
+  private toSystemManagedFields(
+    params: UpdateInternalAssetMaintenanceRecordSystemManagedFieldsParams,
+  ): Record<string, unknown> {
+    const fields: Record<string, unknown> = {};
+
+    if (params.expirationStatusPolicyId !== undefined) {
+      fields.expiration_status_policy_id = params.expirationStatusPolicyId;
+    }
+
+    if (params.expirationNotificationPolicyId !== undefined) {
+      fields.expiration_notification_policy_id =
+        params.expirationNotificationPolicyId;
+    }
+
+    if (params.expirationStatusMaterialization !== undefined) {
+      fields.expiration_status_materialization =
+        MongooseInternalAssetMaintenanceRecordMapper.toMongooseExpirationStatusMaterialization(
+          params.expirationStatusMaterialization,
+        );
+    }
+
+    if (params.expirationNotificationMaterialization !== undefined) {
+      fields.expiration_notification_materialization =
+        MongooseInternalAssetMaintenanceRecordMapper.toMongooseExpirationNotificationMaterialization(
+          params.expirationNotificationMaterialization,
+        );
+    }
+
+    if (Object.keys(fields).length === 0) {
+      throw new Error('At least one system-managed field is required');
+    }
+
+    return fields;
   }
 }

@@ -35,6 +35,18 @@ export interface FindInternalAssetMaintenanceRecordsResult {
   total: number;
 }
 
+export interface InternalAssetMaintenanceOperationalCursor {
+  createdAt: Date;
+  recordId: string;
+}
+
+export interface FindOperationalInternalAssetMaintenanceRecordsParams {
+  after?: InternalAssetMaintenanceOperationalCursor;
+  limit: number;
+  expirationStatusPolicyId?: string | null;
+  expirationNotificationPolicyId?: string | null;
+}
+
 export interface InternalAssetMaintenancePoliciesByIdResult {
   expirationStatusPoliciesById: Map<string, ExpirationStatusPolicy>;
   expirationNotificationPoliciesById: Map<string, ExpirationNotificationPolicy>;
@@ -49,6 +61,9 @@ export interface IInternalAssetMaintenanceRecordReadRepository {
   ): Promise<{ data: InternalAssetMaintenanceRecord[] }>;
   findByExpirationNotificationPolicyId(
     expirationNotificationPolicyId: string,
+  ): Promise<{ data: InternalAssetMaintenanceRecord[] }>;
+  findOperational(
+    params: FindOperationalInternalAssetMaintenanceRecordsParams,
   ): Promise<{ data: InternalAssetMaintenanceRecord[] }>;
   findAll(
     params: FindInternalAssetMaintenanceRecordsParams,

@@ -1,4 +1,8 @@
-import { InternalAssetMaintenanceRecord } from '@domain/entities';
+import {
+  InternalAssetExpirationNotificationMaterializationProps,
+  InternalAssetExpirationStatusMaterializationProps,
+  InternalAssetMaintenanceRecord,
+} from '@domain/entities';
 import { InternalAssetMaintenanceRecordDocument } from '@infra/persistence/mongoose/schemas/internal-asset-maintenance-record';
 
 export class MongooseInternalAssetMaintenanceRecordMapper {
@@ -208,96 +212,98 @@ export class MongooseInternalAssetMaintenanceRecordMapper {
             last_sent_at: record.providerFollowUp.lastSentAt,
           }
         : null,
-      expiration_status_materialization: record.expirationStatusMaterialization
-        ? {
-            source: record.expirationStatusMaterialization.source,
-            code: record.expirationStatusMaterialization.code,
-            effective_start_date:
-              record.expirationStatusMaterialization.effectiveStartDate,
-            label: record.expirationStatusMaterialization.label,
-            label_key: record.expirationStatusMaterialization.labelKey,
-            color_hex: record.expirationStatusMaterialization.colorHex,
-            matched_rule: record.expirationStatusMaterialization.matchedRule
-              ? {
-                  source_rule_id:
-                    record.expirationStatusMaterialization.matchedRule
-                      .sourceRuleId,
-                  start_offset: {
-                    years:
-                      record.expirationStatusMaterialization.matchedRule
-                        .startOffset.years,
-                    months:
-                      record.expirationStatusMaterialization.matchedRule
-                        .startOffset.months,
-                    weeks:
-                      record.expirationStatusMaterialization.matchedRule
-                        .startOffset.weeks,
-                    days: record.expirationStatusMaterialization.matchedRule
-                      .startOffset.days,
-                  },
-                }
-              : null,
-            last_materialized_at:
-              record.expirationStatusMaterialization.lastMaterializedAt,
-          }
-        : null,
+      expiration_status_materialization:
+        this.toMongooseExpirationStatusMaterialization(
+          record.expirationStatusMaterialization,
+        ),
       expiration_notification_materialization:
-        record.expirationNotificationMaterialization
-          ? {
-              source: record.expirationNotificationMaterialization.source,
-              next_trigger_date:
-                record.expirationNotificationMaterialization.nextTriggerDate,
-              last_triggered_at:
-                record.expirationNotificationMaterialization.lastTriggeredAt,
-              materialized_rules_count:
-                record.expirationNotificationMaterialization
-                  .materializedRulesCount,
-              materialized_rules:
-                record.expirationNotificationMaterialization.materializedRules.map(
-                  (rule) => ({
-                    source_rule_id: rule.sourceRuleId,
-                    anchor: rule.anchor,
-                    start_offset: {
-                      years: rule.startOffset.years,
-                      months: rule.startOffset.months,
-                      weeks: rule.startOffset.weeks,
-                      days: rule.startOffset.days,
-                    },
-                    trigger_mode: rule.triggerMode,
-                    repeat_every: rule.repeatEvery
-                      ? {
-                          years: rule.repeatEvery.years,
-                          months: rule.repeatEvery.months,
-                          weeks: rule.repeatEvery.weeks,
-                          days: rule.repeatEvery.days,
-                        }
-                      : null,
-                    repeat_until: rule.repeatUntil,
-                    repeat_for: rule.repeatFor
-                      ? {
-                          years: rule.repeatFor.years,
-                          months: rule.repeatFor.months,
-                          weeks: rule.repeatFor.weeks,
-                          days: rule.repeatFor.days,
-                        }
-                      : null,
-                    trigger_events: rule.triggerEvents.map((event) => ({
-                      trigger_date: event.triggerDate,
-                      status: event.status,
-                      triggered_at: event.triggeredAt,
-                      failure_reason: event.failureReason,
-                    })),
-                    last_triggered_at: rule.lastTriggeredAt,
-                  }),
-                ),
-              last_materialized_at:
-                record.expirationNotificationMaterialization.lastMaterializedAt,
-            }
-          : null,
+        this.toMongooseExpirationNotificationMaterialization(
+          record.expirationNotificationMaterialization,
+        ),
       created_by: record.createdBy,
       updated_by: record.updatedBy,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
+    };
+  }
+
+  static toMongooseExpirationStatusMaterialization(
+    materialization: InternalAssetExpirationStatusMaterializationProps | null,
+  ) {
+    if (!materialization) {
+      return null;
+    }
+
+    return {
+      source: materialization.source,
+      code: materialization.code,
+      effective_start_date: materialization.effectiveStartDate,
+      label: materialization.label,
+      label_key: materialization.labelKey,
+      color_hex: materialization.colorHex,
+      matched_rule: materialization.matchedRule
+        ? {
+            source_rule_id: materialization.matchedRule.sourceRuleId,
+            start_offset: {
+              years: materialization.matchedRule.startOffset.years,
+              months: materialization.matchedRule.startOffset.months,
+              weeks: materialization.matchedRule.startOffset.weeks,
+              days: materialization.matchedRule.startOffset.days,
+            },
+          }
+        : null,
+      last_materialized_at: materialization.lastMaterializedAt,
+    };
+  }
+
+  static toMongooseExpirationNotificationMaterialization(
+    materialization: InternalAssetExpirationNotificationMaterializationProps | null,
+  ) {
+    if (!materialization) {
+      return null;
+    }
+
+    return {
+      source: materialization.source,
+      next_trigger_date: materialization.nextTriggerDate,
+      last_triggered_at: materialization.lastTriggeredAt,
+      materialized_rules_count: materialization.materializedRulesCount,
+      materialized_rules: materialization.materializedRules.map((rule) => ({
+        source_rule_id: rule.sourceRuleId,
+        anchor: rule.anchor,
+        start_offset: {
+          years: rule.startOffset.years,
+          months: rule.startOffset.months,
+          weeks: rule.startOffset.weeks,
+          days: rule.startOffset.days,
+        },
+        trigger_mode: rule.triggerMode,
+        repeat_every: rule.repeatEvery
+          ? {
+              years: rule.repeatEvery.years,
+              months: rule.repeatEvery.months,
+              weeks: rule.repeatEvery.weeks,
+              days: rule.repeatEvery.days,
+            }
+          : null,
+        repeat_until: rule.repeatUntil,
+        repeat_for: rule.repeatFor
+          ? {
+              years: rule.repeatFor.years,
+              months: rule.repeatFor.months,
+              weeks: rule.repeatFor.weeks,
+              days: rule.repeatFor.days,
+            }
+          : null,
+        trigger_events: rule.triggerEvents.map((event) => ({
+          trigger_date: event.triggerDate,
+          status: event.status,
+          triggered_at: event.triggeredAt,
+          failure_reason: event.failureReason,
+        })),
+        last_triggered_at: rule.lastTriggeredAt,
+      })),
+      last_materialized_at: materialization.lastMaterializedAt,
     };
   }
 }
