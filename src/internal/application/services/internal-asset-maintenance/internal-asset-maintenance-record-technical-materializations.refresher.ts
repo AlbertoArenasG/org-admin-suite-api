@@ -44,11 +44,12 @@ export class InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher {
     }
 
     const policiesById = await this.readRepository.findPoliciesByIds({
-      expirationStatusPolicyIds: this.collectPolicyIds(input.records, 'status'),
-      expirationNotificationPolicyIds: this.collectPolicyIds(
-        input.records,
-        'notification',
-      ),
+      expirationStatusPolicyIds: input.refreshExpirationStatus
+        ? this.collectPolicyIds(input.records, 'status')
+        : [],
+      expirationNotificationPolicyIds: input.refreshExpirationNotification
+        ? this.collectPolicyIds(input.records, 'notification')
+        : [],
     });
 
     for (const record of input.records) {

@@ -176,6 +176,20 @@ export interface SendInternalAssetMaintenanceProviderFollowUpDto {
   recordId: string;
 }
 
+export interface RefreshInternalAssetMaintenanceRecordMaterializationsDto {
+  cursor: string | null;
+}
+
+export interface RefreshInternalAssetMaintenanceRecordMaterializationsResultDto {
+  processedRecords: number;
+  materializations: {
+    expirationStatus: { refreshedRecords: number };
+    expirationNotification: { refreshedRecords: number };
+  };
+  durationMs: number;
+  nextCursor: string | null;
+}
+
 export type GetInternalAssetMaintenanceRecordsResultDto =
   PaginatedResultDto<InternalAssetMaintenanceRecordListItemDto>;
 export type GetInternalAssetMaintenanceRecordByIdResultDto =

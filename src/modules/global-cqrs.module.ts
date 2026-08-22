@@ -48,6 +48,7 @@ import {
   UpdateInternalAssetMaintenanceRecordHandler,
   DeleteInternalAssetMaintenanceRecordHandler,
   SendInternalAssetMaintenanceProviderFollowUpHandler,
+  RefreshInternalAssetMaintenanceRecordMaterializationsHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -146,6 +147,7 @@ const providers = [
   UpdateInternalAssetMaintenanceRecordHandler,
   DeleteInternalAssetMaintenanceRecordHandler,
   SendInternalAssetMaintenanceProviderFollowUpHandler,
+  RefreshInternalAssetMaintenanceRecordMaterializationsHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,

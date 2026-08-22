@@ -29,3 +29,8 @@
   - editar una policy refresca únicamente su materialización en records operativos, sin modificar `updatedAt` ni `updatedBy`.
   - eliminar una policy limpia su asociación en todos los records afectados y solo rematerializa los operativos.
 - `npm run build` pasó correctamente después del Slice 3.
+- Se implementó el Slice 4:
+  - se expuso `POST /v1/internal-jobs/internal-asset-maintenance-records/refresh-materializations` protegido solo con `InternalJobsAuthGuard`.
+  - el job procesa hasta 100 records operativos, usa cursor Base64URL opaco y conserva el progreso en `next_cursor`.
+  - el lease persistido coordina ejecuciones; un lock activo responde `409` y el cursor inválido responde `400`.
+  - la respuesta específica expone métricas, duración y cursor en `snake_case`; el job registra inicio, finalización, lock y error con `Logger` de Nest.

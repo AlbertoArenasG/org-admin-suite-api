@@ -45,8 +45,8 @@
 - [x] Integrate policy update and deletion triggers with the approved criteria.
       Status: completed
 
-- [ ] Implement the manual refresh use case, CQRS command and endpoint.
-      Status: pending
+- [x] Implement the manual refresh use case, CQRS command and endpoint.
+      Status: completed
 
 ## Phase 4. Documentation And Validation
 
