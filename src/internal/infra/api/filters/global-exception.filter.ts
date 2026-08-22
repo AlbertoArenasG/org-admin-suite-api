@@ -17,7 +17,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const { status, errorCode, message, validationErrors } =
+    const { status, errorCode, message, validationErrors, details } =
       await this.mapper.map(exception);
 
     const errorDetails = {
@@ -26,6 +26,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       path: request.url,
       error_code: errorCode,
       validation_errors: validationErrors,
+      ...details,
     };
 
     const formattedResponse = ApiResponseBuilder.create()

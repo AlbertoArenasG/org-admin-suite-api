@@ -21,6 +21,7 @@ export const envSchema = z.object({
   AWS_S3_BUCKET: z.string(),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
+  INTERNAL_JOBS_TOKEN: z.string(),
   MAILER_HOST: z.string(),
   MAILER_PORT: z.string(),
   MAILER_USER: z.string(),

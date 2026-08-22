@@ -81,4 +81,8 @@ export const configSchemas = [
     name: schemas.InternalAssetMaintenanceRecordDocument.name,
     schema: schemas.InternalAssetMaintenanceRecordSchema,
   },
+  {
+    name: schemas.InternalJobLockDocument.name,
+    schema: schemas.InternalJobLockSchema,
+  },
 ];

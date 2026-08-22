@@ -56,6 +56,9 @@
     "MASTER_PRIVILEGES_REQUIRED": "Privilegios maestros requeridos",
     "ROLE_PRIVILEGES_INSUFFICIENT": "El rol {role} no tiene los privilegios necesarios"
   },
+  "INTERNAL_JOB": {
+    "LOCK_ACTIVE": "El proceso técnico ya se encuentra en ejecución"
+  },
   "ENTITY_NOT_FOUND": {
     "USER": "No se encontró el usuario",
     "USER_REGISTRATION_INVITATION": "No se encontró la invitación o ya fue utilizada",

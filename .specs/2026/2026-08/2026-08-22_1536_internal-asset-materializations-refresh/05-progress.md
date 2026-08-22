@@ -11,4 +11,10 @@
   - ambos efectos son cascadas técnicas y quedarán fuera de `updatedBy` y `updatedAt`
 - Se aprobó el contrato técnico ampliado `updateSystemManagedFields` para materializaciones y limpieza de asociaciones a policies sin auditoría de backoffice.
 - No se ha modificado código de aplicación para esta spec.
-
+- Se implementó el Slice 1:
+  - `INTERNAL_JOBS_TOKEN` quedó incorporado al environment validado y al ejemplo de configuración.
+  - `InternalJobsAuthGuard` quedó disponible para la nueva frontera técnica.
+  - `InternalJobException` y su mapeo `409` con `locked_until` quedaron incorporados.
+  - el puerto y la persistencia Mongo de locks reutilizables quedaron registrados globalmente.
+- Se cerró formalmente el diseño técnico y comenzó la implementación.
+- `npm run build` pasó correctamente después del Slice 1.

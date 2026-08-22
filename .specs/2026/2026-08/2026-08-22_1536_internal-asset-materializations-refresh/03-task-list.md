@@ -30,11 +30,11 @@
 
 ## Phase 3. Implementation
 
-- [ ] Implement the `internal-jobs` boundary and technical authentication guard.
-      Status: pending
+- [x] Implement the `internal-jobs` boundary and technical authentication guard.
+      Status: completed
 
-- [ ] Implement lock persistence and atomic lease acquisition.
-      Status: pending
+- [x] Implement lock persistence and atomic lease acquisition.
+      Status: completed
 
 - [ ] Refactor materialization refreshers, operational query and technical persistence.
       Status: pending

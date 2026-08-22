@@ -10,6 +10,7 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
   EntityNotFoundException,
+  InternalJobException,
 } from '@domain/exceptions';
 import { ErrorMessageService } from '@infra/i18n/services';
 
@@ -20,6 +21,7 @@ export interface ExceptionMapping {
   errorCode: string;
   message: string;
   validationErrors: ValidationErrors;
+  details: Record<string, unknown>;
 }
 
 export class GlobalExceptionMapper {
@@ -38,12 +40,14 @@ export class GlobalExceptionMapper {
     const errorCode = this.getErrorCode(exception);
     const message = await this.getErrorMessage(exception);
     const validationErrors = this.getValidationErrorDetails(exception);
+    const details = this.getExceptionDetails(exception);
 
     return {
       status,
       errorCode,
       message,
       validationErrors,
+      details,
     };
   }
 
@@ -149,6 +153,18 @@ export class GlobalExceptionMapper {
     return [];
   }
 
+  private getExceptionDetails(exception: unknown): Record<string, unknown> {
+    if (exception instanceof InternalJobException) {
+      const lockedUntil = exception.details?.lockedUntil;
+
+      if (lockedUntil instanceof Date) {
+        return { locked_until: lockedUntil.toISOString() };
+      }
+    }
+
+    return {};
+  }
+
   /**
    * Maps a domain exception to a HTTP status code.
    * @param {DomainException} domainException The domain exception to map.
@@ -179,6 +195,10 @@ export class GlobalExceptionMapper {
       return domainException.code === AuthorizationExceptionCode.CONTEXT_MISSING
         ? HttpStatus.UNAUTHORIZED
         : HttpStatus.FORBIDDEN;
+    }
+
+    if (domainException instanceof InternalJobException) {
+      return HttpStatus.CONFLICT;
     }
 
     return HttpStatus.INTERNAL_SERVER_ERROR;

@@ -56,6 +56,9 @@
     "MASTER_PRIVILEGES_REQUIRED": "Master privileges are required",
     "ROLE_PRIVILEGES_INSUFFICIENT": "User role {role} does not have the required privileges"
   },
+  "INTERNAL_JOB": {
+    "LOCK_ACTIVE": "The internal job is already running"
+  },
   "ENTITY_NOT_FOUND": {
     "USER": "User not found",
     "USER_REGISTRATION_INVITATION": "Invitation not found or already used",
