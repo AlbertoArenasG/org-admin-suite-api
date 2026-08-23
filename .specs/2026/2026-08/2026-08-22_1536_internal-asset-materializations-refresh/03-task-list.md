@@ -50,8 +50,8 @@
 
 ## Phase 4. Documentation And Validation
 
-- [ ] Add the internal-jobs runbook.
-      Status: pending
+- [x] Add the internal-jobs runbook.
+      Status: completed
 
 - [ ] Perform the approved manual validation and verify resulting Mongo data.
       Status: pending

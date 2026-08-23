@@ -34,3 +34,8 @@
   - el job procesa hasta 100 records operativos, usa cursor Base64URL opaco y conserva el progreso en `next_cursor`.
   - el lease persistido coordina ejecuciones; un lock activo responde `409` y el cursor inválido responde `400`.
   - la respuesta específica expone métricas, duración y cursor en `snake_case`; el job registra inicio, finalización, lock y error con `Logger` de Nest.
+- Se implementó parcialmente el Slice 5:
+  - se agregó [docs/runbooks/internal-jobs.md](../../../../docs/runbooks/internal-jobs.md) con autenticación, invocación, continuación por cursor, recuperación, rotación de token y verificaciones operativas.
+  - los errores de escritura técnica ahora preservan `recordId` y etapa para el log del job.
+  - `npm run build` y `npm run lint` pasaron correctamente.
+- Pendiente para cierre: ejecutar la validación manual contra una instancia con Mongo y registrar sus resultados antes de cerrar formalmente la spec.

@@ -4,7 +4,10 @@ import {
   RefreshInternalAssetMaintenanceRecordMaterializationsDto,
   RefreshInternalAssetMaintenanceRecordMaterializationsResultDto,
 } from '@application/dto';
-import { InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher } from '@application/services';
+import {
+  InternalAssetMaintenanceRecordMaterializationsRefreshError,
+  InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher,
+} from '@application/services';
 import { genId } from '@src/common/utils';
 import {
   InternalJobException,
@@ -114,6 +117,16 @@ export class RefreshInternalAssetMaintenanceRecordMaterializationsUseCase {
         executionId,
         durationMs: Date.now() - startedAt,
         hasCursor: Boolean(input.cursor),
+        recordId:
+          error instanceof
+          InternalAssetMaintenanceRecordMaterializationsRefreshError
+            ? error.recordId
+            : undefined,
+        stage:
+          error instanceof
+          InternalAssetMaintenanceRecordMaterializationsRefreshError
+            ? error.stage
+            : undefined,
         error: error instanceof Error ? error.message : String(error),
       });
       throw error;

@@ -25,6 +25,16 @@ export interface RefreshOperationalInternalAssetMaintenanceRecordMaterialization
   refreshExpirationNotification: boolean;
 }
 
+export class InternalAssetMaintenanceRecordMaterializationsRefreshError extends Error {
+  constructor(
+    public readonly recordId: string,
+    public readonly stage: 'system_managed_fields_write',
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
 @Injectable()
 export class InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher {
   constructor(
@@ -53,35 +63,43 @@ export class InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher {
     });
 
     for (const record of input.records) {
-      await this.writeRepository.updateSystemManagedFields({
-        recordId: record.id,
-        ...(input.refreshExpirationStatus
-          ? {
-              expirationStatusMaterialization:
-                this.statusMaterializationRefresher.refresh({
-                  record,
-                  policy: record.expirationStatusPolicyId
-                    ? (policiesById.expirationStatusPoliciesById.get(
-                        record.expirationStatusPolicyId,
-                      ) ?? null)
-                    : null,
-                }),
-            }
-          : {}),
-        ...(input.refreshExpirationNotification
-          ? {
-              expirationNotificationMaterialization:
-                this.notificationMaterializationRefresher.refresh({
-                  record,
-                  policy: record.expirationNotificationPolicyId
-                    ? (policiesById.expirationNotificationPoliciesById.get(
-                        record.expirationNotificationPolicyId,
-                      ) ?? null)
-                    : null,
-                }),
-            }
-          : {}),
-      });
+      try {
+        await this.writeRepository.updateSystemManagedFields({
+          recordId: record.id,
+          ...(input.refreshExpirationStatus
+            ? {
+                expirationStatusMaterialization:
+                  this.statusMaterializationRefresher.refresh({
+                    record,
+                    policy: record.expirationStatusPolicyId
+                      ? (policiesById.expirationStatusPoliciesById.get(
+                          record.expirationStatusPolicyId,
+                        ) ?? null)
+                      : null,
+                  }),
+              }
+            : {}),
+          ...(input.refreshExpirationNotification
+            ? {
+                expirationNotificationMaterialization:
+                  this.notificationMaterializationRefresher.refresh({
+                    record,
+                    policy: record.expirationNotificationPolicyId
+                      ? (policiesById.expirationNotificationPoliciesById.get(
+                          record.expirationNotificationPolicyId,
+                        ) ?? null)
+                      : null,
+                  }),
+              }
+            : {}),
+        });
+      } catch (error) {
+        throw new InternalAssetMaintenanceRecordMaterializationsRefreshError(
+          record.id,
+          'system_managed_fields_write',
+          error instanceof Error ? error.message : String(error),
+        );
+      }
     }
   }
 
