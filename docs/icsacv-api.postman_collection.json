@@ -8605,6 +8605,88 @@
       ]
     },
     {
+      "name": "Internal Jobs",
+      "description": "Technical endpoints protected with INTERNAL_JOBS_TOKEN. They do not use JWT access tokens.",
+      "item": [
+        {
+          "name": "Refresh Internal Asset Materializations (initial batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/internal-asset-maintenance-records/refresh-materializations",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "internal-asset-maintenance-records",
+                "refresh-materializations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Internal Asset Materializations (next batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cursor\": \"{{INTERNAL_JOB_CURSOR}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/internal-asset-maintenance-records/refresh-materializations",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "internal-asset-maintenance-records",
+                "refresh-materializations"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Communication Channels",
       "item": [
         {
