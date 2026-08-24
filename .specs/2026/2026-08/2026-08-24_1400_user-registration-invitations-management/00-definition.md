@@ -3,7 +3,7 @@
 ## Status
 
 - Definition: completed
-- Technical design: pending
+- Technical design: completed
 - Implementation: pending
 
 ## Objective

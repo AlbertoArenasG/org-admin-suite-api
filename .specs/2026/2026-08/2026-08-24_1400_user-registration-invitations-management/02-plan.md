@@ -10,10 +10,10 @@
 
 ## Phase 3. Backend Implementation
 
-- Implementar listado, reenvío, metadata de envío y operación `RESEND`.
-- Actualizar catálogo de autorización, seeders y documentación de integración frontend.
+- Implementar listado, reenvío, revocación, metadata de envío e invalidación pública de invitaciones revocadas.
+- Actualizar catálogo de autorización, seeders, Postman y documentación de integración frontend.
 
 ## Phase 4. Validation And Closure
 
-- Ejecutar validación manual de creación, listado, reenvío, token rotado y errores de correo.
+- Ejecutar validación manual de creación, listado, reenvío, revocación, token rotado y errores de correo.
 - Cerrar la spec y actualizar el índice.

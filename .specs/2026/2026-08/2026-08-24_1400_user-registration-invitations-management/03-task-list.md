@@ -14,14 +14,17 @@
 - [x] Definir contratos completos, reglas de concurrencia y estrategia de pruebas.
       Status: completed
 
+- [x] Definir revocación, compatibilidad histórica, autorización y documentación transversal.
+      Status: completed
+
 ## Phase 2. Technical Design
 
-- [ ] Diseñar cambios de dominio, persistencia, CQRS, HTTP y autorización.
-      Status: pending
+- [x] Diseñar cambios de dominio, persistencia, CQRS, HTTP y autorización.
+      Status: completed
 
 ## Phase 3. Implementation
 
-- [ ] Implementar la funcionalidad y documentación de integración frontend.
+- [ ] Implementar la funcionalidad, documentación de integración frontend y actualización Postman.
       Status: pending
 
 ## Phase 4. Validation And Closure
