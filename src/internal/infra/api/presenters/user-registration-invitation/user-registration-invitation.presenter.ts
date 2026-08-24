@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserRegistrationInvitationDto } from '@application/dto';
+import {
+  ApplicationUserRegistrationInvitationDto,
+  UserRegistrationInvitationDto,
+} from '@application/dto';
 
 @Injectable()
 export class UserRegistrationInvitationPresenter {
@@ -49,6 +52,37 @@ export class UserRegistrationInvitationPresenter {
       user_data: this.mapUserData(invitation.userData),
       created_at: invitation.createdAt ?? null,
     };
+  }
+
+  toApplicationManagementResponse(
+    invitation: ApplicationUserRegistrationInvitationDto,
+  ) {
+    return {
+      invitation_id: invitation.invitationId,
+      email: invitation.email,
+      status: invitation.status,
+      system_role: invitation.systemRole,
+      role_id: invitation.roleId,
+      user_data: this.mapUserData(invitation.userData),
+      invited_by_user_id: invitation.invitedByUserId,
+      created_at: invitation.createdAt ?? null,
+      consumed_at: invitation.consumedAt ?? null,
+      revoked_at: invitation.revokedAt,
+      revoked_by_user_id: invitation.revokedByUserId,
+      email_delivery: {
+        last_attempt_at: invitation.emailDelivery.lastAttemptAt,
+        last_attempt_status: invitation.emailDelivery.lastAttemptStatus,
+      },
+      resend_count: invitation.resendCount,
+    };
+  }
+
+  toApplicationManagementCollection(
+    invitations: ApplicationUserRegistrationInvitationDto[],
+  ) {
+    return invitations.map((invitation) =>
+      this.toApplicationManagementResponse(invitation),
+    );
   }
 
   private mapUserData(userData?: Record<string, unknown> | null) {

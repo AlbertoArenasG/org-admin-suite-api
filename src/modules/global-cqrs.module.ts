@@ -49,6 +49,8 @@ import {
   DeleteInternalAssetMaintenanceRecordHandler,
   SendInternalAssetMaintenanceProviderFollowUpHandler,
   RefreshInternalAssetMaintenanceRecordMaterializationsHandler,
+  ResendApplicationUserRegistrationInvitationHandler,
+  RevokeApplicationUserRegistrationInvitationHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -94,6 +96,7 @@ import {
   GetInternalAssetMaintenanceRecordsHandler,
   GetInternalAssetMaintenanceRecordByIdHandler,
   GetInternalAssetMaintenanceRecordCatalogHandler,
+  GetApplicationUserRegistrationInvitationsHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -148,6 +151,8 @@ const providers = [
   DeleteInternalAssetMaintenanceRecordHandler,
   SendInternalAssetMaintenanceProviderFollowUpHandler,
   RefreshInternalAssetMaintenanceRecordMaterializationsHandler,
+  ResendApplicationUserRegistrationInvitationHandler,
+  RevokeApplicationUserRegistrationInvitationHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -187,6 +192,7 @@ const providers = [
   GetInternalAssetMaintenanceRecordsHandler,
   GetInternalAssetMaintenanceRecordByIdHandler,
   GetInternalAssetMaintenanceRecordCatalogHandler,
+  GetApplicationUserRegistrationInvitationsHandler,
 ];
 
 @Global()

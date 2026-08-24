@@ -30,3 +30,4 @@
 - Se validó el Slice 1 con `npm run build`.
 - Se implementó y validó el Slice 2: puertos de invitaciones, listado paginado de aplicación y escrituras atómicas para reenvío, entrega aceptada y revocación.
 - Se implementó y validó el Slice 3: casos de uso administrativos, excepción de estado `409`, confirmación de entrega en creación e invalidación pública de invitaciones revocadas.
+- Se implementó el Slice 4: DTO paginado, CQRS, endpoints administrativos, presenter, operaciones `READ`/`RESEND`/`REVOKE` e i18n. La ejecución del seeder se reserva para la validación manual final.

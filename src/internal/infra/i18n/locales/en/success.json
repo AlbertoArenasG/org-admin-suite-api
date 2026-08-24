@@ -40,6 +40,8 @@
   },
   "USER_REGISTRATION_INVITATION": {
     "CREATED": "Invitation created successfully",
+    "RESENT": "Invitation resent successfully",
+    "REVOKED": "Invitation revoked successfully",
     "COMPLETED": "Registration completed successfully",
     "ACCEPTED": "Invitation accepted successfully",
     "DECLINED": "Invitation declined successfully"

@@ -43,15 +43,17 @@
 
 ## Slice 4. CQRS, HTTP And Authorization
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - exponer administración mediante los patrones actuales de API y permisos
-- Cambios esperados:
+- Cambios realizados:
   - DTOs HTTP, query/commands, adapters y handlers
   - controller y presenter administrativo
   - catálogo `READ`, `RESEND`, `REVOKE`, i18n y seeder de roles de sistema
 - Validación:
-  - compilación; `MASTER_ADMIN` y `ADMIN` actualizados, roles custom intactos
+  - `npm run build` satisfactoria
+  - JSON de locales ES/EN válido
+  - la ejecución del seeder y la verificación de `MASTER_ADMIN`, `ADMIN` y roles custom quedan en el Slice 5 de validación manual
 
 ## Slice 5. Documentation, Postman And Manual Closure
 

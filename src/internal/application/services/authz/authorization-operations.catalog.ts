@@ -19,6 +19,14 @@ export const AUTHORIZATION_OPERATIONS = {
     code: 'READ_PUBLIC_ACCESS',
     nameKey: 'AUTHORIZATION.OPERATION.READ_PUBLIC_ACCESS',
   },
+  RESEND: {
+    code: 'RESEND',
+    nameKey: 'AUTHORIZATION.OPERATION.RESEND',
+  },
+  REVOKE: {
+    code: 'REVOKE',
+    nameKey: 'AUTHORIZATION.OPERATION.REVOKE',
+  },
 } as const;
 
 export type AuthorizationOperationCode = keyof typeof AUTHORIZATION_OPERATIONS;

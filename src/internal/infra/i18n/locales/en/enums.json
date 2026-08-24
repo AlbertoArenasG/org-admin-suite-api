@@ -146,7 +146,9 @@
       "READ": "Read",
       "UPDATE": "Edit",
       "DELETE": "Delete",
-      "READ_PUBLIC_ACCESS": "Read public access"
+      "READ_PUBLIC_ACCESS": "Read public access",
+      "RESEND": "Resend",
+      "REVOKE": "Revoke"
     }
   }
 }
