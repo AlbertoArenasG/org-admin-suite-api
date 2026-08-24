@@ -29,16 +29,17 @@
 
 ## Slice 3. Application Lifecycle And Public Invalidity
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - conectar metadata de envío y ciclo de vida en los casos de uso
-- Cambios esperados:
+- Cambios realizados:
   - inicialización y confirmación de entrega en creación de aplicación y `MASTER`
   - excepción específica y mapping `409`
   - casos de uso de listado, reenvío y revocación
   - rechazo público de invitaciones revocadas
 - Validación:
-  - compilación y validación manual de estados/token rotado
+  - `npm run build` satisfactoria
+  - la validación de estados y token rotado queda programada para la fase manual integral
 
 ## Slice 4. CQRS, HTTP And Authorization
 

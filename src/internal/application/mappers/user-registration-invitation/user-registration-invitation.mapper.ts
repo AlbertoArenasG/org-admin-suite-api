@@ -1,4 +1,7 @@
-import { UserRegistrationInvitationDto } from '@application/dto';
+import {
+  ApplicationUserRegistrationInvitationDto,
+  UserRegistrationInvitationDto,
+} from '@application/dto';
 import { UserRegistrationInvitationRecord } from '@domain/ports/repositories';
 
 export class UserRegistrationInvitationMapper {
@@ -20,6 +23,28 @@ export class UserRegistrationInvitationMapper {
       consumedAt: record.consumedAt ?? null,
       createdAt: record.createdAt ?? null,
       updatedAt: record.updatedAt ?? null,
+    };
+  }
+
+  static toApplicationDto(
+    record: UserRegistrationInvitationRecord | null,
+  ): ApplicationUserRegistrationInvitationDto | null {
+    if (!record) return null;
+
+    return {
+      invitationId: record.invitationId,
+      email: record.email,
+      status: record.status,
+      systemRole: record.systemRole,
+      roleId: record.roleId,
+      userData: record.userData ?? null,
+      invitedByUserId: record.invitedByUserId,
+      createdAt: record.createdAt ?? null,
+      consumedAt: record.consumedAt ?? null,
+      revokedAt: record.revokedAt,
+      revokedByUserId: record.revokedByUserId,
+      emailDelivery: record.emailDelivery,
+      resendCount: record.resendCount,
     };
   }
 }

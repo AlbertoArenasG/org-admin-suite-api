@@ -5,3 +5,4 @@ export * from './invalid-value.exception';
 export * from './authorization.exception';
 export * from './entity-not-found.exception';
 export * from './internal-job.exception';
+export * from './user-registration-invitation.exception';

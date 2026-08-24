@@ -90,9 +90,18 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       userData: input.userData ?? null,
     });
 
-    const dto = UserRegistrationInvitationMapper.toDto(data);
+    const { data: acceptedInvitation } = data
+      ? await this.invitationWriteRepository.markInvitationEmailAccepted({
+          invitationId: data.invitationId,
+          tokenHash,
+        })
+      : { data: null };
 
-    return dto;
+    const dto = UserRegistrationInvitationMapper.toDto(
+      acceptedInvitation ?? data,
+    );
+
+    return dto!;
   }
 
   private async ensureUserDoesNotExist(email: string): Promise<void> {

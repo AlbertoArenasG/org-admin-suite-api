@@ -100,9 +100,18 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       userData: input.userData ?? null,
     });
 
-    const dto = UserRegistrationInvitationMapper.toDto(data);
+    const { data: acceptedInvitation } = data
+      ? await this.invitationWriteRepository.markInvitationEmailAccepted({
+          invitationId: data.invitationId,
+          tokenHash,
+        })
+      : { data: null };
 
-    return dto;
+    const dto = UserRegistrationInvitationMapper.toDto(
+      acceptedInvitation ?? data,
+    );
+
+    return dto!;
   }
 
   private async findExistingUser(email: string): Promise<User | null> {

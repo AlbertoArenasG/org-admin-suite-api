@@ -1,6 +1,7 @@
 import { SystemRole } from '@domain/entities';
 import {
   UserRegistrationInvitationScope,
+  UserRegistrationInvitationEmailDelivery,
   UserRegistrationInvitationStatus,
   UserRegistrationInvitationType,
   UserRegistrationInvitationUserData,
@@ -43,4 +44,20 @@ export interface UserRegistrationInvitationDto {
   consumedAt?: Date | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;
+}
+
+export interface ApplicationUserRegistrationInvitationDto {
+  invitationId: string;
+  email: string;
+  status: UserRegistrationInvitationStatus;
+  systemRole: SystemRole;
+  roleId: string | null;
+  userData?: UserRegistrationInvitationUserData | null;
+  invitedByUserId: string;
+  createdAt?: Date | null;
+  consumedAt?: Date | null;
+  revokedAt: Date | null;
+  revokedByUserId: string | null;
+  emailDelivery: UserRegistrationInvitationEmailDelivery;
+  resendCount: number;
 }

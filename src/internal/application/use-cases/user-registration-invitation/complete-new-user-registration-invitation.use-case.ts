@@ -136,7 +136,10 @@ export class CompleteNewUserRegistrationInvitationUseCase {
       );
     }
 
-    if (data.consumedAt) {
+    if (
+      data.consumedAt ||
+      data.status !== UserRegistrationInvitationStatus.PENDING
+    ) {
       throw InvalidValueException.create(
         InvalidValueExceptionCode.USER_REGISTRATION_INVITATION_TOKEN,
         { reason: 'Invitation already consumed' },

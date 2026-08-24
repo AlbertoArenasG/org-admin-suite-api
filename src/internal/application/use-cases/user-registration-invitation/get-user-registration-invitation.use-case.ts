@@ -10,6 +10,7 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
+import { UserRegistrationInvitationStatus } from '@domain/ports/repositories';
 import { UserRegistrationInvitationDto } from '@application/dto';
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import { UserRegistrationInvitationTokenService } from '@application/services';
@@ -35,7 +36,10 @@ export class GetUserRegistrationInvitationUseCase {
       );
     }
 
-    if (data.consumedAt) {
+    if (
+      data.consumedAt ||
+      data.status !== UserRegistrationInvitationStatus.PENDING
+    ) {
       throw InvalidValueException.create(
         InvalidValueExceptionCode.USER_REGISTRATION_INVITATION_TOKEN,
         { reason: 'Invitation already consumed' },
