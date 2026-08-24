@@ -48,12 +48,15 @@
 - [x] Implement the manual refresh use case, CQRS command and endpoint.
       Status: completed
 
+- [x] Correct technical writes so refreshes do not alter record `updatedAt`.
+      Status: completed
+
 ## Phase 4. Documentation And Validation
 
 - [x] Add the internal-jobs runbook.
       Status: completed
 
-- [x] Perform the approved manual validation and verify resulting Mongo data.
+- [x] Repeat the approved manual validation after correcting technical audit behavior.
       Status: completed
 
 - [x] Close the spec and update the specs index.

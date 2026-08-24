@@ -20,7 +20,7 @@
 - Se implementó el Slice 2:
   - `findOperational` consulta únicamente records operativos por cursor estable.
   - el schema de records incorpora el índice compuesto de status y cursor.
-  - `updateSystemManagedFields` persiste exclusivamente campos técnicos con `timestamps: false`.
+  - `updateSystemManagedFields` persiste exclusivamente campos técnicos sin auditoría de backoffice.
   - el mapper de records expone conversiones reutilizables para materializaciones parciales.
 - `npm run build` pasó correctamente después del Slice 2.
 - Se implementó el Slice 3:
@@ -44,4 +44,7 @@
 - Se ejecutó la validación manual local del endpoint mediante la colección Postman actualizada.
 - El job autenticó con `INTERNAL_JOBS_TOKEN`, procesó correctamente los 23 records operativos disponibles y devolvió `next_cursor: null`, confirmando que no había lotes pendientes.
 - Se confirmó el contrato de respuesta con métricas separadas para ambas materializaciones y duración de ejecución.
+- La validación reveló una regresión: el refresh modificó `updatedAt` en records procesados. Se reabrió la spec para corregir la ruta técnica y repetir la validación.
+- Se corrigió la persistencia técnica para usar la operación nativa de Mongo, fuera del middleware de timestamps de Mongoose.
+- La validación manual repetida confirmó que el job actualiza las materializaciones sin modificar `updatedAt` ni `updatedBy`.
 - Se cerró formalmente la spec.

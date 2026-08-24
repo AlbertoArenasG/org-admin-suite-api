@@ -51,15 +51,14 @@ export class MongooseInternalAssetMaintenanceRecordWriteRepositoryImpl
   ): Promise<{ updated: boolean }> {
     const fields = this.toSystemManagedFields(params);
 
-    const updated = await this.internalAssetMaintenanceRecordModel
-      .findOneAndUpdate(
+    // Bypass Mongoose update middleware so technical writes cannot change updatedAt.
+    const result =
+      await this.internalAssetMaintenanceRecordModel.collection.updateOne(
         { internal_asset_maintenance_record_id: params.recordId },
         { $set: fields },
-        { new: false, timestamps: false },
-      )
-      .exec();
+      );
 
-    return { updated: Boolean(updated) };
+    return { updated: result.matchedCount > 0 };
   }
 
   private toSystemManagedFields(
