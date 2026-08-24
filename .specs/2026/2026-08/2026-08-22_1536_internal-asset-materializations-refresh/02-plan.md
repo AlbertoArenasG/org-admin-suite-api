@@ -3,7 +3,7 @@
 ## Phase 1. Technical Foundations
 
 - Define the `internal-jobs` bearer-token guard and add `INTERNAL_JOBS_TOKEN` to validated environment configuration.
-- Define the lock port and its Mongo persistence implementation after the pending structural decision is approved.
+- Define the lock port and its Mongo persistence implementation under the approved structural design.
 - Register the new infrastructure pieces using the existing global Mongoose and repository patterns.
 
 ## Phase 2. Materialization Refactor
@@ -29,4 +29,3 @@
 - Add `docs/runbooks/internal-jobs.md`.
 - Execute the manual validation scope defined in `00-definition.md`.
 - Record the validation result and formally close the spec.
-
