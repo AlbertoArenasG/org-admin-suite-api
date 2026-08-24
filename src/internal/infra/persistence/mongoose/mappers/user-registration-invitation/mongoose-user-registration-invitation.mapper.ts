@@ -42,6 +42,13 @@ export class MongooseUserRegistrationInvitationMapper {
       tokenHash: document.token_hash,
       userData,
       consumedAt: document.consumed_at ?? null,
+      emailDelivery: {
+        lastAttemptAt: document.email_delivery?.last_attempt_at ?? null,
+        lastAttemptStatus: document.email_delivery?.last_attempt_status ?? null,
+      },
+      resendCount: document.resend_count ?? 0,
+      revokedAt: document.revoked_at ?? null,
+      revokedByUserId: document.revoked_by_user_id ?? null,
       createdAt: document.createdAt,
       updatedAt: document.updatedAt,
     };
@@ -76,6 +83,13 @@ export class MongooseUserRegistrationInvitationMapper {
         additional: additionalData,
       },
       consumed_at: null,
+      email_delivery: {
+        last_attempt_at: record.emailDelivery.lastAttemptAt,
+        last_attempt_status: record.emailDelivery.lastAttemptStatus,
+      },
+      resend_count: record.resendCount,
+      revoked_at: record.revokedAt,
+      revoked_by_user_id: record.revokedByUserId,
     };
   }
 }

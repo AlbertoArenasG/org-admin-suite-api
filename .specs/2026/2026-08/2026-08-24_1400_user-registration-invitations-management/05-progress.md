@@ -26,3 +26,5 @@
 - Se aprobaron los flujos de creación, reenvío y revocación, incluido el ciclo de entrega `FAILED` a `ACCEPTED` y la invalidación pública de invitaciones revocadas.
 - Se aprobaron los contratos HTTP, CQRS y de presentación administrativa para listado, reenvío y revocación.
 - Se aprobaron autorización, seeders, documentación, Postman y validación manual; se agregó un barrido obligatorio de `docs/` antes del cierre.
+- Se implementó el Slice 1: modelo compartido, schema Mongoose, mapper con defaults históricos, índices de listado e inicialización de metadata en las creaciones existentes.
+- Se validó el Slice 1 con `npm run build`.

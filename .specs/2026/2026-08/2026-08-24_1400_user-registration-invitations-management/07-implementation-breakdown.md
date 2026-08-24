@@ -2,16 +2,17 @@
 
 ## Slice 1. Domain Contract And Persistence Model
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - extender el modelo compartido de invitaciones sin filtrar detalles Mongoose al dominio
-- Cambios esperados:
+- Cambios realizados:
   - agregar `REVOKED` y los enums de entrega
   - extender records de creación y lectura
   - extender schema, mapper y defaults históricos
   - agregar índices administrativos aprobados
 - Validación:
-  - compilación e inspección de documentos existentes y nuevos
+  - `npm run build` satisfactoria
+  - la inspección de documentos se cubrirá durante la validación manual integral
 
 ## Slice 2. Repository Contracts And Atomic Mutations
 

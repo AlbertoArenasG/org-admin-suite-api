@@ -12,6 +12,17 @@ export enum UserRegistrationInvitationType {
 export enum UserRegistrationInvitationStatus {
   PENDING = 'PENDING',
   CONSUMED = 'CONSUMED',
+  REVOKED = 'REVOKED',
+}
+
+export enum UserRegistrationInvitationEmailDeliveryStatus {
+  ACCEPTED = 'ACCEPTED',
+  FAILED = 'FAILED',
+}
+
+export interface UserRegistrationInvitationEmailDelivery {
+  lastAttemptAt: Date | null;
+  lastAttemptStatus: UserRegistrationInvitationEmailDeliveryStatus | null;
 }
 
 export interface UserRegistrationInvitationUserData {
@@ -34,6 +45,10 @@ export interface CreateUserRegistrationInvitationRecord {
   invitedByUserId: string;
   tokenHash: string;
   userData?: UserRegistrationInvitationUserData | null;
+  emailDelivery: UserRegistrationInvitationEmailDelivery;
+  resendCount: number;
+  revokedAt: Date | null;
+  revokedByUserId: string | null;
 }
 
 export interface UserRegistrationInvitationRecord

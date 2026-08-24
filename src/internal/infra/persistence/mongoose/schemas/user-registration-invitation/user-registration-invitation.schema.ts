@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 
 import {
   UserRegistrationInvitationScope,
+  UserRegistrationInvitationEmailDeliveryStatus,
   UserRegistrationInvitationStatus,
   UserRegistrationInvitationType,
 } from '@domain/ports/repositories';
@@ -92,6 +93,35 @@ export class UserRegistrationInvitationDocument extends Document {
   @Prop({ type: Date, default: null })
   consumed_at?: Date | null;
 
+  @Prop({
+    _id: false,
+    type: {
+      last_attempt_at: { type: Date, default: null },
+      last_attempt_status: {
+        type: String,
+        enum: Object.values(UserRegistrationInvitationEmailDeliveryStatus),
+        default: null,
+      },
+    },
+    default: () => ({
+      last_attempt_at: null,
+      last_attempt_status: null,
+    }),
+  })
+  email_delivery?: {
+    last_attempt_at?: Date | null;
+    last_attempt_status?: UserRegistrationInvitationEmailDeliveryStatus | null;
+  };
+
+  @Prop({ type: Number, required: true, default: 0 })
+  resend_count: number;
+
+  @Prop({ type: Date, default: null })
+  revoked_at?: Date | null;
+
+  @Prop({ type: String, default: null })
+  revoked_by_user_id?: string | null;
+
   @Prop()
   createdAt?: Date;
 
@@ -102,5 +132,8 @@ export class UserRegistrationInvitationDocument extends Document {
 const UserRegistrationInvitationSchema = SchemaFactory.createForClass(
   UserRegistrationInvitationDocument,
 );
+
+UserRegistrationInvitationSchema.index({ scope: 1, createdAt: -1 });
+UserRegistrationInvitationSchema.index({ scope: 1, status: 1, createdAt: -1 });
 
 export { UserRegistrationInvitationSchema };

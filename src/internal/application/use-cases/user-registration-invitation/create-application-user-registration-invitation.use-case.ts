@@ -8,6 +8,7 @@ import {
   IUserRegistrationInvitationWriteRepository,
   IUserRegistrationInvitationWriteRepositoryToken,
   UserRegistrationInvitationScope,
+  UserRegistrationInvitationEmailDeliveryStatus,
   UserRegistrationInvitationStatus,
   UserRegistrationInvitationType,
 } from '@domain/ports/repositories';
@@ -82,6 +83,13 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
+      emailDelivery: {
+        lastAttemptAt: new Date(),
+        lastAttemptStatus: UserRegistrationInvitationEmailDeliveryStatus.FAILED,
+      },
+      resendCount: 0,
+      revokedAt: null,
+      revokedByUserId: null,
     });
 
     await this.notifier.sendInvitation({
