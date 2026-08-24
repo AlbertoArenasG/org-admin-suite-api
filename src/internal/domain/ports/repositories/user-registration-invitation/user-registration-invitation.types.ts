@@ -25,6 +25,43 @@ export interface UserRegistrationInvitationEmailDelivery {
   lastAttemptStatus: UserRegistrationInvitationEmailDeliveryStatus | null;
 }
 
+export type UserRegistrationInvitationSortField = 'status' | 'created_at';
+export type UserRegistrationInvitationSortDirection = 'asc' | 'desc';
+
+export interface FindApplicationUserRegistrationInvitationsParams {
+  page: number;
+  perPage: number;
+  search?: string | null;
+  status?: UserRegistrationInvitationStatus | null;
+  sorts: Array<{
+    field: UserRegistrationInvitationSortField;
+    direction: UserRegistrationInvitationSortDirection;
+  }>;
+}
+
+export interface FindApplicationUserRegistrationInvitationsResult {
+  data: UserRegistrationInvitationRecord[];
+  total: number;
+}
+
+export interface RotatePendingUserRegistrationInvitationTokenInput {
+  invitationId: string;
+  expectedTokenHash: string;
+  tokenHash: string;
+  attemptedAt: Date;
+}
+
+export interface MarkUserRegistrationInvitationEmailAcceptedInput {
+  invitationId: string;
+  tokenHash: string;
+}
+
+export interface RevokePendingApplicationUserRegistrationInvitationInput {
+  invitationId: string;
+  revokedAt: Date;
+  revokedByUserId: string;
+}
+
 export interface UserRegistrationInvitationUserData {
   name?: string | null;
   lastname?: string | null;

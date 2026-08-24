@@ -16,15 +16,16 @@
 
 ## Slice 2. Repository Contracts And Atomic Mutations
 
-- Estado: pending
+- Estado: completed
 - Objetivo:
   - incorporar listado de aplicación y mutaciones seguras de token, entrega y revocación
-- Cambios esperados:
+- Cambios realizados:
   - puertos de lectura y escritura explícitos
   - listado paginado de `APPLICATION`
   - rotación, confirmación de entrega y revocación condicionales
 - Validación:
-  - compilación y revisión de filtros/condiciones Mongo
+  - `npm run build` satisfactoria
+  - filtros administrativos limitados a `scope: APPLICATION` y compare-and-set por hash revisados
 
 ## Slice 3. Application Lifecycle And Public Invalidity
 
