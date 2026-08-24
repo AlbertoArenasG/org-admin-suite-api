@@ -1,5 +1,6 @@
 # Specs Index
 
+- [user-registration-invitations-management](./2026/2026-08/2026-08-24_1400_user-registration-invitations-management/00-definition.md) - Definition completed, technical design pending
 - [internal-asset-materializations-refresh](./2026/2026-08/2026-08-22_1536_internal-asset-materializations-refresh/00-definition.md) - Completed
 - [authorization-auxiliary-capabilities](./2026/2026-08/2026-08-19_1200_authorization-auxiliary-capabilities/00-definition.md) - Definition completed, implementation ready
 - [internal-asset-control](./2026/2026-08/2026-08-12_1800_internal-asset-control/00-definition.md) - Definition completed, implementation ready
