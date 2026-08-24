@@ -53,8 +53,8 @@
 - [x] Add the internal-jobs runbook.
       Status: completed
 
-- [ ] Perform the approved manual validation and verify resulting Mongo data.
-      Status: pending
+- [x] Perform the approved manual validation and verify resulting Mongo data.
+      Status: completed
 
-- [ ] Close the spec and update the specs index.
-      Status: pending
+- [x] Close the spec and update the specs index.
+      Status: completed

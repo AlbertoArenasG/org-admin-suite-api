@@ -4,7 +4,7 @@
 
 - Definition: completed
 - Technical design: completed
-- Implementation: in progress
+- Implementation: completed
 
 ## Objective
 

@@ -38,4 +38,10 @@
   - se agregó [docs/runbooks/internal-jobs.md](../../../../docs/runbooks/internal-jobs.md) con autenticación, invocación, continuación por cursor, recuperación, rotación de token y verificaciones operativas.
   - los errores de escritura técnica ahora preservan `recordId` y etapa para el log del job.
   - `npm run build` y `npm run lint` pasaron correctamente.
-- Pendiente para cierre: ejecutar la validación manual contra una instancia con Mongo y registrar sus resultados antes de cerrar formalmente la spec.
+
+## 2026-08-24
+
+- Se ejecutó la validación manual local del endpoint mediante la colección Postman actualizada.
+- El job autenticó con `INTERNAL_JOBS_TOKEN`, procesó correctamente los 23 records operativos disponibles y devolvió `next_cursor: null`, confirmando que no había lotes pendientes.
+- Se confirmó el contrato de respuesta con métricas separadas para ambas materializaciones y duración de ejecución.
+- Se cerró formalmente la spec.
