@@ -4,7 +4,7 @@
 
 - Definition: completed
 - Technical design: completed
-- Implementation: pending
+- Implementation: completed
 
 ## Objective
 
@@ -15,7 +15,7 @@ Incorporar capacidades de backoffice para consultar el estado de las invitacione
 - Listar invitaciones con `scope: APPLICATION`, incluidas `PENDING`, `CONSUMED` y `REVOKED`.
 - Reenviar únicamente invitaciones pendientes no consumidas mediante rotación de token.
 - Revocar invitaciones pendientes por una acción explícita de backoffice.
-- Exponer operaciones directas `READ` y `RESEND` para el módulo `user_registration_invitations`.
+- Exponer operaciones directas `READ`, `RESEND` y `REVOKE` para el módulo `user_registration_invitations`.
 - Registrar metadatos de los intentos de envío de correo.
 - Documentar el contrato backend para una spec frontend posterior.
 

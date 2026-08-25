@@ -24,10 +24,10 @@
 
 ## Phase 3. Implementation
 
-- [ ] Implementar la funcionalidad, documentación de integración frontend y actualización Postman.
-      Status: pending
+- [x] Implementar la funcionalidad, documentación de integración frontend y actualización Postman.
+      Status: completed
 
 ## Phase 4. Validation And Closure
 
-- [ ] Validar manualmente y cerrar la spec.
-      Status: pending
+- [x] Validar manualmente y cerrar la spec.
+      Status: completed

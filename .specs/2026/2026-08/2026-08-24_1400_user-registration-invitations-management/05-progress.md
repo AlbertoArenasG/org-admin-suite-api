@@ -34,3 +34,4 @@
 - Se completó el trabajo documental del Slice 5: colección Postman, handoff frontend, actualización de documentación de autorización y checklist manual. Queda pendiente la ejecución de escenarios sobre infraestructura real.
 - Durante la ejecución del seeder se detectó que el consumo de invitaciones omitía la sincronización `user -> contact`; se conectó `SyncUserContactService` al flujo y se agregó su validación manual.
 - Se alineó la respuesta administrativa al patrón localizado de la API: ahora incluye `system_role_name`, `role_name` y `status_name` en listado, reenvío y revocación.
+- El usuario confirmó la validación manual de seeders, roles, listado, reenvío, revocación, enlaces públicos, metadata de entrega y sincronización `user -> contact`. La spec queda cerrada formalmente.
