@@ -33,3 +33,4 @@
 - Se implementó el Slice 4: DTO paginado, CQRS, endpoints administrativos, presenter, operaciones `READ`/`RESEND`/`REVOKE` e i18n. La ejecución del seeder se reserva para la validación manual final.
 - Se completó el trabajo documental del Slice 5: colección Postman, handoff frontend, actualización de documentación de autorización y checklist manual. Queda pendiente la ejecución de escenarios sobre infraestructura real.
 - Durante la ejecución del seeder se detectó que el consumo de invitaciones omitía la sincronización `user -> contact`; se conectó `SyncUserContactService` al flujo y se agregó su validación manual.
+- Se alineó la respuesta administrativa al patrón localizado de la API: ahora incluye `system_role_name`, `role_name` y `status_name` en listado, reenvío y revocación.

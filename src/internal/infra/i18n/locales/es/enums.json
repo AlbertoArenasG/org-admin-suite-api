@@ -2,7 +2,8 @@
   "USER": {
     "ROLE": {
       "MASTER_ADMIN": "Administrador principal",
-      "ADMIN": "Administrador"
+      "ADMIN": "Administrador",
+      "USER": "Usuario"
     },
     "STATUS": {
       "ACTIVE": "Activo",
@@ -30,6 +31,13 @@
     "STATUS": {
       "PENDING": "Pendiente",
       "COMPLETED": "Completado"
+    }
+  },
+  "USER_REGISTRATION_INVITATION": {
+    "STATUS": {
+      "PENDING": "Pendiente",
+      "CONSUMED": "Consumida",
+      "REVOKED": "Revocada"
     }
   },
   "CUSTOMER": {

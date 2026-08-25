@@ -5,6 +5,8 @@ import {
   IUserRegistrationInvitationReadRepositoryToken,
   IUserRegistrationInvitationWriteRepository,
   IUserRegistrationInvitationWriteRepositoryToken,
+  IRoleReadRepository,
+  IRoleReadRepositoryToken,
   UserRegistrationInvitationStatus,
 } from '@domain/ports/repositories';
 import {
@@ -25,6 +27,8 @@ export class RevokeApplicationUserRegistrationInvitationUseCase {
     private readonly invitationReadRepository: IUserRegistrationInvitationReadRepository,
     @Inject(IUserRegistrationInvitationWriteRepositoryToken)
     private readonly invitationWriteRepository: IUserRegistrationInvitationWriteRepository,
+    @Inject(IRoleReadRepositoryToken)
+    private readonly roleReadRepository: IRoleReadRepository,
   ) {}
 
   async execute(
@@ -42,14 +46,25 @@ export class RevokeApplicationUserRegistrationInvitationUseCase {
       throw UserRegistrationInvitationException.concurrentModification();
     }
 
-    const dto =
-      UserRegistrationInvitationMapper.toApplicationDto(revokedInvitation);
+    const dto = UserRegistrationInvitationMapper.toApplicationDto(
+      revokedInvitation,
+      await this.resolveRoleName(revokedInvitation.roleId),
+    );
 
     if (!dto) {
       throw UserRegistrationInvitationException.concurrentModification();
     }
 
     return dto;
+  }
+
+  private async resolveRoleName(roleId: string | null): Promise<string | null> {
+    if (!roleId) {
+      return null;
+    }
+
+    const { data } = await this.roleReadRepository.findById(roleId);
+    return data?.name ?? null;
   }
 
   private async findPendingInvitation(invitationId: string) {

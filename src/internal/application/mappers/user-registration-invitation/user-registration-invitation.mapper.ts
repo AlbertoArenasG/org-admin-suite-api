@@ -28,6 +28,7 @@ export class UserRegistrationInvitationMapper {
 
   static toApplicationDto(
     record: UserRegistrationInvitationRecord | null,
+    roleName: string | null = null,
   ): ApplicationUserRegistrationInvitationDto | null {
     if (!record) return null;
 
@@ -37,6 +38,7 @@ export class UserRegistrationInvitationMapper {
       status: record.status,
       systemRole: record.systemRole,
       roleId: record.roleId,
+      roleName,
       userData: record.userData ?? null,
       invitedByUserId: record.invitedByUserId,
       createdAt: record.createdAt ?? null,

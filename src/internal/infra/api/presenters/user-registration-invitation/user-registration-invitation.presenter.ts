@@ -4,9 +4,12 @@ import {
   ApplicationUserRegistrationInvitationDto,
   UserRegistrationInvitationDto,
 } from '@application/dto';
+import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class UserRegistrationInvitationPresenter {
+  constructor(private readonly enumNameService: EnumNameService) {}
+
   toApplicationResponse(invitation: UserRegistrationInvitationDto) {
     return {
       invitation_id: invitation.invitationId,
@@ -61,8 +64,15 @@ export class UserRegistrationInvitationPresenter {
       invitation_id: invitation.invitationId,
       email: invitation.email,
       status: invitation.status,
+      status_name: this.enumNameService.getEnumName(
+        `USER_REGISTRATION_INVITATION.STATUS.${invitation.status}`,
+      ),
       system_role: invitation.systemRole,
+      system_role_name: this.enumNameService.getEnumName(
+        `USER.ROLE.${invitation.systemRole}`,
+      ),
       role_id: invitation.roleId,
+      role_name: invitation.roleName,
       user_data: this.mapUserData(invitation.userData),
       invited_by_user_id: invitation.invitedByUserId,
       created_at: invitation.createdAt ?? null,

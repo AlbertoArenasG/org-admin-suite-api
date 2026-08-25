@@ -52,6 +52,7 @@ export interface ApplicationUserRegistrationInvitationDto {
   status: UserRegistrationInvitationStatus;
   systemRole: SystemRole;
   roleId: string | null;
+  roleName: string | null;
   userData?: UserRegistrationInvitationUserData | null;
   invitedByUserId: string;
   createdAt?: Date | null;

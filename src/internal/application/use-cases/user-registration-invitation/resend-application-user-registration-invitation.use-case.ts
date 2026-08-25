@@ -5,6 +5,8 @@ import {
   IUserRegistrationInvitationReadRepositoryToken,
   IUserRegistrationInvitationWriteRepository,
   IUserRegistrationInvitationWriteRepositoryToken,
+  IRoleReadRepository,
+  IRoleReadRepositoryToken,
   UserRegistrationInvitationStatus,
 } from '@domain/ports/repositories';
 import {
@@ -27,6 +29,8 @@ export class ResendApplicationUserRegistrationInvitationUseCase {
     private readonly invitationReadRepository: IUserRegistrationInvitationReadRepository,
     @Inject(IUserRegistrationInvitationWriteRepositoryToken)
     private readonly invitationWriteRepository: IUserRegistrationInvitationWriteRepository,
+    @Inject(IRoleReadRepositoryToken)
+    private readonly roleReadRepository: IRoleReadRepository,
     private readonly notifier: UserRegistrationInvitationNotifierService,
     private readonly tokenService: UserRegistrationInvitationTokenService,
   ) {}
@@ -63,8 +67,10 @@ export class ResendApplicationUserRegistrationInvitationUseCase {
         tokenHash,
       });
 
+    const updatedInvitation = acceptedInvitation ?? rotatedInvitation;
     const dto = UserRegistrationInvitationMapper.toApplicationDto(
-      acceptedInvitation ?? rotatedInvitation,
+      updatedInvitation,
+      await this.resolveRoleName(updatedInvitation.roleId),
     );
 
     if (!dto) {
@@ -72,6 +78,15 @@ export class ResendApplicationUserRegistrationInvitationUseCase {
     }
 
     return dto;
+  }
+
+  private async resolveRoleName(roleId: string | null): Promise<string | null> {
+    if (!roleId) {
+      return null;
+    }
+
+    const { data } = await this.roleReadRepository.findById(roleId);
+    return data?.name ?? null;
   }
 
   private async findPendingInvitation(invitationId: string) {
