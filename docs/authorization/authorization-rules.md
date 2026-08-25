@@ -202,6 +202,7 @@ Excepción importante:
 Ejemplo práctico:
 
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad funcional principal que lo consume; en el estado actual del sistema, al servir el flujo ordinario de invitaciones, queda absorbido por `USER_REGISTRATION_INVITATIONS/CREATE`
+- la administración ordinaria de invitaciones usa operaciones directas del mismo módulo: `USER_REGISTRATION_INVITATIONS/READ`, `RESEND` y `REVOKE`; no son capabilities auxiliares ni aplican a la frontera `MASTER`
 - `GET /v1/roles/modules` queda protegido como auxiliar local por `ROLES/READ`
 - `GET /v1/contacts/search` se protege con `CONTACTS/SEARCH`, capability auxiliar derivada para `RECIPIENT_GROUPS`
 - `GET /v1/communication-channels` se protege con `COMMUNICATION_CHANNELS/READ_OPTIONS`, capability auxiliar derivada para `RECIPIENT_GROUPS`

@@ -31,3 +31,5 @@
 - Se implementó y validó el Slice 2: puertos de invitaciones, listado paginado de aplicación y escrituras atómicas para reenvío, entrega aceptada y revocación.
 - Se implementó y validó el Slice 3: casos de uso administrativos, excepción de estado `409`, confirmación de entrega en creación e invalidación pública de invitaciones revocadas.
 - Se implementó el Slice 4: DTO paginado, CQRS, endpoints administrativos, presenter, operaciones `READ`/`RESEND`/`REVOKE` e i18n. La ejecución del seeder se reserva para la validación manual final.
+- Se completó el trabajo documental del Slice 5: colección Postman, handoff frontend, actualización de documentación de autorización y checklist manual. Queda pendiente la ejecución de escenarios sobre infraestructura real.
+- Durante la ejecución del seeder se detectó que el consumo de invitaciones omitía la sincronización `user -> contact`; se conectó `SyncUserContactService` al flujo y se agregó su validación manual.

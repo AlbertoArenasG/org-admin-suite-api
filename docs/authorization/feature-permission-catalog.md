@@ -440,6 +440,18 @@ Endpoints actuales de backoffice:
   - operacion: `CREATE`
   - acceso actual: autenticado
   - nota: invitacion ordinaria de aplicacion, protegida por `PermissionsGuard` con `user_registration_invitations.CREATE`
+- `GET /v1/user-registration-invitations`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: lista exclusivamente invitaciones de scope `APPLICATION`, incluidas las historicas consumidas o revocadas
+- `POST /v1/user-registration-invitations/:invitationId/resend`
+  - operacion: `RESEND`
+  - acceso actual: autenticado
+  - nota: rota el token y reenvia solo invitaciones `APPLICATION` pendientes
+- `POST /v1/user-registration-invitations/:invitationId/revoke`
+  - operacion: `REVOKE`
+  - acceso actual: autenticado
+  - nota: revoca solo invitaciones `APPLICATION` pendientes; no elimina historial
 - `POST /v1/master-admin/user-registration-invitations`
   - operacion: `CREATE`
   - acceso actual: exclusivo de `MASTER_ADMIN`
@@ -453,6 +465,7 @@ Endpoints publicos por token:
 - `POST /v1/user-registration-invitations/:token/complete-registration`
   - operacion: fuera del catalogo interno
   - acceso actual: publico por token
+  - nota: rechaza tokens de invitaciones consumidas o revocadas
 
 ### `contacts`
 

@@ -57,13 +57,28 @@
 
 ## Slice 5. Documentation, Postman And Manual Closure
 
-- Estado: pending
+- Estado: in_progress
 - Objetivo:
   - dejar contrato integrable para frontend y validar funcionalmente la API
-- Cambios esperados:
+- Cambios realizados:
   - actualizar colección Postman
   - crear handoff en `docs/frontend/`
   - barrido y actualización relevante de `docs/`
-  - ejecutar validación manual aprobada
+- agregar checklist de validación manual
+- Pendiente:
+  - ejecutar validación manual aprobada sobre la base de datos y proveedor de correo
 - Validación:
   - escenarios Postman ejecutados por el usuario, revisión final de docs y cierre formal
+
+### Checklist De Validación Manual
+
+- [ ] Ejecutar el seeder de roles y confirmar que solo `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT` reciben `USER_REGISTRATION_INVITATIONS/READ`, `RESEND` y `REVOKE`.
+- [ ] Confirmar que roles custom existentes no se modifican ni eliminan.
+- [ ] Crear una invitación `APPLICATION` y comprobar `resend_count: 0`, `revoked_at: null` y metadata de entrega `ACCEPTED` cuando el proveedor responda correctamente.
+- [ ] Completar una invitación y confirmar que el usuario nuevo materializa automáticamente su `contact` vinculado por `user_id`.
+- [ ] Crear una invitación `MASTER` y comprobar que recibe la misma metadata de entrega, sin usar los endpoints administrativos nuevos.
+- [ ] Listar invitaciones de aplicación con paginación, `search`, filtro de los tres estados, orden por `created_at` y orden compuesto `status` más `created_at`.
+- [ ] Reenviar una invitación pendiente: comprobar incremento de `resend_count`, metadata del último intento y que el token anterior ya no funciona en la consulta pública ni en el consumo.
+- [ ] Simular o revisar un fallo de correo: la invitación debe permanecer `PENDING` con intento `FAILED` y permitir otro reenvío.
+- [ ] Revocar una invitación pendiente: comprobar `REVOKED`, `revoked_at`, `revoked_by_user_id`, rechazo de consulta/consumo público y creación posterior de una nueva invitación para el mismo email.
+- [ ] Confirmar `404` para IDs inexistentes o de scope `MASTER`, y `409` para invitaciones consumidas, revocadas o modificadas concurrentemente.

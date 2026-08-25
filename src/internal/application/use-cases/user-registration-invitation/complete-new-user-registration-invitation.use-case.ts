@@ -33,7 +33,10 @@ import {
   CreateUserResultDto,
 } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import { UserRegistrationInvitationTokenService } from '@application/services';
+import {
+  SyncUserContactService,
+  UserRegistrationInvitationTokenService,
+} from '@application/services';
 
 @Injectable()
 export class CompleteNewUserRegistrationInvitationUseCase {
@@ -47,6 +50,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
     private readonly tokenService: UserRegistrationInvitationTokenService,
+    private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
   async execute(
@@ -104,6 +108,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     const { data: createdUser } = await this.userWriteRepository.create(user);
 
     createdUser.markAsCreated();
+    await this.syncUserContactService.syncFromUser(createdUser);
 
     const result =
       invitation.scope === UserRegistrationInvitationScope.MASTER

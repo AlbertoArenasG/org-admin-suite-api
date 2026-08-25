@@ -1775,6 +1775,127 @@
           ]
         },
         {
+          "name": "List application invitations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/user-registration-invitations?page=1&limit=10&sort[0][field]=created_at&sort[0][direction]=desc",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sort[0][field]",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort[0][direction]",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Lista exclusivamente invitaciones APPLICATION. Admite search, status y orden compuesto por status y created_at."
+          },
+          "response": []
+        },
+        {
+          "name": "Resend application invitation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID/resend",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations",
+                ":INVITATION_ID",
+                "resend"
+              ],
+              "variable": [
+                {
+                  "key": "INVITATION_ID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Rota el token de una invitación APPLICATION PENDING. El enlace previo queda inválido; la respuesta actualiza resend_count y email_delivery."
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke application invitation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID/revoke",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations",
+                ":INVITATION_ID",
+                "revoke"
+              ],
+              "variable": [
+                {
+                  "key": "INVITATION_ID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Revoca una invitación APPLICATION PENDING. Un enlace revocado no puede consultarse ni completar el registro."
+          },
+          "response": []
+        },
+        {
           "name": "Inspect invitation by token",
           "request": {
             "method": "GET",
