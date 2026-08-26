@@ -17,6 +17,7 @@
     "db:migrate:users-system-role:apply": "node -r tsconfig-paths/register -r ts-node/register src/internal/infra/persistence/mongoose/migrations/migrate-users-to-system-role-and-role-id.ts --apply",
     "db:migrate:users-system-role:dry-run": "node -r tsconfig-paths/register -r ts-node/register src/internal/infra/persistence/mongoose/migrations/migrate-users-to-system-role-and-role-id.ts --dry-run",
     "db:seed": "node -r tsconfig-paths/register -r ts-node/register src/internal/infra/persistence/mongoose/seeds/run-seeds.ts",
+    "db:seed:roles": "node -r tsconfig-paths/register -r ts-node/register src/internal/infra/persistence/mongoose/seeds/run-role-seeds.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

@@ -268,3 +268,5 @@ Add a dedicated `GetCustomerOptionsUseCase` under the customer boundary. It will
 The Mongoose adapter will select only `ACTIVE` customers, sort by `company_name` and `customer_id` ascending, and map them through a minimal application DTO. The HTTP route `GET /v1/customers/options` will be declared before `:customerId`, use `JwtAuthGuard` plus `AuxiliaryCapabilitiesGuard`, and require `CUSTOMERS/READ_OPTIONS`.
 
 Register the capability in the existing auxiliary catalog and derive it from `USER_REGISTRATION_INVITATIONS` and `USERS`. The existing role seed will reconcile the derived capabilities of `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` and every persisted custom role (`is_system: false`), using the same derivation function as runtime role writes. The seed writes only `auxiliary_capabilities` for custom roles whose derived value changed, through the raw MongoDB collection so it does not modify `updatedAt` or `updatedBy`.
+
+Expose `db:seed:roles` as the targeted runner for this reconciliation. It registers only `roleSeeds`, unlike `db:seed`, which also runs catalog seeds such as `contacts-from-users`.

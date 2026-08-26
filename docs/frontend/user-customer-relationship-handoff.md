@@ -27,7 +27,7 @@ La respuesta no es paginada y contiene únicamente clientes `ACTIVE`, ordenados 
 
 No usar `GET /v1/customers` para este propósito: es la lectura administrativa paginada. El acceso al catálogo se resuelve mediante capabilities auxiliares derivadas exclusivamente en backend.
 
-Antes de habilitar este flujo para roles ya existentes, backend debe ejecutar manualmente `npm run db:seed`; el seed recalcula las capabilities derivadas de roles default y custom sin cambiar su auditoría administrativa.
+Antes de habilitar este flujo para roles ya existentes, backend debe ejecutar manualmente `npm run db:seed:roles`; el seed recalcula las capabilities derivadas de roles default y custom sin cambiar su auditoría administrativa, sin ejecutar otros seeds de catálogos.
 
 ## Invitaciones
 
