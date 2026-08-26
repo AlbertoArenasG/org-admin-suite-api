@@ -11,6 +11,11 @@ import {
   EntityNotFoundExceptionCode,
 } from '@domain/exceptions';
 import { CustomerStatus } from '@domain/entities';
+import { CustomerContactCompanyNamesSynchronizerService } from '@application/services/user-customer-relationship';
+import {
+  ITransactionalExecutor,
+  ITransactionalExecutorToken,
+} from '@domain/ports/services';
 
 @Injectable()
 export class DeleteCustomerUseCase {
@@ -19,6 +24,9 @@ export class DeleteCustomerUseCase {
     private readonly customerReadRepository: ICustomerReadRepository,
     @Inject(ICustomerWriteRepositoryToken)
     private readonly customerWriteRepository: ICustomerWriteRepository,
+    @Inject(ITransactionalExecutorToken)
+    private readonly transactionalExecutor: ITransactionalExecutor,
+    private readonly customerContactSynchronizer: CustomerContactCompanyNamesSynchronizerService,
   ) {}
 
   async execute(customerId: string): Promise<void> {
@@ -33,6 +41,11 @@ export class DeleteCustomerUseCase {
     }
 
     customer.markAsDeleted();
-    await this.customerWriteRepository.update(customer);
+    await this.transactionalExecutor.execute(async () => {
+      await this.customerWriteRepository.update(customer);
+      await this.customerContactSynchronizer.synchronizeByCustomerId(
+        customer.id,
+      );
+    });
   }
 }

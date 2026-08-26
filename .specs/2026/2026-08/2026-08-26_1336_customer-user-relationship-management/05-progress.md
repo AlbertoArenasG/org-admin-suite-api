@@ -48,7 +48,8 @@ Implementation.
 - Se implementaron los cuatro casos de uso contextuales de Clientes para consultar, asociar y desasociar Usuarios, con DTOs de aplicacion y lookup compacto reutilizable.
 - Se implementaron adapters CQRS, DTOs HTTP, presenters localizados y `CustomerUserRelationshipController` con las cuatro rutas contextuales protegidas por permisos de Clientes.
 - Se reemplazo `has_customer_relationship` por `customer_relationship=UNASSIGNED` en el listado global de Usuarios, conservando `customer_id` como filtro positivo mutuamente excluyente.
+- `DeleteCustomerUseCase` elimina logicamente el Cliente y resincroniza los Contactos relacionados dentro de la misma transaccion, preservando las relaciones historicas.
 
 ## Next
 
-- Ajustar la eliminacion logica de Clientes para resincronizar los Contactos relacionados dentro de una transaccion.
+- Alinear los contratos HTTP restantes y actualizar documentacion, coleccion Postman y escenarios de validacion manual.
