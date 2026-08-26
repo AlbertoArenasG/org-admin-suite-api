@@ -96,8 +96,8 @@
 
 ## Phase 3. Implementation
 
-- [ ] Implementar la frontera transaccional y el recurso interno `UserCustomerRelationship`.
-      Status: pending
+- [x] Implementar la frontera transaccional y el recurso interno `UserCustomerRelationship`.
+      Status: completed
 
 - [ ] Extender invitaciones de aplicación y materializar relaciones al consumirlas.
       Status: pending

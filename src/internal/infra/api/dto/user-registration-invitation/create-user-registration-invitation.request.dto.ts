@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayUnique,
+  IsArray,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -41,6 +43,13 @@ export class CreateUserRegistrationInvitationRequestDto {
   @IsNotEmpty()
   role_id!: string;
 
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  customer_ids?: string[];
+
   toDomain(
     invitedByUserId: string,
   ): CreateApplicationUserRegistrationInvitationDto {
@@ -51,6 +60,7 @@ export class CreateUserRegistrationInvitationRequestDto {
       roleId: this.role_id,
       invitedByUserId,
       userData: this.buildUserData(),
+      customerIds: this.customer_ids ?? [],
     };
   }
 

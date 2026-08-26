@@ -10,7 +10,7 @@ export interface ContactProps {
   userId: string | null;
   name: string;
   lastname: string;
-  companyName: string | null;
+  companyNames: string[];
   emails: ContactValueProps[];
   phones: ContactValueProps[];
   cellPhones: ContactValueProps[];
@@ -31,7 +31,9 @@ export class Contact extends Entity<ContactProps> {
   constructor(props: ContactProps) {
     props.id = props.id ?? genId();
     props.userId = props.userId ?? null;
-    props.companyName = props.companyName ?? null;
+    props.companyNames = Contact.normalizeCompanyNames(
+      props.companyNames ?? [],
+    );
     props.status = props.status ?? ContactStatus.ACTIVE;
     props.createdBy = props.createdBy ?? null;
     props.updatedBy = props.updatedBy ?? null;
@@ -62,8 +64,8 @@ export class Contact extends Entity<ContactProps> {
     return `${this.name} ${this.lastname}`.trim();
   }
 
-  get companyName(): string | null {
-    return this.props.companyName ?? null;
+  get companyNames(): string[] {
+    return [...this.props.companyNames];
   }
 
   get emails(): ContactValueProps[] {
@@ -121,7 +123,7 @@ export class Contact extends Entity<ContactProps> {
     details: {
       name?: string;
       lastname?: string;
-      companyName?: string | null;
+      companyNames?: string[];
       emails?: ContactValueProps[];
       phones?: ContactValueProps[];
       cellPhones?: ContactValueProps[];
@@ -136,8 +138,10 @@ export class Contact extends Entity<ContactProps> {
       this.props.lastname = details.lastname;
     }
 
-    if (details.companyName !== undefined) {
-      this.props.companyName = details.companyName;
+    if (details.companyNames !== undefined) {
+      this.props.companyNames = Contact.normalizeCompanyNames(
+        details.companyNames,
+      );
     }
 
     if (details.emails !== undefined) {
@@ -160,7 +164,7 @@ export class Contact extends Entity<ContactProps> {
     lastname: string;
     email: string;
     cellPhone: string | null;
-    companyName?: string | null;
+    companyNames?: string[];
     status?: ContactStatus;
   }): void {
     this.props.name = input.name;
@@ -173,8 +177,10 @@ export class Contact extends Entity<ContactProps> {
       ? Contact.replacePrimaryValue(this.props.cellPhones, input.cellPhone)
       : [];
 
-    if (!this.props.companyName && input.companyName !== undefined) {
-      this.props.companyName = input.companyName;
+    if (input.companyNames !== undefined) {
+      this.props.companyNames = Contact.normalizeCompanyNames(
+        input.companyNames,
+      );
     }
 
     if (input.status !== undefined) {
@@ -198,6 +204,10 @@ export class Contact extends Entity<ContactProps> {
     return values
       .map((item) => ({ value: item.value.trim() }))
       .filter((item) => item.value.length > 0);
+  }
+
+  private static normalizeCompanyNames(values: string[]): string[] {
+    return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
   }
 
   private static replacePrimaryValue(

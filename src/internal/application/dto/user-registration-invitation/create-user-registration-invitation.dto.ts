@@ -18,6 +18,7 @@ export interface CreateApplicationUserRegistrationInvitationDto
   scope: UserRegistrationInvitationScope.APPLICATION;
   systemRole: SystemRole;
   roleId: string | null;
+  customerIds: string[];
 }
 
 export interface CreateMasterUserRegistrationInvitationDto

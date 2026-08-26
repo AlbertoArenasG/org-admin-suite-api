@@ -23,6 +23,7 @@ import {
 import { UserRegistrationInvitationMapper } from '@application/mappers';
 import {
   AuthorizationService,
+  UserCustomerRelationshipValidationService,
   UserRegistrationInvitationTokenService,
 } from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
@@ -40,6 +41,7 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
     private readonly notifier: UserRegistrationInvitationNotifierService,
     private readonly tokenService: UserRegistrationInvitationTokenService,
     private readonly authorizationService: AuthorizationService,
+    private readonly relationshipValidationService: UserCustomerRelationshipValidationService,
   ) {}
 
   async execute(
@@ -59,6 +61,12 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
     );
 
     await this.ensureInvitationDoesNotExist(input.email);
+
+    const customerIds =
+      await this.relationshipValidationService.validateCustomerIds(
+        input.customerIds,
+        input.systemRole,
+      );
 
     const existingUser = await this.findExistingUser(input.email);
 
@@ -83,6 +91,7 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
+      customerIds,
       emailDelivery: {
         lastAttemptAt: new Date(),
         lastAttemptStatus: UserRegistrationInvitationEmailDeliveryStatus.FAILED,

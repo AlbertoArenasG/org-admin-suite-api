@@ -21,7 +21,7 @@ export interface ContactListItemDto {
   name: string;
   lastname: string;
   fullName: string;
-  companyName: string | null;
+  companyNames: string[];
   primaryEmail: string | null;
   primaryCellPhone: string | null;
   status: ContactStatus;
@@ -34,7 +34,7 @@ export interface ContactSearchItemDto {
   type: ContactTypeFilter;
   userId: string | null;
   fullName: string;
-  companyName: string | null;
+  companyNames: string[];
   primaryEmail: string | null;
   primaryCellPhone: string | null;
 }
@@ -46,7 +46,7 @@ export interface ContactViewDto {
   name: string;
   lastname: string;
   fullName: string;
-  companyName: string | null;
+  companyNames: string[];
   emails: ContactValueDto[];
   phones: ContactValueDto[];
   cellPhones: ContactValueDto[];
@@ -75,7 +75,7 @@ export interface CreateContactDto {
   actorUserId: string;
   name: string;
   lastname: string;
-  companyName: string | null;
+  companyNames: string[];
   emails: ContactValueDto[];
   phones: ContactValueDto[];
   cellPhones: ContactValueDto[];

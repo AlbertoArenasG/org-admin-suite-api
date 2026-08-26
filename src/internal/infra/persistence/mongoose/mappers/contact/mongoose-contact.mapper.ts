@@ -12,7 +12,7 @@ export class MongooseContactMapper {
       userId: document.user_id ?? null,
       name: document.name,
       lastname: document.lastname,
-      companyName: document.company_name ?? null,
+      companyNames: document.company_names ?? [],
       emails: (document.emails ?? []).map((item) => ({ value: item.value })),
       phones: (document.phones ?? []).map((item) => ({ value: item.value })),
       cellPhones: (document.cell_phones ?? []).map((item) => ({
@@ -32,7 +32,7 @@ export class MongooseContactMapper {
       name: contact.name,
       lastname: contact.lastname,
       full_name: contact.fullName,
-      company_name: contact.companyName,
+      company_names: contact.companyNames,
       emails: contact.emails.map((item) => ({ value: item.value })),
       phones: contact.phones.map((item) => ({ value: item.value })),
       cell_phones: contact.cellPhones.map((item) => ({ value: item.value })),

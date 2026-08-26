@@ -82,6 +82,7 @@ export interface CreateUserRegistrationInvitationRecord {
   invitedByUserId: string;
   tokenHash: string;
   userData?: UserRegistrationInvitationUserData | null;
+  customerIds: string[];
   emailDelivery: UserRegistrationInvitationEmailDelivery;
   resendCount: number;
   revokedAt: Date | null;

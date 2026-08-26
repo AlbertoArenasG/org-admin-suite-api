@@ -53,7 +53,7 @@ export class UpdateContactUseCase {
       {
         name: input.name,
         lastname: input.lastname,
-        companyName: input.companyName,
+        companyNames: input.companyNames,
         emails: input.emails,
         phones: input.phones,
         cellPhones: input.cellPhones,

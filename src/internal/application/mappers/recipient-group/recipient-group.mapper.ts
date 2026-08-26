@@ -53,7 +53,7 @@ export class RecipientGroupMapper {
       type: ContactMapper.resolveType(contact),
       userId: contact.userId,
       fullName: contact.fullName,
-      companyName: contact.companyName,
+      companyNames: contact.companyNames,
       primaryEmail: contact.emails[0]?.value ?? null,
       primaryCellPhone: contact.cellPhones[0]?.value ?? null,
       status: contact.status,

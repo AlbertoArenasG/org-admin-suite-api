@@ -90,6 +90,9 @@ export class UserRegistrationInvitationDocument extends Document {
     additional?: Record<string, unknown>;
   };
 
+  @Prop({ type: [String], default: [] })
+  customer_ids: string[];
+
   @Prop({ type: Date, default: null })
   consumed_at?: Date | null;
 

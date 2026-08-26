@@ -72,7 +72,7 @@ export class MongooseContactReadRepositoryImpl
       constraints.push({
         $or: [
           { full_name: { $regex: escapeRegex(search), $options: 'i' } },
-          { company_name: { $regex: escapeRegex(search), $options: 'i' } },
+          { company_names: { $regex: escapeRegex(search), $options: 'i' } },
           { 'emails.value': { $regex: escapeRegex(search), $options: 'i' } },
         ],
       });
@@ -124,7 +124,7 @@ export class MongooseContactReadRepositoryImpl
         {
           $or: [
             { full_name: { $regex: escapeRegex(params.q), $options: 'i' } },
-            { company_name: { $regex: escapeRegex(params.q), $options: 'i' } },
+            { company_names: { $regex: escapeRegex(params.q), $options: 'i' } },
             {
               'emails.value': {
                 $regex: escapeRegex(params.q),

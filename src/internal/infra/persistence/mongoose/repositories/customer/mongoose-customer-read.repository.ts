@@ -21,6 +21,22 @@ export class MongooseCustomerReadRepositoryImpl
     return { data: document ? this.toDomain(document) : null };
   }
 
+  async findByIds(ids: string[]): Promise<{ data: Customer[] }> {
+    if (ids.length === 0) {
+      return { data: [] };
+    }
+
+    const documents = await this.customerModel
+      .find({ customer_id: { $in: ids } })
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((customer): customer is Customer => customer !== null),
+    };
+  }
+
   async findByClientCode(
     clientCode: string,
   ): Promise<{ data: Customer | null }> {

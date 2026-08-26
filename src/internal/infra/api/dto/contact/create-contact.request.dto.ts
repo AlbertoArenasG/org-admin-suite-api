@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  ArrayUnique,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -20,8 +21,10 @@ export class CreateContactRequestDto {
   lastname!: string;
 
   @IsOptional()
-  @IsString()
-  company_name?: string;
+  @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
+  company_names?: string[];
 
   @IsOptional()
   @IsArray()
@@ -46,7 +49,7 @@ export class CreateContactRequestDto {
       actorUserId,
       name: this.name,
       lastname: this.lastname,
-      companyName: this.company_name ?? null,
+      companyNames: this.company_names ?? [],
       emails: this.emails?.map((item) => item.toDomain()) ?? [],
       phones: this.phones?.map((item) => item.toDomain()) ?? [],
       cellPhones: this.cell_phones?.map((item) => item.toDomain()) ?? [],

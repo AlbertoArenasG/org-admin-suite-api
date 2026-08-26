@@ -73,6 +73,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,
+      customerIds: [],
       emailDelivery: {
         lastAttemptAt: new Date(),
         lastAttemptStatus: UserRegistrationInvitationEmailDeliveryStatus.FAILED,

@@ -34,7 +34,7 @@ export class RecipientGroupPresenter {
         type: contact.type,
         user_id: contact.userId,
         full_name: contact.fullName,
-        company_name: contact.companyName,
+        company_names: contact.companyNames,
         primary_email: contact.primaryEmail,
         primary_cell_phone: contact.primaryCellPhone,
         status_id: contact.status,

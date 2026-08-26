@@ -18,6 +18,7 @@ export interface FindCustomersResult {
 
 export interface ICustomerReadRepository {
   findById(id: string): Promise<{ data: Customer | null }>;
+  findByIds(ids: string[]): Promise<{ data: Customer[] }>;
   findByClientCode(clientCode: string): Promise<{ data: Customer | null }>;
   findByAccessToken(accessToken: string): Promise<{ data: Customer | null }>;
   findAll(params: FindCustomersParams): Promise<FindCustomersResult>;

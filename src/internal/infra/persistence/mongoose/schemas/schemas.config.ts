@@ -85,4 +85,8 @@ export const configSchemas = [
     name: schemas.InternalJobLockDocument.name,
     schema: schemas.InternalJobLockSchema,
   },
+  {
+    name: schemas.UserCustomerRelationshipDocument.name,
+    schema: schemas.UserCustomerRelationshipSchema,
+  },
 ];

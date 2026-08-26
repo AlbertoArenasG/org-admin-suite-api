@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 2: technical design completed.
+Phase 3: backend implementation in progress.
 
 ## Completed
 
@@ -43,7 +43,8 @@ Phase 2: technical design completed.
 - Defined batch repository contracts using domain IDs and semantic contact updates.
 - Defined a stable ordering for derived contact company names.
 - Defined the approved manual validation scope.
+- Implemented the transaction port, Mongoose transaction context and internal user-customer relationship resource.
 
 ## Next
 
-- Begin Phase 3 following the approved implementation breakdown.
+- Extend application invitations to persist selected customer IDs and materialize their relationships on consumption.

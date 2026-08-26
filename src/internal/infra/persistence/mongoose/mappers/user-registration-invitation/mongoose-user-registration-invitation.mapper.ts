@@ -41,6 +41,7 @@ export class MongooseUserRegistrationInvitationMapper {
       invitedByUserId: document.invited_by_user_id,
       tokenHash: document.token_hash,
       userData,
+      customerIds: document.customer_ids ?? [],
       consumedAt: document.consumed_at ?? null,
       emailDelivery: {
         lastAttemptAt: document.email_delivery?.last_attempt_at ?? null,
@@ -82,6 +83,7 @@ export class MongooseUserRegistrationInvitationMapper {
           : null,
         additional: additionalData,
       },
+      customer_ids: record.customerIds,
       consumed_at: null,
       email_delivery: {
         last_attempt_at: record.emailDelivery.lastAttemptAt,

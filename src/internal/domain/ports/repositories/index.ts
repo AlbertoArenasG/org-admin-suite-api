@@ -19,3 +19,4 @@ export * from './expiration-status-policy';
 export * from './expiration-notification-policy';
 export * from './internal-asset-maintenance-record';
 export * from './internal-job-lock';
+export * from './user-customer-relationship';

@@ -18,7 +18,7 @@ export interface RecipientGroupContactSummaryDto {
   type: 'INTERNAL' | 'EXTERNAL';
   userId: string | null;
   fullName: string;
-  companyName: string | null;
+  companyNames: string[];
   primaryEmail: string | null;
   primaryCellPhone: string | null;
   status: string;

@@ -93,7 +93,7 @@ export const contactsFromUsersSeed: MongooseSeedDefinition = {
           name: user.name,
           lastname: user.lastname,
           full_name: fullName,
-          company_name: INTERNAL_COMPANY_NAME,
+          company_names: [INTERNAL_COMPANY_NAME],
           emails: primaryEmail ? [{ value: primaryEmail }] : [],
           phones: [],
           cell_phones: primaryCellPhone ? [{ value: primaryCellPhone }] : [],
@@ -144,8 +144,8 @@ export const contactsFromUsersSeed: MongooseSeedDefinition = {
         shouldUpdate = true;
       }
 
-      if (!existing.company_name) {
-        existing.company_name = INTERNAL_COMPANY_NAME;
+      if (!existing.company_names || existing.company_names.length === 0) {
+        existing.company_names = [INTERNAL_COMPANY_NAME];
         shouldUpdate = true;
       }
 

@@ -36,8 +36,8 @@ export class ContactDocument extends Document {
   @Prop({ type: String, required: true, trim: true, index: true })
   full_name: string;
 
-  @Prop({ type: String, required: false, default: null, index: true })
-  company_name?: string | null;
+  @Prop({ type: [String], default: [], index: true })
+  company_names: string[];
 
   @Prop({ type: [ContactValueSchema], default: [] })
   emails: IContactValueSchema[];
@@ -71,6 +71,6 @@ export class ContactDocument extends Document {
 
 const ContactSchema = SchemaFactory.createForClass(ContactDocument);
 
-ContactSchema.index({ full_name: 'text', company_name: 'text' });
+ContactSchema.index({ full_name: 'text', company_names: 'text' });
 
 export { ContactSchema };

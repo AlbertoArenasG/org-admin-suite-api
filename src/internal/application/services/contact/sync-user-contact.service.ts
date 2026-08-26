@@ -28,7 +28,7 @@ export class SyncUserContactService {
         userId: user.id,
         name: user.name,
         lastname: user.lastname,
-        companyName: SyncUserContactService.INTERNAL_COMPANY_NAME,
+        companyNames: [SyncUserContactService.INTERNAL_COMPANY_NAME],
         emails: [{ value: user.email }],
         phones: [],
         cellPhones: this.toCellPhoneValues(user),
@@ -48,7 +48,7 @@ export class SyncUserContactService {
       lastname: user.lastname,
       email: user.email,
       cellPhone: this.toPrimaryCellPhone(user),
-      companyName: SyncUserContactService.INTERNAL_COMPANY_NAME,
+      companyNames: [SyncUserContactService.INTERNAL_COMPANY_NAME],
       status: this.mapUserStatus(user.status),
     });
 

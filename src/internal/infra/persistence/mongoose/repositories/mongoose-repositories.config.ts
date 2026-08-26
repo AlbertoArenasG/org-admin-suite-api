@@ -39,6 +39,8 @@ import {
   MongooseInternalAssetMaintenanceRecordReadRepositoryImpl,
   MongooseInternalAssetMaintenanceRecordWriteRepositoryImpl,
   MongooseInternalJobLockRepositoryImpl,
+  MongooseUserCustomerRelationshipReadRepositoryImpl,
+  MongooseUserCustomerRelationshipWriteRepositoryImpl,
 } from '.';
 
 import {
@@ -82,7 +84,14 @@ import {
   IInternalAssetMaintenanceRecordReadRepositoryToken,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
   IInternalJobLockRepositoryToken,
+  IUserCustomerRelationshipReadRepositoryToken,
+  IUserCustomerRelationshipWriteRepositoryToken,
 } from '@domain/ports/repositories';
+import { ITransactionalExecutorToken } from '@domain/ports/services';
+import {
+  MongooseTransactionContext,
+  MongooseTransactionalExecutor,
+} from '@infra/persistence/mongoose/transactions';
 
 export const MongooseRepositoriesConfig = [
   {
@@ -245,6 +254,19 @@ export const MongooseRepositoriesConfig = [
     provide: IInternalJobLockRepositoryToken,
     useClass: MongooseInternalJobLockRepositoryImpl,
   },
+  MongooseTransactionContext,
+  {
+    provide: IUserCustomerRelationshipReadRepositoryToken,
+    useClass: MongooseUserCustomerRelationshipReadRepositoryImpl,
+  },
+  {
+    provide: IUserCustomerRelationshipWriteRepositoryToken,
+    useClass: MongooseUserCustomerRelationshipWriteRepositoryImpl,
+  },
+  {
+    provide: ITransactionalExecutorToken,
+    useClass: MongooseTransactionalExecutor,
+  },
 ];
 
 export const MongooseRepositoryTokens = [
@@ -288,4 +310,7 @@ export const MongooseRepositoryTokens = [
   IInternalAssetMaintenanceRecordReadRepositoryToken,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
   IInternalJobLockRepositoryToken,
+  IUserCustomerRelationshipReadRepositoryToken,
+  IUserCustomerRelationshipWriteRepositoryToken,
+  ITransactionalExecutorToken,
 ];
