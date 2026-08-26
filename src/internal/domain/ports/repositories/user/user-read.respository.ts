@@ -16,6 +16,8 @@ export interface FindUsersParams {
   actorSystemRole: SystemRole;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
+  customerId: string | null;
+  hasCustomerRelationship: boolean | null;
 }
 
 export interface FindUsersResult {

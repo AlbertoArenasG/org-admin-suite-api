@@ -7,7 +7,13 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
+  IUserCustomerRelationshipWriteRepository,
+  IUserCustomerRelationshipWriteRepositoryToken,
 } from '@domain/ports/repositories';
+import {
+  ITransactionalExecutor,
+  ITransactionalExecutorToken,
+} from '@domain/ports/services';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
@@ -18,10 +24,16 @@ import {
 } from '@domain/exceptions';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import { UserStatus } from '@domain/entities';
+import {
+  SystemRole,
+  UserCustomerRelationship,
+  UserStatus,
+} from '@domain/entities';
 import {
   AuthorizationService,
   SyncUserContactService,
+  UserCustomerCompanyNamesResolver,
+  UserCustomerRelationshipValidationService,
 } from '@application/services';
 
 @Injectable()
@@ -33,8 +45,14 @@ export class UpdateUserUseCase {
     private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
+    @Inject(IUserCustomerRelationshipWriteRepositoryToken)
+    private readonly relationshipWriteRepository: IUserCustomerRelationshipWriteRepository,
+    @Inject(ITransactionalExecutorToken)
+    private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly authorizationService: AuthorizationService,
     private readonly syncUserContactService: SyncUserContactService,
+    private readonly relationshipValidationService: UserCustomerRelationshipValidationService,
+    private readonly companyNamesResolver: UserCustomerCompanyNamesResolver,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
@@ -143,15 +161,57 @@ export class UpdateUserUseCase {
       user.updateDetails(details);
     }
 
-    const { data: updated } = await this.userWriteRepository.update(user);
-
-    if (!updated) {
-      throw EntityNotFoundException.create(EntityNotFoundExceptionCode.USER, {
-        userId,
+    if (
+      payload.customerIds !== undefined &&
+      user.systemRole !== SystemRole.USER
+    ) {
+      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+        field: 'customer_ids',
+        systemRole: user.systemRole,
       });
     }
 
-    await this.syncUserContactService.syncFromUser(updated);
+    const customerIds =
+      payload.customerIds === undefined
+        ? undefined
+        : await this.relationshipValidationService.validateCustomerIds(
+            payload.customerIds,
+            user.systemRole,
+          );
+
+    const updated = await this.transactionalExecutor.execute(async () => {
+      const { data } = await this.userWriteRepository.update(user);
+
+      if (!data) {
+        throw EntityNotFoundException.create(EntityNotFoundExceptionCode.USER, {
+          userId,
+        });
+      }
+
+      if (customerIds !== undefined) {
+        await this.relationshipWriteRepository.replaceForUser(
+          data.id,
+          customerIds.map(
+            (customerId) =>
+              new UserCustomerRelationship({
+                userId: data.id,
+                customerId,
+              }),
+          ),
+        );
+
+        const [resolution] = await this.companyNamesResolver.resolveForUserIds([
+          data.id,
+        ]);
+        await this.syncUserContactService.syncFromUser(data, {
+          companyNames: resolution.companyNames,
+        });
+      } else {
+        await this.syncUserContactService.syncFromUser(data);
+      }
+
+      return data;
+    });
 
     const roleName = updated.roleId
       ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??

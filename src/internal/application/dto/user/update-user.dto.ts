@@ -14,6 +14,7 @@ export interface UpdateUserDto {
     systemRole?: SystemRole;
     roleId?: string | null;
     status?: UserStatus;
+    customerIds?: string[];
   };
 }
 

@@ -24,6 +24,18 @@ export class UserPresenter {
         number: result.cellPhone?.number ?? null,
       },
       created_at: result.createdAt,
+      ...(result.customers === undefined
+        ? {}
+        : {
+            customers: result.customers.map((customer) => ({
+              id: customer.id,
+              company_name: customer.companyName,
+              status: customer.status,
+              status_name: this.enumNameService.getEnumName(
+                `CUSTOMER.STATUS.${customer.status}`,
+              ),
+            })),
+          }),
     };
   }
 

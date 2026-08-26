@@ -3,6 +3,7 @@ import {
   AuthenticatedUserDto,
   CreateMasterUserResultDto,
   CreateUserResultDto,
+  UserCustomerViewDto,
   UserViewDto,
 } from '@application/dto';
 
@@ -30,6 +31,7 @@ export class UserResultMapper {
   static toUserViewDto(
     user: User,
     roleName: string | null = null,
+    customers?: UserCustomerViewDto[],
   ): UserViewDto {
     return {
       id: user.id!,
@@ -42,6 +44,7 @@ export class UserResultMapper {
       status: user.status,
       cellPhone: toCellPhoneDto(user),
       createdAt: user.createdAt ?? new Date(),
+      ...(customers === undefined ? {} : { customers }),
     };
   }
 

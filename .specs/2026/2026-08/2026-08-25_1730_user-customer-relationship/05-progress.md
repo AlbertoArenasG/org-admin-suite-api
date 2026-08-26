@@ -45,7 +45,12 @@ Phase 3: backend implementation in progress.
 - Defined the approved manual validation scope.
 - Implemented the transaction port, Mongoose transaction context and internal user-customer relationship resource.
 - Persisted validated customer selections in application invitations and materialized them atomically on consumption.
+- Implemented isolated resolution and synchronization of user-contact company names.
+- Extended user editing with atomic customer relationship replacement and contact synchronization.
+- Added optional paired user-list filters for customer relationship presence or absence.
+- Added localized customer summaries exclusively to the administrative user detail response.
+- Replaced the contact company-name contract with the `company_names` collection and updated its search/index behavior.
 
 ## Next
 
-- Extend administrative users with relationship replacement, details and filters.
+- Implement the contact migration, customer-name propagation and derived-field protection.

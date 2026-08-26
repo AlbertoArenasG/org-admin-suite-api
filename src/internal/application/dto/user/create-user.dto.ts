@@ -1,4 +1,4 @@
-import { SystemRole, UserStatus } from '@domain/entities';
+import { CustomerStatus, SystemRole, UserStatus } from '@domain/entities';
 import { PhoneDto } from '@application/dto/shared';
 
 export interface CreateUserDto {
@@ -22,6 +22,13 @@ export interface UserViewDto {
   status: UserStatus;
   cellPhone: PhoneDto;
   createdAt: Date;
+  customers?: UserCustomerViewDto[];
+}
+
+export interface UserCustomerViewDto {
+  id: string;
+  companyName: string;
+  status: CustomerStatus;
 }
 
 export type CreateUserResultDto = UserViewDto;

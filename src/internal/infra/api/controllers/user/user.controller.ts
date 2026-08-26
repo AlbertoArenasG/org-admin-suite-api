@@ -131,7 +131,7 @@ export class UserController {
     @Param('userId') userId: string,
   ) {
     const result = await this.queryBus.execute(
-      GetUserByIdQuery.create(userId, currentUser.systemRole),
+      GetUserByIdQuery.create(userId, currentUser.systemRole, true),
     );
     const data = await this.presenter.toUserResponse(result);
 

@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayUnique,
+  IsArray,
   IsEmail,
   IsIn,
   IsOptional,
@@ -45,6 +47,12 @@ export class UpdateUserRequestDto {
   @IsIn(ALLOWED_STATUSES)
   status_id?: UserStatus;
 
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
+  customer_ids?: string[];
+
   toDomain(
     userId: string,
     actorSystemRole: SystemRole,
@@ -83,6 +91,10 @@ export class UpdateUserRequestDto {
 
     if (this.status_id !== undefined) {
       payload.status = this.status_id;
+    }
+
+    if (this.customer_ids !== undefined) {
+      payload.customerIds = this.customer_ids;
     }
 
     return {

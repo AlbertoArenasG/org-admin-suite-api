@@ -1,9 +1,12 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsIn,
+  IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -42,6 +45,18 @@ export class GetUsersRequestDto extends PaginationRequestDto {
   @IsString()
   search?: string;
 
+  @ValidateIf((request) => request.has_customer_relationship !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  customer_id?: string;
+
+  @ValidateIf((request) => request.customer_id !== undefined)
+  @Transform(({ value }) =>
+    value === 'true' ? true : value === 'false' ? false : value,
+  )
+  @IsBoolean()
+  has_customer_relationship?: boolean;
+
   toDomain(actorSystemRole: SystemRole): GetUsersDto {
     return {
       page: this.getPage(),
@@ -55,6 +70,11 @@ export class GetUsersRequestDto extends PaginationRequestDto {
         { field: 'name', direction: 'asc' },
       ],
       search: this.search ?? null,
+      customerId: this.customer_id ?? null,
+      hasCustomerRelationship:
+        typeof this.has_customer_relationship === 'boolean'
+          ? this.has_customer_relationship
+          : null,
     };
   }
 }

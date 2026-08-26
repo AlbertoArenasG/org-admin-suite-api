@@ -102,14 +102,14 @@
 - [x] Extender invitaciones de aplicación y materializar relaciones al consumirlas.
       Status: completed
 
-- [ ] Implementar servicios aislados de resolución y sincronización de nombres de empresa.
-      Status: pending
+- [x] Implementar servicios aislados de resolución y sincronización de nombres de empresa.
+      Status: completed
 
-- [ ] Extender la edición, detalle y filtrado administrativo de usuarios.
-      Status: pending
+- [x] Extender la edición, detalle y filtrado administrativo de usuarios.
+      Status: completed
 
-- [ ] Reemplazar el contrato de contactos por `company_names`, incluidos búsqueda e índices.
-      Status: pending
+- [x] Reemplazar el contrato de contactos por `company_names`, incluidos búsqueda e índices.
+      Status: completed
 
 - [ ] Implementar migración y actualizar el seed de contactos derivados de usuarios.
       Status: pending

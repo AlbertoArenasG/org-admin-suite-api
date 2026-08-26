@@ -9,10 +9,15 @@ export class GetUserByIdQuery {
   private constructor(
     public readonly userId: string,
     public readonly actorSystemRole: SystemRole,
+    public readonly includeCustomers: boolean,
   ) {}
 
-  static create(userId: string, actorSystemRole: SystemRole) {
-    return new GetUserByIdQuery(userId, actorSystemRole);
+  static create(
+    userId: string,
+    actorSystemRole: SystemRole,
+    includeCustomers = false,
+  ) {
+    return new GetUserByIdQuery(userId, actorSystemRole, includeCustomers);
   }
 }
 
@@ -27,7 +32,11 @@ export class GetUserByIdHandler
 
   async execute(query: GetUserByIdQuery): Promise<UserViewDto> {
     return this.run(query, () =>
-      this.useCase.execute(query.userId, query.actorSystemRole),
+      this.useCase.execute(
+        query.userId,
+        query.actorSystemRole,
+        query.includeCustomers,
+      ),
     );
   }
 }
