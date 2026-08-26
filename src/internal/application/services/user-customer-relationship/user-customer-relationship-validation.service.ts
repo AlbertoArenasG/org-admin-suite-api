@@ -22,6 +22,7 @@ export class UserCustomerRelationshipValidationService {
   async validateCustomerIds(
     customerIds: string[],
     systemRole: SystemRole,
+    existingCustomerIds: string[] = [],
   ): Promise<string[]> {
     const normalizedCustomerIds = customerIds.map((customerId) =>
       customerId.trim(),
@@ -66,8 +67,13 @@ export class UserCustomerRelationshipValidationService {
       );
     }
 
+    const existingCustomerIdSet = new Set(existingCustomerIds);
     const inactiveCustomerIds = customers
-      .filter((customer) => customer.status !== CustomerStatus.ACTIVE)
+      .filter(
+        (customer) =>
+          customer.status !== CustomerStatus.ACTIVE &&
+          !existingCustomerIdSet.has(customer.id),
+      )
       .map((customer) => customer.id);
 
     if (inactiveCustomerIds.length > 0) {

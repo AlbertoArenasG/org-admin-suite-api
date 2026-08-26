@@ -32,7 +32,7 @@ import {
 import {
   AuthorizationService,
   SyncUserContactService,
-  UserCustomerCompanyNamesResolver,
+  UserCustomerCompanyNamesResolverService,
   UserCustomerRelationshipValidationService,
 } from '@application/services';
 
@@ -52,7 +52,7 @@ export class UpdateUserUseCase {
     private readonly authorizationService: AuthorizationService,
     private readonly syncUserContactService: SyncUserContactService,
     private readonly relationshipValidationService: UserCustomerRelationshipValidationService,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolver,
+    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {

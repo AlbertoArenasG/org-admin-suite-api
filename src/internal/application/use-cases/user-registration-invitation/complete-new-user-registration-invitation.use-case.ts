@@ -41,7 +41,7 @@ import {
 import { UserResultMapper } from '@application/mappers';
 import {
   SyncUserContactService,
-  UserCustomerCompanyNamesResolver,
+  UserCustomerCompanyNamesResolverService,
   UserRegistrationInvitationTokenService,
 } from '@application/services';
 
@@ -62,7 +62,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly tokenService: UserRegistrationInvitationTokenService,
     private readonly syncUserContactService: SyncUserContactService,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolver,
+    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
   ) {}
 
   async execute(

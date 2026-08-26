@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { CustomerStatus } from '@domain/entities';
 import {
   ICustomerReadRepository,
   ICustomerReadRepositoryToken,
@@ -13,7 +14,7 @@ export interface UserCompanyNamesResolution {
 }
 
 @Injectable()
-export class UserCustomerCompanyNamesResolver {
+export class UserCustomerCompanyNamesResolverService {
   constructor(
     @Inject(IUserCustomerRelationshipReadRepositoryToken)
     private readonly relationshipReadRepository: IUserCustomerRelationshipReadRepository,
@@ -36,7 +37,9 @@ export class UserCustomerCompanyNamesResolver {
     const { data: customers } =
       await this.customerReadRepository.findByIds(customerIds);
     const companyNameByCustomerId = new Map(
-      customers.map((customer) => [customer.id, customer.companyName]),
+      customers
+        .filter((customer) => customer.status !== CustomerStatus.DELETED)
+        .map((customer) => [customer.id, customer.companyName]),
     );
     const customerIdsByUserId = new Map<string, string[]>();
 

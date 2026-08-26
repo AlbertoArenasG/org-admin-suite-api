@@ -24,7 +24,7 @@ import { CustomerFiscalProfileMapper } from '@application/mappers';
 import { buildFilesMetadataForProfile } from '@application/utils';
 import { CustomerStatus } from '@domain/entities';
 import { AuditUserFetcherService } from '@application/services';
-import { CustomerContactCompanyNamesSynchronizer } from '@application/services/user-customer-relationship';
+import { CustomerContactCompanyNamesSynchronizerService } from '@application/services/user-customer-relationship';
 import {
   ITransactionalExecutor,
   ITransactionalExecutorToken,
@@ -44,7 +44,7 @@ export class UpdateCustomerUseCase {
     @Inject(ITransactionalExecutorToken)
     private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly auditUserFetcher: AuditUserFetcherService,
-    private readonly customerContactSynchronizer: CustomerContactCompanyNamesSynchronizer,
+    private readonly customerContactSynchronizer: CustomerContactCompanyNamesSynchronizerService,
   ) {}
 
   async execute(

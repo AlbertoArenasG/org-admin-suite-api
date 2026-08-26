@@ -7,7 +7,7 @@ import {
 import { UserCompanyNamesResolution } from './user-customer-company-names-resolver.service';
 
 @Injectable()
-export class UserContactCompanyNamesSynchronizer {
+export class UserContactCompanyNamesSynchronizerService {
   constructor(
     @Inject(IContactWriteRepositoryToken)
     private readonly contactWriteRepository: IContactWriteRepository,

@@ -41,7 +41,10 @@ Implementation.
 - Se cerro formalmente Technical design y se aprobo el breakdown de implementacion.
 - Se implemento `StateConflictException` con codigos localizados ES/EN y mapeo global a `409`.
 - Se extendieron puertos y repositorios Mongoose con operaciones relacionales puntuales y consultas dedicadas.
+- Se implementaron `CustomerContextValidationService` y `UserCustomerRelationshipManagerService` para centralizar reglas contextuales, transacciones y sincronizacion de Contactos.
+- Se normalizaron los nombres de los servicios de relaciones usuario-cliente y se excluyen Clientes eliminados de `company_names`.
+- Se preservan relaciones existentes con Clientes no activos durante el reemplazo administrativo, sin permitir nuevas relaciones no activas.
 
 ## Next
 
-- Implementar servicios compartidos de la Phase 3: Fundaciones.
+- Refactorizar los casos de uso existentes para delegar la sustitucion de relaciones a `UserCustomerRelationshipManagerService`.

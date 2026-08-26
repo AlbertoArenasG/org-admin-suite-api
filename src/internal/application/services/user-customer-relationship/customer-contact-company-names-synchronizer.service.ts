@@ -4,16 +4,16 @@ import {
   IUserCustomerRelationshipReadRepository,
   IUserCustomerRelationshipReadRepositoryToken,
 } from '@domain/ports/repositories';
-import { UserCustomerCompanyNamesResolver } from './user-customer-company-names-resolver.service';
-import { UserContactCompanyNamesSynchronizer } from './user-contact-company-names-synchronizer.service';
+import { UserCustomerCompanyNamesResolverService } from './user-customer-company-names-resolver.service';
+import { UserContactCompanyNamesSynchronizerService } from './user-contact-company-names-synchronizer.service';
 
 @Injectable()
-export class CustomerContactCompanyNamesSynchronizer {
+export class CustomerContactCompanyNamesSynchronizerService {
   constructor(
     @Inject(IUserCustomerRelationshipReadRepositoryToken)
     private readonly relationshipReadRepository: IUserCustomerRelationshipReadRepository,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolver,
-    private readonly userContactSynchronizer: UserContactCompanyNamesSynchronizer,
+    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
+    private readonly userContactSynchronizer: UserContactCompanyNamesSynchronizerService,
   ) {}
 
   async synchronizeByCustomerId(customerId: string): Promise<void> {
