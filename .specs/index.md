@@ -1,6 +1,6 @@
 # Specs Index
 
-- [user-customer-relationship](./2026/2026-08/2026-08-25_1730_user-customer-relationship/00-definition.md) - In progress
+- [user-customer-relationship](./2026/2026-08/2026-08-25_1730_user-customer-relationship/00-definition.md) - Completed
 - [user-registration-invitations-management](./2026/2026-08/2026-08-24_1400_user-registration-invitations-management/00-definition.md) - Completed
 - [internal-asset-materializations-refresh](./2026/2026-08/2026-08-22_1536_internal-asset-materializations-refresh/00-definition.md) - Completed
 - [authorization-auxiliary-capabilities](./2026/2026-08/2026-08-19_1200_authorization-auxiliary-capabilities/00-definition.md) - Completed

@@ -129,10 +129,10 @@
 - [x] Actualizar Postman, documentación de API y handoff para frontend.
       Status: completed
 
-- [ ] Ejecutar verificaciones estáticas y documentar escenarios manuales.
-      Status: pending
+- [x] Ejecutar verificaciones estáticas y documentar escenarios manuales.
+      Status: completed
 
 ## Phase 4. Validation And Closure
 
-- [ ] Ejecutar migración y la validación manual acordada, luego cerrar la spec.
-      Status: pending
+- [x] Ejecutar migración y la validación manual acordada, luego cerrar la spec.
+      Status: completed

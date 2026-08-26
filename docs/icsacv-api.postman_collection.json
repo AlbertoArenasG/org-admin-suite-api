@@ -398,7 +398,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"success\": true,\n    \"success_message\": \"La solicitud se ha procesado correctamente\",\n    \"status_code\": 200,\n    \"data\": {\n        \"access_token\": \"<JWT>\",\n        \"user\": {\n            \"id\": \"USR_STAFF_EXAMPLE\",\n            \"name\": \"Staff\",\n            \"lastname\": \"Example\",\n            \"email\": \"icsacv-testing@yopmail.com\",\n            \"system_role\": \"USER\",\n            \"role_id\": \"STAFF_LEGACY\",\n            \"status\": \"ACTIVE\",\n            \"cell_phone\": {\n                \"country_code\": \"+52\",\n                \"number\": \"5512345678\"\n            }\n        }\n    }\n}"
+              "body": "{\n    \"success\": true,\n    \"success_message\": \"La solicitud se ha procesado correctamente\",\n    \"status_code\": 200,\n    \"data\": {\n        \"access_token\": \"<JWT>\",\n        \"user\": {\n            \"id\": \"USR_USER_EXAMPLE\",\n            \"name\": \"Usuario\",\n            \"lastname\": \"Ejemplo\",\n            \"email\": \"usuario@example.com\",\n            \"system_role\": \"USER\",\n            \"role_id\": \"CUSTOM_USER_ROLE_ID\",\n            \"status\": \"ACTIVE\",\n            \"cell_phone\": {\n                \"country_code\": \"+52\",\n                \"number\": \"5512345678\"\n            }\n        }\n    }\n}"
             }
           ]
         },
@@ -1309,7 +1309,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n      \"{{CUSTOMER_ID}}\"\n    ],\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
+              "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"customer_ids\": [\n      \"{{CUSTOMER_ID}}\"\n    ],\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1333,7 +1333,7 @@
                 }
               ]
             },
-            "description": "Generated from cURL: curl -X PATCH \"{{HOST}}/v1/users/{{USER_ID}}\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"status_id\": \"ACTIVE\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }'\n"
+            "description": "Generated from cURL: curl -X PATCH \"{{HOST}}/v1/users/{{USER_ID}}\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"status_id\": \"ACTIVE\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }'\n"
           },
           "response": []
         },
@@ -1387,7 +1387,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
+                  "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1684,7 +1684,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"success\": true,\n    \"success_message\": \"La solicitud se ha procesado correctamente\",\n    \"status_code\": 200,\n    \"data\": [\n        {\n            \"role_id\": \"ADMIN_DEFAULT\",\n            \"role_code\": \"ADMIN_DEFAULT\",\n            \"role_name\": \"Administrador\",\n            \"role_scope\": \"ADMIN\",\n            \"is_system\": true,\n            \"is_default\": true\n        },\n        {\n            \"role_id\": \"STAFF_LEGACY\",\n            \"role_code\": \"STAFF_LEGACY\",\n            \"role_name\": \"Staff Legacy\",\n            \"role_scope\": \"USER\",\n            \"is_system\": false,\n            \"is_default\": false\n        }\n    ]\n}"
+              "body": "{\n    \"success\": true,\n    \"success_message\": \"La solicitud se ha procesado correctamente\",\n    \"status_code\": 200,\n    \"data\": [\n        {\n            \"role_id\": \"ADMIN_DEFAULT\",\n            \"role_code\": \"ADMIN_DEFAULT\",\n            \"role_name\": \"Administrador\",\n            \"role_scope\": \"ADMIN\",\n            \"is_system\": true,\n            \"is_default\": true\n        },\n        {\n            \"role_id\": \"CUSTOM_USER_ROLE_ID\",\n            \"role_code\": \"CUSTOM_USER_ROLE_ID\",\n            \"role_name\": \"Rol operativo\",\n            \"role_scope\": \"USER\",\n            \"is_system\": false,\n            \"is_default\": false\n        }\n    ]\n}"
             }
           ]
         }
@@ -1714,7 +1714,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"\",\n    \"lastname\": \"\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
+              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"\",\n    \"lastname\": \"\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1731,7 +1731,7 @@
                 "user-registration-invitations"
               ]
             },
-            "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/user-registration-invitations \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer <ACCESS_TOKEN>\" \\\n  -d '{\n    \"email\": \"invitee@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"name\": \"Invitee\",\n    \"lastname\": \"Example\"\n  }'\n"
+            "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/user-registration-invitations \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer <ACCESS_TOKEN>\" \\\n  -d '{\n    \"email\": \"invitee@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"name\": \"Invitee\",\n    \"lastname\": \"Example\"\n  }'\n"
           },
           "response": [
             {
@@ -1755,7 +1755,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"Dave\",\n    \"lastname\": \"Gahan\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
+              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"Dave\",\n    \"lastname\": \"Gahan\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2301,7 +2301,7 @@
               "variable": [
                 {
                   "key": "ROLE_ID",
-                  "value": "STAFF_LEGACY"
+                  "value": "{{USER_ROLE_ID}}"
                 }
               ]
             }
@@ -2344,7 +2344,7 @@
               "variable": [
                 {
                   "key": "ROLE_ID",
-                  "value": "STAFF_LEGACY"
+                  "value": "{{USER_ROLE_ID}}"
                 }
               ]
             }
@@ -2388,7 +2388,7 @@
               "variable": [
                 {
                   "key": "ROLE_ID",
-                  "value": "STAFF_LEGACY"
+                  "value": "{{USER_ROLE_ID}}"
                 }
               ]
             }

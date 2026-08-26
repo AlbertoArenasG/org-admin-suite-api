@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 3: backend implementation in progress.
+Completed.
 
 ## Completed
 
@@ -57,7 +57,11 @@ Phase 3: backend implementation in progress.
 - Updated Postman requests, authorization documentation and frontend handoffs for the user-customer relationship contracts and coordinated contact migration.
 - Defined and implemented a reusable active-customer options lookup, protected by backend-derived auxiliary capabilities for users and application invitations.
 - Extended the existing role seed to reconcile derived capabilities for default and custom roles without modifying administrative timestamps or audit fields.
+- Verified static checks with `npm run build`, ESLint without autofix and `git diff --check`.
+- Confirmed the contact migration integrity checks completed successfully.
+- The user confirmed manual execution of the targeted roles seed and Postman validation of the approved contracts.
+- Closed the spec formally.
 
 ## Next
 
-- Run static verification and document the manual validation scenarios, including customer options and derived-capability reconciliation.
+- None.

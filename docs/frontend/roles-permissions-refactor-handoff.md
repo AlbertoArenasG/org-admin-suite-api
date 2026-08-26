@@ -267,7 +267,7 @@ Request vigente:
     "number": "5512345678"
   },
   "system_role": "USER",
-  "role_id": "STAFF_LEGACY",
+  "role_id": "CUSTOM_USER_ROLE_ID",
   "customer_ids": ["CUSTOMER_ID"]
 }
 ```
@@ -291,7 +291,7 @@ Response vigente:
     "status": "PENDING",
     "email": "ana@example.com",
     "system_role": "USER",
-    "role_id": "STAFF_LEGACY",
+    "role_id": "CUSTOM_USER_ROLE_ID",
     "invited_by_user_id": "USR_999",
     "user_data": {
       "name": "Ana",
@@ -416,8 +416,8 @@ Response vigente por item:
   "lastname": "Lopez",
   "email": "ana@example.com",
   "system_role": "USER",
-  "role_id": "STAFF_LEGACY",
-  "role_name": "Staff Legacy",
+  "role_id": "CUSTOM_USER_ROLE_ID",
+  "role_name": "Rol operativo",
   "status": "ACTIVE",
   "status_name": "Activo",
   "cell_phone": {
@@ -809,9 +809,9 @@ Response vigente:
       "is_default": true
     },
     {
-      "role_id": "STAFF_LEGACY",
-      "role_code": "STAFF_LEGACY",
-      "role_name": "Staff Legacy",
+      "role_id": "CUSTOM_USER_ROLE_ID",
+      "role_code": "CUSTOM_USER_ROLE_ID",
+      "role_name": "Rol operativo",
       "system_role": "USER",
       "role_scope": "USER",
       "is_system": false,

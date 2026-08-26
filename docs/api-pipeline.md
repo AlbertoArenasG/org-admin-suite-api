@@ -184,7 +184,7 @@ Regla práctica:
 - el guard resuelve si el actor autenticado puede ejecutar la acción
 - el use case solo conserva validaciones defensivas sensibles cuando la regla no pertenece puramente al HTTP layer
 
-Forma objetivo:
+Para una operación funcional directa, la forma objetivo es:
 
 ```ts
 @Get()
@@ -192,6 +192,17 @@ Forma objetivo:
 @RequirePermission('CUSTOMERS', 'READ')
 async findAll() {}
 ```
+
+Para un lookup reutilizable entre módulos, el controller declara una capability auxiliar; el permiso directo del módulo propietario no sustituye esta frontera:
+
+```ts
+@Get('options')
+@UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+@RequireAuxiliaryCapability('CUSTOMERS', 'READ_OPTIONS')
+async findOptions() {}
+```
+
+Las capabilities auxiliares se derivan y persisten exclusivamente en backend a partir de los permisos directos del rol. No se exponen ni se administran desde frontend. Consultar [auxiliary-capabilities-mapping.md](/Users/alberto/projects/icsacv/org-admin-suite-api/docs/authorization/auxiliary-capabilities-mapping.md:1) para el catálogo y las derivaciones vigentes.
 
 Antipatrón a evitar:
 
