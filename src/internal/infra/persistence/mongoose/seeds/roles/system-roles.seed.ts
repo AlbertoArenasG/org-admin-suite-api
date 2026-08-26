@@ -20,6 +20,16 @@ interface RoleAuxiliaryCapabilitySeedItem {
   capability: string;
 }
 
+interface PersistedRolePermission {
+  module: string;
+  operation: string;
+}
+
+interface PersistedRoleAuxiliaryCapability {
+  module: string;
+  capability: string;
+}
+
 interface SystemRoleSeedItem {
   name: string;
   code: string;
@@ -100,6 +110,24 @@ function hasSameAuxiliaryCapabilities(
   return leftKeys.every((key, index) => key === rightKeys[index]);
 }
 
+function toPersistedPermissions(
+  permissions: PersistedRolePermission[] | null | undefined,
+): RolePermissionSeedItem[] {
+  return (permissions ?? []).map((permission) => ({
+    module: permission.module,
+    operation: permission.operation,
+  }));
+}
+
+function toPersistedAuxiliaryCapabilities(
+  capabilities: PersistedRoleAuxiliaryCapability[] | null | undefined,
+): RoleAuxiliaryCapabilitySeedItem[] {
+  return (capabilities ?? []).map((capability) => ({
+    module: capability.module,
+    capability: capability.capability,
+  }));
+}
+
 export const systemRolesSeed: MongooseSeedDefinition = {
   name: 'system-roles',
   async run(context: MongooseSeedContext): Promise<SeedReportItem> {
@@ -136,55 +164,39 @@ export const systemRolesSeed: MongooseSeedDefinition = {
         continue;
       }
 
-      let shouldUpdate = false;
+      const updates: Record<string, unknown> = {};
 
       if (existing.name !== role.name) {
-        existing.name = role.name;
-        shouldUpdate = true;
+        updates.name = role.name;
       }
 
       if (existing.scope !== role.scope) {
-        existing.scope = role.scope;
-        shouldUpdate = true;
+        updates.scope = role.scope;
       }
 
       if (!existing.is_system) {
-        existing.is_system = true;
-        shouldUpdate = true;
+        updates.is_system = true;
       }
 
       if (!existing.is_immutable) {
-        existing.is_immutable = true;
-        shouldUpdate = true;
+        updates.is_immutable = true;
       }
 
       if (!existing.is_default) {
-        existing.is_default = true;
-        shouldUpdate = true;
+        updates.is_default = true;
       }
 
       if (existing.status !== RoleStatus.ACTIVE) {
-        existing.status = RoleStatus.ACTIVE;
-        shouldUpdate = true;
+        updates.status = RoleStatus.ACTIVE;
       }
 
-      const existingPermissions = (existing.permissions ?? []).map(
-        (permission) => ({
-          module: permission.module,
-          operation: permission.operation,
-        }),
+      const existingPermissions = toPersistedPermissions(existing.permissions);
+      const existingAuxiliaryCapabilities = toPersistedAuxiliaryCapabilities(
+        existing.auxiliary_capabilities,
       );
 
-      const existingAuxiliaryCapabilities = (
-        existing.auxiliary_capabilities ?? []
-      ).map((capability) => ({
-        module: capability.module,
-        capability: capability.capability,
-      }));
-
       if (!hasSamePermissions(existingPermissions, role.permissions)) {
-        existing.permissions = role.permissions;
-        shouldUpdate = true;
+        updates.permissions = role.permissions;
       }
 
       if (
@@ -193,18 +205,64 @@ export const systemRolesSeed: MongooseSeedDefinition = {
           role.auxiliaryCapabilities,
         )
       ) {
-        existing.auxiliary_capabilities = role.auxiliaryCapabilities;
-        shouldUpdate = true;
+        updates.auxiliary_capabilities = role.auxiliaryCapabilities;
       }
 
-      if (shouldUpdate) {
-        await existing.save();
+      if (Object.keys(updates).length > 0) {
+        await roleModel.collection.updateOne(
+          { _id: existing._id },
+          { $set: updates },
+        );
         report.updated += 1;
         continue;
       }
 
       report.unchanged += 1;
     }
+
+    const customRoles = await roleModel
+      .find({ is_system: false })
+      .select({ _id: 1, permissions: 1, auxiliary_capabilities: 1 })
+      .lean()
+      .exec();
+
+    let customRolesUpdated = 0;
+    let customRolesUnchanged = 0;
+    const bulkUpdates = customRoles.flatMap((role) => {
+      const permissions = toPersistedPermissions(role.permissions);
+      const expectedCapabilities =
+        deriveAuxiliaryCapabilitiesFromPermissions(permissions);
+      const currentCapabilities = toPersistedAuxiliaryCapabilities(
+        role.auxiliary_capabilities,
+      );
+
+      if (
+        hasSameAuxiliaryCapabilities(currentCapabilities, expectedCapabilities)
+      ) {
+        customRolesUnchanged += 1;
+        return [];
+      }
+
+      customRolesUpdated += 1;
+      return [
+        {
+          updateOne: {
+            filter: { _id: role._id },
+            update: { $set: { auxiliary_capabilities: expectedCapabilities } },
+          },
+        },
+      ];
+    });
+
+    if (bulkUpdates.length > 0) {
+      await roleModel.collection.bulkWrite(bulkUpdates);
+    }
+
+    report.updated += customRolesUpdated;
+    report.unchanged += customRolesUnchanged;
+    context.logger.info(
+      `system-roles: custom_roles=${customRoles.length} updated=${customRolesUpdated} unchanged=${customRolesUnchanged}`,
+    );
 
     return report;
   },

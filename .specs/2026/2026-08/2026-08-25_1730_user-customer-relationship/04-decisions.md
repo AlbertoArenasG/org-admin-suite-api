@@ -203,4 +203,4 @@ Se agregará `GET /v1/customers/options`, sin paginación, que devuelve únicame
 
 Este endpoint se protegerá con `JwtAuthGuard` y `AuxiliaryCapabilitiesGuard` mediante la capability `{ module: CUSTOMERS, capability: READ_OPTIONS }`. Backend la derivará para `USER_REGISTRATION_INVITATIONS` y `USERS`; frontend no verá ni administrará esa capability.
 
-Los roles existentes deben recalcular sus capabilities derivadas antes de consumir el endpoint. El seed de roles del sistema actualiza `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`; los roles custom conservarán el patrón vigente y obtendrán la capability cuando se guarden nuevamente mediante el flujo administrativo de roles.
+Los roles existentes deben recalcular sus capabilities derivadas antes de consumir el endpoint. El seed existente de roles reconciliará `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y todo rol persistido con `is_system: false`, sin depender de nombres particulares. La reconciliación actualiza únicamente `auxiliary_capabilities` cuando difiere de la derivación vigente y no modifica `updatedAt` ni `updatedBy` de ningún rol.

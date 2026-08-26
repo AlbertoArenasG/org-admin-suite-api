@@ -123,6 +123,9 @@
 - [x] Exponer el catálogo reutilizable de clientes activos y derivar su capability auxiliar.
       Status: completed
 
+- [x] Reconciliar capabilities auxiliares de roles default y custom sin alterar su auditoría.
+      Status: completed
+
 - [x] Actualizar Postman, documentación de API y handoff para frontend.
       Status: completed
 

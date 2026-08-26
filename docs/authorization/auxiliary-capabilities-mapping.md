@@ -43,7 +43,7 @@ Reglas:
 - backend deriva `auxiliaryCapabilities[]` a partir de los módulos directos presentes en `permissions[]`
 - al crear o actualizar un rol, backend reemplaza por completo la lista derivada; no la mezcla con valores previos ni acepta valores enviados por cliente
 - la derivación se deduplica y valida contra el catálogo maestro al iniciar la aplicación
-- el seed de roles del sistema sincroniza las capabilities derivadas de `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`; no altera roles custom ni `STAFF_LEGACY`
+- el seed de roles sincroniza las capabilities derivadas de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y todo rol custom persistido; para reconciliaciones técnicas no modifica `updatedAt` ni `updatedBy`
 
 ## Evaluación En Runtime
 

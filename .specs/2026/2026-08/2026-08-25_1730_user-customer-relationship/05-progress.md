@@ -56,6 +56,7 @@ Phase 3: backend implementation in progress.
 - Added `GET /v1/user-registration-invitations/:invitationId` for administrative application-invitation details with localized selected-customer summaries.
 - Updated Postman requests, authorization documentation and frontend handoffs for the user-customer relationship contracts and coordinated contact migration.
 - Defined and implemented a reusable active-customer options lookup, protected by backend-derived auxiliary capabilities for users and application invitations.
+- Extended the existing role seed to reconcile derived capabilities for default and custom roles without modifying administrative timestamps or audit fields.
 
 ## Next
 
