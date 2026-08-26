@@ -111,8 +111,8 @@
 - [x] Reemplazar el contrato de contactos por `company_names`, incluidos búsqueda e índices.
       Status: completed
 
-- [ ] Implementar migración y actualizar el seed de contactos derivados de usuarios.
-      Status: pending
+- [x] Implementar migración y actualizar el seed de contactos derivados de usuarios.
+      Status: completed
 
 - [ ] Implementar sincronización atómica por cambios de nombre de cliente y proteger campos derivados de contactos.
       Status: pending

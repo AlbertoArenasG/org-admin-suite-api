@@ -50,7 +50,8 @@ Phase 3: backend implementation in progress.
 - Added optional paired user-list filters for customer relationship presence or absence.
 - Added localized customer summaries exclusively to the administrative user detail response.
 - Replaced the contact company-name contract with the `company_names` collection and updated its search/index behavior.
+- Added the controlled `company_name` to `company_names` migration, including dry-run/apply commands, index replacement and post-apply integrity checks.
 
 ## Next
 
-- Implement the contact migration, customer-name propagation and derived-field protection.
+- Implement customer-name propagation and protection for derived contact fields.
