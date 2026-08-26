@@ -59,6 +59,12 @@
   "INTERNAL_JOB": {
     "LOCK_ACTIVE": "The internal job is already running"
   },
+  "STATE_CONFLICT": {
+    "USER_CUSTOMER_RELATIONSHIP": {
+      "ALREADY_EXISTS": "The user is already related to this customer",
+      "NOT_FOUND": "The user is not related to this customer"
+    }
+  },
   "ENTITY_NOT_FOUND": {
     "USER": "User not found",
     "USER_REGISTRATION_INVITATION": "Invitation not found or already used",

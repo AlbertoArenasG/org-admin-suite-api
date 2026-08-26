@@ -11,6 +11,7 @@ import {
   InvalidValueExceptionCode,
   EntityNotFoundException,
   InternalJobException,
+  StateConflictException,
   UserRegistrationInvitationException,
 } from '@domain/exceptions';
 import { ErrorMessageService } from '@infra/i18n/services';
@@ -199,6 +200,10 @@ export class GlobalExceptionMapper {
     }
 
     if (domainException instanceof InternalJobException) {
+      return HttpStatus.CONFLICT;
+    }
+
+    if (domainException instanceof StateConflictException) {
       return HttpStatus.CONFLICT;
     }
 

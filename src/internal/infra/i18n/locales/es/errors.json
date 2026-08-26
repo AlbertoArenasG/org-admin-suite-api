@@ -59,6 +59,12 @@
   "INTERNAL_JOB": {
     "LOCK_ACTIVE": "El proceso técnico ya se encuentra en ejecución"
   },
+  "STATE_CONFLICT": {
+    "USER_CUSTOMER_RELATIONSHIP": {
+      "ALREADY_EXISTS": "El usuario ya está relacionado con este cliente",
+      "NOT_FOUND": "El usuario no está relacionado con este cliente"
+    }
+  },
   "ENTITY_NOT_FOUND": {
     "USER": "No se encontró el usuario",
     "USER_REGISTRATION_INVITATION": "No se encontró la invitación o ya fue utilizada",
