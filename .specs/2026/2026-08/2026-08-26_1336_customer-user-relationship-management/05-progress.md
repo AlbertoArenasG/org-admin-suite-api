@@ -40,7 +40,8 @@ Implementation.
 - Se aprobo validacion manual sin pruebas automatizadas.
 - Se cerro formalmente Technical design y se aprobo el breakdown de implementacion.
 - Se implemento `StateConflictException` con codigos localizados ES/EN y mapeo global a `409`.
+- Se extendieron puertos y repositorios Mongoose con operaciones relacionales puntuales y consultas dedicadas.
 
 ## Next
 
-- Implementar puertos y consultas dedicadas de la Phase 3: Fundaciones.
+- Implementar servicios compartidos de la Phase 3: Fundaciones.

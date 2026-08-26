@@ -15,6 +15,20 @@ export class MongooseUserCustomerRelationshipReadRepositoryImpl
     return this.findMany({ user_id: userId });
   }
 
+  async findByUserIdAndCustomerId(
+    userId: string,
+    customerId: string,
+  ): Promise<{ data: UserCustomerRelationship | null }> {
+    const document = await this.relationshipModel
+      .findOne({ user_id: userId, customer_id: customerId })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
+
+    return {
+      data: document ? this.toDomain(document) : null,
+    };
+  }
+
   async findByUserIds(
     userIds: string[],
   ): Promise<{ data: UserCustomerRelationship[] }> {

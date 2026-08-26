@@ -25,10 +25,30 @@ export interface FindUsersResult {
   total: number;
 }
 
+export interface FindUsersRelatedToCustomerParams {
+  customerId: string;
+  page: number;
+  perPage: number;
+  sorts: Array<{ field: UserSortField; direction: SortDirection }>;
+  search: string | null;
+}
+
+export interface FindUnassignedUsersParams {
+  page: number;
+  perPage: number;
+  sorts: Array<{ field: UserSortField; direction: SortDirection }>;
+  search: string | null;
+}
+
 export interface IUserReadRepository {
   findByEmail(email: string): Promise<{ data: User | null }>;
   findById(userId: string): Promise<{ data: User | null }>;
   findAll(params: FindUsersParams): Promise<FindUsersResult>;
+  findRelatedToCustomer(
+    params: FindUsersRelatedToCustomerParams,
+  ): Promise<FindUsersResult>;
+  findUnassigned(params: FindUnassignedUsersParams): Promise<FindUsersResult>;
+  findUnassignedActiveUsers(): Promise<{ data: User[] }>;
   countByRoleId(roleId: string): Promise<number>;
 }
 
