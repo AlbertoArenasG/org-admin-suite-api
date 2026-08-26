@@ -45,7 +45,8 @@ Implementation.
 - Se normalizaron los nombres de los servicios de relaciones usuario-cliente y se excluyen Clientes eliminados de `company_names`.
 - Se preservan relaciones existentes con Clientes no activos durante el reemplazo administrativo, sin permitir nuevas relaciones no activas.
 - `UpdateUserUseCase` y el consumo de invitaciones reutilizan el servicio centralizado para sustituir relaciones y sincronizar Contactos.
+- Se implementaron los cuatro casos de uso contextuales de Clientes para consultar, asociar y desasociar Usuarios, con DTOs de aplicacion y lookup compacto reutilizable.
 
 ## Next
 
-- Implementar los casos de uso contextuales de Clientes para listar, asociar y desasociar Usuarios.
+- Implementar adapters CQRS, DTOs HTTP, presenters localizados y el controller contextual de Clientes.

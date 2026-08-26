@@ -4,6 +4,7 @@ import {
   CreateMasterUserResultDto,
   CreateUserResultDto,
   UserCustomerViewDto,
+  UserLookupDto,
   UserViewDto,
 } from '@application/dto';
 
@@ -72,5 +73,15 @@ export class UserResultMapper {
     roleName: string | null = null,
   ): CreateUserResultDto {
     return this.toUserViewDto(user, roleName);
+  }
+
+  static toUserLookupDto(user: User): UserLookupDto {
+    return {
+      id: user.id,
+      name: user.name,
+      lastname: user.lastname,
+      fullName: user.fullName,
+      email: user.email,
+    };
   }
 }

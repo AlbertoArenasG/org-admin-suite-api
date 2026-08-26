@@ -4,3 +4,4 @@ export * from './user-contact-company-names-synchronizer.service';
 export * from './customer-contact-company-names-synchronizer.service';
 export * from './customer-context-validation.service';
 export * from './user-customer-relationship-manager.service';
+export * from './user-role-name-resolver.service';
