@@ -81,7 +81,10 @@ export class MongooseContactReadRepositoryImpl
       });
     }
 
-    constraints.push(this.buildUserScopeCriteria(masterAdminUserIds, type));
+    constraints.push(
+      this.buildMasterAdminExclusionCriteria(masterAdminUserIds),
+    );
+    constraints.push(this.buildTypeCriteria(type));
 
     if (status) {
       filter.status = status;
@@ -136,7 +139,7 @@ export class MongooseContactReadRepositoryImpl
             },
           ],
         },
-        this.buildUserScopeCriteria(masterAdminUserIds),
+        this.buildMasterAdminExclusionCriteria(masterAdminUserIds),
       ],
     };
 
@@ -153,23 +156,26 @@ export class MongooseContactReadRepositoryImpl
     };
   }
 
-  private buildUserScopeCriteria(
-    masterAdminUserIds: string[],
-    type?: ContactTypeFilter,
-  ): Record<string, unknown> {
+  private buildTypeCriteria(type?: ContactTypeFilter): Record<string, unknown> {
+    const internalContactCriteria = {
+      user_id: { $ne: null },
+      company_names: 'ICSACV',
+    };
+
     if (type === 'INTERNAL') {
-      return {
-        user_id: {
-          $ne: null,
-          $nin: masterAdminUserIds,
-        },
-      };
+      return internalContactCriteria;
     }
 
     if (type === 'EXTERNAL') {
-      return { user_id: null };
+      return { $nor: [internalContactCriteria] };
     }
 
+    return {};
+  }
+
+  private buildMasterAdminExclusionCriteria(
+    masterAdminUserIds: string[],
+  ): Record<string, unknown> {
     return {
       $or: [{ user_id: null }, { user_id: { $nin: masterAdminUserIds } }],
     };

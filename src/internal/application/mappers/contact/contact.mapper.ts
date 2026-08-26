@@ -8,6 +8,8 @@ import { Contact } from '@domain/entities';
 import { ContactTypeFilter } from '@domain/ports/repositories';
 
 export class ContactMapper {
+  private static readonly INTERNAL_COMPANY_NAME = 'ICSACV';
+
   static toListItemDto(contact: Contact): ContactListItemDto {
     return {
       id: contact.id,
@@ -62,6 +64,9 @@ export class ContactMapper {
   }
 
   static resolveType(contact: Contact): ContactTypeFilter {
-    return contact.userId ? 'INTERNAL' : 'EXTERNAL';
+    return contact.userId &&
+      contact.companyNames.includes(this.INTERNAL_COMPANY_NAME)
+      ? 'INTERNAL'
+      : 'EXTERNAL';
   }
 }
