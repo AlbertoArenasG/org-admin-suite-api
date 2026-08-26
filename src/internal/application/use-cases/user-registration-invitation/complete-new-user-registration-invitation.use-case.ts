@@ -10,8 +10,6 @@ import {
   IUserRegistrationInvitationWriteRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
-  IUserCustomerRelationshipWriteRepository,
-  IUserCustomerRelationshipWriteRepositoryToken,
   UserRegistrationInvitationRecord,
   UserRegistrationInvitationScope,
   UserRegistrationInvitationStatus,
@@ -30,7 +28,7 @@ import {
   InvalidValueException,
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
-import { User, UserCustomerRelationship, UserStatus } from '@domain/entities';
+import { User, UserStatus } from '@domain/entities';
 import { UserPasswordPolicy } from '@domain/policies';
 import {
   CompleteNewUserRegistrationInvitationDto,
@@ -41,7 +39,7 @@ import {
 import { UserResultMapper } from '@application/mappers';
 import {
   SyncUserContactService,
-  UserCustomerCompanyNamesResolverService,
+  UserCustomerRelationshipManagerService,
   UserRegistrationInvitationTokenService,
 } from '@application/services';
 
@@ -56,13 +54,11 @@ export class CompleteNewUserRegistrationInvitationUseCase {
     private readonly userReadRepository: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
-    @Inject(IUserCustomerRelationshipWriteRepositoryToken)
-    private readonly relationshipWriteRepository: IUserCustomerRelationshipWriteRepository,
     @Inject(ITransactionalExecutorToken)
     private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly tokenService: UserRegistrationInvitationTokenService,
     private readonly syncUserContactService: SyncUserContactService,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
+    private readonly relationshipManagerService: UserCustomerRelationshipManagerService,
   ) {}
 
   async execute(
@@ -123,24 +119,9 @@ export class CompleteNewUserRegistrationInvitationUseCase {
       createdUser.markAsCreated();
 
       if (invitation.scope === UserRegistrationInvitationScope.APPLICATION) {
-        await this.relationshipWriteRepository.createMany(
-          invitation.customerIds.map(
-            (customerId) =>
-              new UserCustomerRelationship({
-                userId: createdUser.id,
-                customerId,
-              }),
-          ),
-        );
-
-        const [resolution] = await this.companyNamesResolver.resolveForUserIds([
-          createdUser.id,
-        ]);
-        await this.syncUserContactService.syncFromUser(createdUser, {
-          companyNames:
-            resolution.companyNames.length > 0
-              ? resolution.companyNames
-              : ['ICSACV'],
+        await this.relationshipManagerService.replaceForUser({
+          user: createdUser,
+          customerIds: invitation.customerIds,
         });
       } else {
         await this.syncUserContactService.syncFromUser(createdUser);

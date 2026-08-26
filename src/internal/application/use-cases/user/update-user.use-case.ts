@@ -7,8 +7,6 @@ import {
   IUserReadRepositoryToken,
   IUserWriteRepository,
   IUserWriteRepositoryToken,
-  IUserCustomerRelationshipWriteRepository,
-  IUserCustomerRelationshipWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
   ITransactionalExecutor,
@@ -24,16 +22,11 @@ import {
 } from '@domain/exceptions';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
-import {
-  SystemRole,
-  UserCustomerRelationship,
-  UserStatus,
-} from '@domain/entities';
+import { UserStatus } from '@domain/entities';
 import {
   AuthorizationService,
   SyncUserContactService,
-  UserCustomerCompanyNamesResolverService,
-  UserCustomerRelationshipValidationService,
+  UserCustomerRelationshipManagerService,
 } from '@application/services';
 
 @Injectable()
@@ -45,14 +38,11 @@ export class UpdateUserUseCase {
     private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
-    @Inject(IUserCustomerRelationshipWriteRepositoryToken)
-    private readonly relationshipWriteRepository: IUserCustomerRelationshipWriteRepository,
     @Inject(ITransactionalExecutorToken)
     private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly authorizationService: AuthorizationService,
     private readonly syncUserContactService: SyncUserContactService,
-    private readonly relationshipValidationService: UserCustomerRelationshipValidationService,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
+    private readonly relationshipManagerService: UserCustomerRelationshipManagerService,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
@@ -161,24 +151,6 @@ export class UpdateUserUseCase {
       user.updateDetails(details);
     }
 
-    if (
-      payload.customerIds !== undefined &&
-      user.systemRole !== SystemRole.USER
-    ) {
-      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
-        field: 'customer_ids',
-        systemRole: user.systemRole,
-      });
-    }
-
-    const customerIds =
-      payload.customerIds === undefined
-        ? undefined
-        : await this.relationshipValidationService.validateCustomerIds(
-            payload.customerIds,
-            user.systemRole,
-          );
-
     const updated = await this.transactionalExecutor.execute(async () => {
       const { data } = await this.userWriteRepository.update(user);
 
@@ -188,23 +160,10 @@ export class UpdateUserUseCase {
         });
       }
 
-      if (customerIds !== undefined) {
-        await this.relationshipWriteRepository.replaceForUser(
-          data.id,
-          customerIds.map(
-            (customerId) =>
-              new UserCustomerRelationship({
-                userId: data.id,
-                customerId,
-              }),
-          ),
-        );
-
-        const [resolution] = await this.companyNamesResolver.resolveForUserIds([
-          data.id,
-        ]);
-        await this.syncUserContactService.syncFromUser(data, {
-          companyNames: resolution.companyNames,
+      if (payload.customerIds !== undefined) {
+        await this.relationshipManagerService.replaceForUser({
+          user: data,
+          customerIds: payload.customerIds,
         });
       } else {
         await this.syncUserContactService.syncFromUser(data);
