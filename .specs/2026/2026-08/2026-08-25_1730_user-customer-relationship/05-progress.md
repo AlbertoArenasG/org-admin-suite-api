@@ -53,7 +53,8 @@ Phase 3: backend implementation in progress.
 - Added the controlled `company_name` to `company_names` migration, including dry-run/apply commands, index replacement and post-apply integrity checks.
 - Added atomic customer-name propagation through an isolated batch synchronizer for user-linked contacts.
 - Confirmed the existing contact update boundary rejects linked user contacts, protecting their derived company names from direct administrative changes.
+- Added `GET /v1/user-registration-invitations/:invitationId` for administrative application-invitation details with localized selected-customer summaries.
 
 ## Next
 
-- Expose the administrative invitation detail with selected customer summaries.
+- Update Postman, API documentation and the frontend handoff.

@@ -1,5 +1,6 @@
 import {
   ApplicationUserRegistrationInvitationDto,
+  ApplicationInvitationCustomerDto,
   UserRegistrationInvitationDto,
 } from '@application/dto';
 import { UserRegistrationInvitationRecord } from '@domain/ports/repositories';
@@ -29,6 +30,7 @@ export class UserRegistrationInvitationMapper {
   static toApplicationDto(
     record: UserRegistrationInvitationRecord | null,
     roleName: string | null = null,
+    customers?: ApplicationInvitationCustomerDto[],
   ): ApplicationUserRegistrationInvitationDto | null {
     if (!record) return null;
 
@@ -47,6 +49,7 @@ export class UserRegistrationInvitationMapper {
       revokedByUserId: record.revokedByUserId,
       emailDelivery: record.emailDelivery,
       resendCount: record.resendCount,
+      ...(customers === undefined ? {} : { customers }),
     };
   }
 }

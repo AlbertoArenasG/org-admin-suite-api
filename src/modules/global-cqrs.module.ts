@@ -97,6 +97,7 @@ import {
   GetInternalAssetMaintenanceRecordByIdHandler,
   GetInternalAssetMaintenanceRecordCatalogHandler,
   GetApplicationUserRegistrationInvitationsHandler,
+  GetApplicationUserRegistrationInvitationByIdHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -193,6 +194,7 @@ const providers = [
   GetInternalAssetMaintenanceRecordByIdHandler,
   GetInternalAssetMaintenanceRecordCatalogHandler,
   GetApplicationUserRegistrationInvitationsHandler,
+  GetApplicationUserRegistrationInvitationByIdHandler,
 ];
 
 @Global()

@@ -1,4 +1,4 @@
-import { SystemRole } from '@domain/entities';
+import { CustomerStatus, SystemRole } from '@domain/entities';
 import {
   UserRegistrationInvitationScope,
   UserRegistrationInvitationEmailDelivery,
@@ -62,4 +62,11 @@ export interface ApplicationUserRegistrationInvitationDto {
   revokedByUserId: string | null;
   emailDelivery: UserRegistrationInvitationEmailDelivery;
   resendCount: number;
+  customers?: ApplicationInvitationCustomerDto[];
+}
+
+export interface ApplicationInvitationCustomerDto {
+  id: string;
+  companyName: string;
+  status: CustomerStatus;
 }

@@ -117,8 +117,8 @@
 - [x] Implementar sincronización atómica por cambios de nombre de cliente y proteger campos derivados de contactos.
       Status: completed
 
-- [ ] Exponer el detalle administrativo de invitaciones y actualizar DTOs, presenters, CQRS y rutas.
-      Status: pending
+- [x] Exponer el detalle administrativo de invitaciones y actualizar DTOs, presenters, CQRS y rutas.
+      Status: completed
 
 - [ ] Actualizar Postman, documentación de API y handoff para frontend.
       Status: pending

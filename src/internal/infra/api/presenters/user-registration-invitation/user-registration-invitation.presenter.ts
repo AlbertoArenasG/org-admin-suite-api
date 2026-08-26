@@ -84,6 +84,18 @@ export class UserRegistrationInvitationPresenter {
         last_attempt_status: invitation.emailDelivery.lastAttemptStatus,
       },
       resend_count: invitation.resendCount,
+      ...(invitation.customers === undefined
+        ? {}
+        : {
+            customers: invitation.customers.map((customer) => ({
+              customer_id: customer.id,
+              company_name: customer.companyName,
+              status: customer.status,
+              status_name: this.enumNameService.getEnumName(
+                `CUSTOMER.STATUS.${customer.status}`,
+              ),
+            })),
+          }),
     };
   }
 

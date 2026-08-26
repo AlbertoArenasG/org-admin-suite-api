@@ -1,6 +1,7 @@
 export * from './auth/get-my-permissions.query';
 export * from './user-registration-invitation/get-user-registration-invitation.query';
 export * from './user-registration-invitation/get-application-user-registration-invitations.query';
+export * from './user-registration-invitation/get-application-user-registration-invitation-by-id.query';
 export * from './user/get-users.query';
 export * from './user/get-user-by-id.query';
 export * from './user/get-user-roles.query';

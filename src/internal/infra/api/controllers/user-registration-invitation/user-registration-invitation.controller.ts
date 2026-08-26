@@ -22,7 +22,10 @@ import {
   CreateUserRegistrationInvitationRequestDto,
   GetApplicationUserRegistrationInvitationsRequestDto,
 } from '@infra/api/dto';
-import { GetApplicationUserRegistrationInvitationsQuery } from '@infra/cqrs/queries';
+import {
+  GetApplicationUserRegistrationInvitationByIdQuery,
+  GetApplicationUserRegistrationInvitationsQuery,
+} from '@infra/cqrs/queries';
 import { UserRegistrationInvitationPresenter } from '@infra/api/presenters';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
@@ -78,6 +81,23 @@ export class UserRegistrationInvitationController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(query.getPage(), query.getPerPage(), result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get(':invitationId')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('user_registration_invitations', 'READ')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('invitationId') invitationId: string) {
+    const result = await this.queryBus.execute(
+      GetApplicationUserRegistrationInvitationByIdQuery.create(invitationId),
+    );
+    const data = this.presenter.toApplicationManagementResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }
