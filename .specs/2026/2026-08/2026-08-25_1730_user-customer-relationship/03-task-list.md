@@ -120,8 +120,8 @@
 - [x] Exponer el detalle administrativo de invitaciones y actualizar DTOs, presenters, CQRS y rutas.
       Status: completed
 
-- [ ] Actualizar Postman, documentación de API y handoff para frontend.
-      Status: pending
+- [x] Actualizar Postman, documentación de API y handoff para frontend.
+      Status: completed
 
 - [ ] Ejecutar verificaciones estáticas y documentar escenarios manuales.
       Status: pending

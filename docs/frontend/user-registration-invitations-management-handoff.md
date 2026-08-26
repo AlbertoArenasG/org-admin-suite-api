@@ -20,6 +20,7 @@ La fuente de verdad es la API implementada por la spec `user-registration-invita
 | Crear invitación | `USER_REGISTRATION_INVITATIONS/CREATE` |
 | Reenviar | `USER_REGISTRATION_INVITATIONS/RESEND` |
 | Revocar | `USER_REGISTRATION_INVITATIONS/REVOKE` |
+| Ver detalle | `USER_REGISTRATION_INVITATIONS/READ` |
 
 `UPDATE` no participa en esta funcionalidad. Los permisos de reenvío y revocación son delegados: backend permite operar cualquier invitación `APPLICATION` cuando el actor posee la operación.
 
@@ -65,6 +66,31 @@ Respuesta de cada fila:
 ```
 
 No existen token, hash, URL de invitación ni respuesta del proveedor en esta API.
+
+## Detalle
+
+```text
+GET /v1/user-registration-invitations/:invitationId
+```
+
+- Requiere `USER_REGISTRATION_INVITATIONS/READ`.
+- Resuelve exclusivamente invitaciones `APPLICATION`; una invitación `MASTER` responde `404` igual que un ID inexistente.
+- Mantiene el mismo shape administrativo de una fila y agrega `customers` solo en esta respuesta.
+
+```json
+{
+  "customers": [
+    {
+      "customer_id": "...",
+      "company_name": "Cliente Ejemplo",
+      "status": "ACTIVE",
+      "status_name": "Activo"
+    }
+  ]
+}
+```
+
+Las respuestas de creación, listado, reenvío y revocación no incluyen `customers`.
 
 ## Acciones
 

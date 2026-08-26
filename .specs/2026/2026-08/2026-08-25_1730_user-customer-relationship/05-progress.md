@@ -54,7 +54,8 @@ Phase 3: backend implementation in progress.
 - Added atomic customer-name propagation through an isolated batch synchronizer for user-linked contacts.
 - Confirmed the existing contact update boundary rejects linked user contacts, protecting their derived company names from direct administrative changes.
 - Added `GET /v1/user-registration-invitations/:invitationId` for administrative application-invitation details with localized selected-customer summaries.
+- Updated Postman requests, authorization documentation and frontend handoffs for the user-customer relationship contracts and coordinated contact migration.
 
 ## Next
 
-- Update Postman, API documentation and the frontend handoff.
+- Run static verification and document the manual validation scenarios.

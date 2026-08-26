@@ -1247,6 +1247,53 @@
           ]
         },
         {
+          "name": "Filter Users by Customer Relationship",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/users?page=1&limit=10&customer_id={{CUSTOMER_ID}}&has_customer_relationship=true",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "customer_id",
+                  "value": "{{CUSTOMER_ID}}"
+                },
+                {
+                  "key": "has_customer_relationship",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "customer_id y has_customer_relationship deben enviarse juntos. Cambiar a false para usuarios USER no relacionados con el cliente."
+          },
+          "response": []
+        },
+        {
           "name": "Update a User",
           "request": {
             "method": "PATCH",
@@ -1262,7 +1309,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
+              "raw": "{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n      \"{{CUSTOMER_ID}}\"\n    ],\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1667,7 +1714,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"name\": \"\",\n    \"lastname\": \"\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
+              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"\",\n    \"lastname\": \"\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1708,7 +1755,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"name\": \"Dave\",\n    \"lastname\": \"Gahan\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
+              "raw": "{\n    \"email\": \"icsacv-qa@yopmail.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"STAFF_LEGACY\",\n    \"customer_ids\": [\n        \"{{CUSTOMER_ID}}\"\n    ],\n    \"name\": \"Dave\",\n    \"lastname\": \"Gahan\",\n    \"cell_phone\": {\n        \"country_code\": \"+34\",\n        \"number\": \"600123123\"\n    }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1818,6 +1865,42 @@
               ]
             },
             "description": "Lista exclusivamente invitaciones APPLICATION. Admite search, status y orden compuesto por status y created_at."
+          },
+          "response": []
+        },
+        {
+          "name": "Get application invitation detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations",
+                ":INVITATION_ID"
+              ],
+              "variable": [
+                {
+                  "key": "INVITATION_ID",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Detalle administrativo de una invitación APPLICATION, con customers y status_name localizado. Una invitación MASTER responde 404."
           },
           "response": []
         },
@@ -7496,7 +7579,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Externo\",\n  \"company_name\": \"Empresa Ejemplo\",\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
+              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Externo\",\n  \"company_names\": [\n    \"Empresa Ejemplo\"\n  ],\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7572,7 +7655,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Actualizado\",\n  \"company_name\": \"Empresa Ejemplo\",\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [\n    {\n      \"value\": \"+525511112222\"\n    }\n  ],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
+              "raw": "{\n  \"name\": \"Contacto\",\n  \"lastname\": \"Actualizado\",\n  \"company_names\": [\n    \"Empresa Ejemplo\"\n  ],\n  \"emails\": [\n    {\n      \"value\": \"contacto@example.com\"\n    }\n  ],\n  \"phones\": [\n    {\n      \"value\": \"+525511112222\"\n    }\n  ],\n  \"cell_phones\": [\n    {\n      \"value\": \"+525512345678\"\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"

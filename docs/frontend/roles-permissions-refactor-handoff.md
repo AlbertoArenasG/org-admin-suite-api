@@ -204,6 +204,7 @@ Request vigente:
   },
   "system_role": "USER",
   "role_id": "ANALYST_MX",
+  "customer_ids": ["CUSTOMER_ID"],
   "status_id": "ACTIVE"
 }
 ```
@@ -218,6 +219,7 @@ Reglas:
 - el backend valida frontera estructural antes de permitir promoción, degradación o reasignación
 - un `USER` con `USERS/UPDATE` sí puede editar a otro `USER`
 - ningún `USER` puede editar `ADMIN` o `MASTER_ADMIN`
+- `customer_ids` es opcional y solo se acepta para el usuario objetivo `USER`; si se omite conserva relaciones, `[]` las elimina y un arreglo poblado las reemplaza
 
 Response vigente:
 
@@ -265,7 +267,8 @@ Request vigente:
     "number": "5512345678"
   },
   "system_role": "USER",
-  "role_id": "STAFF_LEGACY"
+  "role_id": "STAFF_LEGACY",
+  "customer_ids": ["CUSTOMER_ID"]
 }
 ```
 
@@ -274,6 +277,7 @@ Reglas:
 - `system_role` solo acepta `ADMIN` o `USER`
 - `role_id` es obligatorio solo cuando `system_role = USER`
 - si `system_role = ADMIN`, el backend resuelve la invitación con el rol default de administración
+- `customer_ids` es opcional y solo aplica a `USER`; cada ID debe corresponder a un cliente activo
 
 Response vigente:
 
@@ -401,6 +405,7 @@ Query params soportados:
 - `sort[].direction`
   - `asc`
   - `desc`
+- `customer_id` y `has_customer_relationship=true|false` deben enviarse juntos para filtrar exclusivamente usuarios `USER` por su relación con un cliente
 
 Response vigente por item:
 
@@ -442,7 +447,8 @@ Permiso requerido:
 
 Response vigente:
 
-- mismo shape que `GET /v1/users/me`
+- mismo shape base que `GET /v1/users/me`, más `customers` como lista de `{ customer_id, company_name, status, status_name }`
+- `GET /v1/users/me` no expone `customers`
 
 ## Endpoints Self-Service Del Usuario Autenticado
 

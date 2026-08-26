@@ -444,6 +444,10 @@ Endpoints actuales de backoffice:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: lista exclusivamente invitaciones de scope `APPLICATION`, incluidas las historicas consumidas o revocadas
+- `GET /v1/user-registration-invitations/:invitationId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: detalle administrativo exclusivo de invitaciones `APPLICATION`, con sus clientes seleccionados
 - `POST /v1/user-registration-invitations/:invitationId/resend`
   - operacion: `RESEND`
   - acceso actual: autenticado
