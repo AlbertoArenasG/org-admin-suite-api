@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Implementation.
+Completed.
 
 ## Completed
 
@@ -52,7 +52,8 @@ Implementation.
 - Se alinearon los contratos contextuales: asociacion responde `201 Created` y desasociacion responde `204 No Content`.
 - Se actualizaron la coleccion Postman, el catalogo de permisos y los handoffs de frontend relevantes.
 - Se documentaron escenarios de validacion manual en `08-manual-validation.md`.
+- Se ejecuto y confirmo la validacion manual documentada.
 
 ## Next
 
-- Ejecutar la validacion manual documentada y confirmar resultados para cerrar formalmente la spec.
+- No hay trabajo pendiente.
