@@ -13,7 +13,6 @@ import {
 } from '@src/internal/domain/ports/repositories';
 import { MongooseUserBaseRepository } from './mongoose-user-base.repository';
 import {
-  CustomerDocument,
   UserCustomerRelationshipDocument,
   UserDocument,
 } from '@infra/persistence/mongoose/schemas';
@@ -27,8 +26,6 @@ export class MongooseUserReadRepositoryImpl
   constructor(
     @InjectModel(UserDocument.name) userModel: Model<UserDocument>,
     transactionContext: MongooseTransactionContext,
-    @InjectModel(CustomerDocument.name)
-    private readonly customerModel: Model<CustomerDocument>,
     @InjectModel(UserCustomerRelationshipDocument.name)
     private readonly relationshipModel: Model<UserCustomerRelationshipDocument>,
   ) {
@@ -58,15 +55,7 @@ export class MongooseUserReadRepositoryImpl
   }
 
   async findAll(params: FindUsersParams): Promise<FindUsersResult> {
-    const {
-      page,
-      perPage,
-      actorSystemRole,
-      sorts,
-      search,
-      customerId,
-      hasCustomerRelationship,
-    } = params;
+    const { page, perPage, actorSystemRole, sorts, search } = params;
     const skip = (page - 1) * perPage;
     const roleFilter =
       actorSystemRole === SystemRole.MASTER_ADMIN
@@ -88,17 +77,6 @@ export class MongooseUserReadRepositoryImpl
       ...searchFilter,
     };
     const sortCriteria = this.buildSortCriteria(sorts);
-
-    if (customerId !== null && hasCustomerRelationship !== null) {
-      return this.findAllByCustomerRelationship({
-        filter,
-        sortCriteria,
-        skip,
-        perPage,
-        customerId,
-        hasCustomerRelationship,
-      });
-    }
 
     const [documents, total] = await Promise.all([
       this.userModel
@@ -186,79 +164,6 @@ export class MongooseUserReadRepositoryImpl
 
     return {
       data: documents.map((document) => this.toDomain(document)),
-    };
-  }
-
-  private async findAllByCustomerRelationship({
-    filter,
-    sortCriteria,
-    skip,
-    perPage,
-    customerId,
-    hasCustomerRelationship,
-  }: {
-    filter: Record<string, unknown>;
-    sortCriteria: Record<string, 1 | -1>;
-    skip: number;
-    perPage: number;
-    customerId: string;
-    hasCustomerRelationship: boolean;
-  }): Promise<FindUsersResult> {
-    const relationshipMatch = hasCustomerRelationship
-      ? { 'matching_relationships.0': { $exists: true } }
-      : { 'matching_relationships.0': { $exists: false } };
-    const matchStages = [
-      { $match: { ...filter, system_role: SystemRole.USER } },
-      {
-        $lookup: {
-          from: this.customerModel.collection.name,
-          pipeline: [{ $match: { customer_id: customerId } }],
-          as: 'target_customer',
-        },
-      },
-      { $match: { 'target_customer.0': { $exists: true } } },
-      {
-        $lookup: {
-          from: this.relationshipModel.collection.name,
-          let: { userId: '$user_id' },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ['$user_id', '$$userId'] },
-                    { $eq: ['$customer_id', customerId] },
-                  ],
-                },
-              },
-            },
-          ],
-          as: 'matching_relationships',
-        },
-      },
-      { $match: relationshipMatch },
-    ];
-    const session = this.transactionContext.getSession() ?? null;
-    const [documents, totalResult] = await Promise.all([
-      this.userModel
-        .aggregate<UserDocument>([
-          ...matchStages,
-          { $sort: sortCriteria },
-          { $skip: skip },
-          { $limit: perPage },
-          { $project: { target_customer: 0, matching_relationships: 0 } },
-        ])
-        .session(session)
-        .exec(),
-      this.userModel
-        .aggregate<{ total: number }>([...matchStages, { $count: 'total' }])
-        .session(session)
-        .exec(),
-    ]);
-
-    return {
-      data: documents.map((document) => this.toDomain(document)),
-      total: totalResult[0]?.total ?? 0,
     };
   }
 

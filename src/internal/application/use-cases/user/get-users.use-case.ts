@@ -1,26 +1,33 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  IRoleReadRepository,
-  IRoleReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
 } from '@domain/ports/repositories';
-import { GetUsersDto, GetUsersResultDto } from '@application/dto';
+import {
+  GetUsersDto,
+  GetUsersResultDto,
+  UserCustomerRelationshipFilter,
+} from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
+import {
+  CustomerContextValidationService,
+  UserRoleNameResolverService,
+} from '@application/services';
 
 @Injectable()
 export class GetUsersUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
-    @Inject(IRoleReadRepositoryToken)
-    private readonly roleReadRepository: IRoleReadRepository,
+    private readonly customerContextValidationService: CustomerContextValidationService,
+    private readonly userRoleNameResolverService: UserRoleNameResolverService,
   ) {}
 
   async execute(input: GetUsersDto): Promise<GetUsersResultDto> {
-    const { data, total } = await this.userReadRepository.findAll(input);
-    const roleNamesByRoleId = await this.resolveRoleNamesByRoleId(data);
+    const { data, total } = await this.findUsers(input);
+    const roleNamesByRoleId =
+      await this.userRoleNameResolverService.resolveByUsers(data);
 
     return {
       items: UserResultMapper.toUserViewCollection(data, roleNamesByRoleId),
@@ -30,26 +37,32 @@ export class GetUsersUseCase {
     };
   }
 
-  private async resolveRoleNamesByRoleId(users: { roleId: string | null }[]) {
-    const uniqueRoleIds = Array.from(
-      new Set(
-        users
-          .map((user) => user.roleId)
-          .filter((roleId): roleId is string => Boolean(roleId)),
-      ),
-    );
+  private async findUsers(input: GetUsersDto) {
+    if (input.customerId) {
+      await this.customerContextValidationService.ensureReadable(
+        input.customerId,
+      );
 
-    const resolvedRoles = await Promise.all(
-      uniqueRoleIds.map(async (roleId) => {
-        const { data } = await this.roleReadRepository.findById(roleId);
-        return [roleId, data?.name ?? null] as const;
-      }),
-    );
+      return this.userReadRepository.findRelatedToCustomer({
+        customerId: input.customerId,
+        page: input.page,
+        perPage: input.perPage,
+        sorts: input.sorts,
+        search: input.search,
+      });
+    }
 
-    return new Map(
-      resolvedRoles.filter(
-        (entry): entry is readonly [string, string] => entry[1] !== null,
-      ),
-    );
+    if (
+      input.customerRelationship === UserCustomerRelationshipFilter.UNASSIGNED
+    ) {
+      return this.userReadRepository.findUnassigned({
+        page: input.page,
+        perPage: input.perPage,
+        sorts: input.sorts,
+        search: input.search,
+      });
+    }
+
+    return this.userReadRepository.findAll(input);
   }
 }

@@ -47,7 +47,8 @@ Implementation.
 - `UpdateUserUseCase` y el consumo de invitaciones reutilizan el servicio centralizado para sustituir relaciones y sincronizar Contactos.
 - Se implementaron los cuatro casos de uso contextuales de Clientes para consultar, asociar y desasociar Usuarios, con DTOs de aplicacion y lookup compacto reutilizable.
 - Se implementaron adapters CQRS, DTOs HTTP, presenters localizados y `CustomerUserRelationshipController` con las cuatro rutas contextuales protegidas por permisos de Clientes.
+- Se reemplazo `has_customer_relationship` por `customer_relationship=UNASSIGNED` en el listado global de Usuarios, conservando `customer_id` como filtro positivo mutuamente excluyente.
 
 ## Next
 
-- Refactorizar el listado global de Usuarios para `customer_id` y `customer_relationship=UNASSIGNED`, y eliminar el filtro anterior.
+- Ajustar la eliminacion logica de Clientes para resincronizar los Contactos relacionados dentro de una transaccion.

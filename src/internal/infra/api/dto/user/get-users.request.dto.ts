@@ -1,16 +1,17 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsBoolean,
   IsIn,
-  IsNotEmpty,
   IsOptional,
   IsString,
-  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-import { GetUsersDto } from '@application/dto';
+import { GetUsersDto, UserCustomerRelationshipFilter } from '@application/dto';
+import {
+  InvalidValueException,
+  InvalidValueExceptionCode,
+} from '@domain/exceptions';
 import { SystemRole } from '@domain/entities';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
@@ -45,19 +46,24 @@ export class GetUsersRequestDto extends PaginationRequestDto {
   @IsString()
   search?: string;
 
-  @ValidateIf((request) => request.has_customer_relationship !== undefined)
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   customer_id?: string;
 
-  @ValidateIf((request) => request.customer_id !== undefined)
-  @Transform(({ value }) =>
-    value === 'true' ? true : value === 'false' ? false : value,
-  )
-  @IsBoolean()
-  has_customer_relationship?: boolean;
+  @IsOptional()
+  @IsIn([UserCustomerRelationshipFilter.UNASSIGNED])
+  customer_relationship?: UserCustomerRelationshipFilter;
 
   toDomain(actorSystemRole: SystemRole): GetUsersDto {
+    if (
+      this.customer_id !== undefined &&
+      this.customer_relationship !== undefined
+    ) {
+      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+        fields: ['customer_id', 'customer_relationship'],
+      });
+    }
+
     return {
       page: this.getPage(),
       perPage: this.getPerPage(),
@@ -71,10 +77,7 @@ export class GetUsersRequestDto extends PaginationRequestDto {
       ],
       search: this.search ?? null,
       customerId: this.customer_id ?? null,
-      hasCustomerRelationship:
-        typeof this.has_customer_relationship === 'boolean'
-          ? this.has_customer_relationship
-          : null,
+      customerRelationship: this.customer_relationship ?? null,
     };
   }
 }
