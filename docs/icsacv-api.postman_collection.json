@@ -1247,7 +1247,7 @@
           ]
         },
         {
-          "name": "Filter Users by Customer Relationship",
+          "name": "Filter Users by Customer",
           "request": {
             "method": "GET",
             "header": [
@@ -1262,7 +1262,7 @@
               }
             ],
             "url": {
-              "raw": "{{HOST}}/v1/users?page=1&limit=10&customer_id={{CUSTOMER_ID}}&has_customer_relationship=true",
+              "raw": "{{HOST}}/v1/users?page=1&limit=10&customer_id={{CUSTOMER_ID}}",
               "host": [
                 "{{HOST}}"
               ],
@@ -1282,14 +1282,10 @@
                 {
                   "key": "customer_id",
                   "value": "{{CUSTOMER_ID}}"
-                },
-                {
-                  "key": "has_customer_relationship",
-                  "value": "true"
                 }
               ]
             },
-            "description": "customer_id y has_customer_relationship deben enviarse juntos. Cambiar a false para usuarios USER no relacionados con el cliente."
+            "description": "Filtra usuarios USER relacionados con el cliente indicado. Para usuarios sin ninguna relación, usar customer_relationship=UNASSIGNED sin customer_id."
           },
           "response": []
         },
@@ -5917,6 +5913,116 @@
               "body": "{\n    \"success\": true,\n    \"success_message\": \"Información fiscal del cliente enviada correctamente\",\n    \"status_code\": 201,\n    \"data\": {\n        \"customer_id\": \"E7bD8lmS4KPuXIelI2HGbD6Q\",\n        \"company_name\": \"Comercializadora Ejemplo\",\n        \"client_code\": \"CLT-001\",\n        \"customer_status_id\": \"ACTIVE\",\n        \"customer_status_name\": \"Cliente activo\",\n        \"public_access_token\": \"Up1AfyX8ldOl2XzcAd0mi2mgxS0Rw03QGzGr\",\n        \"public_access_url\": \"https://app.icsacv.com/public/fiscal-profile/Up1AfyX8ldOl2XzcAd0mi2mgxS0Rw03QGzGr\",\n        \"created_at\": \"2025-11-18T02:33:13.700Z\",\n        \"updated_at\": \"2025-11-18T02:33:13.700Z\",\n        \"fiscal_profile\": {\n            \"profile_id\": \"LaY7Q11M9C5Z3YYyrsZv9KVe\",\n            \"status_id\": \"COMPLETED\",\n            \"status_name\": \"Completado\",\n            \"submitted_at\": \"2025-11-18T02:41:41.648Z\",\n            \"form_data\": {\n                \"business_name\": \"Comercializadora Ejemplo\",\n                \"rfc\": \"ABC123456789\",\n                \"tax_regime\": \"RG\",\n                \"address\": {\n                    \"street\": \"Calle 1\",\n                    \"number\": \"100\",\n                    \"neighborhood\": \"Centro\",\n                    \"delegation\": \"Cuauhtémoc\",\n                    \"city\": \"CDMX\",\n                    \"postal_code\": \"06000\"\n                },\n                \"cfdi\": {\n                    \"use\": \"G03\",\n                    \"payment_method\": \"PUE\",\n                    \"payment_form\": \"03\"\n                },\n                \"billing_contact\": {\n                    \"name\": \"Ana Pérez\",\n                    \"phone\": \"55555555\",\n                    \"email\": \"ana@example.com\"\n                },\n                \"accounts_payable_contact\": {\n                    \"name\": \"Luis López\",\n                    \"phone\": \"55555556\",\n                    \"email\": \"luis@example.com\"\n                },\n                \"requirements_notes\": \"Enviar CFDI por correo\"\n            },\n            \"tax_certificate_file_id\": \"ZEZY2f5bzeqQGbzlmyVvKPOp\",\n            \"invoice_requirements_file_id\": \"ZEZY2f5bzeqQGbzlmyVvKPOp\",\n            \"files_metadata\": {\n                \"tax_certificate\": {\n                    \"file_id\": \"ZEZY2f5bzeqQGbzlmyVvKPOp\",\n                    \"original_name\": \"dummy-doc.pdf\",\n                    \"extension\": \"pdf\",\n                    \"download_url\": \"https://api-dev.icsacv.com/v1/files/ZEZY2f5bzeqQGbzlmyVvKPOp/download\"\n                },\n                \"invoice_requirements\": {\n                    \"file_id\": \"ZEZY2f5bzeqQGbzlmyVvKPOp\",\n                    \"original_name\": \"dummy-doc.pdf\",\n                    \"extension\": \"pdf\",\n                    \"download_url\": \"https://api-dev.icsacv.com/v1/files/ZEZY2f5bzeqQGbzlmyVvKPOp/download\"\n                }\n            }\n        }\n    }\n}"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Customer User Relationships",
+      "item": [
+        {
+          "name": "Get Customer Related Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users?page=1&limit=10",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Requiere CUSTOMERS/READ. Permite consultar Clientes activos o inactivos no eliminados."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Available Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/available-users",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "available-users"]
+            },
+            "description": "Requiere CUSTOMERS/UPDATE. Devuelve usuarios USER activos sin relaciones con Clientes."
+          },
+          "response": []
+        },
+        {
+          "name": "Associate Customer User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{USER_ID}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "users"]
+            },
+            "description": "Requiere CUSTOMERS/UPDATE. Devuelve 201 Created; rechaza relación duplicada con 409."
+          },
+          "response": []
+        },
+        {
+          "name": "Disassociate Customer User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users/{{USER_ID}}",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "users", "{{USER_ID}}"]
+            },
+            "description": "Requiere CUSTOMERS/UPDATE. Devuelve 204 No Content; elimina solamente la relación solicitada."
+          },
+          "response": []
         }
       ]
     },

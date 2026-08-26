@@ -81,7 +81,7 @@ export class CustomerUserRelationshipController {
   @Post(':customerId/users')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('customers', 'UPDATE')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async associateUser(
     @Param('customerId') customerId: string,
     @Body() body: AssociateCustomerUserRequestDto,
@@ -96,29 +96,20 @@ export class CustomerUserRelationshipController {
         this.successMessageService.getMsg('CUSTOMER.USER_ASSOCIATED'),
       )
       .withData(data)
-      .withStatus(HttpStatus.OK)
+      .withStatus(HttpStatus.CREATED)
       .build();
   }
 
   @Delete(':customerId/users/:userId')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('customers', 'UPDATE')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async disassociateUser(
     @Param('customerId') customerId: string,
     @Param('userId') userId: string,
   ) {
-    const result = await this.commandBus.execute(
+    await this.commandBus.execute(
       DisassociateCustomerUserCommandAdapter.create({ customerId, userId }),
     );
-    const data = await this.userPresenter.toUserResponse(result);
-
-    return ApiResponseBuilder.create()
-      .withSuccessMessage(
-        this.successMessageService.getMsg('CUSTOMER.USER_DISASSOCIATED'),
-      )
-      .withData(data)
-      .withStatus(HttpStatus.OK)
-      .build();
   }
 }

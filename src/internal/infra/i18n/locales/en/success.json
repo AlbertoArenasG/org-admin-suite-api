@@ -21,8 +21,7 @@
     "CREATED": "Customer created successfully",
     "UPDATED": "Customer updated successfully",
     "DELETED": "Customer deleted successfully",
-    "USER_ASSOCIATED": "User associated with customer successfully",
-    "USER_DISASSOCIATED": "User disassociated from customer successfully"
+    "USER_ASSOCIATED": "User associated with customer successfully"
   },
   "PROVIDER": {
     "CREATED": "Provider created successfully",

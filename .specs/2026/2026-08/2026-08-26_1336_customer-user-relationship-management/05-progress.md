@@ -49,7 +49,10 @@ Implementation.
 - Se implementaron adapters CQRS, DTOs HTTP, presenters localizados y `CustomerUserRelationshipController` con las cuatro rutas contextuales protegidas por permisos de Clientes.
 - Se reemplazo `has_customer_relationship` por `customer_relationship=UNASSIGNED` en el listado global de Usuarios, conservando `customer_id` como filtro positivo mutuamente excluyente.
 - `DeleteCustomerUseCase` elimina logicamente el Cliente y resincroniza los Contactos relacionados dentro de la misma transaccion, preservando las relaciones historicas.
+- Se alinearon los contratos contextuales: asociacion responde `201 Created` y desasociacion responde `204 No Content`.
+- Se actualizaron la coleccion Postman, el catalogo de permisos y los handoffs de frontend relevantes.
+- Se documentaron escenarios de validacion manual en `08-manual-validation.md`.
 
 ## Next
 
-- Alinear los contratos HTTP restantes y actualizar documentacion, coleccion Postman y escenarios de validacion manual.
+- Ejecutar la validacion manual documentada y confirmar resultados para cerrar formalmente la spec.

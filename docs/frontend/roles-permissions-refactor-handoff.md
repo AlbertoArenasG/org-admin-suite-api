@@ -405,7 +405,7 @@ Query params soportados:
 - `sort[].direction`
   - `asc`
   - `desc`
-- `customer_id` y `has_customer_relationship=true|false` deben enviarse juntos para filtrar exclusivamente usuarios `USER` por su relación con un cliente
+- `customer_id` filtra usuarios `USER` relacionados con un cliente; `customer_relationship=UNASSIGNED` filtra usuarios `USER` y `ADMIN` sin relaciones; ambos parámetros son mutuamente excluyentes
 
 Response vigente por item:
 
@@ -416,6 +416,7 @@ Response vigente por item:
   "lastname": "Lopez",
   "email": "ana@example.com",
   "system_role": "USER",
+  "system_role_name": "Usuario",
   "role_id": "CUSTOM_USER_ROLE_ID",
   "role_name": "Rol operativo",
   "status": "ACTIVE",

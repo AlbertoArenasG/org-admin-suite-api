@@ -70,19 +70,35 @@ Solo aplica a invitaciones `APPLICATION`; un ID de una invitación `MASTER` resp
 - arreglo poblado: reemplaza el conjunto completo;
 - `ADMIN` y `MASTER_ADMIN`: backend rechaza el campo.
 
-`GET /v1/users` conserva filas ligeras. Para filtrar por un cliente se deben enviar siempre ambos parámetros:
+`GET /v1/users` conserva filas ligeras y admite filtros mutuamente excluyentes:
 
 ```text
 customer_id=:customerId
-has_customer_relationship=true|false
+customer_relationship=UNASSIGNED
 ```
 
-- `true`: solo usuarios `USER` relacionados con ese cliente;
-- `false`: solo usuarios `USER` no relacionados con ese cliente;
-- un ID sintácticamente válido que no exista devuelve una lista vacía;
-- enviar solo uno de los parámetros devuelve `400`.
+- `customer_id`: solo usuarios `USER` relacionados con ese cliente;
+- `customer_relationship=UNASSIGNED`: usuarios `USER` y `ADMIN` sin relación con ningún cliente; excluye `MASTER_ADMIN`;
+- un `customer_id` inexistente o eliminado devuelve `404`;
+- enviar ambos parámetros devuelve `400`;
+- `has_customer_relationship` fue retirado sin compatibilidad temporal.
 
 `GET /v1/users/:userId` agrega `customers` con el mismo resumen localizado del detalle de invitación. `GET /v1/users/me`, listados y respuestas de actualización no incluyen ese campo.
+
+## Administración Contextual Desde Clientes
+
+Estas rutas permiten administrar relaciones desde el contexto de un Cliente. No requieren permisos `USERS/*` ni capabilities auxiliares.
+
+| Ruta | Permiso | Comportamiento |
+| --- | --- | --- |
+| `GET /v1/customers/:customerId/users` | `CUSTOMERS/READ` | Lista paginada usuarios `USER` no eliminados relacionados; permite Cliente activo o inactivo. |
+| `GET /v1/customers/:customerId/available-users` | `CUSTOMERS/UPDATE` | Lookup no paginado de usuarios `USER` activos sin relación con ningún Cliente. |
+| `POST /v1/customers/:customerId/users` | `CUSTOMERS/UPDATE` | Asocia `{ "user_id": "..." }`; devuelve `201 Created`. Puede asociar a un Usuario ya relacionado con otro Cliente. |
+| `DELETE /v1/customers/:customerId/users/:userId` | `CUSTOMERS/UPDATE` | Elimina solo esa relación; devuelve `204 No Content`. |
+
+Las mutaciones contextuales solo operan sobre Clientes `ACTIVE`. Clientes `INACTIVE` permiten consultar sus relaciones, pero no asociar ni desasociar. Clientes eliminados no se exponen como contexto.
+
+La respuesta administrativa de Usuario incluye `system_role_name` y `status_name` localizados. El lookup devuelve `id`, `name`, `lastname`, `full_name` y `email`.
 
 ## Contactos
 
@@ -90,7 +106,7 @@ El contrato de contactos reemplaza definitivamente `company_name` por `company_n
 
 - Los contactos manuales pueden enviar una lista vacía o varios nombres.
 - Los contactos vinculados a usuarios mantienen nombres derivados de sus relaciones; su actualización administrativa directa está bloqueada por backend.
-- Cuando cambia el nombre de un cliente, backend recalcula y sincroniza los contactos vinculados en la misma transacción.
+- Cuando cambia el nombre de un cliente o se elimina lógicamente, backend recalcula y sincroniza los contactos vinculados en la misma transacción. La eliminación conserva la relación como historial, pero excluye ese Cliente de `company_names`.
 
 ## Despliegue Coordinado
 

@@ -233,6 +233,22 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `customers.READ`
+- `GET /v1/customers/:customerId/users`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: auxiliar local de Clientes protegido por `PermissionsGuard` con `customers.READ`; lista las relaciones de usuarios del Cliente
+- `GET /v1/customers/:customerId/available-users`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: auxiliar local de Clientes protegido por `PermissionsGuard` con `customers.UPDATE`; lookup de usuarios elegibles sin relaciones
+- `POST /v1/customers/:customerId/users`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `customers.UPDATE`; crea una relación puntual Usuario-Cliente
+- `DELETE /v1/customers/:customerId/users/:userId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: protegido por `PermissionsGuard` con `customers.UPDATE`; elimina una relación puntual Usuario-Cliente
 - `GET /v1/customers/:customerId/public-access`
   - operacion: `READ_PUBLIC_ACCESS`
   - acceso actual: autenticado
