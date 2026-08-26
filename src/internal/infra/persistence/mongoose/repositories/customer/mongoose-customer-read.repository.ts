@@ -39,6 +39,20 @@ export class MongooseCustomerReadRepositoryImpl
     };
   }
 
+  async findOptions(): Promise<{ data: Customer[] }> {
+    const documents = await this.customerModel
+      .find({ status: CustomerStatus.ACTIVE })
+      .sort({ company_name: 1, customer_id: 1 })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
+
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((customer): customer is Customer => customer !== null),
+    };
+  }
+
   async findByClientCode(
     clientCode: string,
   ): Promise<{ data: Customer | null }> {

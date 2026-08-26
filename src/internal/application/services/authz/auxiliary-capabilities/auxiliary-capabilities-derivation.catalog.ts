@@ -28,4 +28,22 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
         },
       ],
     },
+    {
+      consumerModule: 'USER_REGISTRATION_INVITATIONS',
+      auxiliaryCapabilities: [
+        {
+          module: 'CUSTOMERS',
+          capability: 'READ_OPTIONS',
+        },
+      ],
+    },
+    {
+      consumerModule: 'USERS',
+      auxiliaryCapabilities: [
+        {
+          module: 'CUSTOMERS',
+          capability: 'READ_OPTIONS',
+        },
+      ],
+    },
   ];

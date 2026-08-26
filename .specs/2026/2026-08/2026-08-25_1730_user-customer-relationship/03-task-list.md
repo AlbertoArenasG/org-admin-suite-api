@@ -120,6 +120,9 @@
 - [x] Exponer el detalle administrativo de invitaciones y actualizar DTOs, presenters, CQRS y rutas.
       Status: completed
 
+- [x] Exponer el catálogo reutilizable de clientes activos y derivar su capability auxiliar.
+      Status: completed
+
 - [x] Actualizar Postman, documentación de API y handoff para frontend.
       Status: completed
 

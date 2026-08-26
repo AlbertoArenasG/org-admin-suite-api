@@ -16,6 +16,7 @@
 - Reemplazar el contrato de contactos por `company_names`, incluidos búsqueda, índices, seed y migración.
 - Incorporar la sincronización atómica por cambio de nombre de cliente y la protección de campos derivados.
 - Exponer los contratos HTTP aprobados, actualizar CQRS, Postman, documentación de API y handoff frontend.
+- Exponer el catálogo reutilizable de clientes activos, su capability auxiliar y derivaciones para usuarios e invitaciones.
 - Ejecutar verificaciones estáticas y preparar los escenarios manuales de validación.
 
 ## Phase 4. Validation And Closure

@@ -9,6 +9,12 @@ export const AUXILIARY_CAPABILITIES_CATALOG: AuxiliaryCapabilityCatalogEntry[] =
         'Permite consultar contactos resumidos para selección en módulos consumidores.',
     },
     {
+      module: 'CUSTOMERS',
+      capability: 'READ_OPTIONS',
+      description:
+        'Permite consultar clientes activos resumidos para selección reutilizable.',
+    },
+    {
       module: 'COMMUNICATION_CHANNELS',
       capability: 'READ_OPTIONS',
       description:

@@ -260,3 +260,11 @@ The resolver returns a deterministic collection of `{ userId, companyNames }`; u
 ## 17. Manual Validation Scope
 
 No automated tests are included in this delivery. The approved manual validation checklist covers migration, invitation lifecycle, detail and filter contracts, relationship replacement, contact synchronization, derived-field protection, user lifecycle retention and scope boundaries. The exact Postman requests and database verification steps will be documented during implementation and closure.
+
+## 18. Reusable Customer Options
+
+Add a dedicated `GetCustomerOptionsUseCase` under the customer boundary. It will call an explicit `ICustomerReadRepository.findOptions()` port method; it will not load fiscal profiles or simulate an unpaginated administrative list.
+
+The Mongoose adapter will select only `ACTIVE` customers, sort by `company_name` and `customer_id` ascending, and map them through a minimal application DTO. The HTTP route `GET /v1/customers/options` will be declared before `:customerId`, use `JwtAuthGuard` plus `AuxiliaryCapabilitiesGuard`, and require `CUSTOMERS/READ_OPTIONS`.
+
+Register the capability in the existing auxiliary catalog and derive it from `USER_REGISTRATION_INVITATIONS` and `USERS`. System roles receive the new derived capability when the existing role seed runs; a custom role receives it when its direct permissions are saved again, following the established derivation lifecycle.

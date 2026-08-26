@@ -194,3 +194,13 @@ La entrega no incluirá pruebas automatizadas. La validación manual en Postman 
 - Rechazo de edición manual de `company_names` en contactos vinculados a usuarios.
 - Conservación de relaciones ante promoción de rol y eliminación lógica de usuarios.
 - Límites de `APPLICATION`, `USER` y `MASTER`.
+
+## Decision 23. Reusable Customer Options
+
+`GET /v1/customers` conserva su propósito administrativo paginado y su protección directa con `CUSTOMERS/READ`; no se reutilizará para controles de selección de otros módulos.
+
+Se agregará `GET /v1/customers/options`, sin paginación, que devuelve únicamente clientes `ACTIVE`, ordenados ascendentemente por `companyName` y por ID. Su respuesta mínima será `{ customer_id, company_name }` y no expondrá perfil fiscal, datos de acceso público, auditoría ni otros detalles administrativos.
+
+Este endpoint se protegerá con `JwtAuthGuard` y `AuxiliaryCapabilitiesGuard` mediante la capability `{ module: CUSTOMERS, capability: READ_OPTIONS }`. Backend la derivará para `USER_REGISTRATION_INVITATIONS` y `USERS`; frontend no verá ni administrará esa capability.
+
+Los roles existentes deben recalcular sus capabilities derivadas antes de consumir el endpoint. El seed de roles del sistema actualiza `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`; los roles custom conservarán el patrón vigente y obtendrán la capability cuando se guarden nuevamente mediante el flujo administrativo de roles.

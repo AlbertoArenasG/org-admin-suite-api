@@ -4965,6 +4965,36 @@
           ]
         },
         {
+          "name": "Get Customer Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customers/options",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                "options"
+              ]
+            },
+            "description": "Catálogo reutilizable no paginado de clientes activos. Requiere la capability auxiliar CUSTOMERS/READ_OPTIONS derivada por backend."
+          },
+          "response": []
+        },
+        {
           "name": "Get Customers",
           "request": {
             "method": "GET",

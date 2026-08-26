@@ -64,6 +64,7 @@ Cuando una vista ya autorizada requiere un lookup reutilizable, backend garantiz
 | Capability module | Capability | Endpoint protegido | Propósito |
 | --- | --- | --- | --- |
 | `CONTACTS` | `SEARCH` | `GET /v1/contacts/search` | Buscar contactos activos para selección reutilizable. |
+| `CUSTOMERS` | `READ_OPTIONS` | `GET /v1/customers/options` | Obtener clientes activos resumidos para selección reutilizable. |
 | `COMMUNICATION_CHANNELS` | `READ_OPTIONS` | `GET /v1/communication-channels` | Obtener canales de comunicación seleccionables. |
 | `EXPIRATION_STATUS_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-status-policies/options` | Obtener políticas de estatus de vencimiento seleccionables. |
 | `EXPIRATION_NOTIFICATION_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-notification-policies/options` | Obtener políticas de notificación de vencimiento seleccionables. |
@@ -76,6 +77,8 @@ La derivación depende del módulo directo del rol, no de una operación especí
 | --- | --- |
 | `RECIPIENT_GROUPS` | `CONTACTS/SEARCH`, `COMMUNICATION_CHANNELS/READ_OPTIONS` |
 | `INTERNAL_ASSET_MAINTENANCE_RECORDS` | `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`, `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS` |
+| `USER_REGISTRATION_INVITATIONS` | `CUSTOMERS/READ_OPTIONS` |
+| `USERS` | `CUSTOMERS/READ_OPTIONS` |
 
 Esto permite que un usuario con cualquier operación directa válida del módulo consumidor obtenga los lookups que esa funcionalidad necesita, sin que quien construye el rol tenga que conocer ni seleccionar dependencias técnicas.
 

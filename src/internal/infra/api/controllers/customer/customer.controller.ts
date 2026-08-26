@@ -13,14 +13,23 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateCustomerFiscalProfileRequestDto,
   GetCustomerFiscalProfilesRequestDto,
   UpdateCustomerRequestDto,
 } from '@infra/api/dto/customer-fiscal-profile';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
+import { CustomerPresenter } from '@infra/api/presenters/customer';
 import { CustomerFiscalProfilePresenter } from '@infra/api/presenters/customer-fiscal-profile';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import {
@@ -31,6 +40,7 @@ import {
 import {
   GetCustomerFiscalProfilesQuery,
   GetCustomerFiscalProfileByIdQuery,
+  GetCustomerOptionsQuery,
   GetCustomerPublicAccessQuery,
 } from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
@@ -40,6 +50,7 @@ export class CustomerController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
+    private readonly customerPresenter: CustomerPresenter,
     private readonly presenter: CustomerFiscalProfilePresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
@@ -62,6 +73,23 @@ export class CustomerController {
       .withSuccessMessage(this.successMsgService.getMsg('CUSTOMER.CREATED'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Get('options')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('customers', 'read_options')
+  @HttpCode(HttpStatus.OK)
+  async getOptions() {
+    const result = await this.queryBus.execute(
+      GetCustomerOptionsQuery.create(),
+    );
+    const data = this.customerPresenter.toOptionsResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
       .build();
   }
 

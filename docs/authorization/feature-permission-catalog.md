@@ -225,6 +225,10 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `customers.READ`
+- `GET /v1/customers/options`
+  - capability auxiliar: `CUSTOMERS/READ_OPTIONS`
+  - acceso actual: autenticado
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; catálogo no paginado de clientes `ACTIVE` para selección reutilizable
 - `GET /v1/customers/:customerId`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -250,6 +254,7 @@ Frontera complementaria:
 Decisión de evolución aprobada:
 
 - `CUSTOMERS/READ` debe seguir cubriendo listado y detalle ordinario del customer
+- `GET /v1/customers/options` permanece separado del `READ` administrativo y usa `CUSTOMERS/READ_OPTIONS` derivada por backend
 - `public_access_url` y `public_access_token` no permanecen dentro del payload ordinario de `GET /v1/customers` ni `GET /v1/customers/:customerId`
 - esos dos campos salen por el endpoint autenticado dedicado `GET /v1/customers/:customerId/public-access`
 - esa capacidad quedó modelada como operación explícita `READ_PUBLIC_ACCESS`

@@ -55,7 +55,8 @@ Phase 3: backend implementation in progress.
 - Confirmed the existing contact update boundary rejects linked user contacts, protecting their derived company names from direct administrative changes.
 - Added `GET /v1/user-registration-invitations/:invitationId` for administrative application-invitation details with localized selected-customer summaries.
 - Updated Postman requests, authorization documentation and frontend handoffs for the user-customer relationship contracts and coordinated contact migration.
+- Defined and implemented a reusable active-customer options lookup, protected by backend-derived auxiliary capabilities for users and application invitations.
 
 ## Next
 
-- Run static verification and document the manual validation scenarios.
+- Run static verification and document the manual validation scenarios, including customer options and derived-capability reconciliation.

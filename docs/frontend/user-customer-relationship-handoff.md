@@ -6,6 +6,27 @@ La API permite asociar usuarios de aplicación con cero, uno o varios clientes m
 
 La fuente de verdad de las relaciones es backend. Frontend no calcula permisos ni sincroniza contactos.
 
+## Catálogo De Clientes
+
+Para selects de creación de invitaciones y edición de usuarios, usar:
+
+```text
+GET /v1/customers/options
+```
+
+La respuesta no es paginada y contiene únicamente clientes `ACTIVE`, ordenados por nombre:
+
+```json
+[
+  {
+    "customer_id": "...",
+    "company_name": "Cliente Ejemplo"
+  }
+]
+```
+
+No usar `GET /v1/customers` para este propósito: es la lectura administrativa paginada. El acceso al catálogo se resuelve mediante capabilities auxiliares derivadas exclusivamente en backend.
+
 ## Invitaciones
 
 `POST /v1/user-registration-invitations` acepta el campo opcional:

@@ -18,6 +18,7 @@ Permitir que un usuario de aplicación se relacione con uno o más clientes exis
 - Evolucionar el modelo de contactos para representar múltiples nombres de empresa y sincronizar los contactos vinculados a usuarios con sus relaciones de cliente.
 - Migrar los contactos existentes al nuevo modelo de nombres de empresa.
 - Preparar contratos administrativos y documentación para una integración posterior de frontend.
+- Exponer un catálogo reutilizable de clientes activos para selects de invitaciones, usuarios y futuros módulos consumidores.
 
 ## Approved Scope
 
@@ -32,6 +33,7 @@ Permitir que un usuario de aplicación se relacione con uno o más clientes exis
 - El listado existente de usuarios permitirá filtrar relaciones presentes o ausentes respecto a un cliente.
 - Reenvío y revocación conservarán el comportamiento de invitaciones sin exponer relaciones a la frontera pública ni `MASTER`.
 - `Contact.companyName` se reemplazará por `Contact.companyNames`; los contactos vinculados a usuarios se sincronizarán al crear o reemplazar sus relaciones de cliente.
+- El catálogo de clientes será una capability auxiliar derivada en backend; no reutilizará la lectura administrativa paginada.
 
 ## Definition Pending
 
