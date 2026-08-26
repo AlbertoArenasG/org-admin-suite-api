@@ -114,8 +114,8 @@
 - [x] Implementar migración y actualizar el seed de contactos derivados de usuarios.
       Status: completed
 
-- [ ] Implementar sincronización atómica por cambios de nombre de cliente y proteger campos derivados de contactos.
-      Status: pending
+- [x] Implementar sincronización atómica por cambios de nombre de cliente y proteger campos derivados de contactos.
+      Status: completed
 
 - [ ] Exponer el detalle administrativo de invitaciones y actualizar DTOs, presenters, CQRS y rutas.
       Status: pending

@@ -16,6 +16,7 @@ export class MongooseCustomerReadRepositoryImpl
   async findById(id: string): Promise<{ data: Customer | null }> {
     const document = await this.customerModel
       .findOne({ customer_id: id })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return { data: document ? this.toDomain(document) : null };
@@ -28,6 +29,7 @@ export class MongooseCustomerReadRepositoryImpl
 
     const documents = await this.customerModel
       .find({ customer_id: { $in: ids } })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return {
@@ -42,6 +44,7 @@ export class MongooseCustomerReadRepositoryImpl
   ): Promise<{ data: Customer | null }> {
     const document = await this.customerModel
       .findOne({ client_code: clientCode })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return { data: document ? this.toDomain(document) : null };
@@ -52,6 +55,7 @@ export class MongooseCustomerReadRepositoryImpl
   ): Promise<{ data: Customer | null }> {
     const document = await this.customerModel
       .findOne({ access_token: accessToken })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return { data: document ? this.toDomain(document) : null };
@@ -89,8 +93,12 @@ export class MongooseCustomerReadRepositoryImpl
         .sort(sortCriteria)
         .skip(skip)
         .limit(perPage)
+        .session(this.transactionContext.getSession() ?? null)
         .exec(),
-      this.customerModel.countDocuments(filter).exec(),
+      this.customerModel
+        .countDocuments(filter)
+        .session(this.transactionContext.getSession() ?? null)
+        .exec(),
     ]);
 
     return {

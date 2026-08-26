@@ -11,7 +11,7 @@ export class MongooseCustomerWriteRepositoryImpl
 {
   async create(customer: Customer): Promise<{ data: Customer | null }> {
     const document = new this.customerModel(this.toMongoose(customer));
-    await document.save();
+    await document.save({ session: this.transactionContext.getSession() });
 
     return { data: this.toDomain(document) };
   }
@@ -23,6 +23,7 @@ export class MongooseCustomerWriteRepositoryImpl
         this.toMongoose(customer),
         { new: true },
       )
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return {

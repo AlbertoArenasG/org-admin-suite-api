@@ -51,7 +51,9 @@ Phase 3: backend implementation in progress.
 - Added localized customer summaries exclusively to the administrative user detail response.
 - Replaced the contact company-name contract with the `company_names` collection and updated its search/index behavior.
 - Added the controlled `company_name` to `company_names` migration, including dry-run/apply commands, index replacement and post-apply integrity checks.
+- Added atomic customer-name propagation through an isolated batch synchronizer for user-linked contacts.
+- Confirmed the existing contact update boundary rejects linked user contacts, protecting their derived company names from direct administrative changes.
 
 ## Next
 
-- Implement customer-name propagation and protection for derived contact fields.
+- Expose the administrative invitation detail with selected customer summaries.

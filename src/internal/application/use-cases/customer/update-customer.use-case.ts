@@ -24,6 +24,11 @@ import { CustomerFiscalProfileMapper } from '@application/mappers';
 import { buildFilesMetadataForProfile } from '@application/utils';
 import { CustomerStatus } from '@domain/entities';
 import { AuditUserFetcherService } from '@application/services';
+import { CustomerContactCompanyNamesSynchronizer } from '@application/services/user-customer-relationship';
+import {
+  ITransactionalExecutor,
+  ITransactionalExecutorToken,
+} from '@domain/ports/services';
 
 @Injectable()
 export class UpdateCustomerUseCase {
@@ -36,7 +41,10 @@ export class UpdateCustomerUseCase {
     private readonly profileReadRepository: ICustomerFiscalProfileReadRepository,
     @Inject(IFileReadRepositoryToken)
     private readonly fileReadRepository: IFileReadRepository,
+    @Inject(ITransactionalExecutorToken)
+    private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly auditUserFetcher: AuditUserFetcherService,
+    private readonly customerContactSynchronizer: CustomerContactCompanyNamesSynchronizer,
   ) {}
 
   async execute(
@@ -65,6 +73,10 @@ export class UpdateCustomerUseCase {
       }
     }
 
+    const companyNameChanged =
+      input.companyName !== undefined &&
+      input.companyName !== customer.companyName;
+
     customer.updateDetails(
       {
         companyName: input.companyName,
@@ -73,7 +85,15 @@ export class UpdateCustomerUseCase {
       input.userId,
     );
 
-    await this.customerWriteRepository.update(customer);
+    const updatedCustomer = companyNameChanged
+      ? await this.transactionalExecutor.execute(async () => {
+          const { data } = await this.customerWriteRepository.update(customer);
+          await this.customerContactSynchronizer.synchronizeByCustomerId(
+            customer.id,
+          );
+          return data!;
+        })
+      : (await this.customerWriteRepository.update(customer)).data!;
 
     const { data: profile } = await this.profileReadRepository.findByCustomerId(
       customer.id,
@@ -89,11 +109,11 @@ export class UpdateCustomerUseCase {
     const { createdByUser, updatedByUser } =
       await this.auditUserFetcher.fetchAuditUsers({
         createdBy: customer.createdBy,
-        updatedBy: customer.updatedBy,
+        updatedBy: updatedCustomer.updatedBy,
       });
 
     return CustomerFiscalProfileMapper.toViewDto(
-      customer,
+      updatedCustomer,
       profile ?? null,
       filesMetadata,
       createdByUser,
