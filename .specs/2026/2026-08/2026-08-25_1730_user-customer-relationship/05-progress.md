@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 1: definition in progress.
+Phase 2: technical design completed.
 
 ## Completed
 
@@ -22,7 +22,28 @@ Phase 1: definition in progress.
 - Approved compatibility behavior and Postman-only manual validation scope.
 - Approved multiple contact company names and the inclusion of a contact migration.
 - Approved contact synchronization events for relationship creation, replacement and logical user deletion.
+- Defined `UserCustomerRelationship` as an internal resource with independent domain and persistence layers.
+- Defined a persistence-agnostic transaction executor with a Mongoose-only session implementation.
+- Defined relationship identity, repository ports, replacement semantics and persistence indexes.
+- Defined infrastructure-contained user-list filtering by relationship with correct pagination.
+- Defined customer summary reads for administrative details, including localized status names.
+- Defined transactional mutation orchestration and contact synchronization boundaries.
+- Defined the breaking replacement of the contact company-name contract with a normalized collection.
+- Defined the contact company-name search and text-index evolution.
+- Defined the contact migration runner and coordinated deployment sequence.
+- Defined the administrative invitation detail route, CQRS boundary and response contract.
+- Defined optional `customer_ids` request contracts and replacement semantics.
+- Defined the complete query-pair contract for user relationship filters.
+- Defined conditional customer summaries in the existing user detail query and presenter.
+- Defined infrastructure and CQRS registrations, migration scripts, documentation and frontend handoff.
+- Defined protection for derived company names in user-linked contacts.
+- Defined isolated propagation of customer-name changes to linked user contacts.
+- Defined atomic customer-name updates and contact propagation through the infrastructure-owned transaction boundary.
+- Defined batch-oriented shared services for deriving and synchronizing user-contact company names.
+- Defined batch repository contracts using domain IDs and semantic contact updates.
+- Defined a stable ordering for derived contact company names.
+- Defined the approved manual validation scope.
 
 ## Next
 
-- Formally close the definition phase and begin technical design.
+- Begin Phase 3 following the approved implementation breakdown.

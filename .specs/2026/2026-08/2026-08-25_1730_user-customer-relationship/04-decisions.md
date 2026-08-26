@@ -32,6 +32,7 @@ Las respuestas administrativas que representen el detalle de una invitación no 
 customers: Array<{
   customerId: string;
   companyName: string;
+  status: CustomerStatus;
 }>;
 ```
 
@@ -99,6 +100,8 @@ La semántica de errores será la siguiente:
 - Intentar asignar `customer_ids` a `ADMIN` o `MASTER_ADMIN`: `400 InvalidValue`.
 - Usar `has_customer_relationship` sin `customer_id`: validación DTO con `400`.
 
+En el filtro administrativo de usuarios, un `customer_id` inexistente no se tratará como error: la combinación válida de filtros devolverá una lista vacía. El filtro representa pertenencia a una relación, no una lectura o validación administrativa del recurso `Customer`.
+
 ## Decision 11. Lightweight Lists And Relationship Detail Reads
 
 Los listados de usuarios e invitaciones no cargarán ni devolverán los clientes relacionados. Los filtros de `GET /v1/users` por `customer_id` y `has_customer_relationship` solo condicionan el conjunto de usuarios, sin añadir detalles de clientes a cada fila.
@@ -109,7 +112,7 @@ La resolución de resúmenes de clientes se limitará a esas representaciones de
 
 ## Decision 12. Deleted Customer Representation
 
-Los detalles administrativos de usuarios e invitaciones conservarán visibles las relaciones cuyo cliente haya pasado a `DELETED`. Cada resumen incluirá el último `companyName` disponible y el estado actual del cliente, para que la relación no parezca perdida ni se confunda con una selección vacía.
+Los detalles administrativos de usuarios e invitaciones conservarán visibles las relaciones cuyo cliente haya pasado a `DELETED`. Cada resumen incluirá el último `companyName` disponible y el estado actual del cliente, para que la relación no parezca perdida ni se confunda con una selección vacía. El presenter expondrá además el nombre localizado del estado conforme al patrón de la API.
 
 ## Decision 13. Compatibility And Validation Scope
 
@@ -121,7 +124,7 @@ Esta entrega no incluirá pruebas automatizadas. La validación manual en Postma
 
 `Contact.companyName` se reemplazará por `Contact.companyNames: string[]` en el dominio, contratos, persistencia, mappers, búsquedas y usos que corresponda. Los contactos manuales podrán conservar una lista vacía o tener uno o más nombres de empresa.
 
-Para un contacto vinculado a un `User`, `companyNames` será información sincronizada por el sistema: contendrá los nombres de sus clientes relacionados o `['ICSACV']` cuando no tenga relaciones. La sincronización reemplazará por completo el listado derivado para evitar nombres obsoletos.
+Para un contacto vinculado a un `User`, `companyNames` será información sincronizada por el sistema. Contendrá los nombres de sus clientes relacionados; al consumirse una invitación sin clientes seleccionados, el contacto inicial recibirá `['ICSACV']`. Un vaciado administrativo explícito de relaciones conservará la regla específica de `[]` definida para esa operación. La sincronización reemplazará por completo el listado derivado para evitar nombres obsoletos.
 
 La entrega incluirá una migración mecánica, ejecutada antes de desplegar relaciones usuario-cliente: cada contacto existente convertirá su `company_name` actual en `company_names: [company_name]` o en `company_names: []` si el valor actual es nulo o vacío. La migración eliminará el campo legado `company_name`.
 
@@ -136,3 +139,58 @@ El contacto vinculado a un usuario se resincronizará dentro de la misma transac
 - Al eliminar lógicamente un usuario, se conservará su `companyNames` y su contacto seguirá el comportamiento vigente de marcado lógico como eliminado.
 
 No se agregarán eventos o listeners independientes en esta entrega. Los casos de uso que crean o reemplazan relaciones invocarán la sincronización dentro de su unidad atómica. Las actualizaciones ordinarias de datos de usuario no modificarán `companyNames`.
+
+## Decision 16. Derived Contact Company Names
+
+Cuando un contacto tenga `userId`, su `companyNames` será administrado exclusivamente por la sincronización de relaciones usuario-cliente. `PATCH /v1/contacts/:contactId` rechazará un intento explícito de modificar `company_names` en esos contactos, pero conservará la edición vigente de los demás campos permitidos.
+
+## Decision 17. Customer Name Change Synchronization
+
+Al actualizar el nombre de un cliente, el sistema resincronizará los `companyNames` de los contactos vinculados a usuarios que tengan una relación con ese cliente. No se agregará endpoint, evento público ni listener independiente.
+
+La implementación se aislará en servicios compartidos de responsabilidad acotada. Los casos de uso de invitaciones, usuarios y clientes solo los orquestarán; no incorporarán lógica de resolución, reemplazo o propagación de nombres de empresa.
+
+## Decision 18. Atomic Customer Name Propagation
+
+Cuando cambie `companyName` de un `Customer`, la actualización del cliente y la resincronización de los contactos afectados formarán una sola unidad atómica. Si la propagación falla, tampoco se persistirá el nuevo nombre del cliente; así no habrá contactos con nombres obsoletos respecto al recurso administrativo.
+
+El caso de uso seguirá sin conocer sesiones, `ObjectId` ni APIs de Mongoose. La frontera transaccional y sus detalles permanecerán encapsulados en infraestructura detrás del puerto acordado.
+
+## Decision 19. Shared Batch Synchronization Composition
+
+La resolución y actualización de `companyNames` derivados se separará en servicios compartidos de responsabilidad acotada:
+
+- Un resolver de nombres de empresa por usuarios, que recibe uno o varios IDs de usuario y determina los nombres vigentes de sus clientes relacionados.
+- Un sincronizador de contactos de usuario, que aplica esos nombres a los contactos vinculados.
+- Un sincronizador orientado a cliente, que identifica los usuarios afectados por un cliente y delega en los dos servicios anteriores.
+
+Los casos de uso de invitaciones y usuarios usarán la resolución y sincronización por usuario. El caso de uso de actualización de cliente usará el sincronizador orientado a cliente dentro de su unidad atómica.
+
+Las operaciones se resolverán por conjuntos de IDs para evitar consultas repetitivas por usuario. Los puertos manejarán IDs de dominio; la agrupación de consultas y actualizaciones por lote seguirá siendo responsabilidad de infraestructura.
+
+## Decision 20. Batch Repository Contracts
+
+El puerto de lectura de `UserCustomerRelationship` permitirá consultar relaciones por uno o varios usuarios y consultar los usuarios relacionados con un cliente. El puerto de lectura de clientes incorporará la lectura por varios IDs ya definida.
+
+El puerto de escritura de contactos expondrá una operación semántica para reemplazar `companyNames` de varios contactos identificados por `userId`. Cada entrada contendrá únicamente el ID de usuario y su listado normalizado de nombres.
+
+El resolver devolverá una colección determinista de `{ userId, companyNames }`; cuando un usuario no tenga relaciones, devolverá `companyNames: []`. El fallback `['ICSACV']` permanecerá como una regla explícita y exclusiva del consumo de invitaciones sin clientes seleccionados. El reemplazo administrativo vacío conservará `[]`.
+
+## Decision 21. Derived Company-Name Order
+
+Los `companyNames` derivados se ordenarán ascendentemente por nombre de cliente y, cuando dos clientes compartan el mismo nombre, por su ID. El orden estable evita diferencias técnicas o escrituras innecesarias causadas únicamente por el orden de las relaciones persistidas.
+
+## Decision 22. Manual Validation Scope
+
+La entrega no incluirá pruebas automatizadas. La validación manual en Postman y base de datos cubrirá:
+
+- La migración de `company_name` a `company_names`.
+- Invitaciones con cero, uno y varios clientes, además de IDs inválidos, inactivos y duplicados.
+- Detalles administrativos de invitaciones y usuarios con clientes, estado y nombre localizado.
+- Consumo, reenvío y revocación de invitaciones.
+- Reemplazo, vaciado y omisión de `customer_ids` al editar usuarios.
+- Filtros de usuarios relacionados y no relacionados, incluido un ID de cliente inexistente.
+- Sincronización de contactos al consumir invitaciones, reemplazar relaciones y renombrar clientes.
+- Rechazo de edición manual de `company_names` en contactos vinculados a usuarios.
+- Conservación de relaciones ante promoción de rol y eliminación lógica de usuarios.
+- Límites de `APPLICATION`, `USER` y `MASTER`.

@@ -2,8 +2,8 @@
 
 ## Status
 
-- Definition: in progress
-- Technical design: pending
+- Definition: completed
+- Technical design: completed
 - Implementation: pending
 
 ## Objective
@@ -41,3 +41,7 @@ Permitir que un usuario de aplicación se relacione con uno o más clientes exis
 
 - Implementación de frontend.
 - Cambios a la frontera `MASTER` hasta que se determine expresamente su necesidad.
+
+## Architectural Implementation Principle
+
+Los casos de uso principales conservarán responsabilidad de orquestación. La validación y sincronización reutilizable de relaciones usuario-cliente, contactos y nombres de empresa se aislará en servicios compartidos pequeños, con responsabilidades explícitas. No se concentrará lógica de dominio adicional en controladores, casos de uso o servicios existentes que no sean dueños directos de esa responsabilidad.
