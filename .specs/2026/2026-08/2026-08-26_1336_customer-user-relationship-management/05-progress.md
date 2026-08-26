@@ -46,7 +46,8 @@ Implementation.
 - Se preservan relaciones existentes con Clientes no activos durante el reemplazo administrativo, sin permitir nuevas relaciones no activas.
 - `UpdateUserUseCase` y el consumo de invitaciones reutilizan el servicio centralizado para sustituir relaciones y sincronizar Contactos.
 - Se implementaron los cuatro casos de uso contextuales de Clientes para consultar, asociar y desasociar Usuarios, con DTOs de aplicacion y lookup compacto reutilizable.
+- Se implementaron adapters CQRS, DTOs HTTP, presenters localizados y `CustomerUserRelationshipController` con las cuatro rutas contextuales protegidas por permisos de Clientes.
 
 ## Next
 
-- Implementar adapters CQRS, DTOs HTTP, presenters localizados y el controller contextual de Clientes.
+- Refactorizar el listado global de Usuarios para `customer_id` y `customer_relationship=UNASSIGNED`, y eliminar el filtro anterior.

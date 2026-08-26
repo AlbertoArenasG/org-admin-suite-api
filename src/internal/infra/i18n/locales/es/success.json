@@ -20,7 +20,9 @@
   "CUSTOMER": {
     "CREATED": "Cliente creado correctamente",
     "UPDATED": "Cliente actualizado correctamente",
-    "DELETED": "Cliente eliminado correctamente"
+    "DELETED": "Cliente eliminado correctamente",
+    "USER_ASSOCIATED": "Usuario asociado al cliente correctamente",
+    "USER_DISASSOCIATED": "Usuario desasociado del cliente correctamente"
   },
   "PROVIDER": {
     "CREATED": "Proveedor creado correctamente",
