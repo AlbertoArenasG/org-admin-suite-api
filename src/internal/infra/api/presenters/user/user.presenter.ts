@@ -31,7 +31,7 @@ export class UserPresenter {
         ? {}
         : {
             customers: result.customers.map((customer) => ({
-              id: customer.id,
+              customer_id: customer.id,
               company_name: customer.companyName,
               status: customer.status,
               status_name: this.enumNameService.getEnumName(
