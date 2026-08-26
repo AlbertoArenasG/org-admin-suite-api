@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Technical design.
+Implementation.
 
 ## Completed
 
@@ -27,7 +27,19 @@ Technical design.
 - Se aprobo el mapeo uniforme de rechazos contextuales.
 - Se aprobo diferenciar el lookup simple de la asociacion contextual flexible.
 - Se cerro formalmente la fase Definition con 19 decisiones aprobadas.
+- Se aprobo el servicio compartido de escritura relacional para el diseno tecnico.
+- Se aprobaron puertos de lectura explicitos para consultas relacionales.
+- Se aprobaron casos de uso y componentes CQRS independientes para la frontera contextual.
+- Se aprobaron contratos HTTP, DTOs y la regla transversal de localizacion en presenters.
+- Se aprobaron presenters administrativos y un presenter compacto reutilizable para lookups.
+- Se aprobo un controller contextual separado con permisos directos de Clientes.
+- Se aprobaron operaciones, puertos puntuales y concurrencia de `UserCustomerRelationshipManagerService`.
+- Se aprobo `CustomerContextValidationService` para reutilizar reglas de ciclo de vida contextual.
+- Se aprobo resincronizar Contactos al eliminar logicamente un Cliente.
+- Se aprobo `StateConflictException` y su mapeo uniforme a `409`.
+- Se aprobo validacion manual sin pruebas automatizadas.
+- Se cerro formalmente Technical design y se aprobo el breakdown de implementacion.
 
 ## Next
 
-- Definir el diseno tecnico y el breakdown de implementacion.
+- Implementar Phase 3: Fundaciones.

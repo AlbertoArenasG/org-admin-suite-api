@@ -13,14 +13,14 @@ Agregar una frontera contextual de Clientes para consultar y administrar relacio
 
 ### Phase 2. Technical Design
 
-- Estado: pending.
-- Definir puertos, casos de uso, CQRS, DTOs, presenters y autorizacion.
+- Estado: completed.
+- Se definieron puertos, servicios, casos de uso, CQRS, DTOs, presenters, autorizacion, sincronizacion y estrategia de validacion.
 
 ### Phase 3. Implementation And Validation
 
 - Estado: pending.
-- Implementar endpoints y actualizar Postman, docs y handoff frontend.
-- Ejecutar verificaciones y documentar validacion manual.
+- Implementar conforme al breakdown aprobado en `07-implementation-breakdown.md`.
+- Actualizar Postman, docs y documentar validacion manual.
 
 ## Exit Criteria
 
