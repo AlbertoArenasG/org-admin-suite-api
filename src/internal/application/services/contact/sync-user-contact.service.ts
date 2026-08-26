@@ -19,7 +19,10 @@ export class SyncUserContactService {
     private readonly contactWriteRepository: IContactWriteRepository,
   ) {}
 
-  async syncFromUser(user: User): Promise<Contact> {
+  async syncFromUser(
+    user: User,
+    options?: { companyNames?: string[] },
+  ): Promise<Contact> {
     const { data: existingContact } =
       await this.contactReadRepository.findByUserId(user.id);
 
@@ -28,7 +31,9 @@ export class SyncUserContactService {
         userId: user.id,
         name: user.name,
         lastname: user.lastname,
-        companyNames: [SyncUserContactService.INTERNAL_COMPANY_NAME],
+        companyNames: options?.companyNames ?? [
+          SyncUserContactService.INTERNAL_COMPANY_NAME,
+        ],
         emails: [{ value: user.email }],
         phones: [],
         cellPhones: this.toCellPhoneValues(user),
@@ -48,7 +53,7 @@ export class SyncUserContactService {
       lastname: user.lastname,
       email: user.email,
       cellPhone: this.toPrimaryCellPhone(user),
-      companyNames: [SyncUserContactService.INTERNAL_COMPANY_NAME],
+      companyNames: options?.companyNames,
       status: this.mapUserStatus(user.status),
     });
 

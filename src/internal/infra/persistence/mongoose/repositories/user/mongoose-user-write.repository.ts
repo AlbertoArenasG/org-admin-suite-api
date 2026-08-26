@@ -12,7 +12,7 @@ export class MongooseUserWriteRepositoryImpl
   async create(user: User): Promise<{ data: User | null }> {
     const data = this.toMongoose(user);
     const entity = new this.userModel(data);
-    await entity.save();
+    await entity.save({ session: this.transactionContext.getSession() });
     return {
       data: this.toDomain(entity),
     };
@@ -23,6 +23,7 @@ export class MongooseUserWriteRepositoryImpl
 
     const updated = await this.userModel
       .findOneAndUpdate({ user_id: user.id }, data, { new: true })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return {

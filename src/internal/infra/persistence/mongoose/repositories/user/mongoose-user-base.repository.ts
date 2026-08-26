@@ -6,12 +6,14 @@ import { User } from '@domain/entities/user.entity';
 import { UserDocument } from '@infra/persistence/mongoose/schemas';
 
 import * as mappers from '@infra/persistence/mongoose/mappers';
+import { MongooseTransactionContext } from '@infra/persistence/mongoose/transactions';
 
 @Injectable()
 export class MongooseUserBaseRepository {
   constructor(
     @InjectModel(UserDocument.name)
     protected readonly userModel: Model<UserDocument>,
+    protected readonly transactionContext: MongooseTransactionContext,
   ) {}
 
   protected toDomain(userDocument: UserDocument): User {

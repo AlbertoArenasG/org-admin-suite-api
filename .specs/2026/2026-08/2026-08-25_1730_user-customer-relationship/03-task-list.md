@@ -99,8 +99,8 @@
 - [x] Implementar la frontera transaccional y el recurso interno `UserCustomerRelationship`.
       Status: completed
 
-- [ ] Extender invitaciones de aplicación y materializar relaciones al consumirlas.
-      Status: pending
+- [x] Extender invitaciones de aplicación y materializar relaciones al consumirlas.
+      Status: completed
 
 - [ ] Implementar servicios aislados de resolución y sincronización de nombres de empresa.
       Status: pending

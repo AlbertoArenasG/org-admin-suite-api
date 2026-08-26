@@ -5,12 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Contact } from '@domain/entities';
 import { ContactDocument } from '@infra/persistence/mongoose/schemas/contact/contact.schema';
 import { MongooseContactMapper } from '@infra/persistence/mongoose/mappers/contact';
+import { MongooseTransactionContext } from '@infra/persistence/mongoose/transactions';
 
 @Injectable()
 export class MongooseContactBaseRepository {
   constructor(
     @InjectModel(ContactDocument.name)
     protected readonly contactModel: Model<ContactDocument>,
+    protected readonly transactionContext: MongooseTransactionContext,
   ) {}
 
   protected toDomain(document: ContactDocument | null): Contact | null {

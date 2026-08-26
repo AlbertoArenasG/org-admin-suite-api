@@ -44,7 +44,8 @@ Phase 3: backend implementation in progress.
 - Defined a stable ordering for derived contact company names.
 - Defined the approved manual validation scope.
 - Implemented the transaction port, Mongoose transaction context and internal user-customer relationship resource.
+- Persisted validated customer selections in application invitations and materialized them atomically on consumption.
 
 ## Next
 
-- Extend application invitations to persist selected customer IDs and materialize their relationships on consumption.
+- Extend administrative users with relationship replacement, details and filters.

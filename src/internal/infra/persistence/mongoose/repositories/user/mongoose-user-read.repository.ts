@@ -15,7 +15,10 @@ export class MongooseUserReadRepositoryImpl
   implements IUserReadRepository
 {
   async findByEmail(email: string): Promise<{ data: User | null }> {
-    const document = await this.userModel.findOne({ email });
+    const document = await this.userModel
+      .findOne({ email })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: document ? this.toDomain(document) : null,
@@ -23,7 +26,10 @@ export class MongooseUserReadRepositoryImpl
   }
 
   async findById(userId: string): Promise<{ data: User | null }> {
-    const document = await this.userModel.findOne({ user_id: userId });
+    const document = await this.userModel
+      .findOne({ user_id: userId })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: document ? this.toDomain(document) : null,

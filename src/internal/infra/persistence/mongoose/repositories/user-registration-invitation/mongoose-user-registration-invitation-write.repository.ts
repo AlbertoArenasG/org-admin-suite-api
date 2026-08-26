@@ -23,7 +23,7 @@ export class MongooseUserRegistrationInvitationWriteRepositoryImpl
   ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
     const entity = new this.invitationModel(this.toMongoose(record));
 
-    await entity.save();
+    await entity.save({ session: this.transactionContext.getSession() });
 
     return {
       data: this.toDomain(entity),
@@ -34,14 +34,17 @@ export class MongooseUserRegistrationInvitationWriteRepositoryImpl
     invitationId: string,
     consumedAt: Date,
   ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
-    const updated = await this.invitationModel.findOneAndUpdate(
-      { invitation_id: invitationId },
-      {
-        consumed_at: consumedAt,
-        status: UserRegistrationInvitationStatus.CONSUMED,
-      },
-      { new: true },
-    );
+    const updated = await this.invitationModel
+      .findOneAndUpdate(
+        { invitation_id: invitationId },
+        {
+          consumed_at: consumedAt,
+          status: UserRegistrationInvitationStatus.CONSUMED,
+        },
+        { new: true },
+      )
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: this.toDomain(updated),

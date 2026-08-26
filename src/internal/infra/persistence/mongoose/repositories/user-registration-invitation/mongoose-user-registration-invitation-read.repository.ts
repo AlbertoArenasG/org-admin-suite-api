@@ -28,7 +28,10 @@ export class MongooseUserRegistrationInvitationReadRepositoryImpl
       status: UserRegistrationInvitationStatus.PENDING,
     };
 
-    const document = await this.invitationModel.findOne(query);
+    const document = await this.invitationModel
+      .findOne(query)
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: this.toDomain(document),
@@ -38,9 +41,10 @@ export class MongooseUserRegistrationInvitationReadRepositoryImpl
   async findByTokenHash(
     tokenHash: string,
   ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
-    const document = await this.invitationModel.findOne({
-      token_hash: tokenHash,
-    });
+    const document = await this.invitationModel
+      .findOne({ token_hash: tokenHash })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: this.toDomain(document),
@@ -88,10 +92,13 @@ export class MongooseUserRegistrationInvitationReadRepositoryImpl
   async findApplicationInvitationById(
     invitationId: string,
   ): Promise<{ data: UserRegistrationInvitationRecord | null }> {
-    const document = await this.invitationModel.findOne({
-      invitation_id: invitationId,
-      scope: UserRegistrationInvitationScope.APPLICATION,
-    });
+    const document = await this.invitationModel
+      .findOne({
+        invitation_id: invitationId,
+        scope: UserRegistrationInvitationScope.APPLICATION,
+      })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
 
     return {
       data: this.toDomain(document),

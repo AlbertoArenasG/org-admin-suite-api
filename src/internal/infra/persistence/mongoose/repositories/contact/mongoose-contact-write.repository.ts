@@ -15,7 +15,7 @@ export class MongooseContactWriteRepositoryImpl
       contact_id: contact.id,
       ...data,
     });
-    await entity.save();
+    await entity.save({ session: this.transactionContext.getSession() });
 
     return {
       data: this.toDomain(entity),
@@ -27,10 +27,29 @@ export class MongooseContactWriteRepositoryImpl
 
     const updated = await this.contactModel
       .findOneAndUpdate({ contact_id: contact.id }, data, { new: true })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return {
       data: this.toDomain(updated),
     };
+  }
+
+  async replaceCompanyNamesForUsers(
+    updates: Array<{ userId: string; companyNames: string[] }>,
+  ): Promise<void> {
+    if (updates.length === 0) {
+      return;
+    }
+
+    await this.contactModel.bulkWrite(
+      updates.map((update) => ({
+        updateOne: {
+          filter: { user_id: update.userId },
+          update: { $set: { company_names: update.companyNames } },
+        },
+      })),
+      { session: this.transactionContext.getSession() },
+    );
   }
 }

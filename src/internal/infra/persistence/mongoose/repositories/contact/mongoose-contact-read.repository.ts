@@ -12,6 +12,7 @@ import {
 import { MongooseContactBaseRepository } from './mongoose-contact-base.repository';
 import { ContactDocument } from '@infra/persistence/mongoose/schemas/contact/contact.schema';
 import { UserDocument } from '@infra/persistence/mongoose/schemas/user/user.schema';
+import { MongooseTransactionContext } from '@infra/persistence/mongoose/transactions';
 
 @Injectable()
 export class MongooseContactReadRepositoryImpl
@@ -23,8 +24,9 @@ export class MongooseContactReadRepositoryImpl
     contactModel: Model<ContactDocument>,
     @InjectModel(UserDocument.name)
     private readonly userModel: Model<UserDocument>,
+    transactionContext: MongooseTransactionContext,
   ) {
-    super(contactModel);
+    super(contactModel, transactionContext);
   }
 
   async findById(contactId: string): Promise<{ data: Contact | null }> {
@@ -54,6 +56,7 @@ export class MongooseContactReadRepositoryImpl
   async findByUserId(userId: string): Promise<{ data: Contact | null }> {
     const document = await this.contactModel
       .findOne({ user_id: userId })
+      .session(this.transactionContext.getSession() ?? null)
       .exec();
 
     return { data: this.toDomain(document) };
