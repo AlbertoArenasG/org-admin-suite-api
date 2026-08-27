@@ -11,6 +11,7 @@ export class UserPresenter {
       id: result.id,
       name: result.name,
       lastname: result.lastname,
+      full_name: `${result.name} ${result.lastname}`.trim(),
       email: result.email,
       system_role: result.systemRole,
       system_role_name: this.enumNameService.getEnumName(
