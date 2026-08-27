@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 import { genId } from '@src/common/utils';
 
 @Schema({
-  collection: 'user_customer_relationships',
+  collection: 'users_customers',
   timestamps: false,
 })
 export class UserCustomerRelationshipDocument extends Document {
