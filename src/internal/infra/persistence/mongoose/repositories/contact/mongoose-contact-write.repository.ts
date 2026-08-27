@@ -47,6 +47,7 @@ export class MongooseContactWriteRepositoryImpl
         updateOne: {
           filter: { user_id: update.userId },
           update: { $set: { company_names: update.companyNames } },
+          timestamps: false,
         },
       })),
       { session: this.transactionContext.getSession() },

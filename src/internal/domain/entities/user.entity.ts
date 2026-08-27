@@ -11,6 +11,7 @@ export interface UserProps {
   password: string;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   status: UserStatus;
   cellPhone: {
     countryCode: string | null;
@@ -58,6 +59,10 @@ export class User extends Entity<UserProps> {
 
   get roleId(): string | null {
     return this.props.roleId ?? null;
+  }
+
+  get isInternalStaff(): boolean {
+    return this.props.isInternalStaff;
   }
 
   get status(): UserStatus {
@@ -141,6 +146,11 @@ export class User extends Entity<UserProps> {
   }): void {
     this.props.systemRole = params.systemRole;
     this.props.roleId = params.roleId;
+    this.touch();
+  }
+
+  updateInternalStaff(isInternalStaff: boolean): void {
+    this.props.isInternalStaff = isInternalStaff;
     this.touch();
   }
 

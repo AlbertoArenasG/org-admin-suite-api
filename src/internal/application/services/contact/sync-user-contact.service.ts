@@ -7,33 +7,33 @@ import {
   IContactWriteRepository,
   IContactWriteRepositoryToken,
 } from '@domain/ports/repositories';
+import { UserCustomerCompanyNamesResolverService } from '../user-customer-relationship/user-customer-company-names-resolver.service';
 
 @Injectable()
 export class SyncUserContactService {
-  private static readonly INTERNAL_COMPANY_NAME = 'ICSACV';
-
   constructor(
     @Inject(IContactReadRepositoryToken)
     private readonly contactReadRepository: IContactReadRepository,
     @Inject(IContactWriteRepositoryToken)
     private readonly contactWriteRepository: IContactWriteRepository,
+    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
   ) {}
 
-  async syncFromUser(
-    user: User,
-    options?: { companyNames?: string[] },
-  ): Promise<Contact> {
+  async syncFromUser(user: User): Promise<Contact> {
+    const [resolution] = await this.companyNamesResolver.resolveForUserIds([
+      user.id,
+    ]);
+    const companyNames = resolution?.companyNames ?? [];
     const { data: existingContact } =
       await this.contactReadRepository.findByUserId(user.id);
 
     if (!existingContact) {
       const contact = new Contact({
         userId: user.id,
+        isInternalStaff: user.isInternalStaff,
         name: user.name,
         lastname: user.lastname,
-        companyNames: options?.companyNames ?? [
-          SyncUserContactService.INTERNAL_COMPANY_NAME,
-        ],
+        companyNames,
         emails: [{ value: user.email }],
         phones: [],
         cellPhones: this.toCellPhoneValues(user),
@@ -51,14 +51,27 @@ export class SyncUserContactService {
     existingContact.syncFromUser({
       name: user.name,
       lastname: user.lastname,
+      isInternalStaff: user.isInternalStaff,
       email: user.email,
       cellPhone: this.toPrimaryCellPhone(user),
-      companyNames: options?.companyNames,
+      companyNames,
       status: this.mapUserStatus(user.status),
     });
 
     const { data } = await this.contactWriteRepository.update(existingContact);
     return data!;
+  }
+
+  async syncCompanyNamesForUsers(userIds: string[]): Promise<void> {
+    const uniqueUserIds = [...new Set(userIds)];
+
+    if (uniqueUserIds.length === 0) {
+      return;
+    }
+
+    const resolutions =
+      await this.companyNamesResolver.resolveForUserIds(uniqueUserIds);
+    await this.contactWriteRepository.replaceCompanyNamesForUsers(resolutions);
   }
 
   async markDeletedFromUser(user: User): Promise<void> {

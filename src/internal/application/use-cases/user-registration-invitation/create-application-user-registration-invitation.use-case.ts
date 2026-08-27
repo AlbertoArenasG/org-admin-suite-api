@@ -28,6 +28,7 @@ import {
 } from '@application/services';
 import { UserRegistrationInvitationNotifierService } from '@application/services/notification';
 import { SystemRole, User } from '@domain/entities';
+import { UserInternalStaffPolicy } from '@domain/policies';
 
 @Injectable()
 export class CreateApplicationUserRegistrationInvitationUseCase {
@@ -78,6 +79,10 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
     }
 
     const { token, tokenHash } = this.tokenService.generate();
+    const isInternalStaff = UserInternalStaffPolicy.resolve(
+      input.systemRole,
+      input.isInternalStaff,
+    );
 
     const invitationType = UserRegistrationInvitationType.NEW_USER_REGISTRATION;
 
@@ -88,6 +93,7 @@ export class CreateApplicationUserRegistrationInvitationUseCase {
       email: input.email,
       systemRole: input.systemRole,
       roleId: input.roleId,
+      isInternalStaff,
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,

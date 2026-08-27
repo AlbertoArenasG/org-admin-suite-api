@@ -13,8 +13,6 @@ import {
   SeedReportItem,
 } from '../shared/mongoose-seed.types';
 
-const INTERNAL_COMPANY_NAME = 'ICSACV';
-
 function getUserModel(
   connection: MongooseSeedContext['connection'],
 ): Model<UserDocument> {
@@ -93,7 +91,8 @@ export const contactsFromUsersSeed: MongooseSeedDefinition = {
           name: user.name,
           lastname: user.lastname,
           full_name: fullName,
-          company_names: [INTERNAL_COMPANY_NAME],
+          is_internal_staff: user.is_internal_staff,
+          company_names: [],
           emails: primaryEmail ? [{ value: primaryEmail }] : [],
           phones: [],
           cell_phones: primaryCellPhone ? [{ value: primaryCellPhone }] : [],
@@ -144,8 +143,8 @@ export const contactsFromUsersSeed: MongooseSeedDefinition = {
         shouldUpdate = true;
       }
 
-      if (!existing.company_names || existing.company_names.length === 0) {
-        existing.company_names = [INTERNAL_COMPANY_NAME];
+      if (existing.is_internal_staff !== user.is_internal_staff) {
+        existing.is_internal_staff = user.is_internal_staff;
         shouldUpdate = true;
       }
 

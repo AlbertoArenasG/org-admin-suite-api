@@ -10,6 +10,7 @@ import {
 export interface BaseCreateUserRegistrationInvitationDto {
   email: string;
   invitedByUserId: string;
+  isInternalStaff?: boolean;
   userData?: UserRegistrationInvitationUserData | null;
 }
 
@@ -18,6 +19,7 @@ export interface CreateApplicationUserRegistrationInvitationDto
   scope: UserRegistrationInvitationScope.APPLICATION;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   customerIds: string[];
 }
 
@@ -26,6 +28,7 @@ export interface CreateMasterUserRegistrationInvitationDto
   scope: UserRegistrationInvitationScope.MASTER;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff?: boolean;
 }
 
 export type CreateUserRegistrationInvitationDto =
@@ -40,6 +43,7 @@ export interface UserRegistrationInvitationDto {
   status: UserRegistrationInvitationStatus;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   invitedByUserId: string;
   userData?: UserRegistrationInvitationUserData | null;
   consumedAt?: Date | null;
@@ -53,6 +57,7 @@ export interface ApplicationUserRegistrationInvitationDto {
   status: UserRegistrationInvitationStatus;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   roleName: string | null;
   userData?: UserRegistrationInvitationUserData | null;
   invitedByUserId: string;

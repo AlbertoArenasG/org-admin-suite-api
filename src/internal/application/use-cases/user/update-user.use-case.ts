@@ -23,6 +23,7 @@ import {
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
 import { UserResultMapper } from '@application/mappers';
 import { UserStatus } from '@domain/entities';
+import { UserInternalStaffPolicy } from '@domain/policies';
 import {
   AuthorizationService,
   SyncUserContactService,
@@ -57,10 +58,10 @@ export class UpdateUserUseCase {
     }
 
     const isSelfUpdate = actorUserId === userId;
+    const nextSystemRole = payload.systemRole ?? user.systemRole;
+    const systemRoleChanged = nextSystemRole !== user.systemRole;
 
     if (payload.systemRole !== undefined || payload.roleId !== undefined) {
-      const nextSystemRole = payload.systemRole ?? user.systemRole;
-
       if (
         isSelfUpdate &&
         (nextSystemRole !== user.systemRole ||
@@ -92,6 +93,17 @@ export class UpdateUserUseCase {
         systemRole: nextSystemRole,
         roleId: payload.roleId ?? user.roleId,
       });
+    }
+
+    if (payload.isInternalStaff !== undefined || systemRoleChanged) {
+      const isInternalStaff = UserInternalStaffPolicy.resolve(
+        nextSystemRole,
+        payload.isInternalStaff ?? user.isInternalStaff,
+      );
+
+      if (isInternalStaff !== user.isInternalStaff) {
+        user.updateInternalStaff(isInternalStaff);
+      }
     }
 
     if (payload.status !== undefined) {
@@ -165,9 +177,9 @@ export class UpdateUserUseCase {
           user: data,
           customerIds: payload.customerIds,
         });
-      } else {
-        await this.syncUserContactService.syncFromUser(data);
       }
+
+      await this.syncUserContactService.syncFromUser(data);
 
       return data;
     });

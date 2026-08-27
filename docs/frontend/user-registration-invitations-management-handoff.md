@@ -12,6 +12,11 @@ La fuente de verdad es la API implementada por la spec `user-registration-invita
 - No expone listado, reenvío ni revocación de invitaciones `MASTER`.
 - La creación existente permanece en `POST /v1/user-registration-invitations`.
 
+Para una invitación `USER`, el request de creación debe incluir
+`is_internal_staff: boolean`. Es una clasificación de negocio independiente de
+los clientes relacionados. Para `ADMIN`, el valor efectivo es siempre `true` y
+enviar `false` es inválido.
+
 ## Permisos
 
 | Acción UI | Permiso requerido |
@@ -51,6 +56,7 @@ Respuesta de cada fila:
   "system_role_name": "Usuario",
   "role_id": "...",
   "role_name": "...",
+  "is_internal_staff": false,
   "user_data": {},
   "invited_by_user_id": "...",
   "created_at": "...",

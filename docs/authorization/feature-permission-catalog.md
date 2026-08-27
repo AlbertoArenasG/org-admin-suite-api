@@ -503,7 +503,7 @@ Endpoints actuales:
 - `POST /v1/contacts`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `contacts.CREATE`; crea solo contactos externos
+  - nota: protegido por `PermissionsGuard` con `contacts.CREATE`; crea contactos manuales con clasificacion explicita mediante `is_internal_staff`
 - `GET /v1/contacts`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -519,7 +519,7 @@ Endpoints actuales:
 - `PATCH /v1/contacts/:contactId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: protegido por `PermissionsGuard` con `contacts.UPDATE`; solo permite editar contactos externos
+  - nota: protegido por `PermissionsGuard` con `contacts.UPDATE`; solo permite editar contactos manuales sin `user_id`
 - `DELETE /v1/contacts/:contactId`
   - operacion: `DELETE`
   - acceso actual: autenticado

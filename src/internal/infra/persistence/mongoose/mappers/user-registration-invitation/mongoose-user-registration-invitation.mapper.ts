@@ -38,6 +38,7 @@ export class MongooseUserRegistrationInvitationMapper {
       email: document.email,
       systemRole: document.system_role,
       roleId: document.role_id ?? null,
+      isInternalStaff: document.is_internal_staff,
       invitedByUserId: document.invited_by_user_id,
       tokenHash: document.token_hash,
       userData,
@@ -70,6 +71,7 @@ export class MongooseUserRegistrationInvitationMapper {
       email: record.email,
       system_role: record.systemRole,
       role_id: record.roleId,
+      is_internal_staff: record.isInternalStaff,
       invited_by_user_id: record.invitedByUserId,
       token_hash: record.tokenHash,
       user_data: {

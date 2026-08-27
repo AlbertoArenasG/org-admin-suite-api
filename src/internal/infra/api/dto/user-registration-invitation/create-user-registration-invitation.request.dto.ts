@@ -2,11 +2,13 @@ import { Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
+  IsBoolean,
   IsEmail,
   IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -43,6 +45,13 @@ export class CreateUserRegistrationInvitationRequestDto {
   @IsNotEmpty()
   role_id!: string;
 
+  @ValidateIf(
+    (o: CreateUserRegistrationInvitationRequestDto) =>
+      o.system_role === SystemRole.USER || o.is_internal_staff !== undefined,
+  )
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
   @IsOptional()
   @IsArray()
   @ArrayUnique()
@@ -58,6 +67,7 @@ export class CreateUserRegistrationInvitationRequestDto {
       email: this.email,
       systemRole: this.system_role,
       roleId: this.role_id,
+      isInternalStaff: this.is_internal_staff as boolean,
       invitedByUserId,
       userData: this.buildUserData(),
       customerIds: this.customer_ids ?? [],

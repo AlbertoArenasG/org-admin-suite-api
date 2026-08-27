@@ -31,17 +31,20 @@ Antes de habilitar este flujo para roles ya existentes, backend debe ejecutar ma
 
 ## Invitaciones
 
-`POST /v1/user-registration-invitations` acepta el campo opcional:
+`POST /v1/user-registration-invitations` acepta `is_internal_staff` y el campo opcional `customer_ids`:
 
 ```json
 {
+  "is_internal_staff": false,
   "customer_ids": ["CUSTOMER_ID_A", "CUSTOMER_ID_B"]
 }
 ```
 
+- Para invitaciones `USER`, `is_internal_staff` es obligatorio.
+- Para invitaciones `ADMIN`, el valor efectivo siempre es `true`; enviar `false` es inválido.
 - Si se omite, la invitación conserva una selección vacía.
 - Los IDs deben ser únicos y corresponder a clientes `ACTIVE`.
-- Al consumir la invitación, backend materializa las relaciones y deriva los nombres de empresa del contacto interno.
+- Al consumir la invitación, backend materializa las relaciones y deriva `company_names` del contacto vinculado exclusivamente desde los Clientes relacionados.
 - Reenviar o revocar una invitación no modifica su selección.
 
 `GET /v1/user-registration-invitations/:invitationId` expone el detalle administrativo con:
@@ -63,12 +66,17 @@ Solo aplica a invitaciones `APPLICATION`; un ID de una invitación `MASTER` resp
 
 ## Usuarios
 
-`PATCH /v1/users/:userId` acepta opcionalmente `customer_ids` únicamente si el usuario objetivo es `USER`:
+`PATCH /v1/users/:userId` acepta opcionalmente `is_internal_staff` y `customer_ids`:
 
-- campo omitido: conserva las relaciones existentes;
-- `[]`: elimina todas las relaciones;
-- arreglo poblado: reemplaza el conjunto completo;
-- `ADMIN` y `MASTER_ADMIN`: backend rechaza el campo.
+- si `is_internal_staff` se omite, se conserva; para `ADMIN` o `MASTER_ADMIN`, el valor efectivo siempre es `true` y `false` es inválido;
+- el valor se expone como `is_internal_staff` en respuestas protegidas de Usuarios e Invitaciones;
+- no se expone en endpoints públicos de consumo de invitación;
+- `customer_ids` solo se acepta para el usuario objetivo `USER`:
+
+  - campo omitido: conserva las relaciones existentes;
+  - `[]`: elimina todas las relaciones;
+  - arreglo poblado: reemplaza el conjunto completo;
+  - `ADMIN` y `MASTER_ADMIN`: backend rechaza el campo.
 
 `GET /v1/users` conserva filas ligeras y admite filtros mutuamente excluyentes:
 
@@ -104,8 +112,9 @@ La respuesta administrativa de Usuario incluye `system_role_name` y `status_name
 
 El contrato de contactos reemplaza definitivamente `company_name` por `company_names: string[]`.
 
-- Los contactos manuales pueden enviar una lista vacía o varios nombres.
-- Los contactos vinculados a usuarios mantienen nombres derivados de sus relaciones; su actualización administrativa directa está bloqueada por backend.
+- Todo Contacto expone `is_internal_staff`; ya no debe inferirse su clasificación por `user_id` ni por `company_names`.
+- Los contactos manuales deben enviar `is_internal_staff` al crearse, pueden modificarlo y pueden enviar una lista vacía o varios nombres.
+- Los contactos vinculados a usuarios copian `is_internal_staff` desde el Usuario y mantienen nombres derivados exclusivamente de sus relaciones; su actualización administrativa directa está bloqueada por backend.
 - Cuando cambia el nombre de un cliente o se elimina lógicamente, backend recalcula y sincroniza los contactos vinculados en la misma transacción. La eliminación conserva la relación como historial, pero excluye ese Cliente de `company_names`.
 
 ## Despliegue Coordinado

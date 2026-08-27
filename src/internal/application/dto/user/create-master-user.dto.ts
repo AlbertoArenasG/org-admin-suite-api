@@ -9,6 +9,7 @@ export interface CreateMasterUserDto {
   password: string;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff?: boolean;
   cellPhone: PhoneDto;
 }
 

@@ -8,6 +8,7 @@ export interface CreateUserDto {
   password: string;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff?: boolean;
   cellPhone: PhoneDto;
 }
 
@@ -18,6 +19,7 @@ export interface UserViewDto {
   email: string;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   roleName: string | null;
   status: UserStatus;
   cellPhone: PhoneDto;

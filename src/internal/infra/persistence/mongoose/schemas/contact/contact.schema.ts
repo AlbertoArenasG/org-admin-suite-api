@@ -27,6 +27,9 @@ export class ContactDocument extends Document {
   @Prop({ type: String, required: false, default: null, index: true })
   user_id?: string | null;
 
+  @Prop({ type: Boolean, required: true, index: true })
+  is_internal_staff: boolean;
+
   @Prop({ type: String, required: true, trim: true, index: true })
   name: string;
 

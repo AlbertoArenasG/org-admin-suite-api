@@ -27,6 +27,7 @@ import {
   UserRegistrationInvitationTokenService,
 } from '@application/services';
 import { SystemRole } from '@domain/entities';
+import { UserInternalStaffPolicy } from '@domain/policies';
 
 @Injectable()
 export class CreateMasterUserRegistrationInvitationUseCase {
@@ -62,6 +63,10 @@ export class CreateMasterUserRegistrationInvitationUseCase {
     await this.ensureInvitationDoesNotExist(input.email);
 
     const { token, tokenHash } = this.tokenService.generate();
+    const isInternalStaff = UserInternalStaffPolicy.resolve(
+      input.systemRole,
+      input.isInternalStaff,
+    );
 
     const { data } = await this.invitationWriteRepository.create({
       scope: UserRegistrationInvitationScope.MASTER,
@@ -70,6 +75,7 @@ export class CreateMasterUserRegistrationInvitationUseCase {
       email: input.email,
       systemRole: input.systemRole,
       roleId: input.roleId,
+      isInternalStaff,
       invitedByUserId: input.invitedByUserId,
       tokenHash,
       userData: input.userData ?? null,

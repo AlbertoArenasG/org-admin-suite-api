@@ -25,3 +25,7 @@
 - Documentar el comando y escenarios de validacion manual.
 - Actualizar los documentos de API relevantes.
 - El usuario ejecuta y valida la migracion; despues se elimina la migracion temporal.
+
+### Migration Outcome
+
+La migracion temporal se ejecuto y valido manualmente. El script y sus comandos fueron eliminados para impedir que se aplique por error sobre datos futuros que puedan incluir usuarios externos.

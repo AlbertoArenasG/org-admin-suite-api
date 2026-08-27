@@ -19,6 +19,7 @@ export class UserPresenter {
       ),
       role_id: result.roleId,
       role_name: result.roleName,
+      is_internal_staff: result.isInternalStaff,
       status: result.status,
       status_name: this.enumNameService.getEnumName(
         `USER.STATUS.${result.status}`,
@@ -45,5 +46,26 @@ export class UserPresenter {
 
   async toUsersResponse(results: UserViewDto[]) {
     return Promise.all(results.map((result) => this.toUserResponse(result)));
+  }
+
+  async toPublicUserResponse(result: UserViewDto) {
+    return {
+      id: result.id,
+      name: result.name,
+      lastname: result.lastname,
+      full_name: `${result.name} ${result.lastname}`.trim(),
+      email: result.email,
+      system_role: result.systemRole,
+      role_id: result.roleId,
+      status: result.status,
+      status_name: this.enumNameService.getEnumName(
+        `USER.STATUS.${result.status}`,
+      ),
+      cell_phone: {
+        country_code: result.cellPhone?.countryCode ?? null,
+        number: result.cellPhone?.number ?? null,
+      },
+      created_at: result.createdAt,
+    };
   }
 }

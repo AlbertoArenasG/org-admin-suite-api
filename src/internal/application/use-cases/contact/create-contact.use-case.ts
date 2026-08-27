@@ -26,6 +26,7 @@ export class CreateContactUseCase {
 
     const contact = new Contact({
       userId: null,
+      isInternalStaff: input.isInternalStaff,
       name: input.name,
       lastname: input.lastname,
       companyNames: input.companyNames,

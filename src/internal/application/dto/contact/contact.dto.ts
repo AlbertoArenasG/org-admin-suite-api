@@ -18,6 +18,7 @@ export interface ContactListItemDto {
   id: string;
   type: ContactTypeFilter;
   userId: string | null;
+  isInternalStaff: boolean;
   name: string;
   lastname: string;
   fullName: string;
@@ -33,6 +34,7 @@ export interface ContactSearchItemDto {
   id: string;
   type: ContactTypeFilter;
   userId: string | null;
+  isInternalStaff: boolean;
   fullName: string;
   companyNames: string[];
   primaryEmail: string | null;
@@ -43,6 +45,7 @@ export interface ContactViewDto {
   id: string;
   type: ContactTypeFilter;
   userId: string | null;
+  isInternalStaff: boolean;
   name: string;
   lastname: string;
   fullName: string;
@@ -73,6 +76,7 @@ export interface SearchContactsDto {
 
 export interface CreateContactDto {
   actorUserId: string;
+  isInternalStaff: boolean;
   name: string;
   lastname: string;
   companyNames: string[];

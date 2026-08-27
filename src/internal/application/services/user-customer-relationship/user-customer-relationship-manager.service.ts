@@ -29,7 +29,6 @@ import {
 
 import { SyncUserContactService } from '../contact';
 import { CustomerContextValidationService } from './customer-context-validation.service';
-import { UserCustomerCompanyNamesResolverService } from './user-customer-company-names-resolver.service';
 import { UserCustomerRelationshipValidationService } from './user-customer-relationship-validation.service';
 
 @Injectable()
@@ -45,7 +44,6 @@ export class UserCustomerRelationshipManagerService {
     private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly customerContextValidationService: CustomerContextValidationService,
     private readonly relationshipValidationService: UserCustomerRelationshipValidationService,
-    private readonly companyNamesResolver: UserCustomerCompanyNamesResolverService,
     private readonly syncUserContactService: SyncUserContactService,
   ) {}
 
@@ -168,12 +166,6 @@ export class UserCustomerRelationshipManagerService {
   }
 
   private async synchronizeUserContact(user: User): Promise<void> {
-    const [resolution] = await this.companyNamesResolver.resolveForUserIds([
-      user.id,
-    ]);
-
-    await this.syncUserContactService.syncFromUser(user, {
-      companyNames: resolution?.companyNames ?? [],
-    });
+    await this.syncUserContactService.syncCompanyNamesForUsers([user.id]);
   }
 }

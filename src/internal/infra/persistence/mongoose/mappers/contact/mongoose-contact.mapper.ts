@@ -10,6 +10,7 @@ export class MongooseContactMapper {
     return new Contact({
       id: document.contact_id,
       userId: document.user_id ?? null,
+      isInternalStaff: document.is_internal_staff,
       name: document.name,
       lastname: document.lastname,
       companyNames: document.company_names ?? [],
@@ -29,6 +30,7 @@ export class MongooseContactMapper {
   static toMongoose(contact: Contact) {
     return {
       user_id: contact.userId,
+      is_internal_staff: contact.isInternalStaff,
       name: contact.name,
       lastname: contact.lastname,
       full_name: contact.fullName,

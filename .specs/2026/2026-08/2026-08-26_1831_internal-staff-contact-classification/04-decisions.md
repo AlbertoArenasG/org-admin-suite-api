@@ -62,7 +62,7 @@ approved
 
 La base actual contiene exclusivamente Usuarios e invitaciones de personal interno de Implementos Cientificos. La migracion temporal normalizara `is_internal_staff: true` para todos los documentos existentes de `User` y de invitaciones de registro aplicables.
 
-La migracion tambien resincronizara los contactos vinculados a Usuarios con la nueva regla de derivacion de `company_names`.
+La migracion dejara `company_names: []` directamente en los contactos vinculados a Usuarios, sin resolver relaciones ni ejecutar resincronizacion.
 
 No se disena como mecanismo permanente ni generico: debe ejecutarse manualmente una sola vez, validarse en MongoDB y eliminarse del repositorio dentro de esta misma spec. La eliminacion evita que se aplique por error en una base futura que ya contenga Usuarios externos.
 

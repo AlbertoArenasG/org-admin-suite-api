@@ -71,9 +71,9 @@ export class UserRegistrationInvitationPublicController {
     result: CompleteNewUserRegistrationInvitationResultDto,
   ) {
     if (result.scope === UserRegistrationInvitationScope.APPLICATION) {
-      return this.userPresenter.toUserResponse(result.user);
+      return this.userPresenter.toPublicUserResponse(result.user);
     }
 
-    return this.masterUserPresenter.toUserResponse(result.user);
+    return this.masterUserPresenter.toPublicUserResponse(result.user);
   }
 }

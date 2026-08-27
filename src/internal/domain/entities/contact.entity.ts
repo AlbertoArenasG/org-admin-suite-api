@@ -8,6 +8,7 @@ export interface ContactValueProps {
 export interface ContactProps {
   id?: string;
   userId: string | null;
+  isInternalStaff: boolean;
   name: string;
   lastname: string;
   companyNames: string[];
@@ -50,6 +51,10 @@ export class Contact extends Entity<ContactProps> {
 
   get userId(): string | null {
     return this.props.userId ?? null;
+  }
+
+  get isInternalStaff(): boolean {
+    return this.props.isInternalStaff;
   }
 
   get name(): string {
@@ -123,6 +128,7 @@ export class Contact extends Entity<ContactProps> {
     details: {
       name?: string;
       lastname?: string;
+      isInternalStaff?: boolean;
       companyNames?: string[];
       emails?: ContactValueProps[];
       phones?: ContactValueProps[];
@@ -136,6 +142,10 @@ export class Contact extends Entity<ContactProps> {
 
     if (details.lastname !== undefined) {
       this.props.lastname = details.lastname;
+    }
+
+    if (details.isInternalStaff !== undefined) {
+      this.props.isInternalStaff = details.isInternalStaff;
     }
 
     if (details.companyNames !== undefined) {
@@ -164,11 +174,13 @@ export class Contact extends Entity<ContactProps> {
     lastname: string;
     email: string;
     cellPhone: string | null;
+    isInternalStaff: boolean;
     companyNames?: string[];
     status?: ContactStatus;
   }): void {
     this.props.name = input.name;
     this.props.lastname = input.lastname;
+    this.props.isInternalStaff = input.isInternalStaff;
     this.props.emails = Contact.replacePrimaryValue(
       this.props.emails,
       input.email,

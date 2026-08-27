@@ -4,8 +4,8 @@
 
 - Definition: complete
 - Technical design: complete
-- Implementation: pending
-- Validation: pending
+- Implementation: complete
+- Validation: complete
 
 ## Objective
 
@@ -41,6 +41,6 @@ Separar la pertenencia interna de un usuario respecto a Implementos Cientificos 
 - Reglas de alcance de datos por Cliente en modulos futuros.
 - Atributos adicionales de empleo, puesto o sucursal.
 
-## Definition Pending
+## Implementation Notes
 
-- Diseno tecnico de modelos, persistencia y migracion temporal.
+- La migracion temporal queda pendiente de ejecucion y validacion manual antes de eliminarse del repositorio.

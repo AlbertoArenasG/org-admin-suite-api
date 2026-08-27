@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   ArrayUnique,
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -12,6 +13,9 @@ import { CreateContactDto } from '@application/dto';
 import { ContactValueRequestDto } from './contact-value.request.dto';
 
 export class CreateContactRequestDto {
+  @IsBoolean()
+  is_internal_staff!: boolean;
+
   @IsNotEmpty()
   @IsString()
   name!: string;
@@ -47,6 +51,7 @@ export class CreateContactRequestDto {
   toDomain(actorUserId: string): CreateContactDto {
     return {
       actorUserId,
+      isInternalStaff: this.is_internal_staff,
       name: this.name,
       lastname: this.lastname,
       companyNames: this.company_names ?? [],

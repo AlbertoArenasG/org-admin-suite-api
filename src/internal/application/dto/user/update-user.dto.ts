@@ -13,6 +13,7 @@ export interface UpdateUserDto {
     cellPhone?: PhoneDto | null;
     systemRole?: SystemRole;
     roleId?: string | null;
+    isInternalStaff?: boolean;
     status?: UserStatus;
     customerIds?: string[];
   };

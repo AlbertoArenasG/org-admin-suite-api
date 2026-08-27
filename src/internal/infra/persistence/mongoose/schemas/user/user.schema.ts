@@ -48,6 +48,9 @@ export class UserDocument extends Document {
   @Prop({ type: String, required: false, default: null, index: true })
   role_id?: string | null;
 
+  @Prop({ type: Boolean, required: true, index: true })
+  is_internal_staff: boolean;
+
   @Prop({
     type: String,
     enum: Object.values(UserStatus),

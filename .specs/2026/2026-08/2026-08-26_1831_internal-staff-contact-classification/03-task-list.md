@@ -20,12 +20,12 @@
 
 ## Implementation
 
-- [ ] Implementar cambios por slices aprobados.
-- [ ] Actualizar documentos de API relevantes.
-- [ ] Eliminar la migracion temporal despues de ejecutarla y validarla manualmente.
+- [x] Implementar cambios por slices aprobados.
+- [x] Actualizar documentos de API relevantes.
+- [x] Eliminar la migracion temporal despues de ejecutarla y validarla manualmente.
 
 ## Validation
 
-- [ ] Ejecutar y validar manualmente migracion o seed.
-- [ ] Validar flujos y datos en Postman y MongoDB.
-- [ ] Cerrar la spec.
+- [x] Ejecutar y validar manualmente la migracion temporal.
+- [x] Validar flujos y datos en Postman y MongoDB.
+- [x] Cerrar la spec.

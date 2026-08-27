@@ -41,6 +41,7 @@ export class UserResultMapper {
       email: user.email,
       systemRole: user.systemRole,
       roleId: user.roleId,
+      isInternalStaff: user.isInternalStaff,
       roleName,
       status: user.status,
       cellPhone: toCellPhoneDto(user),

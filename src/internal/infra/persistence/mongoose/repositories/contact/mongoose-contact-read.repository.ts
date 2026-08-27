@@ -157,17 +157,12 @@ export class MongooseContactReadRepositoryImpl
   }
 
   private buildTypeCriteria(type?: ContactTypeFilter): Record<string, unknown> {
-    const internalContactCriteria = {
-      user_id: { $ne: null },
-      company_names: 'ICSACV',
-    };
-
     if (type === 'INTERNAL') {
-      return internalContactCriteria;
+      return { is_internal_staff: true };
     }
 
     if (type === 'EXTERNAL') {
-      return { $nor: [internalContactCriteria] };
+      return { is_internal_staff: false };
     }
 
     return {};

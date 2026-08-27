@@ -107,6 +107,7 @@ export class CompleteNewUserRegistrationInvitationUseCase {
         password: hashedPassword,
         systemRole: invitation.systemRole,
         roleId: invitation.roleId,
+        isInternalStaff: invitation.isInternalStaff,
         status: UserStatus.ACTIVE,
         cellPhone: {
           countryCode: mergedUserData.cellPhone?.countryCode ?? null,
@@ -123,9 +124,9 @@ export class CompleteNewUserRegistrationInvitationUseCase {
           user: createdUser,
           customerIds: invitation.customerIds,
         });
-      } else {
-        await this.syncUserContactService.syncFromUser(createdUser);
       }
+
+      await this.syncUserContactService.syncFromUser(createdUser);
 
       const result =
         invitation.scope === UserRegistrationInvitationScope.MASTER

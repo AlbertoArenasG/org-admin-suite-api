@@ -204,6 +204,7 @@ Request vigente:
   },
   "system_role": "USER",
   "role_id": "ANALYST_MX",
+  "is_internal_staff": false,
   "customer_ids": ["CUSTOMER_ID"],
   "status_id": "ACTIVE"
 }
@@ -215,6 +216,7 @@ Reglas:
 - `system_role` acepta `MASTER_ADMIN`, `ADMIN` o `USER`
 - `role_id` puede enviarse cuando se quiera reasignar el rol
 - si se cambia a `USER`, debe quedar un `role_id` válido de scope `USER`
+- `is_internal_staff` es opcional en `PATCH`; si se omite conserva el valor. `ADMIN` y `MASTER_ADMIN` siempre son internos y rechazan `false`
 - un usuario no puede auto-cambiarse `system_role`, `role_id` ni `status`
 - el backend valida frontera estructural antes de permitir promoción, degradación o reasignación
 - un `USER` con `USERS/UPDATE` sí puede editar a otro `USER`
@@ -233,6 +235,7 @@ Response vigente:
     "email": "ana@example.com",
     "system_role": "USER",
     "role_id": "ANALYST_MX",
+    "is_internal_staff": false,
     "status": "ACTIVE",
     "status_name": "Activo",
     "cell_phone": {
@@ -268,6 +271,7 @@ Request vigente:
   },
   "system_role": "USER",
   "role_id": "CUSTOM_USER_ROLE_ID",
+  "is_internal_staff": false,
   "customer_ids": ["CUSTOMER_ID"]
 }
 ```
@@ -276,6 +280,7 @@ Reglas:
 
 - `system_role` solo acepta `ADMIN` o `USER`
 - `role_id` es obligatorio solo cuando `system_role = USER`
+- `is_internal_staff` es obligatorio cuando `system_role = USER`; para `ADMIN` el valor efectivo siempre es `true` y `false` es inválido
 - si `system_role = ADMIN`, el backend resuelve la invitación con el rol default de administración
 - `customer_ids` es opcional y solo aplica a `USER`; cada ID debe corresponder a un cliente activo
 
@@ -292,6 +297,7 @@ Response vigente:
     "email": "ana@example.com",
     "system_role": "USER",
     "role_id": "CUSTOM_USER_ROLE_ID",
+    "is_internal_staff": false,
     "invited_by_user_id": "USR_999",
     "user_data": {
       "name": "Ana",
@@ -310,6 +316,21 @@ Response vigente:
 ```
 
 ## Contratos De Respuesta Modernos
+
+## Clasificación Interna De Usuarios
+
+`is_internal_staff` es la fuente de verdad para clasificar al Usuario y al
+Contacto vinculado como interno o externo. No debe inferirse desde
+`company_names`, `customer_ids` ni `user_id`.
+
+- Las respuestas protegidas de Usuarios e Invitaciones incluyen el campo.
+- Los endpoints públicos de consulta y consumo de invitación no lo exponen.
+- Un `USER` debe declarar el valor al crearse o invitarse; en `PATCH` puede
+  omitirse para conservar el actual.
+- `ADMIN` y `MASTER_ADMIN` siempre son internos y el backend rechaza `false`.
+- Los Contactos manuales también requieren el campo al crearse y pueden
+  actualizarlo; los vinculados a Usuario se sincronizan exclusivamente desde
+  backend.
 
 ### `POST /v1/auth/login`
 

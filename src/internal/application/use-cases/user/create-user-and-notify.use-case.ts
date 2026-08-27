@@ -13,7 +13,7 @@ import {
   User,
   UserStatus,
 } from '@domain/entities';
-import { UserPasswordPolicy } from '@domain/policies';
+import { UserInternalStaffPolicy, UserPasswordPolicy } from '@domain/policies';
 import {
   EntityAlreadyExistsException,
   EntityAlreadyExistsExceptionCode,
@@ -91,6 +91,10 @@ export class CreateUserAndNotifyUseCase {
       password: hashedPassword,
       systemRole: input.systemRole,
       roleId: input.roleId,
+      isInternalStaff: UserInternalStaffPolicy.resolve(
+        input.systemRole,
+        input.isInternalStaff,
+      ),
       status: UserStatus.ACTIVE,
       cellPhone: input.cellPhone,
     });

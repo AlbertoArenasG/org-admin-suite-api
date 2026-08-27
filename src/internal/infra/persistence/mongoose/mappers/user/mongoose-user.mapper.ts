@@ -13,6 +13,7 @@ export class MongooseUserMapper {
       password: userDocument.password,
       systemRole: userDocument.system_role,
       roleId: userDocument.role_id ?? null,
+      isInternalStaff: userDocument.is_internal_staff,
       status: userDocument.status,
       cellPhone: {
         countryCode: userDocument.cell_phone?.country_code || null,
@@ -32,6 +33,7 @@ export class MongooseUserMapper {
       password: user.password,
       system_role: user.systemRole,
       role_id: user.roleId,
+      is_internal_staff: user.isInternalStaff,
       status: user.status,
       cell_phone: {
         country_code: user.cellPhone?.countryCode,

@@ -19,8 +19,12 @@ Status: complete.
 - Implementar por slices pequenos, conservando casos de uso como orquestadores.
 - Actualizar documentacion relevante en `docs`.
 
+Status: complete.
+
 ## Phase 4. Manual Validation And Closure
 
 - Documentar comandos manuales de migracion o seed sin ejecutarlos.
 - Validar contratos en Postman y datos en MongoDB.
 - Cerrar formalmente la spec.
+
+Status: complete.

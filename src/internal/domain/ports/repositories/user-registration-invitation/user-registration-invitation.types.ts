@@ -79,6 +79,7 @@ export interface CreateUserRegistrationInvitationRecord {
   email: string;
   systemRole: SystemRole;
   roleId: string | null;
+  isInternalStaff: boolean;
   invitedByUserId: string;
   tokenHash: string;
   userData?: UserRegistrationInvitationUserData | null;

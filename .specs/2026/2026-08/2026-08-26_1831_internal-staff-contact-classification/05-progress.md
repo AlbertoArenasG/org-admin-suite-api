@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Implementation.
+Completed.
 
 ## Completed
 
@@ -19,7 +19,16 @@ Implementation.
 - Se aprobaron los contratos protegidos, las excepciones obligatorias para `ADMIN` y `MASTER_ADMIN`, y la migracion temporal de Usuarios, Invitaciones y Contactos.
 - Se aprobo el diseno de sincronizacion, persistencia y validacion contra el rol final.
 - Se cerro formalmente el diseno tecnico, incluida la migracion temporal sin timestamps ni resolucion de relaciones.
+- Se implemento `is_internal_staff` obligatorio en Usuario, Contacto e Invitacion, con validacion centralizada respecto al rol final.
+- Se ajustaron los contratos protegidos y se excluyo la propiedad de las respuestas publicas de registro.
+- Se centralizo la sincronizacion de contactos vinculados en `SyncUserContactService`; la sincronizacion por relacion o Cliente actualiza exclusivamente `company_names` sin auditoria tecnica.
+- Se retiro la inferencia basada en `ICSACV` y los filtros de Contactos ahora usan la bandera materializada.
+- Se actualizo el seed de contactos desde Usuarios y se agrego la migracion temporal con `dry-run`, `apply` e integridad.
+- Se actualizaron los handoffs frontend, el catalogo de permisos y la coleccion Postman.
+- Se ejecuto y valido manualmente la migracion temporal; el script y sus comandos fueron retirados del repositorio.
+- Se validaron manualmente los flujos y contratos en Postman.
+- Se cerro formalmente la spec.
 
 ## Next
 
-- Implementar el Slice 1: contratos de dominio y persistencia.
+- No hay tareas pendientes.

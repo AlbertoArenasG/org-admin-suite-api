@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsEmail,
+  IsBoolean,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -41,12 +42,17 @@ export class CreateMasterUserRegistrationInvitationRequestDto {
   @IsNotEmpty()
   role_id!: string;
 
+  @IsOptional()
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
   toDomain(invitedByUserId: string): CreateMasterUserRegistrationInvitationDto {
     return {
       scope: UserRegistrationInvitationScope.MASTER,
       email: this.email,
       systemRole: this.system_role,
       roleId: this.role_id,
+      isInternalStaff: this.is_internal_staff,
       invitedByUserId,
       userData: this.buildUserData(),
     };

@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
+  IsBoolean,
   IsEmail,
   IsIn,
   IsOptional,
@@ -42,6 +43,10 @@ export class UpdateUserRequestDto {
   @IsOptional()
   @IsString()
   role_id?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  is_internal_staff?: boolean;
 
   @IsOptional()
   @IsIn(ALLOWED_STATUSES)
@@ -87,6 +92,10 @@ export class UpdateUserRequestDto {
 
     if (this.role_id !== undefined) {
       payload.roleId = this.role_id;
+    }
+
+    if (this.is_internal_staff !== undefined) {
+      payload.isInternalStaff = this.is_internal_staff;
     }
 
     if (this.status_id !== undefined) {

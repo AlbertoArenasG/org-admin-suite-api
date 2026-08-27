@@ -67,6 +67,9 @@ export class UserRegistrationInvitationDocument extends Document {
   @Prop({ type: String, required: false, default: null, index: true })
   role_id: string | null;
 
+  @Prop({ type: Boolean, required: true, index: true })
+  is_internal_staff: boolean;
+
   @Prop({ type: String, required: true, index: true })
   invited_by_user_id: string;
 

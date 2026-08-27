@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsEmail,
+  IsBoolean,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -45,6 +46,13 @@ export class CreateUserRequestDto {
   @IsString()
   role_id!: string;
 
+  @ValidateIf(
+    (o: CreateUserRequestDto) =>
+      o.system_role === SystemRole.USER || o.is_internal_staff !== undefined,
+  )
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
   toDomain(): CreateUserDto {
     return {
       name: this.name,
@@ -53,6 +61,7 @@ export class CreateUserRequestDto {
       password: this.password,
       systemRole: this.system_role,
       roleId: this.system_role === SystemRole.USER ? this.role_id : null,
+      isInternalStaff: this.is_internal_staff,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,
         number: this.cell_phone?.number || null,

@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsEmail,
+  IsBoolean,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -47,6 +48,10 @@ export class CreateMasterUserRequestDto {
   @IsString()
   role_id!: string;
 
+  @IsOptional()
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
   toDomain(): CreateMasterUserDto {
     return {
       name: this.name,
@@ -55,6 +60,7 @@ export class CreateMasterUserRequestDto {
       password: this.password,
       systemRole: this.system_role,
       roleId: this.system_role === SystemRole.USER ? this.role_id : null,
+      isInternalStaff: this.is_internal_staff,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,
         number: this.cell_phone?.number || null,
