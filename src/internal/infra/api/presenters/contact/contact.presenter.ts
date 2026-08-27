@@ -22,7 +22,6 @@ export class ContactPresenter {
   toViewResponse(result: ContactViewDto) {
     return {
       contact_id: result.id,
-      type: result.type,
       user_id: result.userId,
       is_internal_staff: result.isInternalStaff,
       name: result.name,
@@ -58,7 +57,6 @@ export class ContactPresenter {
   toCollection(results: ContactListItemDto[]) {
     return results.map((result) => ({
       contact_id: result.id,
-      type: result.type,
       user_id: result.userId,
       is_internal_staff: result.isInternalStaff,
       name: result.name,
@@ -79,7 +77,6 @@ export class ContactPresenter {
   toSearchCollection(results: ContactSearchItemDto[]) {
     return results.map((result) => ({
       contact_id: result.id,
-      type: result.type,
       user_id: result.userId,
       is_internal_staff: result.isInternalStaff,
       full_name: result.fullName,

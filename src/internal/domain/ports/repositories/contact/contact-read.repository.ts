@@ -1,6 +1,5 @@
 import { Contact, ContactStatus } from '@domain/entities';
 
-export type ContactTypeFilter = 'INTERNAL' | 'EXTERNAL';
 export type ContactSortField = 'name' | 'lastname' | 'status' | 'created_at';
 export type ContactSortDirection = 'asc' | 'desc';
 
@@ -9,7 +8,6 @@ export interface FindContactsParams {
   perPage: number;
   search?: string | null;
   status?: ContactStatus | null;
-  type?: ContactTypeFilter | null;
   sorts: Array<{ field: ContactSortField; direction: ContactSortDirection }>;
 }
 

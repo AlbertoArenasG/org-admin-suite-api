@@ -5,13 +5,11 @@ import {
   ContactViewDto,
 } from '@application/dto';
 import { Contact } from '@domain/entities';
-import { ContactTypeFilter } from '@domain/ports/repositories';
 
 export class ContactMapper {
   static toListItemDto(contact: Contact): ContactListItemDto {
     return {
       id: contact.id,
-      type: this.resolveType(contact),
       userId: contact.userId,
       isInternalStaff: contact.isInternalStaff,
       name: contact.name,
@@ -29,7 +27,6 @@ export class ContactMapper {
   static toSearchItemDto(contact: Contact): ContactSearchItemDto {
     return {
       id: contact.id,
-      type: this.resolveType(contact),
       userId: contact.userId,
       isInternalStaff: contact.isInternalStaff,
       fullName: contact.fullName,
@@ -46,7 +43,6 @@ export class ContactMapper {
   ): ContactViewDto {
     return {
       id: contact.id,
-      type: this.resolveType(contact),
       userId: contact.userId,
       isInternalStaff: contact.isInternalStaff,
       name: contact.name,
@@ -62,9 +58,5 @@ export class ContactMapper {
       createdAt: contact.createdAt ?? new Date(),
       updatedAt: contact.updatedAt,
     };
-  }
-
-  static resolveType(contact: Contact): ContactTypeFilter {
-    return contact.isInternalStaff ? 'INTERNAL' : 'EXTERNAL';
   }
 }

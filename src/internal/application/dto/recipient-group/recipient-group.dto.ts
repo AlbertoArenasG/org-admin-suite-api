@@ -15,8 +15,8 @@ export interface RecipientGroupChannelDto {
 
 export interface RecipientGroupContactSummaryDto {
   id: string;
-  type: 'INTERNAL' | 'EXTERNAL';
   userId: string | null;
+  isInternalStaff: boolean;
   fullName: string;
   companyNames: string[];
   primaryEmail: string | null;

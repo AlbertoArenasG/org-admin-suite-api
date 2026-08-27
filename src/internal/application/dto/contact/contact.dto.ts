@@ -7,7 +7,6 @@ import { ContactStatus } from '@domain/entities';
 import {
   ContactSortDirection,
   ContactSortField,
-  ContactTypeFilter,
 } from '@domain/ports/repositories';
 
 export interface ContactValueDto {
@@ -16,7 +15,6 @@ export interface ContactValueDto {
 
 export interface ContactListItemDto {
   id: string;
-  type: ContactTypeFilter;
   userId: string | null;
   isInternalStaff: boolean;
   name: string;
@@ -32,7 +30,6 @@ export interface ContactListItemDto {
 
 export interface ContactSearchItemDto {
   id: string;
-  type: ContactTypeFilter;
   userId: string | null;
   isInternalStaff: boolean;
   fullName: string;
@@ -43,7 +40,6 @@ export interface ContactSearchItemDto {
 
 export interface ContactViewDto {
   id: string;
-  type: ContactTypeFilter;
   userId: string | null;
   isInternalStaff: boolean;
   name: string;
@@ -63,7 +59,6 @@ export interface ContactViewDto {
 export interface GetContactsDto extends PaginationParamsDto {
   search: string | null;
   status: ContactStatus | null;
-  type: ContactTypeFilter | null;
   sorts: Array<{ field: ContactSortField; direction: ContactSortDirection }>;
 }
 

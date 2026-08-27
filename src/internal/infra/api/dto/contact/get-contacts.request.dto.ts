@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -10,7 +10,6 @@ import {
 
 import { GetContactsDto } from '@application/dto';
 import { ContactStatus } from '@domain/entities';
-import { ContactTypeFilter } from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 const ALLOWED_SORT_FIELDS = [
@@ -46,20 +45,12 @@ export class GetContactsRequestDto extends PaginationRequestDto {
   @IsEnum(ContactStatus)
   status?: ContactStatus;
 
-  @IsOptional()
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.toUpperCase() : value,
-  )
-  @IsIn(['INTERNAL', 'EXTERNAL'])
-  type?: ContactTypeFilter;
-
   toDomain(): GetContactsDto {
     return {
       page: this.getPage(),
       perPage: this.getPerPage(),
       search: this.search ?? null,
       status: this.status ?? null,
-      type: this.type ?? null,
       sorts: this.sort?.map((item) => ({
         field: item.field,
         direction: item.direction,

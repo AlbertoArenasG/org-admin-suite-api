@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 
 import { Contact, ContactStatus, SystemRole } from '@domain/entities';
 import {
-  ContactTypeFilter,
   FindContactsParams,
   FindContactsResult,
   IContactReadRepository,
@@ -63,7 +62,7 @@ export class MongooseContactReadRepositoryImpl
   }
 
   async findAll(params: FindContactsParams): Promise<FindContactsResult> {
-    const { page, perPage, search, status, type, sorts } = params;
+    const { page, perPage, search, status, sorts } = params;
     const skip = (page - 1) * perPage;
     const filter: Record<string, unknown> = {};
     const masterAdminUserIds = await this.userModel.distinct('user_id', {
@@ -84,8 +83,6 @@ export class MongooseContactReadRepositoryImpl
     constraints.push(
       this.buildMasterAdminExclusionCriteria(masterAdminUserIds),
     );
-    constraints.push(this.buildTypeCriteria(type));
-
     if (status) {
       filter.status = status;
     } else {
@@ -154,18 +151,6 @@ export class MongooseContactReadRepositoryImpl
         .map((document) => this.toDomain(document))
         .filter((contact): contact is Contact => contact !== null),
     };
-  }
-
-  private buildTypeCriteria(type?: ContactTypeFilter): Record<string, unknown> {
-    if (type === 'INTERNAL') {
-      return { is_internal_staff: true };
-    }
-
-    if (type === 'EXTERNAL') {
-      return { is_internal_staff: false };
-    }
-
-    return {};
   }
 
   private buildMasterAdminExclusionCriteria(

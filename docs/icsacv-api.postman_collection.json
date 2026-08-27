@@ -7011,11 +7011,6 @@
                   "disabled": true
                 },
                 {
-                  "key": "type",
-                  "value": "INTERNAL",
-                  "disabled": true
-                },
-                {
                   "key": "sort[0][field]",
                   "value": "created_at",
                   "disabled": true

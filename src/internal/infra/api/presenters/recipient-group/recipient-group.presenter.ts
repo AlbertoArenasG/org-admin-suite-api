@@ -31,8 +31,8 @@ export class RecipientGroupPresenter {
       ),
       contacts: result.contacts.map((contact) => ({
         contact_id: contact.id,
-        type: contact.type,
         user_id: contact.userId,
+        is_internal_staff: contact.isInternalStaff,
         full_name: contact.fullName,
         company_names: contact.companyNames,
         primary_email: contact.primaryEmail,

@@ -5,7 +5,6 @@ import {
   RecipientGroupViewDto,
 } from '@application/dto';
 import { Contact, RecipientGroup } from '@domain/entities';
-import { ContactMapper } from '@application/mappers';
 
 export class RecipientGroupMapper {
   static toListItemDto(
@@ -50,8 +49,8 @@ export class RecipientGroupMapper {
   ): RecipientGroupContactSummaryDto {
     return {
       id: contact.id,
-      type: ContactMapper.resolveType(contact),
       userId: contact.userId,
+      isInternalStaff: contact.isInternalStaff,
       fullName: contact.fullName,
       companyNames: contact.companyNames,
       primaryEmail: contact.emails[0]?.value ?? null,

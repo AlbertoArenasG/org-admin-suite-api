@@ -112,7 +112,7 @@ La respuesta administrativa de Usuario incluye `system_role_name` y `status_name
 
 El contrato de contactos reemplaza definitivamente `company_name` por `company_names: string[]`.
 
-- Todo Contacto expone `is_internal_staff`; ya no debe inferirse su clasificación por `user_id` ni por `company_names`.
+- Todo Contacto expone `is_internal_staff`; es la unica clasificacion de contacto expuesta por la API. Ya no existe el query ni el campo derivado `type`, y frontend no debe inferir la clasificacion por `user_id` ni por `company_names`.
 - Los contactos manuales deben enviar `is_internal_staff` al crearse, pueden modificarlo y pueden enviar una lista vacía o varios nombres.
 - Los contactos vinculados a usuarios copian `is_internal_staff` desde el Usuario y mantienen nombres derivados exclusivamente de sus relaciones; su actualización administrativa directa está bloqueada por backend.
 - Cuando cambia el nombre de un cliente o se elimina lógicamente, backend recalcula y sincroniza los contactos vinculados en la misma transacción. La eliminación conserva la relación como historial, pero excluye ese Cliente de `company_names`.
