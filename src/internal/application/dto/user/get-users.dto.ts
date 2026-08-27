@@ -14,6 +14,7 @@ export interface GetUsersDto extends PaginationParamsDto {
   actorSystemRole: SystemRole;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
+  isInternalStaff: boolean | null;
   customerId: string | null;
   customerRelationship: UserCustomerRelationshipFilter | null;
 }

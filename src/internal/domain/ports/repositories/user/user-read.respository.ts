@@ -16,6 +16,7 @@ export interface FindUsersParams {
   actorSystemRole: SystemRole;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
+  isInternalStaff: boolean | null;
 }
 
 export interface FindUsersResult {
@@ -29,6 +30,7 @@ export interface FindUsersRelatedToCustomerParams {
   perPage: number;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
+  isInternalStaff: boolean | null;
 }
 
 export interface FindUnassignedUsersParams {
@@ -36,6 +38,7 @@ export interface FindUnassignedUsersParams {
   perPage: number;
   sorts: Array<{ field: UserSortField; direction: SortDirection }>;
   search: string | null;
+  isInternalStaff: boolean | null;
 }
 
 export interface IUserReadRepository {

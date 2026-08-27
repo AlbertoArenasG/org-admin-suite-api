@@ -55,7 +55,8 @@ export class MongooseUserReadRepositoryImpl
   }
 
   async findAll(params: FindUsersParams): Promise<FindUsersResult> {
-    const { page, perPage, actorSystemRole, sorts, search } = params;
+    const { page, perPage, actorSystemRole, sorts, search, isInternalStaff } =
+      params;
     const skip = (page - 1) * perPage;
     const roleFilter =
       actorSystemRole === SystemRole.MASTER_ADMIN
@@ -75,6 +76,9 @@ export class MongooseUserReadRepositoryImpl
       status: { $ne: UserStatus.DELETED },
       ...roleFilter,
       ...searchFilter,
+      ...(isInternalStaff === null
+        ? {}
+        : { is_internal_staff: isInternalStaff }),
     };
     const sortCriteria = this.buildSortCriteria(sorts);
 
@@ -105,6 +109,9 @@ export class MongooseUserReadRepositoryImpl
       filter: {
         status: { $ne: UserStatus.DELETED },
         system_role: SystemRole.USER,
+        ...(params.isInternalStaff === null
+          ? {}
+          : { is_internal_staff: params.isInternalStaff }),
         ...this.buildSearchFilter(params.search),
       },
       customerId: params.customerId,
@@ -122,6 +129,9 @@ export class MongooseUserReadRepositoryImpl
       filter: {
         status: { $ne: UserStatus.DELETED },
         system_role: { $ne: SystemRole.MASTER_ADMIN },
+        ...(params.isInternalStaff === null
+          ? {}
+          : { is_internal_staff: params.isInternalStaff }),
         ...this.buildSearchFilter(params.search),
       },
       relationshipExists: false,

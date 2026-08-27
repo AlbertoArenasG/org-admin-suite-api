@@ -427,6 +427,7 @@ Query params soportados:
   - `asc`
   - `desc`
 - `customer_id` filtra usuarios `USER` relacionados con un cliente; `customer_relationship=UNASSIGNED` filtra usuarios `USER` y `ADMIN` sin relaciones; ambos parámetros son mutuamente excluyentes
+- `is_internal_staff=true|false` filtra por clasificación interna y puede combinarse con cualquiera de los filtros anteriores
 
 Response vigente por item:
 

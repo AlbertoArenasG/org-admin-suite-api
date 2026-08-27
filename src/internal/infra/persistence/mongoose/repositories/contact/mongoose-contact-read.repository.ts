@@ -62,7 +62,7 @@ export class MongooseContactReadRepositoryImpl
   }
 
   async findAll(params: FindContactsParams): Promise<FindContactsResult> {
-    const { page, perPage, search, status, sorts } = params;
+    const { page, perPage, search, status, isInternalStaff, sorts } = params;
     const skip = (page - 1) * perPage;
     const filter: Record<string, unknown> = {};
     const masterAdminUserIds = await this.userModel.distinct('user_id', {
@@ -87,6 +87,10 @@ export class MongooseContactReadRepositoryImpl
       filter.status = status;
     } else {
       filter.status = { $ne: ContactStatus.DELETED };
+    }
+
+    if (isInternalStaff !== undefined && isInternalStaff !== null) {
+      filter.is_internal_staff = isInternalStaff;
     }
 
     if (constraints.length > 0) {

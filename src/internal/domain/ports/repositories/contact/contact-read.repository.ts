@@ -8,6 +8,7 @@ export interface FindContactsParams {
   perPage: number;
   search?: string | null;
   status?: ContactStatus | null;
+  isInternalStaff?: boolean | null;
   sorts: Array<{ field: ContactSortField; direction: ContactSortDirection }>;
 }
 

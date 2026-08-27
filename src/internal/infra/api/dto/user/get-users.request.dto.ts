@@ -1,6 +1,7 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsIn,
   IsOptional,
   IsString,
@@ -51,6 +52,13 @@ export class GetUsersRequestDto extends PaginationRequestDto {
   customer_id?: string;
 
   @IsOptional()
+  @Transform(({ value }) =>
+    value === 'true' ? true : value === 'false' ? false : value,
+  )
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
+  @IsOptional()
   @IsIn([UserCustomerRelationshipFilter.UNASSIGNED])
   customer_relationship?: UserCustomerRelationshipFilter;
 
@@ -76,6 +84,7 @@ export class GetUsersRequestDto extends PaginationRequestDto {
         { field: 'name', direction: 'asc' },
       ],
       search: this.search ?? null,
+      isInternalStaff: this.is_internal_staff ?? null,
       customerId: this.customer_id ?? null,
       customerRelationship: this.customer_relationship ?? null,
     };

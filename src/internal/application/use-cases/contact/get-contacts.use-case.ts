@@ -20,6 +20,7 @@ export class GetContactsUseCase {
       perPage: input.perPage,
       search: input.search,
       status: input.status,
+      isInternalStaff: input.isInternalStaff,
       sorts: input.sorts,
     });
 

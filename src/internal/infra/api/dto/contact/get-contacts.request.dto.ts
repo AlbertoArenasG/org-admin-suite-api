@@ -1,6 +1,7 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsIn,
   IsOptional,
@@ -45,12 +46,20 @@ export class GetContactsRequestDto extends PaginationRequestDto {
   @IsEnum(ContactStatus)
   status?: ContactStatus;
 
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === 'true' ? true : value === 'false' ? false : value,
+  )
+  @IsBoolean()
+  is_internal_staff?: boolean;
+
   toDomain(): GetContactsDto {
     return {
       page: this.getPage(),
       perPage: this.getPerPage(),
       search: this.search ?? null,
       status: this.status ?? null,
+      isInternalStaff: this.is_internal_staff ?? null,
       sorts: this.sort?.map((item) => ({
         field: item.field,
         direction: item.direction,

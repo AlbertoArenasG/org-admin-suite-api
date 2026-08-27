@@ -49,6 +49,7 @@ export class GetUsersUseCase {
         perPage: input.perPage,
         sorts: input.sorts,
         search: input.search,
+        isInternalStaff: input.isInternalStaff,
       });
     }
 
@@ -60,6 +61,7 @@ export class GetUsersUseCase {
         perPage: input.perPage,
         sorts: input.sorts,
         search: input.search,
+        isInternalStaff: input.isInternalStaff,
       });
     }
 

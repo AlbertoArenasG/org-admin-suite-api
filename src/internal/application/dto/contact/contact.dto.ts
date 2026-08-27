@@ -59,6 +59,7 @@ export interface ContactViewDto {
 export interface GetContactsDto extends PaginationParamsDto {
   search: string | null;
   status: ContactStatus | null;
+  isInternalStaff: boolean | null;
   sorts: Array<{ field: ContactSortField; direction: ContactSortDirection }>;
 }
 

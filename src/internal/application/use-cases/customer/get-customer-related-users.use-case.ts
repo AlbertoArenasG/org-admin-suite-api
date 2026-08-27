@@ -28,8 +28,12 @@ export class GetCustomerRelatedUsersUseCase {
       input.customerId,
     );
 
-    const { data, total } =
-      await this.userReadRepository.findRelatedToCustomer(input);
+    const { data, total } = await this.userReadRepository.findRelatedToCustomer(
+      {
+        ...input,
+        isInternalStaff: null,
+      },
+    );
     const roleNamesByRoleId =
       await this.userRoleNameResolverService.resolveByUsers(data);
 

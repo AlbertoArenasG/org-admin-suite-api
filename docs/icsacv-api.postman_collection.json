@@ -1006,6 +1006,11 @@
                   "value": "garcía"
                 },
                 {
+                  "key": "is_internal_staff",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
                   "key": "sort[0][field]",
                   "value": "lastname"
                 },
@@ -7008,6 +7013,11 @@
                 {
                   "key": "status",
                   "value": "ACTIVE",
+                  "disabled": true
+                },
+                {
+                  "key": "is_internal_staff",
+                  "value": "true",
                   "disabled": true
                 },
                 {
