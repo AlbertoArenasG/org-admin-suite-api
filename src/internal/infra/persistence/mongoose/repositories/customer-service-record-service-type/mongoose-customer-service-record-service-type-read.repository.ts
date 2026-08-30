@@ -32,6 +32,16 @@ export class MongooseCustomerServiceRecordServiceTypeReadRepositoryImpl
     return { data: this.toDomain(document) };
   }
 
+  async findByName(
+    name: string,
+  ): Promise<{ data: CustomerServiceRecordServiceType | null }> {
+    const document = await this.customerServiceRecordServiceTypeModel
+      .findOne({ name })
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
+    return { data: this.toDomain(document) };
+  }
+
   async findAll(input: {
     page: number;
     perPage: number;

@@ -17,3 +17,4 @@ export * from './expiration-status-policy';
 export * from './expiration-notification-policy';
 export * from './internal-asset-maintenance-record';
 export * from './internal-jobs';
+export * from './customer-service-record-service-type';

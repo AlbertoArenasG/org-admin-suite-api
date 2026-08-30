@@ -12,12 +12,20 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { RequirePermission } from '@src/common/decorators';
+import {
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import {
   AssociateCustomerUserRequestDto,
   GetCustomerRelatedUsersRequestDto,
+  GetCustomerRelatedUserOptionsRequestDto,
 } from '@infra/api/dto/customer';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { UserLookupPresenter, UserPresenter } from '@infra/api/presenters/user';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -27,6 +35,7 @@ import {
 import {
   GetCustomerAvailableUsersQuery,
   GetCustomerRelatedUsersQuery,
+  GetCustomerRelatedUserOptionsQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 
@@ -57,6 +66,29 @@ export class CustomerUserRelationshipController {
       .withSuccessMessage(this.successMessageService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get(':customerId/users/options')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('customers', 'read_related_users_options')
+  @HttpCode(HttpStatus.OK)
+  async getRelatedUserOptions(
+    @Param('customerId') customerId: string,
+    @Query() query: GetCustomerRelatedUserOptionsRequestDto,
+  ) {
+    const result = await this.queryBus.execute(
+      GetCustomerRelatedUserOptionsQuery.create(
+        customerId,
+        query.search ?? null,
+      ),
+    );
+    const data = this.userLookupPresenter.toCollectionResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMessageService.getMsg('DEFAULT'))
+      .withData(data)
       .withStatus(HttpStatus.OK)
       .build();
   }

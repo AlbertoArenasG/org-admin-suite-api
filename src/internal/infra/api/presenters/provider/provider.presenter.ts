@@ -73,6 +73,16 @@ export class ProviderPresenter {
     return providers.map((provider) => this.toViewResponse(provider));
   }
 
+  toOptionsResponse(
+    results: Array<{ id: string; code: string; name: string }>,
+  ) {
+    return results.map((result) => ({
+      provider_id: result.id,
+      code: result.code,
+      name: result.name,
+    }));
+  }
+
   toPublicAccessResponse(provider: ProviderPublicAccessViewDto) {
     return {
       provider_id: provider.providerId,

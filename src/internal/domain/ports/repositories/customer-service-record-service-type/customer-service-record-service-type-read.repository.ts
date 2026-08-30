@@ -7,6 +7,9 @@ export interface ICustomerServiceRecordServiceTypeReadRepository {
   findByCode(
     code: string,
   ): Promise<{ data: CustomerServiceRecordServiceType | null }>;
+  findByName(
+    name: string,
+  ): Promise<{ data: CustomerServiceRecordServiceType | null }>;
   findAll(input: {
     page: number;
     perPage: number;

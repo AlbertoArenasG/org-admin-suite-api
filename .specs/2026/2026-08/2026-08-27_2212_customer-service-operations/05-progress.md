@@ -112,3 +112,7 @@
   enumeraciones localizadas y seeds independientes para contactos desde
   usuarios y tipos de servicio. La compilacion de backend finalizo
   correctamente; no se ejecuto ningun seed.
+- Se completo el Slice 3: catalogo administrable de tipos de servicio con
+  nombre y codigo inmutables, opciones locales activas y lookups auxiliares
+  compactos de Proveedores, grupos destinatarios y Usuarios activos de un
+  Cliente. La compilacion de backend finalizo correctamente.

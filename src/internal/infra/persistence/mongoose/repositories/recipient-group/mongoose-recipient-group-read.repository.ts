@@ -100,6 +100,32 @@ export class MongooseRecipientGroupReadRepositoryImpl
     };
   }
 
+  async findOptions(
+    search: string | null,
+  ): Promise<{ data: RecipientGroup[] }> {
+    const searchFilter =
+      search && search.trim().length > 0
+        ? {
+            $or: [
+              { name: { $regex: escapeRegex(search), $options: 'i' } },
+              { code: { $regex: escapeRegex(search), $options: 'i' } },
+            ],
+          }
+        : {};
+    const documents = await this.recipientGroupModel
+      .find({ status: RecipientGroupStatus.ACTIVE, ...searchFilter })
+      .sort({ name: 1, createdAt: 1 })
+      .exec();
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter(
+          (recipientGroup): recipientGroup is RecipientGroup =>
+            recipientGroup !== null,
+        ),
+    };
+  }
+
   private buildSortCriteria(
     sorts: FindRecipientGroupsParams['sorts'],
   ): Record<string, 1 | -1> {

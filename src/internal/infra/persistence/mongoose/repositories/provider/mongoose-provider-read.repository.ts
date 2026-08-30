@@ -88,6 +88,27 @@ export class MongooseProviderReadRepositoryImpl
     };
   }
 
+  async findOptions(search: string | null): Promise<{ data: Provider[] }> {
+    const searchFilter =
+      search && search.trim().length > 0
+        ? {
+            $or: [
+              {
+                company_name: { $regex: escapeRegex(search), $options: 'i' },
+              },
+              {
+                provider_code: { $regex: escapeRegex(search), $options: 'i' },
+              },
+            ],
+          }
+        : {};
+    const documents = await this.providerModel
+      .find({ status: ProviderStatus.ACTIVE, ...searchFilter })
+      .sort({ company_name: 1, createdAt: 1 })
+      .exec();
+    return { data: documents.map((document) => this.toDomain(document)) };
+  }
+
   private buildSortCriteria(
     sorts: Array<{
       field: FindProvidersParams['sorts'][number]['field'];

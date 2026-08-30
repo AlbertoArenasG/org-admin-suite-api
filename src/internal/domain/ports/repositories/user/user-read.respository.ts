@@ -50,6 +50,10 @@ export interface IUserReadRepository {
   ): Promise<FindUsersResult>;
   findUnassigned(params: FindUnassignedUsersParams): Promise<FindUsersResult>;
   findUnassignedActiveUsers(): Promise<{ data: User[] }>;
+  findActiveRelatedToCustomerOptions(
+    customerId: string,
+    search: string | null,
+  ): Promise<{ data: User[] }>;
   countByRoleId(roleId: string): Promise<number>;
 }
 

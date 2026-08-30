@@ -1,5 +1,6 @@
 import { Model } from 'mongoose';
 
+import { genId } from '@src/common/utils';
 import {
   CustomerServiceRecordServiceTypeDocument,
   CustomerServiceRecordServiceTypeSchema,
@@ -73,7 +74,7 @@ export const customerServiceRecordServiceTypesSeed: MongooseSeedDefinition = {
       }
 
       await model.create({
-        customer_service_record_service_type_id: serviceType.code,
+        customer_service_record_service_type_id: genId(),
         code: serviceType.code,
         name: serviceType.name,
         created_by: null,

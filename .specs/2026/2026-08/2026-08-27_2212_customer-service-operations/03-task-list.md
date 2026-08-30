@@ -18,8 +18,8 @@
   Status: completed
 - [x] Slice 2. Autorizacion, i18n y seeds independientes.
   Status: completed
-- [ ] Slice 3. Catalogo de tipos y lookups externos.
-  Status: pending
+- [x] Slice 3. Catalogo de tipos y lookups externos.
+  Status: completed
 - [ ] Slice 4. Materializaciones aisladas.
   Status: pending
 - [ ] Slice 5. CRUD de registros y presentacion localizada.

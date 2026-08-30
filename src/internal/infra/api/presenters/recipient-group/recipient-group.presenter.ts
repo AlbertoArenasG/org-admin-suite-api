@@ -84,6 +84,16 @@ export class RecipientGroupPresenter {
     }));
   }
 
+  toOptionsResponse(
+    results: Array<{ id: string; code: string; name: string }>,
+  ) {
+    return results.map((result) => ({
+      recipient_group_id: result.id,
+      code: result.code,
+      name: result.name,
+    }));
+  }
+
   private toChannelResponse(channel: RecipientGroupChannelDto) {
     const catalogItem = getCommunicationChannel(channel.code);
 

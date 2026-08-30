@@ -13,14 +13,23 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import {
   CreateRecipientGroupRequestDto,
+  GetRecipientGroupOptionsRequestDto,
   GetRecipientGroupsRequestDto,
   UpdateRecipientGroupRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { RecipientGroupPresenter } from '@infra/api/presenters/recipient-group';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -31,6 +40,7 @@ import {
 import {
   GetRecipientGroupByIdQuery,
   GetRecipientGroupsQuery,
+  GetRecipientGroupOptionsQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 
@@ -61,6 +71,21 @@ export class RecipientGroupController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Get('options')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('recipient_groups', 'read_options')
+  @HttpCode(HttpStatus.OK)
+  async getOptions(@Query() query: GetRecipientGroupOptionsRequestDto) {
+    const result = await this.queryBus.execute(
+      GetRecipientGroupOptionsQuery.create(query.toDomain()),
+    );
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(this.presenter.toOptionsResponse(result))
+      .withStatus(HttpStatus.OK)
       .build();
   }
 

@@ -177,6 +177,47 @@ export class MongooseUserReadRepositoryImpl
     };
   }
 
+  async findActiveRelatedToCustomerOptions(
+    customerId: string,
+    search: string | null,
+  ): Promise<{ data: User[] }> {
+    const documents = await this.userModel
+      .aggregate<UserDocument>([
+        {
+          $match: {
+            status: UserStatus.ACTIVE,
+            system_role: SystemRole.USER,
+            ...this.buildSearchFilter(search),
+          },
+        },
+        {
+          $lookup: {
+            from: this.relationshipModel.collection.name,
+            let: { userId: '$user_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$user_id', '$$userId'] },
+                      { $eq: ['$customer_id', customerId] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'matching_relationships',
+          },
+        },
+        { $match: { 'matching_relationships.0': { $exists: true } } },
+        { $sort: { lastname: 1, name: 1, createdAt: 1 } },
+        { $project: { matching_relationships: 0 } },
+      ])
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
+    return { data: documents.map((document) => this.toDomain(document)) };
+  }
+
   private async findUsersByRelationship({
     filter,
     customerId,

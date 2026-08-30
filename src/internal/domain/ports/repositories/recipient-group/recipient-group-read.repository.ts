@@ -27,6 +27,7 @@ export interface IRecipientGroupReadRepository {
   findAll(
     params: FindRecipientGroupsParams,
   ): Promise<FindRecipientGroupsResult>;
+  findOptions(search: string | null): Promise<{ data: RecipientGroup[] }>;
 }
 
 export const IRecipientGroupReadRepositoryToken = Symbol(

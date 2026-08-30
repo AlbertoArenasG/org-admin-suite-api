@@ -13,14 +13,23 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateProviderRequestDto,
+  GetProviderOptionsRequestDto,
   GetProvidersRequestDto,
   UpdateProviderRequestDto,
 } from '@infra/api/dto/provider';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { ProviderPresenter } from '@infra/api/presenters/provider';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import {
@@ -32,6 +41,7 @@ import {
   GetProvidersQuery,
   GetProviderByIdQuery,
   GetProviderPublicAccessQuery,
+  GetProviderOptionsQuery,
 } from '@infra/cqrs/queries';
 import { AuthenticatedUserContextDto } from '@application/dto';
 
@@ -62,6 +72,21 @@ export class ProviderController {
       .withSuccessMessage(this.successMsgService.getMsg('PROVIDER.CREATED'))
       .withData(data)
       .withStatus(HttpStatus.CREATED)
+      .build();
+  }
+
+  @Get('options')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('providers', 'read_options')
+  @HttpCode(HttpStatus.OK)
+  async getOptions(@Query() query: GetProviderOptionsRequestDto) {
+    const result = await this.queryBus.execute(
+      GetProviderOptionsQuery.create(query.toDomain()),
+    );
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(this.presenter.toOptionsResponse(result))
+      .withStatus(HttpStatus.OK)
       .build();
   }
 

@@ -38,6 +38,10 @@
     },
     "PROVIDER_BANKING_INFO": {
       "FORM": "La información bancaria del proveedor ya fue registrada"
+    },
+    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": {
+      "CODE": "Ya existe un tipo de servicio con el código {code}",
+      "NAME": "Ya existe un tipo de servicio con el nombre {name}"
     }
   },
   "AUTHENTICATION": {
@@ -76,6 +80,7 @@
     "PROVIDER": "No se encontró el proveedor",
     "PROVIDER_FISCAL_PROFILE": "No se encontró el perfil fiscal del proveedor",
     "PROVIDER_BANKING_INFO": "No se encontró la información bancaria del proveedor",
-    "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio"
+    "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio",
+    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "No se encontró el tipo de servicio"
   }
 }

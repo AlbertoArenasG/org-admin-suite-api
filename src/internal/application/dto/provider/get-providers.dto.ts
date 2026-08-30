@@ -88,4 +88,15 @@ export interface GetProvidersDto extends PaginationParamsDto {
   }>;
 }
 
+export interface ProviderOptionDto {
+  id: string;
+  code: string;
+  name: string;
+}
+
+export interface GetProviderOptionsDto {
+  search: string | null;
+}
+
 export type GetProvidersResultDto = PaginatedResultDto<ProviderViewDto>;
+export type GetProviderOptionsResultDto = ProviderOptionDto[];

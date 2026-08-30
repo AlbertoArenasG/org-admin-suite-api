@@ -19,3 +19,4 @@ export * from './communication-channel';
 export * from './expiration-status-policy';
 export * from './expiration-notification-policy';
 export * from './internal-asset-maintenance-record';
+export * from './customer-service-record-service-type';

@@ -59,10 +59,21 @@ export interface GetRecipientGroupsDto extends PaginationParamsDto {
   }>;
 }
 
+export interface RecipientGroupOptionDto {
+  id: string;
+  code: string;
+  name: string;
+}
+
+export interface GetRecipientGroupOptionsDto {
+  search: string | null;
+}
+
 export type GetRecipientGroupsResultDto =
   PaginatedResultDto<RecipientGroupListItemDto>;
 
 export type GetRecipientGroupByIdResultDto = RecipientGroupViewDto;
+export type GetRecipientGroupOptionsResultDto = RecipientGroupOptionDto[];
 
 export interface CreateRecipientGroupDto {
   actorUserId: string;

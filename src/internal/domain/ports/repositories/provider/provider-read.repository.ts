@@ -21,6 +21,7 @@ export interface IProviderReadRepository {
   findByProviderCode(providerCode: string): Promise<{ data: Provider | null }>;
   findByAccessToken(accessToken: string): Promise<{ data: Provider | null }>;
   findAll(params: FindProvidersParams): Promise<FindProvidersResult>;
+  findOptions(search: string | null): Promise<{ data: Provider[] }>;
 }
 
 export const IProviderReadRepositoryToken = Symbol('IProviderReadRepository');

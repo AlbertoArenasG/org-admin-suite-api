@@ -38,6 +38,10 @@
     },
     "PROVIDER_BANKING_INFO": {
       "FORM": "Provider banking information has already been submitted"
+    },
+    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": {
+      "CODE": "A service type with code {code} already exists",
+      "NAME": "A service type with name {name} already exists"
     }
   },
   "AUTHENTICATION": {
@@ -76,6 +80,7 @@
     "PROVIDER": "Provider not found",
     "PROVIDER_FISCAL_PROFILE": "Provider fiscal profile not found",
     "PROVIDER_BANKING_INFO": "Provider banking information not found",
-    "SERVICE_PACKAGE_RECORD": "Service package record not found"
+    "SERVICE_PACKAGE_RECORD": "Service package record not found",
+    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "Service type not found"
   }
 }

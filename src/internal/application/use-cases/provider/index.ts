@@ -1,5 +1,6 @@
 export * from './create-provider.use-case';
 export * from './get-providers.use-case';
+export * from './get-provider-options.use-case';
 export * from './get-provider-by-id.use-case';
 export * from './get-provider-public-access.use-case';
 export * from './get-provider-by-token.use-case';
