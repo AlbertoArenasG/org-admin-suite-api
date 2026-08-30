@@ -31,5 +31,5 @@
 
 - [x] Ejecutar y registrar validacion manual.
   Status: completed
-- [ ] Actualizar documentacion permanente y cerrar la spec.
-  Status: pending
+- [x] Actualizar documentacion permanente y cerrar la spec.
+  Status: completed

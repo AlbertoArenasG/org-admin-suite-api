@@ -132,3 +132,5 @@
   La compilacion de backend finalizo correctamente.
 - Se ejecutaron los seeds independientes de roles y tipos de servicio, y se
   completó la validación manual del módulo.
+- Se actualizó la documentación permanente de autorización, capabilities,
+  runbook y colección Postman del job interno. La spec queda cerrada.
