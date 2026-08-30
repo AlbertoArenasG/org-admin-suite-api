@@ -55,6 +55,9 @@ import {
   DisassociateCustomerUserHandler,
   CreateCustomerServiceRecordServiceTypeHandler,
   UpdateCustomerServiceRecordServiceTypeHandler,
+  CreateCustomerServiceRecordHandler,
+  UpdateCustomerServiceRecordHandler,
+  DeleteCustomerServiceRecordHandler,
 } from '@infra/cqrs/commands';
 import {
   GetMyPermissionsHandler,
@@ -110,6 +113,8 @@ import {
   GetCustomerRelatedUserOptionsHandler,
   GetProviderOptionsHandler,
   GetRecipientGroupOptionsHandler,
+  GetCustomerServiceRecordsHandler,
+  GetCustomerServiceRecordByIdHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -170,6 +175,9 @@ const providers = [
   DisassociateCustomerUserHandler,
   CreateCustomerServiceRecordServiceTypeHandler,
   UpdateCustomerServiceRecordServiceTypeHandler,
+  CreateCustomerServiceRecordHandler,
+  UpdateCustomerServiceRecordHandler,
+  DeleteCustomerServiceRecordHandler,
   GetFileByIdHandler,
   DownloadFileHandler,
   GetUserRolesHandler,
@@ -219,6 +227,8 @@ const providers = [
   GetCustomerRelatedUserOptionsHandler,
   GetProviderOptionsHandler,
   GetRecipientGroupOptionsHandler,
+  GetCustomerServiceRecordsHandler,
+  GetCustomerServiceRecordByIdHandler,
 ];
 
 @Global()

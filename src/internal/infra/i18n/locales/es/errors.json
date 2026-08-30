@@ -81,6 +81,7 @@
     "PROVIDER_FISCAL_PROFILE": "No se encontró el perfil fiscal del proveedor",
     "PROVIDER_BANKING_INFO": "No se encontró la información bancaria del proveedor",
     "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio",
-    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "No se encontró el tipo de servicio"
+    "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "No se encontró el tipo de servicio",
+    "CUSTOMER_SERVICE_RECORD": "No se encontró el registro de servicio"
   }
 }
