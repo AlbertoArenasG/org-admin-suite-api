@@ -18,3 +18,5 @@ export * from './expiration-status-policy.entity';
 export * from './expiration-notification-policy.entity';
 export * from './internal-asset-maintenance-record.entity';
 export * from './user-customer-relationship.entity';
+export * from './customer-service-record.entity';
+export * from './customer-service-record-service-type.entity';

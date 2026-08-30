@@ -105,3 +105,6 @@
 - Se cerraron definicion y diseno tecnico. La implementacion se dividio en seis
   slices verificables, con validaciones manuales y ejecucion de seeds a cargo
   del usuario.
+- Se completo el Slice 1: aggregate, catalogo local, contador transaccional,
+  esquemas, mappers, repositorios, indices y registro en DI. La compilacion de
+  backend finalizo correctamente; no se ejecutaron migraciones ni seeds.

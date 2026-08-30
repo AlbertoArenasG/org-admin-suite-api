@@ -41,6 +41,11 @@ import {
   MongooseInternalJobLockRepositoryImpl,
   MongooseUserCustomerRelationshipReadRepositoryImpl,
   MongooseUserCustomerRelationshipWriteRepositoryImpl,
+  MongooseCustomerServiceRecordReadRepositoryImpl,
+  MongooseCustomerServiceRecordWriteRepositoryImpl,
+  MongooseCustomerServiceRecordServiceTypeReadRepositoryImpl,
+  MongooseCustomerServiceRecordServiceTypeWriteRepositoryImpl,
+  MongooseSequenceCounterRepositoryImpl,
 } from '.';
 
 import {
@@ -86,6 +91,11 @@ import {
   IInternalJobLockRepositoryToken,
   IUserCustomerRelationshipReadRepositoryToken,
   IUserCustomerRelationshipWriteRepositoryToken,
+  ICustomerServiceRecordReadRepositoryToken,
+  ICustomerServiceRecordWriteRepositoryToken,
+  ICustomerServiceRecordServiceTypeReadRepositoryToken,
+  ICustomerServiceRecordServiceTypeWriteRepositoryToken,
+  ISequenceCounterRepositoryToken,
 } from '@domain/ports/repositories';
 import { ITransactionalExecutorToken } from '@domain/ports/services';
 import {
@@ -254,6 +264,26 @@ export const MongooseRepositoriesConfig = [
     provide: IInternalJobLockRepositoryToken,
     useClass: MongooseInternalJobLockRepositoryImpl,
   },
+  {
+    provide: ICustomerServiceRecordReadRepositoryToken,
+    useClass: MongooseCustomerServiceRecordReadRepositoryImpl,
+  },
+  {
+    provide: ICustomerServiceRecordWriteRepositoryToken,
+    useClass: MongooseCustomerServiceRecordWriteRepositoryImpl,
+  },
+  {
+    provide: ICustomerServiceRecordServiceTypeReadRepositoryToken,
+    useClass: MongooseCustomerServiceRecordServiceTypeReadRepositoryImpl,
+  },
+  {
+    provide: ICustomerServiceRecordServiceTypeWriteRepositoryToken,
+    useClass: MongooseCustomerServiceRecordServiceTypeWriteRepositoryImpl,
+  },
+  {
+    provide: ISequenceCounterRepositoryToken,
+    useClass: MongooseSequenceCounterRepositoryImpl,
+  },
   MongooseTransactionContext,
   {
     provide: IUserCustomerRelationshipReadRepositoryToken,
@@ -310,6 +340,11 @@ export const MongooseRepositoryTokens = [
   IInternalAssetMaintenanceRecordReadRepositoryToken,
   IInternalAssetMaintenanceRecordWriteRepositoryToken,
   IInternalJobLockRepositoryToken,
+  ICustomerServiceRecordReadRepositoryToken,
+  ICustomerServiceRecordWriteRepositoryToken,
+  ICustomerServiceRecordServiceTypeReadRepositoryToken,
+  ICustomerServiceRecordServiceTypeWriteRepositoryToken,
+  ISequenceCounterRepositoryToken,
   IUserCustomerRelationshipReadRepositoryToken,
   IUserCustomerRelationshipWriteRepositoryToken,
   ITransactionalExecutorToken,

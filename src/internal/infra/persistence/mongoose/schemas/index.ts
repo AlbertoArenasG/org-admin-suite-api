@@ -20,3 +20,6 @@ export * from './expiration-notification-policy';
 export * from './internal-asset-maintenance-record';
 export * from './internal-job-lock';
 export * from './user-customer-relationship';
+export * from './customer-service-record';
+export * from './customer-service-record-service-type';
+export * from './sequence-counter';

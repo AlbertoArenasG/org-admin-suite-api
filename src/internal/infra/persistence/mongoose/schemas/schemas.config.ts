@@ -89,4 +89,16 @@ export const configSchemas = [
     name: schemas.UserCustomerRelationshipDocument.name,
     schema: schemas.UserCustomerRelationshipSchema,
   },
+  {
+    name: schemas.CustomerServiceRecordDocument.name,
+    schema: schemas.CustomerServiceRecordSchema,
+  },
+  {
+    name: schemas.CustomerServiceRecordServiceTypeDocument.name,
+    schema: schemas.CustomerServiceRecordServiceTypeSchema,
+  },
+  {
+    name: schemas.SequenceCounterDocument.name,
+    schema: schemas.SequenceCounterSchema,
+  },
 ];

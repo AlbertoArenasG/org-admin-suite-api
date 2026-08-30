@@ -14,8 +14,8 @@
 
 ## Phase 3. Implementation
 
-- [ ] Slice 1. Fundacion de dominio y persistencia.
-  Status: pending
+- [x] Slice 1. Fundacion de dominio y persistencia.
+  Status: completed
 - [ ] Slice 2. Autorizacion, i18n y seeds independientes.
   Status: pending
 - [ ] Slice 3. Catalogo de tipos y lookups externos.
