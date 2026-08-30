@@ -677,6 +677,45 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `internal_asset_maintenance_records.DELETE`; hace borrado lógico
 
+### `customer_service_records`
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/customer-service-record/customer-service-record.controller.ts`
+
+Endpoints actuales:
+
+- `POST /v1/customer-service-records`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: crea un registro con consecutivo transaccional, snapshots de Cliente, Usuarios, Proveedor y tipo de servicio, y materializaciones iniciales.
+- `GET /v1/customer-service-records`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: listado paginado con filtros, rangos date-only y ordenamientos permitidos.
+- `GET /v1/customer-service-records/:recordId`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: devuelve el detalle, ambos compromisos y sus materializaciones.
+- `PATCH /v1/customer-service-records/:recordId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: PATCH por campos presentes; Cliente y activos reemplazan sus bloques y `provider: null` limpia el bloque opcional.
+- `DELETE /v1/customer-service-records/:recordId`
+  - operacion: `DELETE`
+  - acceso actual: autenticado
+  - nota: hace baja lógica e invalida materializaciones pendientes sin una segunda actualización de auditoría.
+- `GET /v1/customer-service-record-service-types`
+  - operacion: `MANAGE_SERVICE_TYPES`
+  - acceso actual: autenticado
+  - nota: administra el catálogo de tipos; el nombre y código son inmutables después del alta.
+- `GET /v1/customer-service-record-service-types/options`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: lookup local de tipos activos para el módulo.
+
+El refresh técnico `POST /v1/internal-jobs/customer-service-records/materializations/refresh` no usa permisos del backoffice: está protegido por `InternalJobsAuthGuard`.
+
 ## Features Publicas Existentes Fuera Del Catalogo Interno
 
 Las siguientes features existen en el repo, pero no se incluyen dentro del catalogo de permisos internos porque operan como endpoints publicos o de autenticacion:

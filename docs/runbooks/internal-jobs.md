@@ -56,6 +56,41 @@ The run is complete only when `data.next_cursor` is `null`. The response include
 
 Do not invent, edit, or decode cursors manually. A cursor identifies a stable position by record creation time and domain record ID.
 
+## Customer Service Record Materializations Refresh
+
+Endpoint:
+
+```text
+POST /v1/internal-jobs/customer-service-records/materializations/refresh
+```
+
+Cada llamada procesa hasta 100 registros activos con estado operativo `PENDING`
+o `IN_PROGRESS`. Recalcula cinco grupos: semáforo y notificaciones del
+compromiso con Cliente, semáforo y notificaciones del retorno de Proveedor, y
+seguimiento embebido al Proveedor. No envía correos.
+
+Inicio:
+
+```bash
+curl --request POST "$API_URL/v1/internal-jobs/customer-service-records/materializations/refresh" \
+  --header "Authorization: Bearer $INTERNAL_JOBS_TOKEN" \
+  --header 'Content-Type: application/json' \
+  --data '{}'
+```
+
+Continuación:
+
+```bash
+curl --request POST "$API_URL/v1/internal-jobs/customer-service-records/materializations/refresh" \
+  --header "Authorization: Bearer $INTERNAL_JOBS_TOKEN" \
+  --header 'Content-Type: application/json' \
+  --data '{"cursor":"<data.next_cursor>"}'
+```
+
+El proceso termina cuando `data.next_cursor` es `null`. La respuesta expone
+`processed_records`, los cinco conteos bajo `materializations` y `duration_ms`.
+Conserva el mismo contrato de recuperación, cursor y lock descrito arriba.
+
 ## Operational Verification
 
 After a controlled run, verify the following:

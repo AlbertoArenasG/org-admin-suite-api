@@ -8262,6 +8262,68 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Refresh Customer Service Record Materializations (initial batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/materializations/refresh",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "internal-jobs", "customer-service-records", "materializations", "refresh"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Customer Service Record Materializations (next batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cursor\": \"{{INTERNAL_JOB_CURSOR}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/materializations/refresh",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "internal-jobs", "customer-service-records", "materializations", "refresh"]
+            }
+          },
+          "response": []
         }
       ]
     },

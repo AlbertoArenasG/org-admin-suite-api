@@ -68,6 +68,7 @@ Cuando una vista ya autorizada requiere un lookup reutilizable, backend garantiz
 | `COMMUNICATION_CHANNELS` | `READ_OPTIONS` | `GET /v1/communication-channels` | Obtener canales de comunicación seleccionables. |
 | `EXPIRATION_STATUS_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-status-policies/options` | Obtener políticas de estatus de vencimiento seleccionables. |
 | `EXPIRATION_NOTIFICATION_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-notification-policies/options` | Obtener políticas de notificación de vencimiento seleccionables. |
+| `CUSTOMERS` | `READ_RELATED_USERS_OPTIONS` | `GET /v1/customers/:customerId/users/options` | Obtener usuarios activos relacionados con un Cliente para selección reutilizable. |
 
 ## Reglas De Derivación Actuales
 
@@ -79,6 +80,7 @@ La derivación depende del módulo directo del rol, no de una operación especí
 | `INTERNAL_ASSET_MAINTENANCE_RECORDS` | `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`, `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS` |
 | `USER_REGISTRATION_INVITATIONS` | `CUSTOMERS/READ_OPTIONS` |
 | `USERS` | `CUSTOMERS/READ_OPTIONS` |
+| `CUSTOMER_SERVICE_RECORDS` | `CUSTOMERS/READ_OPTIONS`, `CUSTOMERS/READ_RELATED_USERS_OPTIONS`, `PROVIDERS/READ_OPTIONS`, `RECIPIENT_GROUPS/READ_OPTIONS`, `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`, `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS` |
 
 Esto permite que un usuario con cualquier operación directa válida del módulo consumidor obtenga los lookups que esa funcionalidad necesita, sin que quien construye el rol tenga que conocer ni seleccionar dependencias técnicas.
 
