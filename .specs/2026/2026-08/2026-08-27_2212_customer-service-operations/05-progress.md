@@ -116,3 +116,8 @@
   nombre y codigo inmutables, opciones locales activas y lookups auxiliares
   compactos de Proveedores, grupos destinatarios y Usuarios activos de un
   Cliente. La compilacion de backend finalizo correctamente.
+- Se completo el Slice 4: cinco refreshers aislados para estatus y
+  notificaciones de Cliente y Proveedor, y seguimiento al Proveedor. El
+  orquestador reutilizable procesa registros operativos por cursor y escribe
+  exclusivamente campos tecnicos, sin modificar auditoria. La compilacion de
+  backend finalizo correctamente.

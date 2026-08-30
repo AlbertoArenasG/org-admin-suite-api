@@ -20,8 +20,8 @@
   Status: completed
 - [x] Slice 3. Catalogo de tipos y lookups externos.
   Status: completed
-- [ ] Slice 4. Materializaciones aisladas.
-  Status: pending
+- [x] Slice 4. Materializaciones aisladas.
+  Status: completed
 - [ ] Slice 5. CRUD de registros y presentacion localizada.
   Status: pending
 - [ ] Slice 6. Integracion operativa y cierre tecnico.
