@@ -41,6 +41,17 @@ export class UpdateCustomerServiceRecordUseCase {
         EntityNotFoundExceptionCode.CUSTOMER_SERVICE_RECORD,
         { recordId: input.recordId },
       );
+    const hasChanges = [
+      input.serviceTypeCode,
+      input.requestedAt,
+      input.observations,
+      input.customer,
+      input.assets,
+      input.customerDelivery,
+      input.provider,
+      input.operationalStatus,
+    ].some((value) => value !== undefined);
+    if (!hasChanges) return CustomerServiceRecordMapper.toViewDto(record);
     const serviceType =
       input.serviceTypeCode === undefined
         ? null
