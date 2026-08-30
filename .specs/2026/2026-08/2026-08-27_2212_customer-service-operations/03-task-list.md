@@ -29,7 +29,7 @@
 
 ## Phase 4. Validation And Closure
 
-- [ ] Ejecutar y registrar validacion manual.
-  Status: pending
+- [x] Ejecutar y registrar validacion manual.
+  Status: completed
 - [ ] Actualizar documentacion permanente y cerrar la spec.
   Status: pending

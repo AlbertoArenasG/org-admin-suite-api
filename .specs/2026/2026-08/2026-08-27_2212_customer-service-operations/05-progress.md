@@ -130,3 +130,5 @@
   cambios o bajas de politicas, limitado a registros operativos. No se agrego
   un dispatcher de correos; solo se recalculan datos tecnicos materializados.
   La compilacion de backend finalizo correctamente.
+- Se ejecutaron los seeds independientes de roles y tipos de servicio, y se
+  completó la validación manual del módulo.
