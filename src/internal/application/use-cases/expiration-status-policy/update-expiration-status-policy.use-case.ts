@@ -8,6 +8,7 @@ import { ExpirationStatusPolicyMapper } from '@application/mappers';
 import {
   AuditUserFetcherService,
   InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher,
+  CustomerServiceRecordTechnicalMaterializationsRefresherService,
 } from '@application/services';
 import { ExpirationStatusPolicyOffsetProps } from '@domain/entities';
 import {
@@ -33,6 +34,7 @@ export class UpdateExpirationStatusPolicyUseCase {
     @Inject(IExpirationStatusPolicyWriteRepositoryToken)
     private readonly writeRepository: IExpirationStatusPolicyWriteRepository,
     private readonly technicalMaterializationsRefresher: InternalAssetMaintenanceRecordTechnicalMaterializationsRefresher,
+    private readonly customerServiceRecordMaterializationsRefresher: CustomerServiceRecordTechnicalMaterializationsRefresherService,
     private readonly auditUserFetcher: AuditUserFetcherService,
   ) {}
 
@@ -73,6 +75,26 @@ export class UpdateExpirationStatusPolicyUseCase {
       refreshExpirationStatus: true,
       refreshExpirationNotification: false,
     });
+    await Promise.all([
+      this.customerServiceRecordMaterializationsRefresher.refreshOperational({
+        commitment: 'CUSTOMER_DELIVERY',
+        statusPolicyId: updated!.id,
+        customerDeliveryStatus: true,
+        customerDeliveryNotification: false,
+        providerStatus: false,
+        providerNotification: false,
+        providerFollowUp: false,
+      }),
+      this.customerServiceRecordMaterializationsRefresher.refreshOperational({
+        commitment: 'PROVIDER_RETURN',
+        statusPolicyId: updated!.id,
+        customerDeliveryStatus: false,
+        customerDeliveryNotification: false,
+        providerStatus: true,
+        providerNotification: false,
+        providerFollowUp: false,
+      }),
+    ]);
 
     const { createdByUser, updatedByUser } =
       await this.auditUserFetcher.fetchAuditUsers({

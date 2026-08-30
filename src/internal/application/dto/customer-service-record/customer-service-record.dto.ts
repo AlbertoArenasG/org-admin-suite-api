@@ -138,3 +138,19 @@ export type GetCustomerServiceRecordByIdResultDto =
   CustomerServiceRecordViewDto;
 export type CreateCustomerServiceRecordResultDto = CustomerServiceRecordViewDto;
 export type UpdateCustomerServiceRecordResultDto = CustomerServiceRecordViewDto;
+
+export interface RefreshCustomerServiceRecordMaterializationsDto {
+  cursor: string | null;
+}
+export interface RefreshCustomerServiceRecordMaterializationsResultDto {
+  processedRecords: number;
+  materializations: {
+    customerDeliveryStatus: { refreshedRecords: number };
+    customerDeliveryNotification: { refreshedRecords: number };
+    providerStatus: { refreshedRecords: number };
+    providerNotification: { refreshedRecords: number };
+    providerFollowUp: { refreshedRecords: number };
+  };
+  durationMs: number;
+  nextCursor: string | null;
+}

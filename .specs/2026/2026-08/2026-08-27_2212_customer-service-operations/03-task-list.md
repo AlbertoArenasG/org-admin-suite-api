@@ -24,8 +24,8 @@
   Status: completed
 - [x] Slice 5. CRUD de registros y presentacion localizada.
   Status: completed
-- [ ] Slice 6. Integracion operativa y cierre tecnico.
-  Status: pending
+- [x] Slice 6. Integracion operativa y cierre tecnico.
+  Status: completed
 
 ## Phase 4. Validation And Closure
 

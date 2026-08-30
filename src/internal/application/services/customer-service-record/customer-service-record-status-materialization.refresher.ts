@@ -7,6 +7,7 @@ import {
   CustomerServiceRecordStatus,
   CustomerServiceRecordStatusMaterializationProps,
   ExpirationStatusPolicy,
+  ExpirationStatusPolicyStatus,
 } from '@domain/entities';
 import {
   compareCustomerServiceRecordIntervals,
@@ -41,6 +42,7 @@ export class CustomerServiceRecordStatusMaterializationRefresher {
       systemCode === 'CANCELLED' ||
       systemCode === 'OVERDUE' ||
       !input.policy ||
+      input.policy.status !== ExpirationStatusPolicyStatus.ACTIVE ||
       input.policy.rules.length === 0 ||
       !this.isOperational(input.record)
     ) {

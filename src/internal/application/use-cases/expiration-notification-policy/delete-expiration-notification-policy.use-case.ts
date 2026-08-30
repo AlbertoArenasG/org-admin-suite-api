@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { DeleteExpirationNotificationPolicyDto } from '@application/dto';
-import { InternalAssetNotificationMaterializationRefresher } from '@application/services';
+import {
+  CustomerServiceRecordTechnicalMaterializationsRefresherService,
+  InternalAssetNotificationMaterializationRefresher,
+} from '@application/services';
 import { isRecordOperational } from '@application/services/internal-asset-maintenance';
 import {
   EntityNotFoundException,
@@ -30,6 +33,7 @@ export class DeleteExpirationNotificationPolicyUseCase {
     @Inject(IInternalAssetMaintenanceRecordWriteRepositoryToken)
     private readonly internalAssetMaintenanceRecordWriteRepository: IInternalAssetMaintenanceRecordWriteRepository,
     private readonly notificationMaterializationRefresher: InternalAssetNotificationMaterializationRefresher,
+    private readonly customerServiceRecordMaterializationsRefresher: CustomerServiceRecordTechnicalMaterializationsRefresherService,
   ) {}
 
   async execute(input: DeleteExpirationNotificationPolicyDto): Promise<void> {
@@ -69,5 +73,25 @@ export class DeleteExpirationNotificationPolicyUseCase {
         },
       );
     }
+    await Promise.all([
+      this.customerServiceRecordMaterializationsRefresher.refreshOperational({
+        commitment: 'CUSTOMER_DELIVERY',
+        notificationPolicyId: deletedPolicy!.id,
+        customerDeliveryStatus: false,
+        customerDeliveryNotification: true,
+        providerStatus: false,
+        providerNotification: false,
+        providerFollowUp: false,
+      }),
+      this.customerServiceRecordMaterializationsRefresher.refreshOperational({
+        commitment: 'PROVIDER_RETURN',
+        notificationPolicyId: deletedPolicy!.id,
+        customerDeliveryStatus: false,
+        customerDeliveryNotification: false,
+        providerStatus: false,
+        providerNotification: true,
+        providerFollowUp: false,
+      }),
+    ]);
   }
 }

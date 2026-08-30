@@ -125,3 +125,8 @@
   aislada de referencias y snapshots, consecutivo transaccional, PATCH por
   campos presentes, baja logica, refresh selectivo y respuestas localizadas.
   La compilacion de backend finalizo correctamente.
+- Se completo el Slice 6: refresco interno cursor-based protegido por lock,
+  conteos separados para las cinco materializaciones y refresh dirigido desde
+  cambios o bajas de politicas, limitado a registros operativos. No se agrego
+  un dispatcher de correos; solo se recalculan datos tecnicos materializados.
+  La compilacion de backend finalizo correctamente.

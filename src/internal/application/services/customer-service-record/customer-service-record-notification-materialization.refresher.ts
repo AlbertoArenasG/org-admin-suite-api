@@ -8,6 +8,7 @@ import {
   CustomerServiceRecordOperationalStatus,
   CustomerServiceRecordStatus,
   ExpirationNotificationPolicy,
+  ExpirationNotificationPolicyStatus,
   ExpirationNotificationPolicyAnchor,
   ExpirationNotificationPolicyRepeatUntil,
   ExpirationNotificationPolicyRuleProps,
@@ -36,7 +37,12 @@ export class CustomerServiceRecordNotificationMaterializationRefresher {
     ) {
       return this.invalidate(previous, now);
     }
-    if (!estimatedDate || !input.policy || input.policy.rules.length === 0) {
+    if (
+      !estimatedDate ||
+      !input.policy ||
+      input.policy.status !== ExpirationNotificationPolicyStatus.ACTIVE ||
+      input.policy.rules.length === 0
+    ) {
       return this.empty(previous, now);
     }
 
