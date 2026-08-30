@@ -108,3 +108,7 @@
 - Se completo el Slice 1: aggregate, catalogo local, contador transaccional,
   esquemas, mappers, repositorios, indices y registro en DI. La compilacion de
   backend finalizo correctamente; no se ejecutaron migraciones ni seeds.
+- Se completo el Slice 2: autorizacion directa y capabilities derivadas,
+  enumeraciones localizadas y seeds independientes para contactos desde
+  usuarios y tipos de servicio. La compilacion de backend finalizo
+  correctamente; no se ejecuto ningun seed.

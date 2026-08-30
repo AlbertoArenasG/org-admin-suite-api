@@ -66,6 +66,11 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.INTERNAL_ASSET_MAINTENANCE_RECORDS',
     operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
   },
+  CUSTOMER_SERVICE_RECORDS: {
+    code: 'CUSTOMER_SERVICE_RECORDS',
+    nameKey: 'AUTHORIZATION.MODULE.CUSTOMER_SERVICE_RECORDS',
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE', 'MANAGE_SERVICE_TYPES'],
+  },
 } as const satisfies Record<
   string,
   {

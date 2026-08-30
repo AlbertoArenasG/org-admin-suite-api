@@ -16,8 +16,8 @@
 
 - [x] Slice 1. Fundacion de dominio y persistencia.
   Status: completed
-- [ ] Slice 2. Autorizacion, i18n y seeds independientes.
-  Status: pending
+- [x] Slice 2. Autorizacion, i18n y seeds independientes.
+  Status: completed
 - [ ] Slice 3. Catalogo de tipos y lookups externos.
   Status: pending
 - [ ] Slice 4. Materializaciones aisladas.

@@ -29,6 +29,35 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
       ],
     },
     {
+      consumerModule: 'CUSTOMER_SERVICE_RECORDS',
+      auxiliaryCapabilities: [
+        {
+          module: 'CUSTOMERS',
+          capability: 'READ_OPTIONS',
+        },
+        {
+          module: 'CUSTOMERS',
+          capability: 'READ_RELATED_USERS_OPTIONS',
+        },
+        {
+          module: 'PROVIDERS',
+          capability: 'READ_OPTIONS',
+        },
+        {
+          module: 'RECIPIENT_GROUPS',
+          capability: 'READ_OPTIONS',
+        },
+        {
+          module: 'EXPIRATION_STATUS_POLICIES',
+          capability: 'READ_OPTIONS',
+        },
+        {
+          module: 'EXPIRATION_NOTIFICATION_POLICIES',
+          capability: 'READ_OPTIONS',
+        },
+      ],
+    },
+    {
       consumerModule: 'USER_REGISTRATION_INVITATIONS',
       auxiliaryCapabilities: [
         {

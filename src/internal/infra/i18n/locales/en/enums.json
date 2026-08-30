@@ -128,6 +128,48 @@
       "CANCELLED": "Cancelled"
     }
   },
+  "CUSTOMER_SERVICE_RECORD": {
+    "STATUS": {
+      "ACTIVE": "Active",
+      "DELETED": "Deleted"
+    },
+    "OPERATIONAL_STATUS": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "DERIVED_STATUS": {
+      "PENDING_ESTIMATED_DATE": "No estimated date",
+      "NOT_APPLICABLE": "Not applicable",
+      "ON_TIME": "On time",
+      "OVERDUE": "Overdue",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "MATERIALIZATION_SOURCE": {
+      "SYSTEM": "System",
+      "POLICY": "Policy"
+    },
+    "NOTIFICATION_EVENT_STATUS": {
+      "PENDING": "Pending",
+      "TRIGGERED": "Sent",
+      "FAILED": "Failed",
+      "INVALIDATED": "Invalidated"
+    },
+    "PROVIDER_FOLLOW_UP_EVENT_STATUS": {
+      "PENDING": "Pending",
+      "TRIGGERED": "Sent",
+      "FAILED": "Failed",
+      "INVALIDATED": "Invalidated"
+    }
+  },
+  "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": {
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Email"
@@ -147,7 +189,8 @@
       "RECIPIENT_GROUPS": "Recipient groups",
       "EXPIRATION_STATUS_POLICIES": "Expiration status policies",
       "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies",
-      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control and payments"
+      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control and payments",
+      "CUSTOMER_SERVICE_RECORDS": "Customer service records"
     },
     "OPERATION": {
       "CREATE": "Create",
@@ -156,7 +199,8 @@
       "DELETE": "Delete",
       "READ_PUBLIC_ACCESS": "Read public access",
       "RESEND": "Resend",
-      "REVOKE": "Revoke"
+      "REVOKE": "Revoke",
+      "MANAGE_SERVICE_TYPES": "Manage service types"
     }
   }
 }

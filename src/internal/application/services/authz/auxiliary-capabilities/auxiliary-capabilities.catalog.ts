@@ -15,6 +15,24 @@ export const AUXILIARY_CAPABILITIES_CATALOG: AuxiliaryCapabilityCatalogEntry[] =
         'Permite consultar clientes activos resumidos para selección reutilizable.',
     },
     {
+      module: 'CUSTOMERS',
+      capability: 'READ_RELATED_USERS_OPTIONS',
+      description:
+        'Permite consultar usuarios activos relacionados con un cliente para selección.',
+    },
+    {
+      module: 'PROVIDERS',
+      capability: 'READ_OPTIONS',
+      description:
+        'Permite consultar proveedores activos resumidos para selección reutilizable.',
+    },
+    {
+      module: 'RECIPIENT_GROUPS',
+      capability: 'READ_OPTIONS',
+      description:
+        'Permite consultar grupos destinatarios activos para selección reutilizable.',
+    },
+    {
       module: 'COMMUNICATION_CHANNELS',
       capability: 'READ_OPTIONS',
       description:

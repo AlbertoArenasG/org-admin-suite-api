@@ -128,6 +128,48 @@
       "CANCELLED": "Cancelado"
     }
   },
+  "CUSTOMER_SERVICE_RECORD": {
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "DELETED": "Eliminado"
+    },
+    "OPERATIONAL_STATUS": {
+      "PENDING": "Pendiente",
+      "IN_PROGRESS": "En proceso",
+      "COMPLETED": "Completado",
+      "CANCELLED": "Cancelado"
+    },
+    "DERIVED_STATUS": {
+      "PENDING_ESTIMATED_DATE": "Sin fecha estimada",
+      "NOT_APPLICABLE": "No aplica",
+      "ON_TIME": "En tiempo",
+      "OVERDUE": "Vencido",
+      "COMPLETED": "Completado",
+      "CANCELLED": "Cancelado"
+    },
+    "MATERIALIZATION_SOURCE": {
+      "SYSTEM": "Sistema",
+      "POLICY": "Política"
+    },
+    "NOTIFICATION_EVENT_STATUS": {
+      "PENDING": "Pendiente",
+      "TRIGGERED": "Enviado",
+      "FAILED": "Fallido",
+      "INVALIDATED": "Invalidado"
+    },
+    "PROVIDER_FOLLOW_UP_EVENT_STATUS": {
+      "PENDING": "Pendiente",
+      "TRIGGERED": "Enviado",
+      "FAILED": "Fallido",
+      "INVALIDATED": "Invalidado"
+    }
+  },
+  "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": {
+    "STATUS": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo"
+    }
+  },
   "COMMUNICATION": {
     "CHANNEL": {
       "EMAIL": "Correo electrónico"
@@ -147,7 +189,8 @@
       "RECIPIENT_GROUPS": "Grupos de destinatarios",
       "EXPIRATION_STATUS_POLICIES": "Políticas de estatus por vencimiento",
       "EXPIRATION_NOTIFICATION_POLICIES": "Políticas de notificación por vencimiento",
-      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Control de activos y pagos"
+      "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Control de activos y pagos",
+      "CUSTOMER_SERVICE_RECORDS": "Registros de servicio a clientes"
     },
     "OPERATION": {
       "CREATE": "Crear",
@@ -156,7 +199,8 @@
       "DELETE": "Eliminar",
       "READ_PUBLIC_ACCESS": "Leer acceso público",
       "RESEND": "Reenviar",
-      "REVOKE": "Revocar"
+      "REVOKE": "Revocar",
+      "MANAGE_SERVICE_TYPES": "Administrar tipos de servicio"
     }
   }
 }
