@@ -95,9 +95,10 @@ export class CustomerServiceRecordTechnicalMaterializationsRefresherService {
               },
             }
           : {}),
-        ...(input.providerStatus ||
-        input.providerNotification ||
-        input.providerFollowUp
+        ...(record.provider &&
+        (input.providerStatus ||
+          input.providerNotification ||
+          input.providerFollowUp)
           ? {
               provider: {
                 ...(input.providerStatus

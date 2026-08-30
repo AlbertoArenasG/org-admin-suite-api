@@ -73,15 +73,16 @@ export class CreateCustomerServiceRecordUseCase {
         updatedAt: new Date(),
       });
       const { data } = await this.writeRepository.create(entity);
-      return data!;
-    });
-    await this.materializationsRefresher.refresh({
-      records: [record],
-      customerDeliveryStatus: true,
-      customerDeliveryNotification: true,
-      providerStatus: true,
-      providerNotification: true,
-      providerFollowUp: true,
+      const createdRecord = data!;
+      await this.materializationsRefresher.refresh({
+        records: [createdRecord],
+        customerDeliveryStatus: true,
+        customerDeliveryNotification: true,
+        providerStatus: true,
+        providerNotification: true,
+        providerFollowUp: true,
+      });
+      return createdRecord;
     });
     const { data } = await this.readRepository.findById(record.id);
     return CustomerServiceRecordMapper.toViewDto(data!);
