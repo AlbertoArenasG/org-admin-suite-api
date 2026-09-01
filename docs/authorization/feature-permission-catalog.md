@@ -45,7 +45,7 @@ AUTHORIZATION_CATALOG.USERS = {
   code: 'USERS',
   nameKey: 'AUTHORIZATION.MODULE.USERS',
   operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
-}
+};
 ```
 
 Estado actual:
@@ -432,6 +432,10 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `service_packages.READ`
+- `GET /v1/service-packages/records/options`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: expone los tipos de servicio disponibles para filtros; protegido por `PermissionsGuard` con `service_packages.READ`
 - `GET /v1/service-packages/records/:recordId`
   - operacion: `READ`
   - acceso actual: autenticado

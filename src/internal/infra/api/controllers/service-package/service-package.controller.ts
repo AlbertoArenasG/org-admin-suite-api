@@ -27,6 +27,7 @@ import { SuccessMessageService } from '@infra/i18n/services/success-message.serv
 import {
   GetServicePackageRecordsQuery,
   GetServicePackageRecordByIdQuery,
+  GetServicePackageRecordServiceTypeOptionsQuery,
 } from '@infra/cqrs/queries';
 import { GetServicePackageRecordsRequestDto } from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
@@ -83,6 +84,22 @@ export class ServicePackageController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('records/options')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_packages', 'READ')
+  @HttpCode(HttpStatus.OK)
+  async getRecordOptions() {
+    const data = await this.queryBus.execute(
+      GetServicePackageRecordServiceTypeOptionsQuery.create(),
+    );
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData({ service_types: data })
       .withStatus(HttpStatus.OK)
       .build();
   }

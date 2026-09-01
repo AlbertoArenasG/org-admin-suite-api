@@ -39,6 +39,7 @@ export interface GetServicePackageRecordsDto {
   perPage: number;
   packageId?: string | null;
   search?: string | null;
+  serviceType?: string | null;
 }
 
 export interface GetServicePackageRecordsResultDto {
@@ -47,6 +48,14 @@ export interface GetServicePackageRecordsResultDto {
   perPage: number;
   total: number;
 }
+
+export interface ServicePackageRecordServiceTypeOptionDto {
+  value: string;
+  label: string;
+}
+
+export type GetServicePackageRecordServiceTypeOptionsResultDto =
+  ServicePackageRecordServiceTypeOptionDto[];
 
 export interface DeleteServicePackageRecordDto {
   recordId: string;

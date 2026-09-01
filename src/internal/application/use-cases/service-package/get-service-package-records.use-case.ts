@@ -25,6 +25,7 @@ export class GetServicePackageRecordsUseCase {
       perPage: input.perPage,
       packageId: input.packageId ?? null,
       search: input.search ?? null,
+      serviceType: input.serviceType ?? null,
     });
 
     return {

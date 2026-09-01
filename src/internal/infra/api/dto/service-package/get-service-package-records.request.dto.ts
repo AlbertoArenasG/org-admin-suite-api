@@ -12,12 +12,17 @@ export class GetServicePackageRecordsRequestDto extends PaginationRequestDto {
   @IsString()
   search?: string;
 
+  @IsOptional()
+  @IsString()
+  service_type?: string;
+
   toDomain(): GetServicePackageRecordsDto {
     return {
       page: this.getPage(),
       perPage: this.getPerPage(),
       packageId: this.package_id ?? null,
       search: this.search ?? null,
+      serviceType: this.service_type ?? null,
     };
   }
 }

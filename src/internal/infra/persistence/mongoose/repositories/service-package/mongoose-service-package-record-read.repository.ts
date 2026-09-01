@@ -26,7 +26,7 @@ export class MongooseServicePackageRecordReadRepositoryImpl
   async findAll(
     params: FindServicePackageRecordsParams,
   ): Promise<FindServicePackageRecordsResult> {
-    const { page, perPage, packageId, search } = params;
+    const { page, perPage, packageId, search, serviceType } = params;
     const skip = (page - 1) * perPage;
 
     const filter: Record<string, unknown> = {
@@ -35,6 +35,10 @@ export class MongooseServicePackageRecordReadRepositoryImpl
 
     if (packageId) {
       filter.package_id = packageId;
+    }
+
+    if (serviceType && serviceType.trim().length > 0) {
+      filter.service_type = serviceType.trim();
     }
 
     if (search && search.trim().length > 0) {
@@ -75,6 +79,25 @@ export class MongooseServicePackageRecordReadRepositoryImpl
 
     return {
       data: MongooseServicePackageRecordMapper.toDomain(document ?? null),
+    };
+  }
+
+  async findServiceTypes(): Promise<{ data: string[] }> {
+    const values = await this.model
+      .distinct('service_type', {
+        status: { $ne: ServicePackageRecordStatus.DELETED },
+        service_type: { $nin: [null, ''] },
+      })
+      .exec();
+
+    return {
+      data: values
+        .filter(
+          (value): value is string =>
+            typeof value === 'string' && value.trim().length > 0,
+        )
+        .map((value) => value.trim())
+        .sort((left, right) => left.localeCompare(right, 'es')),
     };
   }
 }

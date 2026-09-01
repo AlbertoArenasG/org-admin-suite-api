@@ -5,6 +5,7 @@ export interface FindServicePackageRecordsParams {
   perPage: number;
   packageId?: string | null;
   search?: string | null;
+  serviceType?: string | null;
 }
 
 export interface FindServicePackageRecordsResult {
@@ -17,6 +18,7 @@ export interface IServicePackageRecordReadRepository {
     params: FindServicePackageRecordsParams,
   ): Promise<FindServicePackageRecordsResult>;
   findById(recordId: string): Promise<{ data: ServicePackageRecord | null }>;
+  findServiceTypes(): Promise<{ data: string[] }>;
 }
 
 export const IServicePackageRecordReadRepositoryToken = Symbol(

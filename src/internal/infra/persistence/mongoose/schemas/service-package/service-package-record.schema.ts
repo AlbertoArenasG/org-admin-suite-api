@@ -65,7 +65,7 @@ export class ServicePackageRecordDocument extends Document {
   @Prop({ type: String, default: null })
   visit_date?: string | null;
 
-  @Prop({ type: String, default: null })
+  @Prop({ type: String, default: null, index: true })
   service_type?: string | null;
 
   @Prop({ type: String, default: null })
