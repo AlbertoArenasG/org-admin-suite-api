@@ -11,6 +11,9 @@
 - [x] Cerrar contrato visible de listado y detalle.
   Status: done
 
+- [ ] Cerrar decisiones tecnicas, contratos detallados y estrategia de validacion.
+  Status: pending
+
 ## Phase 2. Technical Design
 
 - [ ] Diseñar DTOs, queries, repositorio y presenters de consulta restringida.

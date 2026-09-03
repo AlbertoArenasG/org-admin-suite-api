@@ -2,8 +2,10 @@
 
 ## Phase 1. Definition
 
-Completa. Se confirmaron la ruta HTTP, la frontera de visibilidad y el lookup
-de Clientes que responde a la consulta activa.
+En progreso. Se confirmaron la ruta HTTP, la frontera de visibilidad y el
+lookup de Clientes que responde a la consulta activa. Falta cerrar el diseño
+tecnico detallado de persistencia, contratos, integracion y validacion antes de
+marcar la definition como lista para implementacion.
 
 ## Phase 2. Technical Design
 

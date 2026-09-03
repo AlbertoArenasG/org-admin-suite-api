@@ -4,8 +4,8 @@
 
 - Initiative: `customer-service-records-client-access`
 - Date: `2026-09-03`
-- Definition status: completed
-- Implementation ready: yes
+- Definition status: in_progress
+- Implementation ready: no
 
 ## Objective
 
@@ -16,6 +16,15 @@ un Cliente, sin exponer informacion operativa interna sobre Proveedores.
 El nombre visible propuesto para navegacion e interfaz es `Seguimiento de
 servicios`. El nombre de permisos y administracion de roles sera `Acceso de
 clientes a registros de servicio`.
+
+## Decision Governance
+
+- Ningun gap funcional, tecnico, de contrato, persistencia, autorizacion o
+  validacion se resuelve por inferencia durante esta iniciativa.
+- Todo gap se documenta con su contexto, opciones, recomendacion e impacto
+  antes de continuar la fase afectada.
+- Solo el usuario responsable aprueba la decision final. La implementacion no
+  inicia ni avanza sobre una decision critica mientras permanezca pendiente.
 
 ## Initial Scope
 

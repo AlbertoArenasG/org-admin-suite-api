@@ -16,6 +16,9 @@
   `/v1/customer-service-records-client-access`.
 - Se confirmo que el lookup de Clientes responde a la busqueda y filtros activos
   para no mostrar opciones sin coincidencias en la consulta actual.
-- La definition quedo completa y lista para implementacion.
+- Se identifico que la definition funcional necesita complementarse con el
+  diseno tecnico detallado antes de cualquier implementacion.
+- Se registro la gobernanza de decisiones: cualquier gap se presenta al usuario
+  responsable con opciones y no se resuelve sin su aprobacion explicita.
 - El seed de roles se ejecutara manualmente por el responsable del entorno con
   `npm run db:seed:roles` despues de integrar el catalogo de autorizacion.
