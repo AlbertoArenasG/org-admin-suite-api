@@ -1,0 +1,91 @@
+# Customer Service Records Client Access
+
+## Status
+
+- Initiative: `customer-service-records-client-access`
+- Date: `2026-09-03`
+- Definition status: completed
+- Implementation ready: yes
+
+## Objective
+
+Crear un modulo independiente y de solo lectura para que un usuario consulte
+los registros de servicio a los que tiene acceso como usuario relacionado con
+un Cliente, sin exponer informacion operativa interna sobre Proveedores.
+
+El nombre visible propuesto para navegacion e interfaz es `Seguimiento de
+servicios`. El nombre de permisos y administracion de roles sera `Acceso de
+clientes a registros de servicio`.
+
+## Initial Scope
+
+- Listado paginado de registros visibles para el usuario autenticado.
+- Detalle de un registro visible para el usuario autenticado.
+- Permiso independiente bajo el modulo tecnico
+  `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`, inicialmente con operacion `READ`.
+- Datos visibles: folio, tipo de servicio, estatus operativo, datos generales,
+  equipos, usuarios asociados al registro y bloque de compromiso con el
+  Cliente.
+- Filtros por Cliente, tipo de servicio, estatus operativo, busqueda por folio
+  y equipos, y rangos de fechas de solicitud, recepcion y entrega estimada al
+  Cliente.
+- Lookup de Clientes calculado como `distinct` sobre los registros que cumplen
+  la visibilidad del usuario y la consulta activa; no se deriva directamente
+  de las relaciones usuario-cliente.
+- Actualizacion del catalogo de autorizacion, traducciones y seed de roles de
+  sistema.
+
+## Confirmed Decisions
+
+- El modulo no reutiliza los endpoints administrativos de
+  `CUSTOMER_SERVICE_RECORDS`; tendra controladores, queries y presenters de
+  consulta propios.
+- El permiso del modulo es necesario, pero no suficiente para acceder a un
+  registro.
+- Un registro es visible solo si cumple simultaneamente:
+  - el usuario autenticado tiene una relacion vigente con el Cliente del
+    registro;
+  - el usuario autenticado esta incluido en `customer.users` del registro;
+  - el registro tiene estatus tecnico `ACTIVE`.
+- La perdida de la relacion usuario-cliente revoca inmediatamente la
+  visibilidad, incluso para registros historicos.
+- El presenter de este modulo omitira por contrato todo el bloque `provider`:
+  identidad, fechas, estimaciones, semaforos, politicas, seguimiento y eventos.
+- El bloque `customer_delivery` expone recepcion, entrega estimada, entrega
+  real y semaforo materializado; no expone politicas ni eventos de
+  notificacion.
+- Los filtros, ordenamientos y busquedas de Proveedor quedan fuera de alcance.
+- Los roles de sistema recibiran el permiso nuevo mediante el seed de roles;
+  aun con ese permiso, su acceso a datos sigue sujeto a la frontera de Cliente
+  y usuario definida arriba.
+
+## Resolved Decisions
+
+### Decision 01. Ruta HTTP del modulo
+
+La ruta del modulo sera independiente:
+
+```text
+GET /v1/customer-service-records-client-access
+GET /v1/customer-service-records-client-access/:recordId
+```
+
+Status: approved
+
+### Decision 02. Contexto del lookup de Clientes
+
+El lookup se calcula como `distinct` sobre los registros activos y autorizados
+despues de aplicar la busqueda y los filtros activos de listado. Por tanto, sus
+opciones se reducen junto con las coincidencias de la consulta y no muestran
+Clientes que ya no tengan resultados visibles.
+
+Status: approved
+
+## Out Of Scope For Now
+
+- Crear, editar, eliminar o cambiar el estatus operativo de registros.
+- Mostrar informacion, filtros, lookups o materializaciones de Proveedor.
+- Mostrar politicas aplicadas o eventos de notificacion.
+- Reutilizar el controlador o presenter administrativo como superficie externa.
+- Cambios de frontend; se planificaran en una spec propia cuando exista el
+  contrato de API cerrado.
