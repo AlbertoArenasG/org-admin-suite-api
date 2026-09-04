@@ -2,6 +2,10 @@
 
 `.specs` guarda el historial de analisis, planes, tareas, decisiones y diseño técnico de features, refactors y cambios estructurales del proyecto.
 
+La forma de crear, retomar y cerrar una iniciativa esta definida en
+[SPEC_WORKFLOW.md](./SPEC_WORKFLOW.md). Toda sesion que trabaje una spec debe
+leerlo antes de proponer o implementar cambios.
+
 ## Objetivo
 
 - Tener trazabilidad tecnica de cambios importantes.
