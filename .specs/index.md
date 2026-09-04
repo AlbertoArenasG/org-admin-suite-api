@@ -1,6 +1,6 @@
 # Specs Index
 
-- [customer-service-records-client-access](./2026/2026-09/2026-09-03_1307_customer-service-records-client-access/00-definition.md) - Definition in progress
+- [customer-service-records-client-access](./2026/2026-09/2026-09-03_1307_customer-service-records-client-access/00-definition.md) - Definition completed, implementation pending
 - [customer-service-operations](./2026/2026-08/2026-08-27_2212_customer-service-operations/00-definition.md) - Definition in progress
 - [internal-staff-contact-classification](./2026/2026-08/2026-08-26_1831_internal-staff-contact-classification/00-definition.md) - Completed
 - [customer-user-relationship-management](./2026/2026-08/2026-08-26_1336_customer-user-relationship-management/00-definition.md) - Completed

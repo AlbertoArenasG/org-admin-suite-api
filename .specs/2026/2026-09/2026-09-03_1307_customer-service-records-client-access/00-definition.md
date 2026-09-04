@@ -4,8 +4,8 @@
 
 - Initiative: `customer-service-records-client-access`
 - Date: `2026-09-03`
-- Definition status: in_progress
-- Implementation ready: no
+- Definition status: completed
+- Implementation ready: yes
 
 ## Objective
 
@@ -30,14 +30,16 @@ clientes a registros de servicio`.
 
 - Listado paginado de registros visibles para el usuario autenticado.
 - Detalle de un registro visible para el usuario autenticado.
+- Lookups contextuales de Clientes y tipos de servicio para los filtros del
+  listado.
 - Permiso independiente bajo el modulo tecnico
   `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`, inicialmente con operacion `READ`.
-- Datos visibles: folio, tipo de servicio, estatus operativo, datos generales,
-  equipos, usuarios asociados al registro y bloque de compromiso con el
-  Cliente.
-- Filtros por Cliente, tipo de servicio, estatus operativo, busqueda por folio
-  y equipos, y rangos de fechas de solicitud, recepcion y entrega estimada al
-  Cliente.
+- Datos visibles: folio, tipo de servicio, datos generales, equipos, usuarios
+  asociados al registro y bloque de compromiso con el
+  Cliente. Las observaciones se exponen en listado y detalle; el semaforo
+  materializado queda fuera del contrato inicial.
+- Filtros por Cliente, tipo de servicio, busqueda por folio y equipos, y rangos
+  de fechas de recepcion y entrega estimada al Cliente.
 - Lookup de Clientes calculado como `distinct` sobre los registros que cumplen
   la visibilidad del usuario y la consulta activa; no se deriva directamente
   de las relaciones usuario-cliente.
@@ -60,9 +62,8 @@ clientes a registros de servicio`.
   visibilidad, incluso para registros historicos.
 - El presenter de este modulo omitira por contrato todo el bloque `provider`:
   identidad, fechas, estimaciones, semaforos, politicas, seguimiento y eventos.
-- El bloque `customer_delivery` expone recepcion, entrega estimada, entrega
-  real y semaforo materializado; no expone politicas ni eventos de
-  notificacion.
+- El bloque `customer_delivery` expone recepcion, entrega estimada y entrega
+  real; no expone semaforo, politicas ni eventos de notificacion.
 - Los filtros, ordenamientos y busquedas de Proveedor quedan fuera de alcance.
 - Los roles de sistema recibiran el permiso nuevo mediante el seed de roles;
   aun con ese permiso, su acceso a datos sigue sujeto a la frontera de Cliente

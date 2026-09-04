@@ -1,28 +1,50 @@
 # Implementation Breakdown
 
-## Slice 1. Authorization Foundation
+## Slice 1. Authorization And Read Foundation
 
-- Agregar `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS` al catalogo central con
-  `READ`.
-- Agregar copias i18n de autorizacion y registrar el efecto esperado del seed
-  de roles de sistema.
+**Phase:** 3, tasks 1 and 2. **Goal:** establish the dedicated read boundary
+without exposing HTTP routes. **Artifacts:** authorization catalog, i18n,
+client-access port, Mongoose repository, visibility service, DTOs, mapper,
+use cases, barrels and DI registrations listed in `06`.
 
-## Slice 2. Restricted Read Model
+Steps: register `READ`; add translations; create the visibility service; create
+the dedicated port/repository and the four use cases; register DI and exports.
+The repository must apply `ACTIVE`, actor snapshot and active customer IDs
+before count or pagination. No schema, index, route, Postman or handoff change
+occurs in this slice.
 
-- Definir parametros de consulta que incluyan `actorUserId`.
-- Implementar metodos de repositorio que apliquen la frontera compuesta antes
-  de paginar, contar o buscar detalle.
-- Definir el lookup `distinct` de Clientes sobre registros visibles.
+Validation: typecheck and focused manual code review of the three-part fence.
+Close only when all artifacts compile and administrative read artifacts remain
+unchanged.
 
-## Slice 3. HTTP And Presentation
+## Slice 2. HTTP Contract And Consumer Documentation
 
-- Agregar queries, handlers, DTOs y controlador de solo lectura.
-- Crear presenter exclusivo con la proyeccion visible al Cliente.
-- Restringir filtros y ordenamientos al contrato publico.
+**Phase:** 3, task 3. **Goal:** expose list, detail and contextual options.
+**Artifacts:** request DTOs, four CQRS handlers, presenter, controller, API and
+CQRS registrations, Postman collection, frontend handoff and permission catalog.
 
-## Slice 4. Verification And Seed
+Steps: add four routes with options before `:recordId`; wire `READ`; implement
+the approved projections, filters and errors; create/update the handoff draft;
+update the four Postman requests and representative examples.
 
-- Agregar pruebas de autorizacion, visibilidad, paginacion y ausencia de datos
-  internos.
-- Ejecutar validaciones tecnicas.
-- Solicitar y registrar la ejecucion manual de `npm run db:seed:roles`.
+Compatibility: does not modify administrative routes or their presenter. Close
+only when endpoint behavior, handoff and Postman reflect the same contract.
+
+## Slice 3. Verification And Operational Seed
+
+**Phase:** 3 task 4 and Phase 4. **Goal:** verify observable behavior and
+record operational evidence. **Artifacts:** `03-task-list.md`, `05-progress.md`,
+final handoff, Postman and authorization catalog documentation.
+
+Validation: build/typecheck, lint (review diff because it fixes files), manual
+Postman scenarios from the behavior matrix, and absence of Provider/internal
+fields. No automated tests by approved scope; this limitation is recorded.
+
+User command: after catalog deployment and before validating system roles,
+execute `npm run db:seed:roles`. Preconditions: target environment and catalog
+change are deployed. Risk: it recalculates default-role permissions. Evidence:
+Master Admin and Administrator receive the new `READ` permission; user shares
+the result before this slice is closed.
+
+Close only after validation evidence, final handoff/Postman, progress entries
+and the seed result are recorded.

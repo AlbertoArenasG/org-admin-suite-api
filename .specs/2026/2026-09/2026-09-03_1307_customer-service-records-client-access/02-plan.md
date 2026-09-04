@@ -2,10 +2,9 @@
 
 ## Phase 1. Definition
 
-En progreso. Se confirmaron la ruta HTTP, la frontera de visibilidad y el
-lookup de Clientes que responde a la consulta activa. Falta cerrar el diseño
-tecnico detallado de persistencia, contratos, integracion y validacion antes de
-marcar la definition como lista para implementacion.
+Completada. Se confirmaron ruta HTTP, frontera de visibilidad, contratos
+visibles, lookups contextuales, restricciones de datos internos, criterios de
+aceptacion y registro verificable de artefactos.
 
 ## Phase 2. Technical Design
 
@@ -14,12 +13,16 @@ marcar la definition como lista para implementacion.
 2. Definir catalogo de permisos, i18n, registro de controladores y handlers.
 3. Definir indices o ajustes de consulta necesarios para la frontera compuesta.
 
+Completada. Se documentaron registro verificable de artefactos, impacto entre
+repositorios y todos los slices ejecutables antes de implementar.
+
 ## Phase 3. Implementation
 
 1. Agregar el modulo de autorizacion y sus traducciones.
 2. Implementar listado, detalle y lookup de Clientes con la frontera de acceso.
 3. Registrar controladores, queries, handlers y dependencias.
-4. Agregar pruebas de autorizacion, filtrado y omision de datos de Proveedor.
+4. Preparar escenarios de validacion manual de autorizacion, filtrado y omision
+   de datos de Proveedor.
 
 ## Phase 4. Validation And Closure
 
