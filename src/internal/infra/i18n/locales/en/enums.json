@@ -190,7 +190,8 @@
       "EXPIRATION_STATUS_POLICIES": "Expiration status policies",
       "EXPIRATION_NOTIFICATION_POLICIES": "Expiration notification policies",
       "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Internal asset control and payments",
-      "CUSTOMER_SERVICE_RECORDS": "Customer service records"
+      "CUSTOMER_SERVICE_RECORDS": "Customer service records",
+      "CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS": "Customer access to service records"
     },
     "OPERATION": {
       "CREATE": "Create",

@@ -93,3 +93,13 @@
 - La revision final del gate confirmo criterios de aceptacion, artefactos,
   composicion, impacto entre repositorios y slices completos; la definicion se
   marco como completada y lista para implementacion.
+- Se cerro la Slice 1, `Authorization And Read Foundation`: se implementaron
+  el catalogo `READ`, i18n, servicio de visibilidad, puerto y repositorio de
+  lectura dedicados, DTOs, mapper, cuatro casos de uso y registros DI/barrels.
+- La frontera compuesta se aplica en el repositorio antes de conteo,
+  paginacion, detalle y opciones. No se modificaron schema, indices, CRUD
+  administrativo, rutas HTTP, Postman ni handoff frontend.
+- Validacion ejecutada: `npx tsc --noEmit --pretty false` exitosa. No se
+  ejecutaron pruebas automatizadas por alcance aprobado; la validacion manual
+  queda en la Slice 3.
+- Siguiente paso: Slice 2, contrato HTTP y documentacion de consumidores.
