@@ -150,6 +150,34 @@ Estas validaciones deben cubrir casos como:
 - tocar algo relacionado con `MASTER_ADMIN`
 - exigir `roleId` custom al convertir un usuario en `USER`
 
+## Permiso Y Alcance De Datos
+
+Registrado: 2026-09-04.
+
+El permiso funcional habilita una operacion del modulo; no sustituye las
+restricciones de visibilidad de sus datos. El controller declara el permiso,
+el caso de uso resuelve el contexto de visibilidad desde backend y el
+repositorio aplica esa frontera antes de conteo, paginacion, detalle y opciones.
+No debe filtrarse una pagina ya obtenida ni confiar en parametros del cliente
+para establecer el alcance autorizado.
+
+En `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`, los cuatro GET requieren `READ`
+y registros `ACTIVE`. El servicio de visibilidad consulta el Usuario persistido
+en cada lectura:
+
+- `isInternalStaff === true`: no exige relacion usuario-cliente ni pertenencia
+  al snapshot `customer.users`.
+- Usuarios externos: exige simultaneamente relacion vigente usuario-cliente
+  y pertenencia a `customer.users` del registro.
+
+El flag no se infiere del rol ni se recibe como filtro o se confia al JWT.
+Ser staff no concede `READ`, acceso al modulo administrativo ni campos internos;
+solo cambia el alcance de registros dentro de este modulo. Esta excepcion no
+se extiende automaticamente a otros modulos.
+
+Ver el [contrato de Client Access](../frontend/customer-service-records-client-access-handoff.md)
+para proyecciones, lookups contextuales y errores no reveladores.
+
 ## Criterio Práctico
 
 Usar `ensurePermission(...)` cuando:

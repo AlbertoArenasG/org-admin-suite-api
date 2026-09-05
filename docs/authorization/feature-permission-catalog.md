@@ -112,6 +112,8 @@ Los modulos actuales del sistema son:
 - `expiration_status_policies`
 - `expiration_notification_policies`
 - `internal_asset_maintenance_records`
+- `customer_service_records`
+- `customer_service_records_client_access`
 
 Nota:
 
@@ -733,6 +735,31 @@ Endpoints actuales:
   - nota: lookup local de tipos activos para el módulo.
 
 El refresh técnico `POST /v1/internal-jobs/customer-service-records/materializations/refresh` no usa permisos del backoffice: está protegido por `InternalJobsAuthGuard`.
+
+### `customer_service_records_client_access`
+
+Actualizado: 2026-09-04.
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/customer-service-record-client-access/customer-service-record-client-access.controller.ts`
+
+Endpoints actuales:
+
+- `GET /v1/customer-service-records-client-access`: listado paginado; operacion `READ`.
+- `GET /v1/customer-service-records-client-access/:recordId`: detalle visible o `404`; operacion `READ`.
+- `GET /v1/customer-service-records-client-access/customers/options`: Clientes distintos de registros visibles, conserva filtros excepto `customer_id`; operacion `READ`.
+- `GET /v1/customer-service-records-client-access/service-types/options`: tipos distintos de registros visibles, conserva filtros excepto `service_type_code`; operacion `READ`.
+
+Los cuatro endpoints requieren JWT y `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS/READ`.
+No heredan permisos del modulo administrativo ni requieren capabilities auxiliares.
+Solo consultan registros `ACTIVE`: staff interno omite ambas restricciones
+relacionales; externos requieren relacion vigente usuario-cliente y pertenencia
+a `customer.users`. Ambos perfiles reciben la misma proyeccion limitada, sin
+Proveedor ni campos internos. Los lookups no son catalogos globales.
+
+Contrato de respuestas y filtros en el
+[handoff de Client Access](../frontend/customer-service-records-client-access-handoff.md).
 
 ## Features Publicas Existentes Fuera Del Catalogo Interno
 

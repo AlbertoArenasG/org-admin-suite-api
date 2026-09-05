@@ -110,6 +110,29 @@ Las mutaciones contextuales solo operan sobre Clientes `ACTIVE`. Clientes `INACT
 
 La respuesta administrativa de Usuario incluye `system_role_name` y `status_name` localizados. El lookup devuelve `id`, `name`, `lastname`, `full_name` y `email`.
 
+## Efecto En Seguimiento De Servicios
+
+Registrado: 2026-09-04.
+
+El modulo `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS` exige su propio `READ`.
+Para usuarios externos, la visibilidad requiere tanto una relacion vigente
+con el Cliente como pertenecer a `customer.users` del registro de servicio.
+Agregar una relacion no concede por si solo acceso a todos sus registros.
+
+Retirar la relacion revoca el acceso externo en consultas posteriores, aunque
+el usuario permanezca en el snapshot del registro: no se necesita eliminar ese
+snapshot para hacer efectiva la restriccion.
+
+Cambiar `is_internal_staff` del Usuario tambien cambia el alcance de la siguiente
+consulta, sin renovar JWT. Staff interno puede consultar registros activos de
+todos los Clientes sin ambas relaciones, pero sigue necesitando `READ` y recibe
+la misma proyeccion limitada. Frontend no debe inferir este alcance por rol.
+
+Los selects de Seguimiento de servicios deben usar sus lookups contextuales,
+no el catalogo global `GET /v1/customers/options` usado para administrar relaciones.
+Contrato completo en el
+[handoff de Seguimiento de servicios](customer-service-records-client-access-handoff.md).
+
 ## Contactos
 
 El contrato de contactos reemplaza definitivamente `company_name` por `company_names: string[]`.
