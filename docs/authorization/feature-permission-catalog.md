@@ -83,6 +83,19 @@ Nota:
 
 ## Modulos Actuales
 
+### Acceso cliente a registros de servicio
+
+Modulo tecnico: `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`; decorador:
+`customer_service_records_client_access:READ`. Las cuatro rutas GET bajo
+`/v1/customer-service-records-client-access` (listado, `:recordId`,
+`customers/options`, `service-types/options`) usan JWT y el mismo permiso.
+No requiere capabilities auxiliares ni permiso administrativo del aggregate.
+El acceso a datos exige relacion vigente, usuario en snapshot y registro ACTIVE,
+tambien para roles de sistema. Contrato en
+[handoff de acceso cliente](../frontend/customer-service-records-client-access-handoff.md).
+Sincronizacion de roles: el responsable ejecuta `npm run db:seed:roles` tras
+desplegar el catalogo; no se crea un seed adicional.
+
 Los modulos actuales del sistema son:
 
 - `users`

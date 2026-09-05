@@ -682,3 +682,23 @@ aislada.
 - La spec registra casos manuales, resultados y cualquier limitacion del
   entorno en `05-progress.md`.
 - No se agregan archivos de prueba automatizada como parte de este modulo.
+
+## 2026-09-04 - Integracion HTTP del acceso cliente
+
+### Decision
+
+Se implementa la Slice 2 con los contratos aprobados y carpetas propias. Los
+parametros no declarados se descartan siguiendo el ValidationPipe global;
+rangos invertidos y sort invalido en listado devuelven 400.
+
+### Reason
+
+La integracion debe conservar las convenciones existentes y la frontera
+compuesta aprobada. El filtro customer_id se intersecta con los IDs autorizados.
+
+### Impact
+
+- Validacion local completada; ver evidencia de 07. La prueba HTTP con datos
+  y seed conserva su lugar en Slice 3.
+- Handoff y Postman describen el contrato implementado y distinguen ejemplos
+  ilustrativos de evidencia de entorno.

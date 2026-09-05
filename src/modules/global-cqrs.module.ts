@@ -1,4 +1,10 @@
 import { Global, Module } from '@nestjs/common';
+import {
+  GetCustomerServiceRecordClientAccessListHandler,
+  GetCustomerServiceRecordClientAccessByIdHandler,
+  GetCustomerServiceRecordClientAccessCustomerOptionsHandler,
+  GetCustomerServiceRecordClientAccessServiceTypeOptionsHandler,
+} from '@infra/cqrs/queries/customer-service-record-client-access';
 import { CqrsModule } from '@nestjs/cqrs';
 
 import {
@@ -120,6 +126,10 @@ import {
 } from '@infra/cqrs/queries';
 
 const providers = [
+  GetCustomerServiceRecordClientAccessListHandler,
+  GetCustomerServiceRecordClientAccessByIdHandler,
+  GetCustomerServiceRecordClientAccessCustomerOptionsHandler,
+  GetCustomerServiceRecordClientAccessServiceTypeOptionsHandler,
   AuthenticateUserHandler,
   RequestPasswordResetHandler,
   ResetUserPasswordHandler,

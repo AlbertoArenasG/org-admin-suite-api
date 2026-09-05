@@ -11,34 +11,34 @@
 - [x] Cerrar contrato visible de listado y detalle.
   Status: done
 
-- [ ] Completar criterios de aceptacion, registro de artefactos, contratos entre
+- [x] Completar criterios de aceptacion, registro de artefactos, contratos entre
   repositorios y estrategia de validacion.
   Status: done
 
 ## Phase 2. Technical Design
 
-- [ ] Diseñar artefactos, DTOs, queries, repositorio y presenters de consulta
+- [x] Diseñar artefactos, DTOs, queries, repositorio y presenters de consulta
   restringida.
   Status: done
 
-- [ ] Diseñar integracion de autorizacion, i18n, composicion CQRS/API, Postman
+- [x] Diseñar integracion de autorizacion, i18n, composicion CQRS/API, Postman
   y handoff frontend.
   Status: done
 
 ## Phase 3. Implementation
 
-- [ ] Agregar catalogo, traducciones y seed derivado de roles de sistema.
-  Status: pending
+- [x] Agregar catalogo, traducciones y seed derivado de roles de sistema.
+  Status: done
 
-- [ ] Implementar listado, detalle y lookups restringidos de Clientes y tipos
+- [x] Implementar listado, detalle y lookups restringidos de Clientes y tipos
   de servicio.
-  Status: pending
+  Status: done
 
-- [ ] Actualizar la coleccion Postman y el handoff frontend del modulo.
-  Status: pending
+- [x] Actualizar la coleccion Postman y el handoff frontend del modulo.
+  Status: done
 
-- [ ] Actualizar el catalogo permanente de permisos del feature.
-  Status: pending
+- [x] Actualizar el catalogo permanente de permisos del feature.
+  Status: done
 
 - [ ] Documentar y ejecutar validacion manual de frontera, paginacion y contrato de respuesta.
   Status: pending

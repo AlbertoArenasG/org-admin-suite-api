@@ -263,15 +263,15 @@ lookups usan el mismo builder sin `pagination` ni `meta` adicional.
 | `GetCustomerServiceRecordClientAccessByIdUseCase` | use case | `src/internal/application/use-cases/customer-service-record-client-access/get-customer-service-record-client-access-by-id.use-case.ts` | Coordina visibilidad y devuelve `404` no revelador. | new |
 | `GetCustomerServiceRecordClientAccessCustomerOptionsUseCase` | use case | `src/internal/application/use-cases/customer-service-record-client-access/get-customer-service-record-client-access-customer-options.use-case.ts` | Obtiene opciones de Cliente ignorando solo su filtro propio. | new |
 | `GetCustomerServiceRecordClientAccessServiceTypeOptionsUseCase` | use case | `src/internal/application/use-cases/customer-service-record-client-access/get-customer-service-record-client-access-service-type-options.use-case.ts` | Obtiene opciones de tipo ignorando solo su filtro propio. | new |
-| application DTO barrel | composition | `src/internal/application/dto/customer-service-record/index.ts` | Exporta DTOs del acceso cliente. | modify |
-| application mapper barrel | composition | `src/internal/application/mappers/customer-service-record/index.ts` | Exporta el mapper dedicado. | modify |
-| application service barrel | composition | `src/internal/application/services/customer-service-record/index.ts` | Exporta el servicio de visibilidad. | modify |
-| application use-case barrel | composition | `src/internal/application/use-cases/customer-service-record/index.ts` | Exporta los cuatro casos de uso. | modify |
+| application DTO barrel | composition | `src/internal/application/dto/customer-service-record-client-access/index.ts` | Exporta DTOs del acceso cliente. | modify |
+| application mapper barrel | composition | `src/internal/application/mappers/customer-service-record-client-access/index.ts` | Exporta el mapper dedicado. | modify |
+| application service barrel | composition | `src/internal/application/services/customer-service-record-client-access/index.ts` | Exporta el servicio de visibilidad. | modify |
+| application use-case barrel | composition | `src/internal/application/use-cases/customer-service-record-client-access/index.ts` | Exporta los cuatro casos de uso. | modify |
 | `GetCustomerServiceRecordClientAccessListQuery` / `Handler` | CQRS | `src/internal/infra/cqrs/queries/customer-service-record-client-access/customer-service-record-client-access.queries.ts` | Adapta listado al use case correspondiente; no contiene reglas de visibilidad. | new |
 | `GetCustomerServiceRecordClientAccessByIdQuery` / `Handler` | CQRS | `src/internal/infra/cqrs/queries/customer-service-record-client-access/customer-service-record-client-access.queries.ts` | Adapta detalle al use case correspondiente. | new |
 | `GetCustomerServiceRecordClientAccessCustomerOptionsQuery` / `Handler` | CQRS | `src/internal/infra/cqrs/queries/customer-service-record-client-access/customer-service-record-client-access.queries.ts` | Adapta el lookup contextual de Clientes. | new |
 | `GetCustomerServiceRecordClientAccessServiceTypeOptionsQuery` / `Handler` | CQRS | `src/internal/infra/cqrs/queries/customer-service-record-client-access/customer-service-record-client-access.queries.ts` | Adapta el lookup contextual de tipos. | new |
-| query barrel and `GlobalCqrsModule` | CQRS registration | `src/internal/infra/cqrs/queries/customer-service-record/index.ts`, `src/modules/global-cqrs.module.ts` | Exportan y registran los cuatro handlers. | modify |
+| query barrel and `GlobalCqrsModule` | CQRS registration | `src/internal/infra/cqrs/queries/customer-service-record-client-access/index.ts`, `src/modules/global-cqrs.module.ts` | Exportan y registran los cuatro handlers. | modify |
 
 ### HTTP, authorization and composition
 
@@ -280,9 +280,9 @@ lookups usan el mismo builder sin `pagination` ni `meta` adicional.
 | `GetCustomerServiceRecordClientAccessListRequestDto`, `GetCustomerServiceRecordClientAccessCustomerOptionsRequestDto`, `GetCustomerServiceRecordClientAccessServiceTypeOptionsRequestDto` | HTTP DTOs | `src/internal/infra/api/dto/customer-service-record-client-access/customer-service-record-client-access.request.dto.ts` | Valida paginacion heredada, filtros, sort y rangos; los DTOs de options excluyen paginacion y sort. | new |
 | `CustomerServiceRecordClientAccessPresenter` | presenter | `src/internal/infra/api/presenters/customer-service-record-client-access/customer-service-record-client-access.presenter.ts` | Convierte DTOs a snake_case y aplica las proyecciones list/detail/options. | new |
 | `CustomerServiceRecordClientAccessController` | controller | `src/internal/infra/api/controllers/customer-service-record-client-access/customer-service-record-client-access.controller.ts` | Expone cuatro GET; options antes de `:recordId`; aplica JWT, permissions and `READ`. | new |
-| API DTO barrels | composition | `src/internal/infra/api/dto/customer-service-record/index.ts`, `src/internal/infra/api/dto/index.ts` | Exportan los request DTOs dedicados. | modify |
-| API presenter barrels | composition | `src/internal/infra/api/presenters/customer-service-record/index.ts`, `src/internal/infra/api/presenters/index.ts` | Exportan el presenter dedicado. | modify |
-| API controller barrels | composition | `src/internal/infra/api/controllers/customer-service-record/index.ts`, `src/internal/infra/api/controllers/index.ts` | Exportan el controller dedicado. | modify |
+| API DTO barrels | composition | `src/internal/infra/api/dto/customer-service-record-client-access/index.ts`, `src/internal/infra/api/dto/index.ts` | Exportan los request DTOs dedicados. | modify |
+| API presenter barrels | composition | `src/internal/infra/api/presenters/customer-service-record-client-access/index.ts`, `src/internal/infra/api/presenters/index.ts` | Exportan el presenter dedicado. | modify |
+| API controller barrels | composition | `src/internal/infra/api/controllers/customer-service-record-client-access/index.ts`, `src/internal/infra/api/controllers/index.ts` | Exportan el controller dedicado. | modify |
 | `GlobalMongooseRepositoriesModule`, `GlobalCqrsModule`, `GlobalHttpModule` | composition | `src/modules/global-mongoose-repositories.module.ts`, `src/modules/global-cqrs.module.ts`, `src/modules/global-http.module.ts` | Consumen barrels/configuraciones para exportar repositorio y registrar handlers, controller y presenter. | modify |
 | `AUTHORIZATION_CATALOG` | authorization catalog | `src/internal/application/services/authz/authorization.catalog.ts` | Registra module `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS` with `READ`. | modify |
 | enum translations | i18n | `src/internal/infra/i18n/locales/{es,en}/enums.json` | Agrega copy de modulo en ambos idiomas. | modify |
@@ -316,3 +316,26 @@ en `05-progress.md` y estara acompanada por `build` y `lint`.
   ve ese registro.
 - Registro eliminado: no aparece ni responde en detalle.
 - Ninguna respuesta ni campo de filtro revela datos de Proveedor.
+
+## Integracion de Slice 2 - 2026-09-04
+
+Los barrels de Client Access son propios de cada capa. Los padres exportan el
+nuevo submodulo; GlobalHttpModule y GlobalApplicationModule lo descubren sin
+modificarse. GlobalCqrsModule registra explicitamente los cuatro handlers.
+El repositorio conserva su registro existente por token.
+
+El archivo de request DTOs contiene validateRanges, funcion local compartida
+por listado y options para validar rangos invertidos antes de invocar CQRS.
+Reutiliza BadRequestException y el envelope global de VALIDATION.DEFAULT.
+El ValidationPipe existente elimina propiedades no declaradas; no se agrego
+rechazo global de parametros desconocidos.
+
+Durante la integracion se corrigieron dos defectos del codigo de Slice 1:
+customer_id ahora se combina mediante AND con los IDs autorizados (no reemplaza
+el filtro de visibilidad); la base CustomerServiceRecordClientAccessUseCase
+declara explicitamente la inyeccion de VisibilityService para que los cuatro
+casos heredados resuelvan ambas dependencias.
+
+Contrato HTTP implementado en carpetas propias. Handoff y Postman actualizados
+con ejemplos ilustrativos. La validacion contra entorno y datos persiste como
+tarea de Slice 3; no se reporta como realizada.

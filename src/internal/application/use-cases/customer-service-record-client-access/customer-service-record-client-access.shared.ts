@@ -8,6 +8,7 @@ import { CustomerServiceRecordClientAccessVisibilityService } from '@application
 
 export abstract class CustomerServiceRecordClientAccessUseCase {
   constructor(
+    @Inject(CustomerServiceRecordClientAccessVisibilityService)
     protected readonly visibility: CustomerServiceRecordClientAccessVisibilityService,
     @Inject(ICustomerServiceRecordClientAccessReadRepositoryToken)
     protected readonly repository: ICustomerServiceRecordClientAccessReadRepository,

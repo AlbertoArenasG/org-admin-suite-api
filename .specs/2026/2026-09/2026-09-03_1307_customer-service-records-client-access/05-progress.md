@@ -102,4 +102,24 @@
 - Validacion ejecutada: `npx tsc --noEmit --pretty false` exitosa. No se
   ejecutaron pruebas automatizadas por alcance aprobado; la validacion manual
   queda en la Slice 3.
+- Se corrigio el DTO de opciones para cumplir la regla ESLint de tipos vacios;
+  `npx eslint --fix` sobre los artefactos de Client Access y
+  `npx tsc --noEmit --pretty false` finalizaron correctamente.
 - Siguiente paso: Slice 2, contrato HTTP y documentacion de consumidores.
+
+## 2026-09-04 - Implementacion de Slice 2
+
+- Se completaron DTOs HTTP, cuatro queries/handlers tipados, presenter, controller
+  y registros globales/barrels propios de Client Access.
+- Se implemento la validacion compartida de rangos invertidos con HTTP 400.
+- Se corrigio la sustitucion accidental del filtro de clientes autorizados por
+  customer_id y se explicito la inyeccion de VisibilityService en la base heredada.
+- Se actualizaron el handoff frontend, los cuatro requests y ejemplos Postman
+  y el catalogo permanente de permisos.
+- ESLint y npm run build correctos. Inspecciones locales de ValidationPipe,
+  metadata de rutas/DI, presenter y filtro compuesto registradas en 07.
+- Una inspeccion inicial importando modulos globales se interrumpio por la
+  instrumentacion Console Ninja del entorno; la inspeccion directa posterior
+  de controller y casos de uso termino correctamente.
+- No se agregaron pruebas automatizadas ni se ejecutaron seeds. Los ejemplos
+  Postman son ilustrativos; validacion HTTP con datos y seed pendiente en Slice 3.

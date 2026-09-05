@@ -19,6 +19,9 @@ unchanged.
 
 ## Slice 2. HTTP Contract And Consumer Documentation
 
+Estado: implementada; validacion local completada el 2026-09-04. Validacion HTTP
+con JWT y datos reales pendiente de Slice 3. No se declara verificada en entorno.
+
 **Phase:** 3, task 3. **Goal:** expose list, detail and contextual options.
 **Artifacts:** request DTOs, four CQRS handlers, presenter, controller, API and
 CQRS registrations, Postman collection, frontend handoff and permission catalog.
@@ -48,3 +51,18 @@ the result before this slice is closed.
 
 Close only after validation evidence, final handoff/Postman, progress entries
 and the seed result are recorded.
+
+## Evidencia de Slice 2
+
+- Cuatro rutas, DTOs, handlers tipados, presenter y registros implementados.
+- ESLint del modulo y GlobalCqrsModule correcto; build correcto.
+- Inspeccion local con ValidationPipe: rango invertido y sort invalido retornan
+  400; parametros desconocidos se eliminan siguiendo la configuracion vigente.
+- Inspeccion de metadata: cuatro rutas con READ y dependencias heredadas resueltas.
+- Invocacion local del presenter: listado sin users/created_at; detalle los agrega;
+  provider, requested_at y materializaciones no aparecen.
+- Consulta inspeccionada: customer_id conserva la interseccion con clientes vigentes.
+- Postman parseable: una carpeta, cuatro requests, ejemplos 200/400/401/403/404.
+- Handoff y catalogo de permisos actualizados.
+- Pendiente de entorno: respuesta HTTP real, datos, revocacion y seed de roles.
+  No se iniciaron servidores ni se ejecutaron operaciones sobre datos.

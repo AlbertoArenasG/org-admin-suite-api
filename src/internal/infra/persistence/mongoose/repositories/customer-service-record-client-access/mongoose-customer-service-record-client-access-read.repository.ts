@@ -104,7 +104,8 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
       params.actorUserId,
       params.customerIds,
     );
-    if (params.customerId) filter['customer.customer_id'] = params.customerId;
+    if (params.customerId)
+      filter.$and = [{ 'customer.customer_id': params.customerId }];
     if (params.serviceTypeCode)
       filter.service_type_code = params.serviceTypeCode;
     this.range(
