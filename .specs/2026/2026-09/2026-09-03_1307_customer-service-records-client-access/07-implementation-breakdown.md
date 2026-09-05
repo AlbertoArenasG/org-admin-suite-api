@@ -1,5 +1,14 @@
 # Implementation Breakdown
 
+## Ampliacion de alcance - Staff interno
+
+Slice adicional aprobada antes del cierre: modificar servicio de visibilidad,
+puerto, cuatro casos de uso y repositorio para separar alcance staff/externo.
+Actualizar handoff, Postman y catalogo de permisos sin agregar rutas o permisos.
+Reutilizar IUserReadRepository; resolver el flag desde persistencia por consulta.
+Validar lint, build y manualmente ambos alcances, filtros y registros eliminados.
+La validacion HTTP del entorno permanece en Slice 3; no requiere repetir seed.
+
 ## Slice 1. Authorization And Read Foundation
 
 **Phase:** 3, tasks 1 and 2. **Goal:** establish the dedicated read boundary
@@ -34,6 +43,11 @@ Compatibility: does not modify administrative routes or their presenter. Close
 only when endpoint behavior, handoff and Postman reflect the same contract.
 
 ## Slice 3. Verification And Operational Seed
+
+Estado: in_progress. El usuario confirmo el seed mediante captura:
+system-roles created=0 updated=2 unchanged=4; custom_roles=4 updated=0 unchanged=4.
+La ejecucion finalizo y cerro la conexion MongoDB sin errores reportados.
+Esto confirma la ejecucion del seed, no la validacion funcional de los endpoints.
 
 **Phase:** 3 task 4 and Phase 4. **Goal:** verify observable behavior and
 record operational evidence. **Artifacts:** `03-task-list.md`, `05-progress.md`,

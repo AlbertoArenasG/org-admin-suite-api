@@ -1,5 +1,10 @@
 # Analysis
 
+Actualizacion de alcance aprobada: la frontera relacional descrita abajo
+corresponde a usuarios externos. Staff interno se identifica mediante
+IUserReadRepository.findById en cada consulta y omite ambas restricciones
+relacionales, conservando READ, ACTIVE y la proyeccion de Client Access.
+
 ## Current State
 
 - `CustomerServiceRecord` ya contiene `customer`, `assets`,

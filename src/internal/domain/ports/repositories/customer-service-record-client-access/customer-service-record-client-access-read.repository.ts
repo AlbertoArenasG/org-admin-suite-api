@@ -8,6 +8,7 @@ export type CustomerServiceRecordClientAccessSortField =
 export interface FindCustomerServiceRecordClientAccessParams {
   actorUserId: string;
   customerIds: string[];
+  isInternalStaff: boolean;
   page?: number;
   perPage?: number;
   search?: string | null;
@@ -32,6 +33,7 @@ export interface ICustomerServiceRecordClientAccessReadRepository {
     recordId: string,
     actorUserId: string,
     customerIds: string[],
+    isInternalStaff: boolean,
   ): Promise<{
     data: CustomerServiceRecord | null;
   }>;

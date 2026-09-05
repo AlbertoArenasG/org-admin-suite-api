@@ -123,3 +123,29 @@
   de controller y casos de uso termino correctamente.
 - No se agregaron pruebas automatizadas ni se ejecutaron seeds. Los ejemplos
   Postman son ilustrativos; validacion HTTP con datos y seed pendiente en Slice 3.
+
+## 2026-09-04 - Evidencia del seed de Slice 3
+
+- El usuario ejecuto `npm run db:seed:roles` y compartio una captura del resultado.
+- Se ejecuto unicamente el seed system-roles: created=0, updated=2, unchanged=4.
+- Roles custom: custom_roles=4, updated=0, unchanged=4.
+- La salida indica Seed execution finished y MongoDB connection closed,
+  sin errores reportados.
+- Pendiente: validacion HTTP con JWT y datos reales; el resultado del seed no
+  demuestra por si solo visibilidad, permisos efectivos ni contratos de endpoints.
+
+## 2026-09-04 - Ampliacion aprobada para staff interno
+
+- El usuario aprobo omitir ambas restricciones relacionales al staff interno.
+- VisibilityService lee IUserReadRepository.findById por consulta; staff omite
+  relaciones y externos conservan clientes vigentes mas snapshot del registro.
+- Se actualizaron puerto, cuatro casos de uso y repositorio; READ, ACTIVE,
+  filtros, lookups contextuales y proyeccion limitada permanecen.
+- Handoff, catalogo de permisos y descripcion Postman reflejan ambos alcances.
+- No requiere un nuevo seed ni cambios de schema. Validacion HTTP de ambos
+  perfiles pendiente en Slice 3.
+- ESLint del modulo y npm run build finalizaron correctamente.
+- Inspeccion local con dependencias controladas: staff realizo cero lecturas
+  de relaciones y produjo filtro ACTIVE mas filtro seleccionado; externo
+  conservo snapshot, IDs vigentes y filtro seleccionado; usuario inexistente
+  produjo alcance vacio. JSON de Postman valido.

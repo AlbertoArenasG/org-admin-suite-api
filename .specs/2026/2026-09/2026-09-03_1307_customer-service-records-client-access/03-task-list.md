@@ -43,13 +43,19 @@
 - [ ] Documentar y ejecutar validacion manual de frontera, paginacion y contrato de respuesta.
   Status: pending
 
+- [x] Ampliar acceso a todos los registros ACTIVE para staff interno y conservar
+  ambas restricciones para externos; actualizar contratos y comprobar lint/build.
+  Status: done
+
 ## Phase 4. Validation And Closure
 
 - [ ] Ejecutar validaciones tecnicas y registrar resultados.
   Status: pending
 
-- [ ] Solicitar ejecucion manual de `npm run db:seed:roles` al responsable del entorno.
-  Status: pending
+- [x] Solicitar ejecucion manual de `npm run db:seed:roles` al responsable del entorno.
+  Status: done
+  Evidence: captura del usuario; system-roles created=0 updated=2 unchanged=4.
 
 - [ ] Registrar resultado del seed y cerrar la spec.
-  Status: pending
+  Status: in_progress
+  Evidence: seed registrado; cierre pendiente de validacion HTTP con datos.

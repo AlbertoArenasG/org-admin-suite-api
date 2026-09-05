@@ -16,7 +16,8 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
   implements ICustomerServiceRecordClientAccessReadRepository
 {
   async findAll(params: FindCustomerServiceRecordClientAccessParams) {
-    if (!params.customerIds.length) return { data: [], total: 0 };
+    if (!params.isInternalStaff && !params.customerIds.length)
+      return { data: [], total: 0 };
     const filter = this.filter(params);
     const [documents, total] = await Promise.all([
       this.customerServiceRecordModel
@@ -34,13 +35,18 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
       total,
     };
   }
-  async findById(recordId: string, actorUserId: string, customerIds: string[]) {
-    if (!customerIds.length) return { data: null };
+  async findById(
+    recordId: string,
+    actorUserId: string,
+    customerIds: string[],
+    isInternalStaff: boolean,
+  ) {
+    if (!isInternalStaff && !customerIds.length) return { data: null };
     return {
       data: this.toDomain(
         await this.customerServiceRecordModel
           .findOne({
-            ...this.base(actorUserId, customerIds),
+            ...this.base(actorUserId, customerIds, isInternalStaff),
             customer_service_record_id: recordId,
           })
           .exec(),
@@ -50,7 +56,7 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
   async findCustomerOptions(
     params: FindCustomerServiceRecordClientAccessParams,
   ) {
-    if (!params.customerIds.length) return [];
+    if (!params.isInternalStaff && !params.customerIds.length) return [];
     const documents = await this.customerServiceRecordModel
       .find(this.filter({ ...params, customerId: null }))
       .select('customer.customer_id customer.customer_name')
@@ -74,7 +80,7 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
   async findServiceTypeOptions(
     params: FindCustomerServiceRecordClientAccessParams,
   ) {
-    if (!params.customerIds.length) return [];
+    if (!params.isInternalStaff && !params.customerIds.length) return [];
     const documents = await this.customerServiceRecordModel
       .find(this.filter({ ...params, serviceTypeCode: null }))
       .select('service_type_code service_type_name')
@@ -90,7 +96,13 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
       (a, b) => a.name.localeCompare(b.name) || a.code.localeCompare(b.code),
     );
   }
-  private base(actorUserId: string, customerIds: string[]) {
+  private base(
+    actorUserId: string,
+    customerIds: string[],
+    isInternalStaff: boolean,
+  ) {
+    if (isInternalStaff === true)
+      return { status: CustomerServiceRecordStatus.ACTIVE };
     return {
       status: CustomerServiceRecordStatus.ACTIVE,
       'customer.users.user_id': actorUserId,
@@ -103,6 +115,7 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
     const filter: Record<string, unknown> = this.base(
       params.actorUserId,
       params.customerIds,
+      params.isInternalStaff,
     );
     if (params.customerId)
       filter.$and = [{ 'customer.customer_id': params.customerId }];

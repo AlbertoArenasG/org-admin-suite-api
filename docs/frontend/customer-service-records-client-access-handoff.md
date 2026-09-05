@@ -11,10 +11,14 @@ Copy de navegacion: Seguimiento de servicios. Copy de permisos: Acceso de client
 a registros de servicio. Los cuatro endpoints requieren Bearer JWT y ese permiso.
 El permiso administrativo `CUSTOMER_SERVICE_RECORDS/READ` no lo sustituye.
 
-Cada lectura exige simultaneamente relacion usuario-cliente vigente, usuario en
-`customer.users` del registro y estatus tecnico `ACTIVE`. No hay bypass de datos
-para roles de sistema. Backend calcula esta frontera; frontend solo aporta filtros.
-Revocar una relacion impide consultas posteriores aunque el snapshot siga presente.
+Cada lectura exige READ y estatus tecnico ACTIVE. Backend lee is_internal_staff
+del usuario persistido en cada consulta. Staff interno ve registros de todos los
+Clientes sin requerir relacion usuario-cliente ni pertenencia a customer.users.
+Usuarios externos requieren ambas condiciones simultaneamente.
+El rol no determina este alcance y frontend no puede enviar el flag como filtro.
+Revocar una relacion impide consultas posteriores del usuario externo aunque el
+snapshot siga presente. Cambiar la clasificacion de staff afecta la siguiente
+consulta sin renovar JWT.
 No cambia el contrato administrativo existente. La implementacion frontend tendra
 su propia spec; este documento es su referencia de integracion.
 
@@ -106,14 +110,15 @@ Opciones de Clientes: `[{ customer_id, company_name }]`.
 Opciones de tipos: `[{ code, name }]`. Ambas listas viven dentro de `data`.
 Cada lookup se deriva de registros autorizados y conserva busqueda y filtros,
 excepto su filtro propio: Clientes ignora customer_id y tipos ignora service_type_code.
-La UI debe reenviar el contexto de filtros al refrescar ambos selects.
+Para staff las opciones abarcan todos los registros ACTIVE coincidentes; para
+externos solo los autorizados. La UI debe reenviar el contexto de filtros al refrescar ambos selects.
 Orden alfabetico por etiqueta y desempate por ID/codigo.
 
 ## Estados y errores
 
 | Caso | HTTP | Resultado |
 | --- | --- | --- |
-| Sin coincidencias o relaciones | 200 | data vacia; listado con total y total_pages 0 |
+| Sin coincidencias (o externo sin relaciones) | 200 | data vacia; listado con total y total_pages 0 |
 | Registro inexistente, eliminado o fuera de frontera | 404 | ENTITY_NOT_FOUND.CUSTOMER_SERVICE_RECORD |
 | JWT ausente o invalido | 401 | Codigo AUTHENTICATION correspondiente |
 | Permiso insuficiente | 403 | AUTHORIZATION.ROLE_PRIVILEGES_INSUFFICIENT |

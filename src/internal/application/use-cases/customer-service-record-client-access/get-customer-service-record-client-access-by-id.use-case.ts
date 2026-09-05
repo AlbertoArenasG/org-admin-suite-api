@@ -13,11 +13,12 @@ export class GetCustomerServiceRecordClientAccessByIdUseCase extends CustomerSer
     actorUserId: string,
     recordId: string,
   ): Promise<CustomerServiceRecordClientAccessViewDto> {
-    const customerIds = await this.visibility.resolveCustomerIds(actorUserId);
+    const visibility = await this.visibility.resolve(actorUserId);
     const { data } = await this.repository.findById(
       recordId,
       actorUserId,
-      customerIds,
+      visibility.customerIds,
+      visibility.isInternalStaff,
     );
     if (!data)
       throw EntityNotFoundException.create(

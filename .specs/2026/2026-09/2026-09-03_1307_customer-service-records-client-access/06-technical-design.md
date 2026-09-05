@@ -1,5 +1,32 @@
 # Technical Design
 
+## Ampliacion aprobada: staff interno
+
+Regla vigente (sustituye la frontera universal descrita originalmente):
+los cuatro GET conservan JWT, READ y status tecnico ACTIVE. Si el usuario
+persistido tiene isInternalStaff=true, se omiten las condiciones de relacion
+usuario-cliente y pertenencia a customer.users. Para externos ambas siguen
+siendo obligatorias. Filtros, lookup contextual y proyecciones no cambian.
+
+El servicio CustomerServiceRecordClientAccessVisibilityService reutiliza
+IUserReadRepository.findById y resuelve en cada consulta
+{ customerIds, isInternalStaff }. No confia en query params ni en un flag del JWT.
+Para staff no consulta relaciones; usuario inexistente produce contexto
+restringido vacio. No se deriva staff del rol.
+
+Artefactos modificados: servicio de visibilidad, puerto de lectura (flag interno
+obligatorio en listado/options/detalle), sus cuatro casos de uso y repositorio
+Mongoose. Se reutiliza sin cambios IUserReadRepository en
+src/internal/domain/ports/repositories/user/user-read.respository.ts y su token.
+No se crean nuevas clases, permisos, schemas o migraciones.
+
+Criterios adicionales: staff sin relaciones ni snapshot puede consultar todos
+los registros ACTIVE; externos mantienen ambas condiciones; staff tampoco ve
+eliminados ni campos internos. Un filtro de cliente sigue reduciendo resultados.
+Ambos lookups siguen la busqueda y los filtros excepto el propio. Cambiar staff
+en persistencia cambia el alcance de la siguiente consulta sin emitir otro JWT.
+Verificar manualmente con dos usuarios y registrar evidencia en 05.
+
 ## Module Identity
 
 - Catalog module: `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`.

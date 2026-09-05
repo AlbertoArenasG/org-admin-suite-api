@@ -11,12 +11,10 @@ export class GetCustomerServiceRecordClientAccessListUseCase extends CustomerSer
   async execute(
     input: GetCustomerServiceRecordClientAccessListDto,
   ): Promise<GetCustomerServiceRecordClientAccessListResultDto> {
-    const customerIds = await this.visibility.resolveCustomerIds(
-      input.actorUserId,
-    );
+    const visibility = await this.visibility.resolve(input.actorUserId);
     const { data, total } = await this.repository.findAll({
       ...input,
-      customerIds,
+      ...visibility,
     });
     return {
       items: data.map(CustomerServiceRecordClientAccessMapper.toViewDto),

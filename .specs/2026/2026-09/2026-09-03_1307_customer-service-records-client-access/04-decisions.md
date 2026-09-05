@@ -1,5 +1,14 @@
 # Decisions
 
+## Ampliacion aprobada - Acceso del staff interno
+
+El usuario aprobo quitar ambas restricciones relacionales al staff interno.
+Con READ ve todos los registros ACTIVE, aunque no tenga relacion con el Cliente
+ni figure como contacto. Externos conservan ambas restricciones. La respuesta
+sigue siendo la proyeccion limitada de Client Access, sin datos de Proveedor.
+Esta decision sustituye la frontera universal previa. La clasificacion se lee
+del usuario persistido; no es un filtro publico ni depende del nombre del rol.
+
 ## 2026-09-03 - Identidad y frontera del modulo
 
 ### Decision

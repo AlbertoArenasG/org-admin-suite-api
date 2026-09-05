@@ -10,9 +10,7 @@ export class GetCustomerServiceRecordClientAccessServiceTypeOptionsUseCase exten
   async execute(
     input: GetCustomerServiceRecordClientAccessOptionsDto,
   ): Promise<CustomerServiceRecordClientAccessServiceTypeOptionDto[]> {
-    const customerIds = await this.visibility.resolveCustomerIds(
-      input.actorUserId,
-    );
-    return this.repository.findServiceTypeOptions({ ...input, customerIds });
+    const visibility = await this.visibility.resolve(input.actorUserId);
+    return this.repository.findServiceTypeOptions({ ...input, ...visibility });
   }
 }

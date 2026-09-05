@@ -90,8 +90,9 @@ Modulo tecnico: `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`; decorador:
 `/v1/customer-service-records-client-access` (listado, `:recordId`,
 `customers/options`, `service-types/options`) usan JWT y el mismo permiso.
 No requiere capabilities auxiliares ni permiso administrativo del aggregate.
-El acceso a datos exige relacion vigente, usuario en snapshot y registro ACTIVE,
-tambien para roles de sistema. Contrato en
+El acceso exige READ y registro ACTIVE. Staff interno (flag persistido
+is_internal_staff) no requiere relacion con Cliente ni pertenencia al snapshot;
+externos requieren ambas. El alcance no se deriva del rol. Contrato en
 [handoff de acceso cliente](../frontend/customer-service-records-client-access-handoff.md).
 Sincronizacion de roles: el responsable ejecuta `npm run db:seed:roles` tras
 desplegar el catalogo; no se crea un seed adicional.

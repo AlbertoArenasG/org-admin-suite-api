@@ -48,17 +48,22 @@ clientes a registros de servicio`.
 
 ## Confirmed Decisions
 
+Actualizacion aprobada: staff interno con READ consulta todos los registros ACTIVE
+sin relacion usuario-cliente ni asociacion al registro. Las condiciones relacionales
+que siguen se aplican solo a externos. Se conserva la proyeccion limitada, filtros
+y lookups contextuales. El flag se resuelve desde el usuario persistido, no del JWT.
+
 - El modulo no reutiliza los endpoints administrativos de
   `CUSTOMER_SERVICE_RECORDS`; tendra controladores, queries y presenters de
   consulta propios.
 - El permiso del modulo es necesario, pero no suficiente para acceder a un
   registro.
-- Un registro es visible solo si cumple simultaneamente:
+- Para usuarios externos, un registro es visible solo si cumple simultaneamente:
   - el usuario autenticado tiene una relacion vigente con el Cliente del
     registro;
   - el usuario autenticado esta incluido en `customer.users` del registro;
   - el registro tiene estatus tecnico `ACTIVE`.
-- La perdida de la relacion usuario-cliente revoca inmediatamente la
+- Para externos, la perdida de la relacion usuario-cliente revoca inmediatamente la
   visibilidad, incluso para registros historicos.
 - El presenter de este modulo omitira por contrato todo el bloque `provider`:
   identidad, fechas, estimaciones, semaforos, politicas, seguimiento y eventos.
@@ -66,8 +71,8 @@ clientes a registros de servicio`.
   real; no expone semaforo, politicas ni eventos de notificacion.
 - Los filtros, ordenamientos y busquedas de Proveedor quedan fuera de alcance.
 - Los roles de sistema recibiran el permiso nuevo mediante el seed de roles;
-  aun con ese permiso, su acceso a datos sigue sujeto a la frontera de Cliente
-  y usuario definida arriba.
+  el alcance depende del flag de staff persistido: staff sin restricciones
+  relacionales y externos sujetos a la frontera de Cliente y usuario.
 
 ## Resolved Decisions
 
