@@ -149,3 +149,41 @@
   de relaciones y produjo filtro ACTIVE mas filtro seleccionado; externo
   conservo snapshot, IDs vigentes y filtro seleccionado; usuario inexistente
   produjo alcance vacio. JSON de Postman valido.
+
+## 2026-09-04 - Validacion del listado para staff interno
+
+- El usuario confirmo como validado el escenario solicitado: listado
+  `GET /v1/customer-service-records-client-access?page=1&limit=10` con staff
+  interno y READ, sin exigir relacion con cliente ni asociacion al registro.
+- Evidencia: confirmacion del usuario en la sesion; no se adjunto respuesta HTTP
+  ni se ejecuto esta comprobacion desde el agente.
+- Se actualizan tarea y breakdown. Slice 3 permanece en progreso: acceso
+  externo, detalle, lookups y demas escenarios de la matriz pendientes.
+
+## 2026-09-04 - Validacion completa y cierre
+
+- Tras recibir la lista completa de validaciones, el usuario indico:
+  "marca todos como validados". Se registra su confirmacion para la totalidad
+  de los escenarios, no como comprobaciones HTTP ejecutadas por el agente.
+- Acceso validado: JWT, READ independiente, staff y externos, ambas relaciones
+  externas, multiples clientes, revocacion, cambio de staff sin renovar JWT,
+  imposibilidad de ampliar alcance por parametros, exclusion de eliminados
+  y detalle no revelador con 404.
+- Contratos validados: campos de listado/detalle, folio, assets, observaciones,
+  fechas y nulos, contactos y created_at exclusivos del detalle, exclusion de
+  informacion interna, envelope y localizacion.
+- Listado validado: vacios, paginacion y metadata, limites y alias, conteo
+  restringido, search textual/numerico y exclusiones, filtros combinados,
+  rangos inclusivos, errores 400, ordenamientos y parametros desconocidos.
+- Lookups validados: origen contextual, distinct, restricciones por perfil,
+  busqueda y filtros, omision exclusiva del filtro propio, rangos invalidos,
+  vacios, opciones completas sin metadata/paginacion y contratos/orden estables.
+- Cierre validado: handoff y Postman corresponden al contrato; modulo
+  administrativo conserva su comportamiento. Lint/build e inspecciones locales
+  ya registrados; seed confirmado previamente mediante captura.
+- No se adjuntaron nuevas capturas ni payloads HTTP. La evidencia funcional
+  es la confirmacion del usuario; no se agregaron pruebas automatizadas.
+- Se actualizan tareas, breakdown, estado de definicion, indice y handoff.
+  Slice 3 y spec completadas el 2026-09-04, sin pendientes de validacion.
+- Las menciones anteriores a pendientes se conservan como historia y quedan
+  superadas por este registro de cierre.

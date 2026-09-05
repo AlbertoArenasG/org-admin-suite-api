@@ -6,6 +6,9 @@
 - Date: `2026-09-03`
 - Definition status: completed
 - Implementation ready: yes
+- Implementation status: completed
+- Closed at: `2026-09-04`
+- Validation: confirmacion del usuario para todos los escenarios; evidencia en `05-progress.md`.
 
 ## Objective
 

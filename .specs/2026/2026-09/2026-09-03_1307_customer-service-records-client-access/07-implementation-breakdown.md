@@ -7,7 +7,8 @@ puerto, cuatro casos de uso y repositorio para separar alcance staff/externo.
 Actualizar handoff, Postman y catalogo de permisos sin agregar rutas o permisos.
 Reutilizar IUserReadRepository; resolver el flag desde persistencia por consulta.
 Validar lint, build y manualmente ambos alcances, filtros y registros eliminados.
-La validacion HTTP del entorno permanece en Slice 3; no requiere repetir seed.
+Validacion HTTP confirmada por el usuario en Slice 3 el 2026-09-04;
+ampliacion completada, sin repetir seed.
 
 ## Slice 1. Authorization And Read Foundation
 
@@ -28,8 +29,8 @@ unchanged.
 
 ## Slice 2. HTTP Contract And Consumer Documentation
 
-Estado: implementada; validacion local completada el 2026-09-04. Validacion HTTP
-con JWT y datos reales pendiente de Slice 3. No se declara verificada en entorno.
+Estado: completed. Validacion local completada el 2026-09-04; validacion HTTP
+confirmada por el usuario en Slice 3 en la misma fecha.
 
 **Phase:** 3, task 3. **Goal:** expose list, detail and contextual options.
 **Artifacts:** request DTOs, four CQRS handlers, presenter, controller, API and
@@ -44,10 +45,18 @@ only when endpoint behavior, handoff and Postman reflect the same contract.
 
 ## Slice 3. Verification And Operational Seed
 
-Estado: in_progress. El usuario confirmo el seed mediante captura:
+Estado: completed (2026-09-04). El usuario confirmo el seed mediante captura:
 system-roles created=0 updated=2 unchanged=4; custom_roles=4 updated=0 unchanged=4.
 La ejecucion finalizo y cerro la conexion MongoDB sin errores reportados.
 Esto confirma la ejecucion del seed, no la validacion funcional de los endpoints.
+
+Validacion completa confirmada por el usuario el 2026-09-04: acceso staff y
+externo, permisos, revocacion, detalle, proyecciones, busqueda, filtros,
+paginacion, ordenamientos, errores y lookups contextuales. Tambien confirma
+compatibilidad administrativa y contratos de handoff/Postman.
+Fuente: confirmacion explicita del usuario en la sesion para toda la lista;
+sin capturas ni payloads HTTP adicionales. No son ejecuciones HTTP del agente.
+Evidencia consolidada en `05-progress.md`. Slice 3 y spec cerradas.
 
 **Phase:** 3 task 4 and Phase 4. **Goal:** verify observable behavior and
 record operational evidence. **Artifacts:** `03-task-list.md`, `05-progress.md`,

@@ -40,8 +40,10 @@
 - [x] Actualizar el catalogo permanente de permisos del feature.
   Status: done
 
-- [ ] Documentar y ejecutar validacion manual de frontera, paginacion y contrato de respuesta.
-  Status: pending
+- [x] Documentar y ejecutar validacion manual de frontera, paginacion y contrato de respuesta.
+  Status: done
+  Evidence: 2026-09-04, todos los escenarios confirmados por el usuario;
+  alcance y fuente de evidencia registrados en `05-progress.md`.
 
 - [x] Ampliar acceso a todos los registros ACTIVE para staff interno y conservar
   ambas restricciones para externos; actualizar contratos y comprobar lint/build.
@@ -49,13 +51,16 @@
 
 ## Phase 4. Validation And Closure
 
-- [ ] Ejecutar validaciones tecnicas y registrar resultados.
-  Status: pending
+- [x] Ejecutar validaciones tecnicas y registrar resultados.
+  Status: done
+  Evidence: lint/build e inspecciones locales previas; validacion HTTP confirmada
+  por el usuario el 2026-09-04. Sin pruebas automatizadas, por alcance aprobado.
 
 - [x] Solicitar ejecucion manual de `npm run db:seed:roles` al responsable del entorno.
   Status: done
   Evidence: captura del usuario; system-roles created=0 updated=2 unchanged=4.
 
-- [ ] Registrar resultado del seed y cerrar la spec.
-  Status: in_progress
-  Evidence: seed registrado; cierre pendiente de validacion HTTP con datos.
+- [x] Registrar resultado del seed y cerrar la spec.
+  Status: done
+  Evidence: seed registrado; todas las validaciones confirmadas por el usuario.
+  Slice 3 y spec cerradas el 2026-09-04.
