@@ -66,6 +66,10 @@ Solo aplica a invitaciones `APPLICATION`; un ID de una invitación `MASTER` resp
 
 ## Usuarios
 
+La creacion directa desde backoffice usa `POST /v1/users` con `USERS:CREATE` y
+acepta un `customer_id` opcional singular. Su contrato completo, incluyendo el
+lookup de roles asignables, esta en el [handoff de creacion directa](direct-backoffice-user-creation-handoff.md).
+
 `PATCH /v1/users/:userId` acepta opcionalmente `is_internal_staff` y `customer_ids`:
 
 - si `is_internal_staff` se omite, se conserva; para `ADMIN` o `MASTER_ADMIN`, el valor efectivo siempre es `true` y `false` es inválido;

@@ -8,6 +8,10 @@ import {
   IUserWriteRepositoryToken,
 } from '@domain/ports/repositories';
 import {
+  ITransactionalExecutor,
+  ITransactionalExecutorToken,
+} from '@domain/ports/services';
+import {
   NotificationType,
   SystemRole,
   User,
@@ -23,6 +27,7 @@ import { UserResultMapper } from '@application/mappers';
 import {
   AuthorizationService,
   SyncUserContactService,
+  UserCustomerRelationshipManagerService,
   UserNotifierService,
 } from '@application/services';
 
@@ -33,9 +38,12 @@ export class CreateUserAndNotifyUseCase {
     private readonly userReadRepo: IUserReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepo: IUserWriteRepository,
+    @Inject(ITransactionalExecutorToken)
+    private readonly transactionalExecutor: ITransactionalExecutor,
     private readonly notifier: UserNotifierService,
     private readonly authorizationService: AuthorizationService,
     private readonly syncUserContactService: SyncUserContactService,
+    private readonly relationshipManagerService: UserCustomerRelationshipManagerService,
   ) {}
 
   /**
@@ -69,7 +77,23 @@ export class CreateUserAndNotifyUseCase {
       );
     }
 
-    const user = await this.createUser(input);
+    const user = await this.transactionalExecutor.execute(async () => {
+      const createdUser = await this.createUser(input);
+
+      if (input.customerId !== undefined) {
+        await this.relationshipManagerService.replaceForUser({
+          user: createdUser,
+          customerIds: [input.customerId],
+        });
+      }
+
+      await this.syncUserContactService.syncFromUser(createdUser);
+
+      return createdUser;
+    });
+
+    await this.notifier.notify(user, NotificationType.WELCOME_USER);
+    user.markAsCreated();
 
     return UserResultMapper.toCreateUserResultDto(user);
   }
@@ -100,10 +124,6 @@ export class CreateUserAndNotifyUseCase {
     });
 
     const { data } = await this.userWriteRepo.create(user);
-
-    await this.syncUserContactService.syncFromUser(data);
-    await this.notifier.notify(data, NotificationType.WELCOME_USER);
-    data.markAsCreated();
 
     return data;
   }

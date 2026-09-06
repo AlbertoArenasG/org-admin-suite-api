@@ -53,6 +53,10 @@ export class CreateUserRequestDto {
   @IsBoolean()
   is_internal_staff?: boolean;
 
+  @IsOptional()
+  @IsString()
+  customer_id?: string;
+
   toDomain(): CreateUserDto {
     return {
       name: this.name,
@@ -62,6 +66,7 @@ export class CreateUserRequestDto {
       systemRole: this.system_role,
       roleId: this.system_role === SystemRole.USER ? this.role_id : null,
       isInternalStaff: this.is_internal_staff,
+      customerId: this.customer_id,
       cellPhone: {
         countryCode: this.cell_phone?.country_code || null,
         number: this.cell_phone?.number || null,

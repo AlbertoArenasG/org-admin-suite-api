@@ -151,6 +151,16 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: listado general de usuarios, protegido por `users.READ`
+- `POST /v1/users`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: crea un usuario activo directamente, con `customer_id` opcional;
+    protegido por `users.CREATE` y no sustituye invitaciones
+- `GET /v1/users/creation-roles`
+  - operacion: `CREATE`
+  - acceso actual: autenticado
+  - nota: lookup de roles asignables para creacion directa, protegido por
+    `users.CREATE`
 - `GET /v1/users/roles`
   - operacion: `CREATE`
   - acceso actual: autenticado
@@ -170,8 +180,11 @@ Endpoints actuales:
 
 Notas:
 
-- `POST /v1/users` ya no forma parte del scope normal ni del catálogo funcional de negocio; la creación funcional de usuarios en aplicación vive en el flujo de invitaciones
-- el alta directa de usuarios queda reservada a `POST /v1/master-admin/users` bajo frontera estructural `MASTER_ADMIN`
+- La creacion directa ordinaria y las invitaciones coexisten: la primera crea
+  credenciales definidas por el actor; la segunda conserva el registro
+  autogestionado.
+- `POST /v1/master-admin/users` conserva la frontera estructural
+  `MASTER_ADMIN` para crear cuentas de plataforma, incluido `MASTER_ADMIN`.
 - ver usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - crear usuarios `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`
 - promover hacia `MASTER_ADMIN` o degradar desde `MASTER_ADMIN` es exclusivo de `MASTER_ADMIN`

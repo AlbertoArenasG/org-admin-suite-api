@@ -84,36 +84,43 @@ En responses modernas de usuarios y auth, la API expone como fuente principal:
 
 Estado:
 
-- `removed_from_normal_scope`
+- `implemented`
 
 Notas:
 
-- ya no forma parte del scope normal de aplicación
-- la creación funcional de usuarios en backoffice ocurre por invitación
-- el alta directa queda reservada a `POST /v1/master-admin/users`
+- requiere `USERS:CREATE`
+- crea un usuario `ACTIVE` directamente y coexiste con las invitaciones
+- acepta `customer_id` opcional solo para `system_role=USER`; backend confirma
+  Usuario, relación y Contacto en una sola transacción
+- no acepta `MASTER_ADMIN`; esa cuenta permanece en la frontera Master Admin
+- el contrato actual y el lookup de roles viven en el [handoff de creación
+  directa](direct-backoffice-user-creation-handoff.md)
 
-Request histórico de referencia:
+Request vigente:
 
 ```json
 {
   "name": "Ana",
   "lastname": "Lopez",
   "email": "ana@example.com",
-  "password": "secret123",
+  "password": "A-secure-password",
   "cell_phone": {
     "country_code": "+52",
     "number": "5512345678"
   },
   "system_role": "USER",
-  "role_id": "STAFF_LEGACY"
+  "role_id": "USER_ROLE_ID",
+  "is_internal_staff": false,
+  "customer_id": "CUSTOMER_ID"
 }
 ```
 
-Reglas históricas del payload:
+Reglas del payload:
 
 - `system_role` solo acepta `ADMIN` o `USER`
 - `role_id` es obligatorio solo cuando `system_role = USER`
-- si `system_role = ADMIN`, el backend persiste el rol default de administración
+- si `system_role = ADMIN`, `role_id` se omite y la respuesta conserva `null`
+- `customer_id` es opcional y solo se acepta para `USER`
 
 Ejemplo histórico de request para `ADMIN`:
 
@@ -127,7 +134,7 @@ Ejemplo histórico de request para `ADMIN`:
 }
 ```
 
-Response histórica de referencia:
+Response de referencia:
 
 ```json
 {
@@ -138,8 +145,8 @@ Response histórica de referencia:
     "lastname": "Perez",
     "email": "luis@example.com",
     "system_role": "ADMIN",
-    "role_id": "ADMIN_DEFAULT",
-    "role_name": "Administrador",
+    "role_id": null,
+    "role_name": null,
     "status": "ACTIVE",
     "status_name": "Activo",
     "cell_phone": {
@@ -151,8 +158,6 @@ Response histórica de referencia:
   "status_code": 201
 }
 ```
-
-Frontend normal no debe consumir este endpoint.
 
 ## `POST /v1/master-admin/users`
 
@@ -166,7 +171,8 @@ Frontera requerida:
 
 Notas:
 
-- este endpoint conserva el alta directa de usuarios fuera del scope normal de negocio
+- este endpoint conserva la creacion estructural de cuentas de plataforma,
+  incluido `MASTER_ADMIN`
 - no forma parte del catálogo funcional ordinario
 
 Request vigente:

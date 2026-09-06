@@ -10,6 +10,7 @@ export interface CreateUserDto {
   roleId: string | null;
   isInternalStaff?: boolean;
   cellPhone: PhoneDto;
+  customerId?: string;
 }
 
 export interface UserViewDto {

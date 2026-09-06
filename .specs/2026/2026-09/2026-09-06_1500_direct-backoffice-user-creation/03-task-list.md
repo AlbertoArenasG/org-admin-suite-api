@@ -10,24 +10,26 @@
 
 ## Phase 2. Authorization And Application Flow
 
-- [ ] Add `CREATE` to the `USERS` authorization catalog and preserve existing invitation permissions.
-  Status: pending
+- [x] Add `CREATE` to the `USERS` authorization catalog and preserve existing invitation permissions.
+  Status: done
 
-- [ ] Make direct user creation and its optional relationship atomic through existing services.
-  Status: pending
+- [x] Make direct user creation and its optional relationship atomic through existing services.
+  Status: done
 
 ## Phase 3. HTTP And CQRS Exposure
 
-- [ ] Expose `POST /v1/users` and `GET /v1/users/creation-roles` with `USERS:CREATE`.
-  Status: pending
+- [x] Expose `POST /v1/users` and `GET /v1/users/creation-roles` with `USERS:CREATE`.
+  Status: done
 
 ## Phase 4. Contract, Validation And Closure
 
-- [ ] Update Postman, frontend handoff and the permanent permission catalog.
-  Status: pending
+- [x] Update Postman, frontend handoffs, authorization rules and the permanent permission catalog.
+  Status: done
 
 - [ ] Run focused automated checks and record results.
   Status: pending
+  Evidence: no focused test harness exists for this flow; user must run the
+  documented build before environment validation.
 
 - [ ] Ask the user to execute `npm run db:seed:roles` after the catalog change, then validate endpoint scenarios manually.
   Status: pending

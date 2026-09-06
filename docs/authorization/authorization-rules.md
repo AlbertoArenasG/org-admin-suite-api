@@ -230,12 +230,17 @@ Excepción importante:
 Ejemplo práctico:
 
 - `GET /v1/users/roles` puede quedar absorbido por la capacidad funcional principal que lo consume; en el estado actual del sistema, al servir el flujo ordinario de invitaciones, queda absorbido por `USER_REGISTRATION_INVITATIONS/CREATE`
+- `GET /v1/users/creation-roles` es un auxiliar local de creacion directa y
+  queda absorbido por `USERS/CREATE`
 - la administración ordinaria de invitaciones usa operaciones directas del mismo módulo: `USER_REGISTRATION_INVITATIONS/READ`, `RESEND` y `REVOKE`; no son capabilities auxiliares ni aplican a la frontera `MASTER`
 - `GET /v1/roles/modules` queda protegido como auxiliar local por `ROLES/READ`
 - `GET /v1/contacts/search` se protege con `CONTACTS/SEARCH`, capability auxiliar derivada para `RECIPIENT_GROUPS`
 - `GET /v1/communication-channels` se protege con `COMMUNICATION_CHANNELS/READ_OPTIONS`, capability auxiliar derivada para `RECIPIENT_GROUPS`
 - los endpoints `/options` de políticas de vencimiento se protegen con capabilities auxiliares derivadas para `INTERNAL_ASSET_MAINTENANCE_RECORDS`
-- si la creación funcional de usuarios ocurre por invitación, un endpoint técnico como `POST /v1/users` no debe mantenerse por inercia dentro del catálogo general de negocio
+- `POST /v1/users` es una capacidad funcional ordinaria aprobada cuando se
+  requiere crear credenciales directamente; usa `USERS/CREATE`, conserva la
+  validacion estructural de jerarquia de roles y puede asociar un Cliente de
+  forma opcional sin requerir `CUSTOMERS/UPDATE`
 - `GET /v1/customers` y `GET /v1/customers/:customerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `CUSTOMERS/READ_PUBLIC_ACCESS`
 - `GET /v1/providers` y `GET /v1/providers/:providerId` no deben exponer `public_access_url` ni `public_access_token`; esos campos deben resolverse mediante `PROVIDERS/READ_PUBLIC_ACCESS`
 - si un capability como `FILES` solo existe para soportar uploads, metadata o descargas requeridas por otros módulos funcionales y no tiene UI ni gobierno de negocio propio, debe salir del catálogo funcional general y tratarse como infraestructura transversal

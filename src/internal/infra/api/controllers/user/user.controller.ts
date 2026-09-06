@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -15,12 +16,14 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
+  CreateUserRequestDto,
   GetUsersRequestDto,
   UpdateMyProfileRequestDto,
   UpdateUserRequestDto,
 } from '@infra/api/dto/user';
 import { UserPresenter, UserRolePresenter } from '@infra/api/presenters/user';
 import {
+  CreateUserAndNotifyCommandAdapter,
   DeleteUserCommandAdapter,
   UpdateMyProfileCommandAdapter,
   UpdateUserCommandAdapter,
@@ -119,6 +122,48 @@ export class UserController {
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
       .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('creation-roles')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'CREATE')
+  @HttpCode(HttpStatus.OK)
+  async creationRoles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
+    const result = await this.queryBus.execute(
+      GetUserRolesQuery.create({
+        actorSystemRole: currentUser.systemRole,
+      }),
+    );
+    const data = this.rolePresenter.toResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'CREATE')
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Body() body: CreateUserRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      CreateUserAndNotifyCommandAdapter.create(
+        body.toDomain(),
+        currentUser.systemRole,
+      ),
+    );
+    const data = await this.presenter.toUserResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('USER.CREATED'))
+      .withData(data)
+      .withStatus(HttpStatus.CREATED)
       .build();
   }
 

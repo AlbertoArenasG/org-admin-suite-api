@@ -2705,6 +2705,89 @@
       "name": "Users",
       "item": [
         {
+          "name": "Create Direct User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana\",\n  \"lastname\": \"Lopez\",\n  \"email\": \"ana.directa@example.com\",\n  \"password\": \"A-secure-password\",\n  \"system_role\": \"USER\",\n  \"role_id\": \"{{USER_ROLE_ID}}\",\n  \"is_internal_staff\": false,\n  \"customer_id\": \"{{CUSTOMER_ID}}\",\n  \"cell_phone\": {\n    \"country_code\": \"+52\",\n    \"number\": \"5512345678\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/users",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "users"]
+            },
+            "description": "Requiere users.CREATE. customer_id es opcional y solo se acepta para system_role USER. Omitir customer_id para crear un usuario sin Cliente."
+          },
+          "response": [
+            {
+              "name": "created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"Usuario creado correctamente\",\n  \"status_code\": 201,\n  \"data\": {\n    \"id\": \"USER_ID\",\n    \"name\": \"Ana\",\n    \"lastname\": \"Lopez\",\n    \"full_name\": \"Ana Lopez\",\n    \"email\": \"ana.directa@example.com\",\n    \"system_role\": \"USER\",\n    \"system_role_name\": \"Usuario\",\n    \"role_id\": \"USER_ROLE_ID\",\n    \"role_name\": null,\n    \"is_internal_staff\": false,\n    \"status\": \"ACTIVE\",\n    \"status_name\": \"Activo\",\n    \"cell_phone\": {\n      \"country_code\": \"+52\",\n      \"number\": \"5512345678\"\n    },\n    \"created_at\": \"2026-09-06T00:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Direct Creation Roles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/users/creation-roles",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "users", "creation-roles"]
+            },
+            "description": "Roles asignables para creacion directa. Requiere users.CREATE; no depende de invitaciones."
+          },
+          "response": [
+            {
+              "name": "success",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": [\n    {\n      \"role_id\": \"USER_ROLE_ID\",\n      \"role_code\": \"USER_ROLE\",\n      \"role_name\": \"Usuario operativo\",\n      \"system_role\": \"USER\",\n      \"role_scope\": \"USER\",\n      \"is_system\": false,\n      \"is_default\": false\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
           "name": "Get Users paginated",
           "protocolProfileBehavior": {
             "disableBodyPruning": true

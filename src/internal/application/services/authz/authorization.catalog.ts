@@ -4,7 +4,7 @@ export const AUTHORIZATION_CATALOG = {
   USERS: {
     code: 'USERS',
     nameKey: 'AUTHORIZATION.MODULE.USERS',
-    operations: ['READ', 'UPDATE', 'DELETE'],
+    operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
   },
   ROLES: {
     code: 'ROLES',
