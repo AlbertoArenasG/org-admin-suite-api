@@ -23,11 +23,8 @@ export class CustomerServiceRecordClientAccessMapper {
         model: asset.model,
         serialNumber: asset.serialNumber,
       })),
-      customerDelivery: {
-        receivedAt: record.customerDelivery.receivedAt,
-        estimatedDeliveryAt: record.customerDelivery.estimatedDeliveryAt,
-        deliveredToCustomerAt: record.customerDelivery.deliveredToCustomerAt,
-      },
+      customerDelivery: record.customerDelivery,
+      operationalStatus: record.operationalStatus,
       createdAt: record.createdAt ?? new Date(),
     };
   }

@@ -2,6 +2,10 @@ import {
   PaginatedResultDto,
   PaginationParamsDto,
 } from '@application/dto/shared';
+import {
+  CustomerServiceRecordCustomerDeliveryProps,
+  CustomerServiceRecordOperationalStatus,
+} from '@domain/entities';
 
 import { CustomerServiceRecordClientAccessSortField } from '@domain/ports/repositories';
 
@@ -43,11 +47,8 @@ export interface CustomerServiceRecordClientAccessViewDto {
     users: Array<{ userId: string; name: string; email: string }>;
   };
   assets: CustomerServiceRecordClientAccessAssetDto[];
-  customerDelivery: {
-    receivedAt: string | null;
-    estimatedDeliveryAt: string | null;
-    deliveredToCustomerAt: string | null;
-  };
+  customerDelivery: CustomerServiceRecordCustomerDeliveryProps;
+  operationalStatus: CustomerServiceRecordOperationalStatus;
   createdAt: Date;
 }
 export type GetCustomerServiceRecordClientAccessListResultDto =

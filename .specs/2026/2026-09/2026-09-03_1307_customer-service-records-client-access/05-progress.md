@@ -187,3 +187,12 @@
   Slice 3 y spec completadas el 2026-09-04, sin pendientes de validacion.
 - Las menciones anteriores a pendientes se conservan como historia y quedan
   superadas por este registro de cierre.
+## 2026-09-06 - Ampliacion de compromiso con Cliente
+
+- Se amplio Client Access para exponer `operational_status` y el bloque completo
+  `customer_delivery`, incluidas las materializaciones de estatus y
+  notificaciones.
+- Proveedor y todos sus datos permanecen fuera del contrato.
+- Se actualizo el handoff frontend.
+- La respuesta HTTP ampliada fue validada por confirmacion del usuario. La
+  ampliacion queda cerrada; no se agregaron pruebas automatizadas por alcance.

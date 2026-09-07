@@ -9,6 +9,8 @@
 - Implementation status: completed
 - Closed at: `2026-09-04`
 - Validation: confirmacion del usuario para todos los escenarios; evidencia en `05-progress.md`.
+- Amendment 2026-09-06: compromiso completo con Cliente implementado y
+  validado por confirmacion del usuario; iniciativa cerrada nuevamente.
 
 ## Objective
 
@@ -38,9 +40,9 @@ clientes a registros de servicio`.
 - Permiso independiente bajo el modulo tecnico
   `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`, inicialmente con operacion `READ`.
 - Datos visibles: folio, tipo de servicio, datos generales, equipos, usuarios
-  asociados al registro y bloque de compromiso con el
-  Cliente. Las observaciones se exponen en listado y detalle; el semaforo
-  materializado queda fuera del contrato inicial.
+  asociados al registro y bloque completo de compromiso con el Cliente,
+  incluidas sus materializaciones. Las observaciones se exponen en listado y
+  detalle.
 - Filtros por Cliente, tipo de servicio, busqueda por folio y equipos, y rangos
   de fechas de recepcion y entrega estimada al Cliente.
 - Lookup de Clientes calculado como `distinct` sobre los registros que cumplen
@@ -70,8 +72,9 @@ y lookups contextuales. El flag se resuelve desde el usuario persistido, no del 
   visibilidad, incluso para registros historicos.
 - El presenter de este modulo omitira por contrato todo el bloque `provider`:
   identidad, fechas, estimaciones, semaforos, politicas, seguimiento y eventos.
-- El bloque `customer_delivery` expone recepcion, entrega estimada y entrega
-  real; no expone semaforo, politicas ni eventos de notificacion.
+- El bloque `customer_delivery` expone recepcion, intervalo y entrega estimada,
+  entrega real, referencias de politicas y las materializaciones de estatus y
+  notificaciones asociadas al compromiso con Cliente.
 - Los filtros, ordenamientos y busquedas de Proveedor quedan fuera de alcance.
 - Los roles de sistema recibiran el permiso nuevo mediante el seed de roles;
   el alcance depende del flag de staff persistido: staff sin restricciones
@@ -103,7 +106,7 @@ Status: approved
 
 - Crear, editar, eliminar o cambiar el estatus operativo de registros.
 - Mostrar informacion, filtros, lookups o materializaciones de Proveedor.
-- Mostrar politicas aplicadas o eventos de notificacion.
+- Mostrar politicas aplicadas, materializaciones o eventos de Proveedor.
 - Reutilizar el controlador o presenter administrativo como superficie externa.
 - Cambios de frontend; se planificaran en una spec propia cuando exista el
   contrato de API cerrado.

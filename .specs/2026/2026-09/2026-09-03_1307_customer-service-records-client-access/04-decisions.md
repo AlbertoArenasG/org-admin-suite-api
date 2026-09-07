@@ -9,6 +9,33 @@ sigue siendo la proyeccion limitada de Client Access, sin datos de Proveedor.
 Esta decision sustituye la frontera universal previa. La clasificacion se lee
 del usuario persistido; no es un filtro publico ni depende del nombre del rol.
 
+## 2026-09-06 - Compromiso completo con Cliente
+
+### Decision
+
+Client Access expone el bloque completo `customer_delivery` y el
+`operational_status` del registro. El bloque incluye fechas, intervalo,
+referencias de politicas, materializacion de estatus y materializacion de
+notificaciones, con sus reglas y eventos.
+
+### Reason
+
+El seguimiento de servicios necesita mostrar el compromiso asumido con el
+Cliente y sus señales materializadas. Esas señales pertenecen al compromiso
+con Cliente y no revelan la operacion con Proveedor.
+
+### Impact
+
+- DTO, mapper, presenter y handoff incluyen el bloque completo en listado y
+  detalle.
+- Las representaciones de codigos se localizan igual que en el modulo
+  administrativo.
+- El contrato sigue excluyendo por completo provider, sus politicas,
+  materializaciones y eventos.
+- Esta decision sustituye la exclusion de `status_materialization` establecida
+  el 2026-09-03 para el compromiso con Cliente. No modifica la exclusion de
+  Provider.
+
 ## 2026-09-03 - Identidad y frontera del modulo
 
 ### Decision

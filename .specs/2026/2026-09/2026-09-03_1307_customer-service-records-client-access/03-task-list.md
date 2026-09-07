@@ -64,3 +64,17 @@
   Status: done
   Evidence: seed registrado; todas las validaciones confirmadas por el usuario.
   Slice 3 y spec cerradas el 2026-09-04.
+
+## Phase 5. Amendment: Customer Delivery Projection
+
+- [x] Exponer `operational_status` y el bloque completo `customer_delivery`
+  en Client Access, sin incluir Provider.
+  Status: done
+  Evidence: DTO, mapper, presenter, handoff y build actualizados el
+  2026-09-06.
+
+- [x] Validar la respuesta HTTP ampliada con un registro que contenga
+  materializaciones de compromiso con Cliente.
+  Status: done
+  Evidence: validacion HTTP confirmada por el usuario el 2026-09-06; no se
+  agregaron pruebas automatizadas.

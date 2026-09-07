@@ -141,22 +141,20 @@ crea un formato nuevo.
 ### List
 
 El listado expone folio, Cliente, tipo de servicio, equipos, observaciones,
-`received_at`, `estimated_delivery_at` y
-`delivered_to_customer_at`. No expone `requested_at`, usuarios asociados, el
-bloque completo de compromiso ni el semaforo materializado.
+`operational_status` y el bloque completo `customer_delivery`. No expone
+`requested_at`, usuarios asociados ni datos de Proveedor.
 
-Conserva la estructura del contrato administrativo: las tres fechas se emiten
-dentro de `customer_delivery`, no como campos planos del registro. El bloque
-del listado contiene exclusivamente `received_at`, `estimated_delivery_at` y
-`delivered_to_customer_at`.
+`customer_delivery` conserva la estructura anidada y expone recepcion,
+intervalo y entrega estimada, entrega real, referencias de politicas y las
+materializaciones de estatus y notificaciones del compromiso con Cliente.
 
 ### Detail
 
 El detalle agrega usuarios asociados, todos los campos visibles del compromiso
 con Cliente y `created_at`.
 
-Tambien conserva `customer_delivery` con exactamente las mismas tres fechas
-visibles del listado; no agrega una estructura alternativa.
+Tambien conserva el mismo `customer_delivery` completo del listado; no agrega
+una estructura alternativa.
 
 En ambos contratos, cada equipo contiene `asset_id`, `name`, `identifier`,
 `brand`, `model` y `serial_number`; no contiene observaciones.
@@ -170,10 +168,8 @@ La respuesta dedicada puede incluir:
 - snapshot de Cliente;
 - usuarios asociados al registro;
 - equipos;
-- `received_at`, `estimated_delivery_at` y `delivered_to_customer_at`.
-
-El detalle no expone `estimated_delivery_interval`; la fecha tentativa efectiva
-`estimated_delivery_at` es el unico valor visible de estimacion.
+- `operational_status`;
+- bloque completo `customer_delivery`.
 
 `service_type` usa `{ service_type_code, name }` y `customer` usa
 `{ customer_id, name }`, pues ambos contienen nombres de negocio persistidos.
@@ -181,9 +177,8 @@ El detalle no expone `estimated_delivery_interval`; la fecha tentativa efectiva
 El detalle expone `customer.users` como snapshots con `user_id`, `name` y
 `email`. No consulta ni expone rol, telefono o metadatos de la relacion actual.
 
-La respuesta no puede incluir `provider`, referencias de politicas,
-materializaciones de notificacion, sus eventos, semaforo materializado ni
-`updated_at`.
+La respuesta no puede incluir `provider`, sus referencias de politicas,
+materializaciones, eventos ni `updated_at`.
 
 ## Filters And Sorting
 

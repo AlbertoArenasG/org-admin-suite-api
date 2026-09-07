@@ -1,7 +1,8 @@
 # Handoff Frontend: Seguimiento de Servicios
 
-**Fecha:** 2026-09-04
-**Estado:** Contrato final; validaciones confirmadas por el usuario y Slice 3 cerrada el 2026-09-04. Seed registrado.
+**Fecha:** 2026-09-06
+**Estado:** Contrato final; compromiso completo con Cliente validado por
+confirmacion del usuario el 2026-09-06.
 **Spec:** [Customer Service Records Client Access](../../.specs/2026/2026-09/2026-09-03_1307_customer-service-records-client-access/00-definition.md).
 
 ## Acceso y compatibilidad
@@ -91,8 +92,27 @@ Cada fila del listado:
   ],
   "customer_delivery": {
     "received_at": "2026-09-01",
+    "estimated_delivery_interval": { "years": 0, "months": 0, "weeks": 1, "days": 0 },
     "estimated_delivery_at": "2026-09-10",
-    "delivered_to_customer_at": null
+    "delivered_to_customer_at": null,
+    "status_policy_id": "policy-example",
+    "notification_policy_id": "notification-policy-example",
+    "status_materialization": {
+      "source": { "code": "POLICY", "name": "Politica", "name_key": "CUSTOMER_SERVICE_RECORD.MATERIALIZATION_SOURCE.POLICY" },
+      "code": "ON_TIME",
+      "name": "En tiempo",
+      "name_key": "CUSTOMER_SERVICE_RECORD.STATUS.ON_TIME",
+      "color_hex": "#16A34A",
+      "effective_start_date": "2026-09-03",
+      "matched_rule": null,
+      "last_materialized_at": "2026-09-03T12:00:00.000Z"
+    },
+    "notification_materialization": null
+  },
+  "operational_status": {
+    "code": "IN_PROGRESS",
+    "name": "En proceso",
+    "name_key": "CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.IN_PROGRESS"
   }
 }
 ```
@@ -103,8 +123,17 @@ minimo de cuatro digitos. Las fechas del compromiso son date-only o null.
 Observaciones son string o null. Los nombres de Cliente y tipo son snapshots
 de negocio, no enums traducibles.
 
-No se exponen provider, requested_at, operational_status, updated_at, observaciones
-de assets, intervalos, politicas, semaforos, materializaciones ni eventos.
+`customer_delivery` expone el compromiso completo: fechas, intervalo,
+referencias de politicas, `status_materialization` y
+`notification_materialization`. La materializacion de estatus incluye fuente
+localizada, codigo, nombre, color, fecha efectiva, regla coincidente y fecha de
+materializacion. La de notificaciones incluye sus fechas, reglas y eventos con
+estatus localizado. `operational_status` tambien se expone como codigo, nombre
+y `name_key` localizado.
+
+No se exponen provider, requested_at, updated_at ni observaciones de assets.
+No se exponen campos, politicas, materializaciones o eventos pertenecientes a
+Proveedor.
 
 Opciones de Clientes: `[{ customer_id, company_name }]`.
 Opciones de tipos: `[{ code, name }]`. Ambas listas viven dentro de `data`.
