@@ -738,3 +738,22 @@ compuesta aprobada. El filtro customer_id se intersecta con los IDs autorizados.
   y seed conserva su lugar en Slice 3.
 - Handoff y Postman describen el contrato implementado y distinguen ejemplos
   ilustrativos de evidencia de entorno.
+
+## 2026-09-08 - Observaciones por equipo en Client Access
+
+### Decision
+
+El contrato de listado y detalle de Client Access expone
+`assets[].observations`, ademas de las observaciones generales del registro.
+
+### Reason
+
+La consulta externa necesita mostrar observaciones propias de cada equipo sin
+consumir el modulo administrativo ni revelar datos de proveedor.
+
+### Impact
+
+- El DTO, mapper y presenter incluyen `observations` nullable en cada asset.
+- Esta decision sustituye la exclusion anterior de observaciones por equipo.
+- Proveedor, politicas, eventos y demas datos internos siguen fuera del
+  contrato.

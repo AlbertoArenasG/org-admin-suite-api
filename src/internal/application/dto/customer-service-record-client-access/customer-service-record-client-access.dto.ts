@@ -35,6 +35,7 @@ export interface CustomerServiceRecordClientAccessAssetDto {
   brand: string;
   model: string;
   serialNumber: string;
+  observations: string | null;
 }
 export interface CustomerServiceRecordClientAccessViewDto {
   id: string;

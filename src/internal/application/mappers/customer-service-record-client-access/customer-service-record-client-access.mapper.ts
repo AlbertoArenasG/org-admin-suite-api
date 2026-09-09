@@ -22,6 +22,7 @@ export class CustomerServiceRecordClientAccessMapper {
         brand: asset.brand,
         model: asset.model,
         serialNumber: asset.serialNumber,
+        observations: asset.observations,
       })),
       customerDelivery: record.customerDelivery,
       operationalStatus: record.operationalStatus,

@@ -35,6 +35,7 @@ export class CustomerServiceRecordClientAccessPresenter {
         brand: asset.brand,
         model: asset.model,
         serial_number: asset.serialNumber,
+        observations: asset.observations,
       })),
       customer_delivery: this.customerDelivery(value.customerDelivery),
       operational_status: this.localized(
