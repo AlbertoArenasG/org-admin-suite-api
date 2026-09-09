@@ -106,17 +106,14 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
     };
     if (params.search?.trim()) {
       const expression = { $regex: escapeRegex(params.search), $options: 'i' };
-      const serviceNumber = Number(params.search);
       filter.$or = [
+        { service_number_display: expression },
         { service_type_name: expression },
         { 'customer.customer_name': expression },
         { 'provider.provider_name': expression },
         { 'assets.name': expression },
         { 'assets.identifier': expression },
         { 'assets.brand': expression },
-        ...(Number.isInteger(serviceNumber)
-          ? [{ service_number: serviceNumber }]
-          : []),
       ];
     }
     if (params.operationalStatus)

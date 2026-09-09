@@ -51,6 +51,7 @@ export class MongooseCustomerServiceRecordMapper {
     const value = record.currentState;
     return {
       service_number: record.serviceNumber,
+      service_number_display: record.serviceNumberDisplay,
       service_type_code: record.serviceTypeCode,
       service_type_name: record.serviceTypeName,
       requested_at: record.requestedAt,

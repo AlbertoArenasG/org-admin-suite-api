@@ -135,15 +135,14 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
     );
     if (params.search?.trim()) {
       const regex = { $regex: escapeRegex(params.search), $options: 'i' };
-      const number = Number(params.search);
       filter.$or = [
+        { service_number_display: regex },
         { service_type_name: regex },
         { 'assets.name': regex },
         { 'assets.identifier': regex },
         { 'assets.brand': regex },
         { 'assets.model': regex },
         { 'assets.serial_number': regex },
-        ...(Number.isInteger(number) ? [{ service_number: number }] : []),
       ];
     }
     return filter;

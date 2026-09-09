@@ -9,6 +9,7 @@ export class CustomerServiceRecordClientAccessMapper {
     return {
       id: record.id,
       serviceNumber: record.serviceNumber,
+      serviceNumberDisplay: record.serviceNumberDisplay,
       serviceType: {
         code: record.serviceTypeCode,
         name: record.serviceTypeName,

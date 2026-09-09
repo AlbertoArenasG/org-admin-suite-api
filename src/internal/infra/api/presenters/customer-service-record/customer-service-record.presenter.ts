@@ -8,7 +8,8 @@ export class CustomerServiceRecordPresenter {
   toViewResponse(result: CustomerServiceRecordViewDto) {
     return {
       customer_service_record_id: result.id,
-      service_number: String(result.serviceNumber).padStart(4, '0'),
+      service_number: result.serviceNumber,
+      service_number_display: result.serviceNumberDisplay,
       service_type: {
         service_type_code: result.serviceType.code,
         name: result.serviceType.name,

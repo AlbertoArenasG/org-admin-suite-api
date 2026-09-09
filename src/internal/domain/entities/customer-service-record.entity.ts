@@ -1,6 +1,17 @@
 import { genId } from '@src/common/utils';
 import { Entity } from '@src/internal/core/entities/entity';
 
+export const CUSTOMER_SERVICE_RECORD_SERVICE_NUMBER_DISPLAY_WIDTH = 4;
+
+export function formatCustomerServiceRecordServiceNumber(
+  serviceNumber: number,
+): string {
+  return String(serviceNumber).padStart(
+    CUSTOMER_SERVICE_RECORD_SERVICE_NUMBER_DISPLAY_WIDTH,
+    '0',
+  );
+}
+
 export enum CustomerServiceRecordStatus {
   ACTIVE = 'ACTIVE',
   DELETED = 'DELETED',
@@ -194,6 +205,9 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
   }
   get serviceNumber(): number {
     return this.props.serviceNumber;
+  }
+  get serviceNumberDisplay(): string {
+    return formatCustomerServiceRecordServiceNumber(this.serviceNumber);
   }
   get serviceTypeCode(): string {
     return this.props.serviceTypeCode;

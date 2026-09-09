@@ -311,6 +311,14 @@ export class CustomerServiceRecordDocument extends Document {
     index: true,
   })
   service_number: number;
+  @Prop({
+    type: String,
+    required: true,
+    immutable: true,
+    unique: true,
+    index: true,
+  })
+  service_number_display: string;
   @Prop({ type: String, required: true, index: true })
   service_type_code: string;
   @Prop({ type: String, required: true }) service_type_name: string;

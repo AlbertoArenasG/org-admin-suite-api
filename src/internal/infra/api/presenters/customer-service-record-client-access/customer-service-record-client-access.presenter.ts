@@ -18,7 +18,8 @@ export class CustomerServiceRecordClientAccessPresenter {
   toListResponse(value: CustomerServiceRecordClientAccessViewDto) {
     return {
       customer_service_record_id: value.id,
-      service_number: String(value.serviceNumber).padStart(4, '0'),
+      service_number: value.serviceNumber,
+      service_number_display: value.serviceNumberDisplay,
       service_type: {
         service_type_code: value.serviceType.code,
         name: value.serviceType.name,

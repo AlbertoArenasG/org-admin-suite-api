@@ -40,6 +40,7 @@ export interface CustomerServiceRecordClientAccessAssetDto {
 export interface CustomerServiceRecordClientAccessViewDto {
   id: string;
   serviceNumber: number;
+  serviceNumberDisplay: string;
   serviceType: { code: string; name: string };
   observations: string | null;
   customer: {
