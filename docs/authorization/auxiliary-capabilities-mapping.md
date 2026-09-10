@@ -45,6 +45,21 @@ Reglas:
 - la derivación se deduplica y valida contra el catálogo maestro al iniciar la aplicación
 - el seed de roles sincroniza las capabilities derivadas de `MASTER_ADMIN_DEFAULT`, `ADMIN_DEFAULT` y todo rol custom persistido; para reconciliaciones técnicas no modifica `updatedAt` ni `updatedBy`
 
+### Reconciliación Después De Cambios De Catálogo
+
+Cuando se agrega o modifica una capability auxiliar o una regla de derivación,
+el responsable del entorno ejecuta, después de desplegar el catálogo:
+
+```bash
+npm run db:seed:roles
+```
+
+Este seed existente recalcula la derivación desde `permissions[]` para roles
+default y custom. No se crea una migración ni un seed adicional por cada nueva
+capability. La reconciliación técnica solo escribe
+`auxiliary_capabilities` cuando el valor persistido difiere, y preserva
+`updatedAt` y `updatedBy`.
+
 ## Evaluación En Runtime
 
 Los endpoints reutilizables se protegen con `JwtAuthGuard` y `AuxiliaryCapabilitiesGuard`.
