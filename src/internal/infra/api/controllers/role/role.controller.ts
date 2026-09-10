@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   ChangeRoleStatusRequestDto,
@@ -21,7 +25,11 @@ import {
   GetRolesRequestDto,
   UpdateRoleRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { RolePresenter } from '@infra/api/presenters';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import {
@@ -32,6 +40,7 @@ import {
 } from '@infra/cqrs/commands';
 import {
   GetPermissionModulesQuery,
+  GetAssignableRolesQuery,
   GetRoleByIdQuery,
   GetRolesQuery,
 } from '@infra/cqrs/queries';
@@ -97,6 +106,25 @@ export class RoleController {
       GetPermissionModulesQuery.create(),
     );
     const data = this.presenter.toPermissionModulesResponse(result);
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Get('options')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability('roles', 'READ_OPTIONS')
+  @HttpCode(HttpStatus.OK)
+  async options(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
+    const result = await this.queryBus.execute(
+      GetAssignableRolesQuery.create({
+        actorSystemRole: currentUser.systemRole,
+      }),
+    );
+    const data = this.presenter.toOptionsResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))

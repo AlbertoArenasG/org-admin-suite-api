@@ -80,6 +80,7 @@ Cuando una vista ya autorizada requiere un lookup reutilizable, backend garantiz
 | --- | --- | --- | --- |
 | `CONTACTS` | `SEARCH` | `GET /v1/contacts/search` | Buscar contactos activos para selección reutilizable. |
 | `CUSTOMERS` | `READ_OPTIONS` | `GET /v1/customers/options` | Obtener clientes activos resumidos para selección reutilizable. |
+| `ROLES` | `READ_OPTIONS` | `GET /v1/roles/options` | Obtener roles asignables para flujos reutilizables de usuarios. |
 | `COMMUNICATION_CHANNELS` | `READ_OPTIONS` | `GET /v1/communication-channels` | Obtener canales de comunicación seleccionables. |
 | `EXPIRATION_STATUS_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-status-policies/options` | Obtener políticas de estatus de vencimiento seleccionables. |
 | `EXPIRATION_NOTIFICATION_POLICIES` | `READ_OPTIONS` | `GET /v1/expiration-notification-policies/options` | Obtener políticas de notificación de vencimiento seleccionables. |
@@ -93,8 +94,8 @@ La derivación depende del módulo directo del rol, no de una operación especí
 | --- | --- |
 | `RECIPIENT_GROUPS` | `CONTACTS/SEARCH`, `COMMUNICATION_CHANNELS/READ_OPTIONS` |
 | `INTERNAL_ASSET_MAINTENANCE_RECORDS` | `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`, `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS` |
-| `USER_REGISTRATION_INVITATIONS` | `CUSTOMERS/READ_OPTIONS` |
-| `USERS` | `CUSTOMERS/READ_OPTIONS` |
+| `USER_REGISTRATION_INVITATIONS` | `CUSTOMERS/READ_OPTIONS`, `ROLES/READ_OPTIONS` |
+| `USERS` | `CUSTOMERS/READ_OPTIONS`, `ROLES/READ_OPTIONS` |
 | `CUSTOMER_SERVICE_RECORDS` | `CUSTOMERS/READ_OPTIONS`, `CUSTOMERS/READ_RELATED_USERS_OPTIONS`, `PROVIDERS/READ_OPTIONS`, `RECIPIENT_GROUPS/READ_OPTIONS`, `EXPIRATION_STATUS_POLICIES/READ_OPTIONS`, `EXPIRATION_NOTIFICATION_POLICIES/READ_OPTIONS` |
 
 Esto permite que un usuario con cualquier operación directa válida del módulo consumidor obtenga los lookups que esa funcionalidad necesita, sin que quien construye el rol tenga que conocer ni seleccionar dependencias técnicas.
@@ -104,12 +105,17 @@ Esto permite que un usuario con cualquier operación directa válida del módulo
 Los auxiliares locales siguen protegidos por la frontera funcional existente. Ejemplos:
 
 - `GET /v1/roles/modules` usa `ROLES/READ`
-- `GET /v1/users/roles` usa `USER_REGISTRATION_INVITATIONS/CREATE`
 - `GET /v1/expiration-status-policies/catalog` usa `EXPIRATION_STATUS_POLICIES/READ`
 - `GET /v1/expiration-notification-policies/catalog` usa `EXPIRATION_NOTIFICATION_POLICIES/READ`
 - `GET /v1/internal-asset-maintenance-records/catalog` usa `INTERNAL_ASSET_MAINTENANCE_RECORDS/READ`
 
 No se debe crear una capability auxiliar solo porque un endpoint sea un catálogo. Debe ser reutilizable entre módulos y requerir una frontera independiente de la operación administrativa del módulo dueño.
+
+Las rutas `GET /v1/users/roles` y `GET /v1/users/creation-roles` permanecen
+temporalmente con sus permisos funcionales actuales para compatibilidad de
+consumidores. Ambas delegan en el lookup dueño
+`GET /v1/roles/options`, protegido por `ROLES/READ_OPTIONS`; se retirarán
+cuando los consumidores frontend adopten la ruta transversal.
 
 ## Mantenimiento
 

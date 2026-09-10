@@ -4,38 +4,38 @@
 
 | Campo                   | Valor                                     |
 | ----------------------- | ----------------------------------------- |
-| Estado                  | Identificada                              |
+| Estado                  | Remediación backend completada; migración frontend pendiente |
 | Prioridad               | Alta                                      |
 | Fecha de identificación | 9 de septiembre de 2026                   |
-| Última revisión         | 9 de septiembre de 2026                   |
-| Área                    | Usuarios, autorización y contratos HTTP   |
-| Alcance actual          | Controller de usuarios y consumidores API |
+| Última revisión         | 10 de septiembre de 2026                  |
+| Área                    | Roles, usuarios, autorización y contratos HTTP |
+| Alcance actual          | Migración de consumidores frontend y retiro de rutas legacy |
 
 ## Resumen
 
 La lista de roles que un actor puede asignar es una capability auxiliar
-transversal. Actualmente se expone a través de dos rutas que ejecutan la misma
-consulta, pero se protegen con permisos asociados a flujos distintos.
+transversal. Backend ya la normalizó bajo `ROLES/READ_OPTIONS`; permanece deuda
+solo la migración de consumidores frontend y el retiro de rutas legacy.
 
 ## Estado Actual
 
 | Ruta | Uso actual | Guard actual | Consulta |
 | --- | --- | --- | --- |
-| `GET /v1/users/roles` | Invitación y edición | `user_registration_invitations:CREATE` | `GetUserRolesQuery` |
-| `GET /v1/users/creation-roles` | Creación directa | `users:CREATE` | `GetUserRolesQuery` |
+| `GET /v1/roles/options` | Lookup transversal dueño | `ROLES/READ_OPTIONS` | `GetAssignableRolesQuery` |
+| `GET /v1/users/roles` | Compatibilidad de invitación y edición | `user_registration_invitations:CREATE` | `GetAssignableRolesQuery` |
+| `GET /v1/users/creation-roles` | Compatibilidad de creación directa | `users:CREATE` | `GetAssignableRolesQuery` |
 
-`GET /v1/users/roles` es consumido también por edición. Por ello, el permiso
-de invitaciones se convierte erróneamente en requisito para que un actor pueda
-obtener los roles necesarios al actualizar un usuario.
+Los consumidores frontend aún usan rutas legacy. Mientras no adopten
+`GET /v1/roles/options`, edición conserva su dependencia temporal del permiso
+de invitaciones.
 
 ## Impacto
 
-- Dos contratos HTTP duplican una consulta y presenter idénticos.
-- La autorización de una capability compartida queda ligada a acciones de
-  producto distintas.
-- El flujo de edición puede perder sus opciones de rol si el actor tiene
-  `users:UPDATE` sin `user_registration_invitations:CREATE`.
-- Cada nuevo flujo de asignación de roles podría crear rutas duplicadas.
+- La migración frontend debe coordinar los flujos de invitación, creación y
+  edición hacia la ruta transversal.
+- El flujo de edición no quedará plenamente desacoplado del permiso de
+  invitaciones hasta adoptar el nuevo contrato.
+- Las rutas legacy deben retirarse solo cuando no tengan consumidores.
 
 ## Solución Objetivo
 
@@ -45,8 +45,8 @@ Normalizar la capability como una ruta auxiliar transversal:
 - Protegerla mediante la capability auxiliar `ROLES / READ_OPTIONS`.
 - Derivar esa capability para los módulos consumidores `USERS` y
   `USER_REGISTRATION_INVITATIONS`.
-- Mantener `GetUserRolesQuery` como la fuente de las reglas de jerarquía del
-  actor y retornar únicamente los roles asignables.
+- `GetAssignableRolesQuery` es la fuente de las reglas de jerarquía del actor
+  y retorna únicamente los roles asignables.
 - Mantener permisos de escritura separados en `POST /v1/users`,
   `PATCH /v1/users/:userId` y el endpoint de invitaciones.
 
@@ -55,24 +55,22 @@ esta consulta auxiliar compartida.
 
 ## Plan de Migración
 
-1. Definir `ROLES / READ_OPTIONS` y su derivación para los módulos
-   consumidores; actualizar catálogo, seeds y tipos de autorización.
-2. Añadir la nueva ruta con `JwtAuthGuard` y
-   `AuxiliaryCapabilitiesGuard`.
-3. Migrar los consumidores frontend de invitación, creación y edición.
-4. Añadir pruebas de autorización y de jerarquía para la nueva ruta.
-5. Eliminar las rutas `roles` y `creation-roles` al no tener consumidores.
+1. Migrar los consumidores frontend de invitación, creación y edición hacia
+   `GET /v1/roles/options`.
+2. Validar manualmente los tres niveles de `systemRole` y la ausencia de
+   consumidores legacy.
+3. Eliminar las rutas `roles` y `creation-roles` al no tener consumidores.
 
 ## Criterios de Cierre
 
-- Solo existe una ruta para consultar roles asignables.
-- La capability de esa ruta es transversal y no depende del flujo consumidor.
+- Todos los consumidores frontend usan `GET /v1/roles/options`.
+- Las rutas legacy ya no existen.
 - Invitación, creación y edición reciben roles correctos para el mismo actor.
 - Las rutas de escritura conservan sus permisos específicos.
-- Existen pruebas automatizadas de autorización y jerarquía de roles.
 
 ## Historial
 
 | Fecha                   | Estado       | Nota |
 | ----------------------- | ------------ | ---- |
 | 9 de septiembre de 2026 | Identificada | Detectada al revisar la creación directa de usuarios y la dependencia de edición respecto al permiso de invitaciones. |
+| 10 de septiembre de 2026 | Backend remediado | Se implementaron `ROLES/READ_OPTIONS`, `GET /v1/roles/options`, derivación para módulos consumidores y reconciliación mediante el seed existente. |

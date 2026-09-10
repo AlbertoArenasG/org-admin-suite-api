@@ -33,6 +33,12 @@ export const AUXILIARY_CAPABILITIES_CATALOG: AuxiliaryCapabilityCatalogEntry[] =
         'Permite consultar grupos destinatarios activos para selección reutilizable.',
     },
     {
+      module: 'ROLES',
+      capability: 'READ_OPTIONS',
+      description:
+        'Permite consultar roles asignables para flujos reutilizables de usuarios.',
+    },
+    {
       module: 'COMMUNICATION_CHANNELS',
       capability: 'READ_OPTIONS',
       description:

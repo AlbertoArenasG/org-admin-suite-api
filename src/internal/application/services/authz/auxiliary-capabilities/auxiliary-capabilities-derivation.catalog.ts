@@ -64,6 +64,10 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
           module: 'CUSTOMERS',
           capability: 'READ_OPTIONS',
         },
+        {
+          module: 'ROLES',
+          capability: 'READ_OPTIONS',
+        },
       ],
     },
     {
@@ -71,6 +75,10 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
       auxiliaryCapabilities: [
         {
           module: 'CUSTOMERS',
+          capability: 'READ_OPTIONS',
+        },
+        {
+          module: 'ROLES',
           capability: 'READ_OPTIONS',
         },
       ],

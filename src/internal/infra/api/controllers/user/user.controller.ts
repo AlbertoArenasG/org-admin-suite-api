@@ -21,7 +21,8 @@ import {
   UpdateMyProfileRequestDto,
   UpdateUserRequestDto,
 } from '@infra/api/dto/user';
-import { UserPresenter, UserRolePresenter } from '@infra/api/presenters/user';
+import { UserPresenter } from '@infra/api/presenters/user';
+import { RolePresenter } from '@infra/api/presenters/role';
 import {
   CreateUserAndNotifyCommandAdapter,
   DeleteUserCommandAdapter,
@@ -30,7 +31,7 @@ import {
 } from '@infra/cqrs/commands';
 import {
   GetUserByIdQuery,
-  GetUserRolesQuery,
+  GetAssignableRolesQuery,
   GetUsersQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
@@ -43,7 +44,7 @@ export class UserController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly presenter: UserPresenter,
-    private readonly rolePresenter: UserRolePresenter,
+    private readonly rolePresenter: RolePresenter,
     private readonly successMsgService: SuccessMessageService,
   ) {}
 
@@ -111,12 +112,12 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async roles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
-      GetUserRolesQuery.create({
+      GetAssignableRolesQuery.create({
         actorSystemRole: currentUser.systemRole,
       }),
     );
 
-    const data = this.rolePresenter.toResponse(result);
+    const data = this.rolePresenter.toOptionsResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
@@ -131,11 +132,11 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async creationRoles(@CurrentUser() currentUser: AuthenticatedUserContextDto) {
     const result = await this.queryBus.execute(
-      GetUserRolesQuery.create({
+      GetAssignableRolesQuery.create({
         actorSystemRole: currentUser.systemRole,
       }),
     );
-    const data = this.rolePresenter.toResponse(result);
+    const data = this.rolePresenter.toOptionsResponse(result);
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))

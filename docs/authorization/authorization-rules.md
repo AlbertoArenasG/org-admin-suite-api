@@ -189,7 +189,8 @@ Regla para endpoints de catálogo auxiliares locales:
 
 - un endpoint de catálogo o lookup no debe convertirse por defecto en un permiso explícito editable dentro del CRUD de roles
 - si el endpoint solo sirve a su propio módulo, debe protegerse con la combinación funcional `module + operation` que corresponda
-- ejemplos: `GET /v1/roles/modules` con `ROLES/READ`, `GET /v1/users/roles` con `USER_REGISTRATION_INVITATIONS/CREATE` y los endpoints `/catalog` locales de cada módulo
+- ejemplos: `GET /v1/roles/modules` con `ROLES/READ` y los endpoints
+  `/catalog` locales de cada módulo
 
 Regla para endpoints auxiliares reutilizables:
 
@@ -229,9 +230,12 @@ Excepción importante:
 
 Ejemplo práctico:
 
-- `GET /v1/users/roles` puede quedar absorbido por la capacidad funcional principal que lo consume; en el estado actual del sistema, al servir el flujo ordinario de invitaciones, queda absorbido por `USER_REGISTRATION_INVITATIONS/CREATE`
-- `GET /v1/users/creation-roles` es un auxiliar local de creacion directa y
-  queda absorbido por `USERS/CREATE`
+- `GET /v1/roles/options` se protege con `ROLES/READ_OPTIONS`, capability
+  auxiliar derivada para `USERS` y `USER_REGISTRATION_INVITATIONS`; el lookup
+  conserva el filtro estructural de opciones según `systemRole`
+- `GET /v1/users/roles` y `GET /v1/users/creation-roles` son rutas legacy de
+  compatibilidad: conservan sus permisos funcionales actuales, pero delegan en
+  el lookup dueño de `ROLES` hasta que frontend migre sus consumidores
 - la administración ordinaria de invitaciones usa operaciones directas del mismo módulo: `USER_REGISTRATION_INVITATIONS/READ`, `RESEND` y `REVOKE`; no son capabilities auxiliares ni aplican a la frontera `MASTER`
 - `GET /v1/roles/modules` queda protegido como auxiliar local por `ROLES/READ`
 - `GET /v1/contacts/search` se protege con `CONTACTS/SEARCH`, capability auxiliar derivada para `RECIPIENT_GROUPS`

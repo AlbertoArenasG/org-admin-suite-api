@@ -159,12 +159,14 @@ Endpoints actuales:
 - `GET /v1/users/creation-roles`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: lookup de roles asignables para creacion directa, protegido por
-    `users.CREATE`
+  - nota: ruta legacy de compatibilidad para creación directa; conserva
+    `users.CREATE` y delega en el lookup dueño `GET /v1/roles/options`
 - `GET /v1/users/roles`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: protegido por `user_registration_invitations.CREATE`; hoy resuelve roles asignables desde la colección `roles`, devolviendo metadata real del rol en lugar de una lista fija de enums legacy
+  - nota: ruta legacy de compatibilidad para invitación; conserva
+    `user_registration_invitations.CREATE` y delega en el lookup dueño
+    `GET /v1/roles/options`
 - `GET /v1/users/:userId`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -204,6 +206,11 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `roles.READ`; devuelve colección real de roles desde Mongo
+- `GET /v1/roles/options`
+  - capability auxiliar: `ROLES/READ_OPTIONS`
+  - acceso actual: autenticado
+  - nota: protegido por `AuxiliaryCapabilitiesGuard`; lookup no paginado de
+    roles asignables, filtrado por la jerarquía de `systemRole`
 - `GET /v1/roles/:roleId`
   - operacion: `READ`
   - acceso actual: autenticado

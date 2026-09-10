@@ -70,6 +70,24 @@ export type GetRolesResultDto = PaginatedResultDto<RoleViewDto>;
 export type GetRoleByIdResultDto = RoleViewDto;
 export type GetPermissionModulesResultDto = PermissionModuleViewDto[];
 
+export interface GetAssignableRolesDto {
+  actorSystemRole: SystemRole;
+}
+
+export interface AssignableRoleViewDto {
+  roleId: string;
+  code: string;
+  name: string;
+  systemRole: SystemRole;
+  scope: RoleScope;
+  isSystem: boolean;
+  isDefault: boolean;
+}
+
+export interface GetAssignableRolesResultDto {
+  roles: AssignableRoleViewDto[];
+}
+
 export interface ChangeRoleStatusDto {
   roleId: string;
   status: RoleStatus.ACTIVE | RoleStatus.INACTIVE;

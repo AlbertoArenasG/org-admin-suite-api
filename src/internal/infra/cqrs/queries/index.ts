@@ -4,7 +4,6 @@ export * from './user-registration-invitation/get-application-user-registration-
 export * from './user-registration-invitation/get-application-user-registration-invitation-by-id.query';
 export * from './user/get-users.query';
 export * from './user/get-user-by-id.query';
-export * from './user/get-user-roles.query';
 export * from './file';
 export * from './service-entry';
 export * from './service-entry-survey';

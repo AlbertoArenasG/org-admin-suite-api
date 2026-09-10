@@ -1,20 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
+  GetAssignableRolesDto,
+  GetAssignableRolesResultDto,
+} from '@application/dto';
+import {
   IRoleReadRepository,
   IRoleReadRepositoryToken,
 } from '@domain/ports/repositories';
-import { GetUserRolesDto, GetUserRolesResultDto } from '@application/dto';
 import { Role, RoleScope, SystemRole } from '@domain/entities';
 
 @Injectable()
-export class GetUserRolesUseCase {
+export class GetAssignableRolesUseCase {
   constructor(
     @Inject(IRoleReadRepositoryToken)
     private readonly roleReadRepository: IRoleReadRepository,
   ) {}
 
-  async execute(input: GetUserRolesDto): Promise<GetUserRolesResultDto> {
+  async execute(
+    input: GetAssignableRolesDto,
+  ): Promise<GetAssignableRolesResultDto> {
     const roles = await this.resolveRoles(input.actorSystemRole);
 
     return {
