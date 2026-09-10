@@ -3,7 +3,10 @@
 ## Status
 
 - Definition status: completed
-- Implementation ready: no
+- Implementation ready: yes
+- Implementation status: completed
+- Validation status: completed
+- Spec status: closed
 
 ## Objective
 

@@ -1,8 +1,8 @@
 # Specs Index
 
-- [direct-backoffice-user-creation](./2026/2026-09/2026-09-06_1500_direct-backoffice-user-creation/00-definition.md) - Definition completed; implementation ready
+- [direct-backoffice-user-creation](./2026/2026-09/2026-09-06_1500_direct-backoffice-user-creation/00-definition.md) - Completada; creación directa validada
 - [customer-service-records-client-access](./2026/2026-09/2026-09-03_1307_customer-service-records-client-access/00-definition.md) - Completed; customer delivery projection validated 2026-09-06
-- [customer-service-operations](./2026/2026-08/2026-08-27_2212_customer-service-operations/00-definition.md) - Definition in progress
+- [customer-service-operations](./2026/2026-08/2026-08-27_2212_customer-service-operations/00-definition.md) - Completada; operaciones de servicio validadas
 - [internal-staff-contact-classification](./2026/2026-08/2026-08-26_1831_internal-staff-contact-classification/00-definition.md) - Completed
 - [customer-user-relationship-management](./2026/2026-08/2026-08-26_1336_customer-user-relationship-management/00-definition.md) - Completed
 - [user-customer-relationship](./2026/2026-08/2026-08-25_1730_user-customer-relationship/00-definition.md) - Completed

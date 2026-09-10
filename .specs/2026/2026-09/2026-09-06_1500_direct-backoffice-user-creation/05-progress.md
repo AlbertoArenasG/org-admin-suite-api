@@ -4,7 +4,7 @@
 
 - Created the spec and inspected the existing direct creation, invitation,
   customer relationship, authorization and transaction flows.
-- Closed definition and technical design. Implementation has not started.
+- Se cerraron definición y diseño técnico, y se completó la implementación.
 - Added `USERS:CREATE` to the technical catalog.
 - Extended direct creation with optional `customer_id`; user, relationship and
   contact writes now share one outer transaction.
@@ -14,7 +14,5 @@
   relationship and role-permission documentation, including removal of the
   obsolete Master-only direct-creation rule.
 - Updated Postman with direct creation and creation-role lookup requests.
-- Added `08-manual-validation.md`; no focused test harness exists for this
-  flow, so build and environment validation are pending user execution.
-- Next: user runs `npm run build`; if successful, executes
-  `npm run db:seed:roles` before manual Postman validation.
+- Se completó la validación de entorno y los escenarios manuales documentados.
+- La spec queda cerrada formalmente.

@@ -212,4 +212,4 @@
 - Se registró el cierre funcional/manual de la iniciativa:
   - reglas mínimas de `recipient-groups` validadas
   - handoff documental completado
-  - spec lista para cierre formal
+  - spec cerrada formalmente

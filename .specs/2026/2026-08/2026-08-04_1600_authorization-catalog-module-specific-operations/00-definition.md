@@ -13,8 +13,11 @@ Regla de trabajo:
 ## Overall Status
 
 - Initiative: `authorization-catalog-module-specific-operations`
-- Definition status: `in_progress`
-- Implementation ready: `no`
+- Definition status: `completed`
+- Implementation ready: `yes`
+- Implementation status: `completed`
+- Validation status: `completed`
+- Spec status: `closed`
 
 ---
 
@@ -146,11 +149,12 @@ Un vocabulario base sigue aportando consistencia, pero ya no debe actuar como re
 
 ### Decision Final
 
-Pendiente.
+Se aprueba mantener un vocabulario global base y permitir extensiones explícitas
+por módulo cuando el dominio lo requiera.
 
 ### Status
 
-pending
+approved
 
 ---
 
@@ -180,11 +184,12 @@ Backend es la fuente de verdad del dominio de autorización. Esta spec debe qued
 
 ### Decision Final
 
-Pendiente.
+Se aprueba cerrar análisis, decisiones e implementación backend dentro de esta
+misma iniciativa.
 
 ### Status
 
-pending
+approved
 
 ---
 

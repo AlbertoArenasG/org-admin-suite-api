@@ -8,3 +8,4 @@
 - Se eliminó `GET /v1/roles/operations` del controller, CQRS y presenter asociados.
 - Se actualizó el handoff de frontend y la documentación operativa del catálogo.
 - Se validó el cambio con `npm run lint` y `npm run build`.
+- La spec queda cerrada formalmente.

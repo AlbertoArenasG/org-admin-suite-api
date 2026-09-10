@@ -21,3 +21,4 @@
   - un `USER` con permiso funcional suficiente ya puede editar o eliminar a otro `USER`
   - la frontera estructural se mantiene para bloquear operaciones sobre `ADMIN` y `MASTER_ADMIN`
   - la autoeliminación sigue bloqueada
+- La iniciativa queda cerrada formalmente.

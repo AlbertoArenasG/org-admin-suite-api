@@ -2,14 +2,14 @@
 
 ## Phase 1. Analysis
 
-- [ ] Analizar módulo por módulo el catálogo actual de autorización
-      Status: pending
+- [x] Analizar módulo por módulo el catálogo actual de autorización
+      Status: completed
 
-- [ ] Clasificar qué módulos siguen siendo cercanos a CRUD y cuáles requieren operaciones de dominio
-      Status: pending
+- [x] Clasificar qué módulos siguen siendo cercanos a CRUD y cuáles requieren operaciones de dominio
+      Status: completed
 
-- [ ] Identificar capacidades que pertenecen a plataforma y no al catálogo general
-      Status: pending
+- [x] Identificar capacidades que pertenecen a plataforma y no al catálogo general
+      Status: completed
 
 Notas de avance:
 
@@ -19,30 +19,30 @@ Notas de avance:
 
 ## Phase 2. Definition
 
-- [ ] Cerrar la decisión sobre el modelo objetivo del catálogo
-      Status: pending
+- [x] Cerrar la decisión sobre el modelo objetivo del catálogo
+      Status: completed
 
-- [ ] Cerrar la decisión sobre el vocabulario global de operaciones
-      Status: pending
+- [x] Cerrar la decisión sobre el vocabulario global de operaciones
+      Status: completed
 
-- [ ] Definir impacto en validaciones, seeds y contratos HTTP
-      Status: pending
+- [x] Definir impacto en validaciones, seeds y contratos HTTP
+      Status: completed
 
 ## Phase 3. Implementation
 
-- [ ] Ajustar el catálogo backend al modelo aprobado
-      Status: pending
+- [x] Ajustar el catálogo backend al modelo aprobado
+      Status: completed
 
-- [ ] Actualizar documentación permanente de autorización
-      Status: pending
+- [x] Actualizar documentación permanente de autorización
+      Status: completed
 
-- [ ] Registrar el handoff necesario para frontend
-      Status: pending
+- [x] Registrar el handoff necesario para frontend
+      Status: completed
 
 ## Phase 4. Validation
 
-- [ ] Verificar coherencia del catálogo final contra los módulos reales del sistema
-      Status: pending
+- [x] Verificar coherencia del catálogo final contra los módulos reales del sistema
+      Status: completed
 
-- [ ] Actualizar progreso y breakdown al cierre
-      Status: pending
+- [x] Actualizar progreso y breakdown al cierre
+      Status: completed

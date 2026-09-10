@@ -19,8 +19,11 @@ Regla de trabajo:
 ## Overall Status
 
 - Initiative: `contacts-and-recipient-groups`
-- Definition status: `in_progress`
-- Implementation ready: `no`
+- Definition status: `completed`
+- Implementation ready: `yes`
+- Implementation status: `completed`
+- Validation status: `completed`
+- Spec status: `closed`
 
 ## Scope Summary
 
