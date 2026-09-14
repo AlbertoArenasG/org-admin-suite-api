@@ -25,6 +25,15 @@ estrategia, alcance o decision previamente aprobada.
 - Si estas fuentes entran en conflicto, detenerse, exponer la discrepancia y
   solicitar una decision antes de continuar.
 
+Una spec cerrada es memoria institucional de su iniciativa; no es un plan ni
+una fuente de verdad para definir, priorizar, depender de o preautorizar otra
+spec. Una iniciativa nueva se abre solo ante una necesidad actual y define su
+alcance, decisiones y prioridad de forma independiente. Una spec puede
+referenciar contratos vigentes o señalar adopciones posibles como contexto, pero
+no convertirlas en instrucciones para trabajo futuro. Un plan transversal, si
+alguna vez existe y está aprobado, vive en documentación viva, no dentro de una
+spec cerrada.
+
 Antes de trabajar una iniciativa, leer en este orden:
 
 1. `.specs/README.md` y este documento.

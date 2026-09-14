@@ -44,7 +44,7 @@ Ejemplo conceptual:
 AUTHORIZATION_CATALOG.USERS = {
   code: 'USERS',
   nameKey: 'AUTHORIZATION.MODULE.USERS',
-  operations: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+  operations: ['CREATE', 'READ', 'UPDATE', 'UPDATE_PASSWORD', 'DELETE'],
 };
 ```
 
@@ -175,6 +175,12 @@ Endpoints actuales:
   - operacion: `UPDATE`
   - acceso actual: autenticado
   - nota: incluye potencial cambio estructural de usuario en el refactor, protegido por `users.UPDATE`
+- `PATCH /v1/users/:userId/password`
+  - operacion: `UPDATE_PASSWORD`
+  - acceso actual: autenticado
+  - nota: reemplaza la contraseña de un usuario, protegido por
+    `users.UPDATE_PASSWORD`; permite objetivo propio con esa capability y, para
+    terceros, aplica la jerarquía estructural vigente
 - `DELETE /v1/users/:userId`
   - operacion: `DELETE`
   - acceso actual: autenticado

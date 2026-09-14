@@ -3077,6 +3077,52 @@
           "response": []
         },
         {
+          "name": "Update a User Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NuevaClaveSegura123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/users/{{USER_ID}}/password",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "users", "{{USER_ID}}", "password"]
+            },
+            "description": "Requiere users.UPDATE_PASSWORD. Permite cambiar la contraseña propia con esa capability; para otro usuario aplica la jerarquía de roles. No devuelve contraseña, hash ni representación del usuario."
+          },
+          "response": [
+            {
+              "name": "success",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"Usuario actualizado correctamente\",\n  \"status_code\": 200\n}"
+            }
+          ]
+        },
+        {
           "name": "Delete a User",
           "request": {
             "method": "DELETE",

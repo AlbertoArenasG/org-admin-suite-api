@@ -197,6 +197,7 @@
       "CREATE": "Create",
       "READ": "Read",
       "UPDATE": "Edit",
+      "UPDATE_PASSWORD": "Change user passwords",
       "DELETE": "Delete",
       "READ_PUBLIC_ACCESS": "Read public access",
       "RESEND": "Resend",

@@ -19,6 +19,7 @@ import {
   CreateUserRequestDto,
   GetUsersRequestDto,
   UpdateMyProfileRequestDto,
+  UpdateUserPasswordRequestDto,
   UpdateUserRequestDto,
 } from '@infra/api/dto/user';
 import { UserPresenter } from '@infra/api/presenters/user';
@@ -27,6 +28,7 @@ import {
   CreateUserAndNotifyCommandAdapter,
   DeleteUserCommandAdapter,
   UpdateMyProfileCommandAdapter,
+  UpdateUserPasswordCommandAdapter,
   UpdateUserCommandAdapter,
 } from '@infra/cqrs/commands';
 import {
@@ -184,6 +186,27 @@ export class UserController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(data)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+
+  @Patch(':userId/password')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('users', 'UPDATE_PASSWORD')
+  @HttpCode(HttpStatus.OK)
+  async updatePassword(
+    @CurrentUser() currentUser: AuthenticatedUserContextDto,
+    @Param('userId') userId: string,
+    @Body() body: UpdateUserPasswordRequestDto,
+  ) {
+    await this.commandBus.execute(
+      UpdateUserPasswordCommandAdapter.create(
+        body.toDomain(userId, currentUser.systemRole, currentUser.userId),
+      ),
+    );
+
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('USER.UPDATED'))
       .withStatus(HttpStatus.OK)
       .build();
   }
