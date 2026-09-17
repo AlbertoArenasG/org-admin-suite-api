@@ -11,6 +11,7 @@
 - Validation: confirmacion del usuario para todos los escenarios; evidencia en `05-progress.md`.
 - Amendment 2026-09-06: compromiso completo con Cliente implementado y
   validado por confirmacion del usuario; iniciativa cerrada nuevamente.
+- Spec status: completed
 
 ## Objective
 

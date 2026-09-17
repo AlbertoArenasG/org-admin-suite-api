@@ -22,30 +22,30 @@
 
 ## Phase 2. Technical Design
 
-- [ ] Diseñar decorator y guard auxiliares
-      Status: pending
+- [x] Diseñar decorator y guard auxiliares
+      Status: completed
 
-- [ ] Diseñar el resolver de derivaciones automáticas para roles
-      Status: pending
+- [x] Diseñar el resolver de derivaciones automáticas para roles
+      Status: completed
 
-- [ ] Diseñar ajustes mínimos en esquema, mappers y contratos HTTP de roles
-      Status: pending
+- [x] Diseñar ajustes mínimos en esquema, mappers y contratos HTTP de roles
+      Status: completed
 
-- [ ] Diseñar la estrategia de rollout uniforme para no dejar enfoques mixtos en código
-      Status: pending
+- [x] Diseñar la estrategia de rollout uniforme para no dejar enfoques mixtos en código
+      Status: completed
 
 ## Phase 3. Implementation
 
-- [ ] Implementar la primera versión backend de capacidades auxiliares
-      Status: pending
+- [x] Implementar la primera versión backend de capacidades auxiliares
+      Status: completed
 
-- [ ] Integrar la derivación en `create-role` y `update-role`
-      Status: pending
+- [x] Integrar la derivación en `create-role` y `update-role`
+      Status: completed
 
-- [ ] Proteger los endpoints auxiliares reutilizables actuales del backoffice con la nueva capa o con la clasificación aprobada
-      Status: pending
+- [x] Proteger los endpoints auxiliares reutilizables actuales del backoffice con la nueva capa o con la clasificación aprobada
+      Status: completed
 
 ## Phase 4. Validation
 
-- [ ] Validar el flujo end-to-end y actualizar documentación viva si aplica
-      Status: pending
+- [x] Validar el flujo end-to-end y actualizar documentación viva si aplica
+      Status: completed

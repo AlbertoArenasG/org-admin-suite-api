@@ -6,6 +6,7 @@
 - Technical design: complete
 - Implementation: complete
 - Validation: complete
+- Spec status: completed
 
 ## Objective
 

@@ -5,6 +5,8 @@
 - Definition: completed
 - Technical design: completed
 - Implementation: completed
+- Validation: completed
+- Spec status: completed
 
 ## Objective
 

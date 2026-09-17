@@ -60,6 +60,30 @@ Regla:
 - no empezar implementación estructural mientras existan decisiones críticas abiertas
 - cuando la definición ya no tenga gaps bloqueantes, actualizar esos flags
 
+## Cierre Formal
+
+Una spec no está cerrada solo porque el código exista, el índice diga
+`completed` o una entrada de progreso use la palabra "cerrada". El cierre se
+declara de forma explícita en `00-definition.md` con estos campos:
+
+- `Definition status: completed`
+- `Implementation status: completed`
+- `Validation status: completed`
+- `Spec status: completed`
+
+Los nombres históricos equivalentes se conservan en specs antiguas, pero toda
+nueva spec usa estos campos. Antes de añadirlos, la sesión debe verificar que
+la evidencia en tareas, progreso, validación y documentación permanente los
+respalda.
+
+`Spec status` usa estos estados terminales:
+
+- `completed`: el alcance aprobado se implementó y validó por completo.
+- `cancelled`: la iniciativa no continuará; registra el motivo y el trabajo no
+  realizado, sin presentarlo como completado.
+- `superseded`: otra spec aprobada reemplaza la iniciativa; enlaza la spec que
+  la sustituye y aclara qué parte, si alguna, fue implementada.
+
 ## Convencion de task list
 
 Las tareas no se reordenan por status.
@@ -78,6 +102,13 @@ Estados sugeridos:
 - `done`
 - `blocked`
 - `cancelled`
+
+Invariante: checkbox y `Status` deben coincidir. Una tarea `done` o
+`completed` usa `[x]`; una tarea `[ ]` no puede declarar esos estados. Una
+spec `completed` no conserva tareas `pending` o `in_progress`; una
+`cancelled` o `superseded` debe identificar las tareas no realizadas con su
+estado terminal. Si se detecta una contradicción en una spec cerrada, se
+corrige solo el marcador de estado o checkbox, sin reescribir su historia.
 
 ## Diferencia entre task list e implementation breakdown
 
@@ -137,3 +168,6 @@ Idealmente debe reflejar algo más útil que solo “in progress”, por ejemplo
 - `implementation in progress`
 - `blocked`
 - `completed`
+
+El índice resume, pero no sustituye el cierre formal dentro de la carpeta. Una
+sesión debe revisar ambos antes de afirmar que una iniciativa está cerrada.

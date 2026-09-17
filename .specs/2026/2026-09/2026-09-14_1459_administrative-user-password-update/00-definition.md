@@ -1,7 +1,9 @@
 # Actualización Administrativa de Contraseña de Usuario
 
-**Definition status:** completed  
-**Implementation status:** completed
+- Definition status: completed
+- Implementation status: completed
+- Validation status: completed
+- Spec status: completed
 
 ## Problema
 
