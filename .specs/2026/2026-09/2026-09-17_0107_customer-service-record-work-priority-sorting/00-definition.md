@@ -20,17 +20,17 @@ preserva la paginación correcta.
 El contrato propuesto es:
 
 ```text
-sorting=work_priority
+sort_strategy=work_priority
 ```
 
-No sustituye `sort[]`: `sorting` representa una estrategia de negocio; `sort[]`
+No sustituye `sort[]`: `sort_strategy` representa una estrategia de negocio; `sort[]`
 sigue representando ordenamientos explícitos de campos.
 
 ## Initial Scope
 
 - `GET /v1/customer-service-records`.
 - `GET /v1/customer-service-records-client-access`.
-- Validación del query parameter `sorting` con el valor `work_priority`.
+- Validación del query parameter `sort_strategy` con el valor `work_priority`.
 - Construcción de la prioridad y sus desempates en persistencia antes de
   paginar.
 - Validación manual acordada para ambas superficies.
@@ -43,7 +43,7 @@ sigue representando ordenamientos explícitos de campos.
   `customer_delivery.estimated_delivery_at`, `operational_status` y
   `createdAt`. No considera las materializaciones ni fechas del proveedor.
 - El perfil es semántico, no una lista expuesta de campos ni de códigos de
-  política. El frontend solicita `sorting=work_priority`; el backend compone la
+  política. El frontend solicita `sort_strategy=work_priority`; el backend compone la
   consulta.
 - El primer criterio es una prioridad calculada ascendente:
   1. registros abiertos con materialización de sistema `OVERDUE`;
@@ -73,15 +73,15 @@ sigue representando ordenamientos explícitos de campos.
 
 ## Resolved Decisions
 
-### Decision 01. Convivencia entre `sorting` y `sort[]`
+### Decision 01. Convivencia entre `sort_strategy` y `sort[]`
 
 `sort[]` tiene precedencia cuando ambos parámetros llegan en una request. El
 ordenamiento explícito por campo representa una instrucción directa de quien
-consume el endpoint; `sorting=work_priority` actúa como perfil de bandeja solo
+consume el endpoint; `sort_strategy=work_priority` actúa como estrategia de bandeja solo
 cuando no hay `sort[]`.
 
 No se crea un error `400` ni copies asociados. Frontend puede eliminar
-`sorting` al activar una orden manual, pero el backend conserva este fallback
+`sort_strategy` al activar una orden manual, pero el backend conserva este fallback
 para que requests con ambos parámetros sean deterministas.
 
 Status: approved
@@ -108,7 +108,7 @@ Status: approved
 
 ## Out Of Scope
 
-- Cambiar el orden por defecto de consumidores que no envíen `sorting`.
+- Cambiar el orden por defecto de consumidores que no envíen `sort_strategy`.
 - Exponer un selector visual, columna adicional o nuevos filtros en frontend.
 - Ordenar por materializaciones, políticas, eventos o fechas de proveedor.
 - Clasificar individualmente códigos o labels de políticas.

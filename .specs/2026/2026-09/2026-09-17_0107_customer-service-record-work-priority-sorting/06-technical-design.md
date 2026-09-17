@@ -5,16 +5,16 @@
 Los endpoints afectados aceptarán opcionalmente:
 
 ```text
-GET /v1/customer-service-records?sorting=work_priority
-GET /v1/customer-service-records-client-access?sorting=work_priority
+GET /v1/customer-service-records?sort_strategy=work_priority
+GET /v1/customer-service-records-client-access?sort_strategy=work_priority
 ```
 
-`sorting` es un enum público con un único valor inicial. Requests sin este
+`sort_strategy` es un enum público con un único valor inicial. Requests sin este
 parámetro conservan sus ordenamientos actuales. Un valor desconocido responde
 con el envelope estándar de validación `400`.
 
 Cuando `sort[]` contiene uno o más ordenamientos válidos, prevalece sobre
-`sorting`; el perfil no se ejecuta. Esto preserva el significado de una orden
+`sort_strategy`; la estrategia no se ejecuta. Esto preserva el significado de una orden
 manual explícita sin crear una variante de error.
 
 ## Priority Algorithm
@@ -57,7 +57,7 @@ criterio de negocio.
 
 ## Query Shape
 
-Para `sorting=work_priority` sin `sort[]`, cada repositorio conserva su filtro
+Para `sort_strategy=work_priority` sin `sort[]`, cada repositorio conserva su filtro
 actual y usa una agregación con este orden:
 
 ```text
@@ -82,22 +82,22 @@ schema.
 
 | Flow | Input | Observable result | Evidence |
 | --- | --- | --- | --- |
-| Administrative work queue | `sorting=work_priority` con registros de todas las categorías | orden exacto de la tabla de prioridad y fechas ascendente dentro de cada prioridad | compilación y validación manual de la persona usuaria |
+| Administrative work queue | `sort_strategy=work_priority` con registros de todas las categorías | orden exacto de la tabla de prioridad y fechas ascendente dentro de cada prioridad | compilación y validación manual de la persona usuaria |
 | Client work queue | mismo perfil, actor autorizado y frontera aplicable | misma prioridad sin exponer ni alterar datos no visibles | compilación y validación manual de la persona usuaria |
 | Missing delivery date | abierto sin fecha junto con `POLICY` u `ON_TIME` | aparece después de `OVERDUE` y antes de `POLICY` | validación manual |
 | Policy materialization | reglas/códigos POLICY distintos | todos comparten prioridad; código y label no cambian su posición relativa salvo fecha/creación | validación manual |
 | Missing materialization | abierto con fecha y materialización ausente o no reconocible | aparece después de `POLICY` y antes de `ON_TIME`, sin recalcular estatus | validación manual |
 | Terminal records | `COMPLETED` y `CANCELLED`, aun sin fecha | aparecen al final en ese orden | validación manual |
 | Pagination | resultados distribuidos entre dos páginas | no se repiten ni omiten registros por ordenar después de paginar | validación manual |
-| Invalid profile | `sorting=unknown` | `400` estándar | validación manual |
-| Legacy consumer | sin `sorting` | orden y contrato actuales sin cambio | validación manual |
+| Invalid strategy | `sort_strategy=unknown` | `400` estándar | validación manual |
+| Legacy consumer | sin `sort_strategy` | orden y contrato actuales sin cambio | validación manual |
 
 ## Contract And Impact Between Repositories
 
 | Consumer | Previous contract | New contract | Compatibility | Responsible validation |
 | --- | --- | --- | --- | --- |
-| `org-admin-suite-frontend` admin table | `sort[]` directo u orden actual | puede solicitar `sorting=work_priority` | opcional y aditivo; la adopción borra o evita `sort[]` según decisión pendiente | frontend owner |
-| `org-admin-suite-frontend` client table | orden actual o un `sort[]` directo | puede solicitar `sorting=work_priority` | opcional y aditivo; misma regla de coexistencia | frontend owner |
+| `org-admin-suite-frontend` admin table | `sort[]` directo u orden actual | puede solicitar `sort_strategy=work_priority` | opcional y aditivo; la adopción borra o evita `sort[]` según decisión pendiente | frontend owner |
+| `org-admin-suite-frontend` client table | orden actual o un `sort[]` directo | puede solicitar `sort_strategy=work_priority` | opcional y aditivo; misma regla de coexistencia | frontend owner |
 
 Al cerrar el contrato se creará o actualizará
 `docs/frontend/customer-service-record-work-priority-sorting-handoff.md` y se
@@ -107,7 +107,7 @@ actualizará `docs/icsacv-api.postman_collection.json`.
 
 | Artefacto | Tipo | Ubicación | Responsabilidad y dependencias | Estado |
 | --- | --- | --- | --- | --- |
-| `GetCustomerServiceRecordsRequestDto` | HTTP request DTO | `src/internal/infra/api/dto/customer-service-record/customer-service-record.request.dto.ts` | Valida y transforma `sorting`; conserva `sort[]` para que tenga precedencia cuando llegue. | modify |
+| `GetCustomerServiceRecordsRequestDto` | HTTP request DTO | `src/internal/infra/api/dto/customer-service-record/customer-service-record.request.dto.ts` | Valida y transforma `sort_strategy`; conserva `sort[]` para que tenga precedencia cuando llegue. | modify |
 | `GetCustomerServiceRecordClientAccessListRequestDto` | HTTP request DTO | `src/internal/infra/api/dto/customer-service-record-client-access/customer-service-record-client-access.request.dto.ts` | Valida y transforma el mismo perfil para acceso de cliente, con la misma precedencia de `sort[]`. | modify |
 | `GetCustomerServiceRecordListDto` | application DTO | `src/internal/application/dto/customer-service-record/customer-service-record.dto.ts` | Transporta el perfil de ordenamiento al caso de uso. | modify |
 | `GetCustomerServiceRecordClientAccessListDto` | application DTO | `src/internal/application/dto/customer-service-record-client-access/customer-service-record-client-access.dto.ts` | Transporta el perfil de ordenamiento al caso de uso dedicado. | modify |
@@ -132,6 +132,6 @@ actualizará `docs/icsacv-api.postman_collection.json`.
 | --- | --- | --- | --- | --- |
 | Prioridad incorrecta | combinación de todos los grupos, fechas y terminales | manual | orden exacto confirmado por la persona usuaria | persona usuaria |
 | Fuga de visibilidad | perfil en acceso de cliente | manual | solo registros permitidos y ordenados | persona usuaria |
-| Precedencia de contrato | `sorting` combinado con `sort[]` | manual | se ejecuta exclusivamente `sort[]` | persona usuaria |
+| Precedencia de contrato | `sort_strategy` combinado con `sort[]` | manual | se ejecuta exclusivamente `sort[]` | persona usuaria |
 | Paginación incoherente | prioridad distribuida en más de una página | manual | páginas sin repeticiones ni omisiones | persona usuaria |
 | Rendimiento | colección representativa | revisión operativa manual | `explain` si se detecta regresión | persona usuaria, solo si es necesaria |

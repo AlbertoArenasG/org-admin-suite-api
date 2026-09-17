@@ -37,7 +37,7 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
     const filter = this.buildFilter(params);
     const skip = (params.page - 1) * params.perPage;
 
-    if (params.sorting === 'work_priority' && params.sorts.length === 0) {
+    if (params.sortStrategy === 'work_priority' && params.sorts.length === 0) {
       return this.findAllWithWorkPriority(filter, skip, params.perPage);
     }
 

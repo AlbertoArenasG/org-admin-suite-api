@@ -2,7 +2,7 @@
 
 ## Phase 1. Contract And Design
 
-Cerrar la convivencia entre `sorting` y `sort[]`; completar el registro de
+Cerrar la convivencia entre `sort_strategy` y `sort[]`; completar el registro de
 artefactos, criterios de aceptación y diseño de agregación en el base
 repository compartido existente.
 
@@ -19,5 +19,5 @@ de visibilidad y la misma semántica de prioridad.
 ## Phase 4. Contract And Validation
 
 Cubrir validación de query, prioridad, paginación y compatibilidad sin
-`sorting`; actualizar handoff y Postman; solicitar validación manual de ambas
+`sort_strategy`; actualizar handoff y Postman; solicitar validación manual de ambas
 vistas al integrar frontend.

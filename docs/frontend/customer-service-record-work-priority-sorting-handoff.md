@@ -8,11 +8,11 @@
 Los listados siguientes aceptan opcionalmente:
 
 ```text
-GET /v1/customer-service-records?sorting=work_priority
-GET /v1/customer-service-records-client-access?sorting=work_priority
+GET /v1/customer-service-records?sort_strategy=work_priority
+GET /v1/customer-service-records-client-access?sort_strategy=work_priority
 ```
 
-`sorting` tiene un único valor válido: `work_priority`.
+`sort_strategy` tiene un único valor válido: `work_priority`.
 
 Sin ese parámetro, no cambia el contrato ni el orden histórico. Si llega junto
 con uno o más `sort[]`, el backend ignora el perfil y aplica exclusivamente el
@@ -38,7 +38,7 @@ estatus durante la consulta ni clasifica códigos o labels de `POLICY`.
 
 ## Adopción Frontend
 
-Las dos vistas pueden enviar `sorting=work_priority` como orden inicial. Al
+Las dos vistas pueden enviar `sort_strategy=work_priority` como orden inicial. Al
 activar un orden manual por columna, pueden retirar el parámetro para mantener
 la URL clara; aun si no lo retiran, `sort[]` prevalece en backend.
 

@@ -17,8 +17,8 @@ import {
 } from '@application/dto';
 import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
 import {
-  CUSTOMER_SERVICE_RECORD_SORTING_PROFILES,
-  CustomerServiceRecordSortingProfile,
+  CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES,
+  CustomerServiceRecordSortStrategy,
 } from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
@@ -279,8 +279,8 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
   @Type(() => SortInstructionRequestDto)
   sort?: SortInstructionRequestDto[];
   @IsOptional()
-  @IsIn(CUSTOMER_SERVICE_RECORD_SORTING_PROFILES)
-  sorting?: CustomerServiceRecordSortingProfile;
+  @IsIn(CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES)
+  sort_strategy?: CustomerServiceRecordSortStrategy;
   @IsOptional() @IsString() search?: string;
   @IsOptional()
   @IsEnum(CustomerServiceRecordOperationalStatus)
@@ -334,7 +334,7 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
       providerEstimatedReturnAtFrom:
         this.provider_estimated_return_at_from ?? null,
       providerEstimatedReturnAtTo: this.provider_estimated_return_at_to ?? null,
-      sorting: this.sorting ?? null,
+      sortStrategy: this.sort_strategy ?? null,
       sorts:
         this.sort?.map((item) => ({
           field: item.field,

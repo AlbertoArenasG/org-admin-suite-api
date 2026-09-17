@@ -2,7 +2,7 @@
 
 ## Phase 1. Definition And Design
 
-- [x] Cerrar la regla de convivencia entre `sorting` y `sort[]`.
+- [x] Cerrar la regla de convivencia entre `sort_strategy` y `sort[]`.
   Status: done
   Closure: contrato no ambiguo documentado en definition, decisions y diseño.
 - [x] Definir la ubicación de abiertos con materialización ausente y completar
@@ -16,14 +16,14 @@
 
 ## Phase 2. Administrative Contract And Query
 
-- [x] Incorporar `sorting=work_priority` al listado administrativo.
+- [x] Incorporar `sort_strategy=work_priority` al listado administrativo.
   Status: done
   Closure: DTO, aplicación, puerto y consulta aplican el perfil antes de
-  paginar sin cambiar requests existentes sin `sorting`.
+  paginar sin cambiar requests existentes sin `sort_strategy`.
 
 ## Phase 3. Client-Access Contract And Query
 
-- [x] Incorporar `sorting=work_priority` al listado de acceso de cliente.
+- [x] Incorporar `sort_strategy=work_priority` al listado de acceso de cliente.
   Status: done
   Closure: misma prioridad con la frontera de visibilidad intacta.
 
@@ -33,7 +33,7 @@
   Status: done
   Closure: la persona usuaria confirmó manualmente prioridad, paginación,
   precedencia de `sort[]`, visibilidad Client Access y compatibilidad sin
-  `sorting`; compilación y revisión estática también finalizaron correctamente.
+  `sort_strategy`; compilación y revisión estática también finalizaron correctamente.
 - [x] Actualizar el handoff de frontend y Postman.
   Status: done
   Closure: ambos endpoints documentan el parámetro, incompatibilidades y

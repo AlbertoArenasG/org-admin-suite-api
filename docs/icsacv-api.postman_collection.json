@@ -8,7 +8,7 @@
   "item": [
     {
       "name": "Customer Service Records Client Access",
-      "description": "Consulta restringida. Variables: CLIENT_ACCESS_AUTH_TOKEN y CLIENT_ACCESS_RECORD_ID. Cada lookup ignora solo su propio filtro. El listado acepta sorting=work_priority como perfil semantico opcional.",
+      "description": "Consulta restringida. Variables: CLIENT_ACCESS_AUTH_TOKEN y CLIENT_ACCESS_RECORD_ID. Cada lookup ignora solo su propio filtro. El listado acepta sort_strategy=work_priority como estrategia semantica opcional.",
       "item": [
         {
           "name": "Listado",
@@ -49,7 +49,7 @@
                   "value": "10"
                 },
                 {
-                  "key": "sorting",
+                  "key": "sort_strategy",
                   "value": "work_priority",
                   "disabled": true
                 },
@@ -1798,7 +1798,7 @@
     },
     {
       "name": "Customer Service Records",
-      "description": "Listado administrativo. El perfil sorting=work_priority es opcional; sort[] explicito tiene precedencia.",
+      "description": "Listado administrativo. La estrategia sort_strategy=work_priority es opcional; sort[] explicito tiene precedencia.",
       "item": [
         {
           "name": "List Work Priority",
@@ -1819,7 +1819,7 @@
               }
             ],
             "url": {
-              "raw": "{{HOST}}/v1/customer-service-records?page=1&limit=10&sorting=work_priority",
+              "raw": "{{HOST}}/v1/customer-service-records?page=1&limit=10&sort_strategy=work_priority",
               "host": ["{{HOST}}"],
               "path": ["v1", "customer-service-records"],
               "query": [
@@ -1832,7 +1832,7 @@
                   "value": "10"
                 },
                 {
-                  "key": "sorting",
+                  "key": "sort_strategy",
                   "value": "work_priority"
                 },
                 {
@@ -1847,7 +1847,7 @@
                 }
               ]
             },
-            "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sorting."
+            "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sort_strategy."
           },
           "response": []
         }

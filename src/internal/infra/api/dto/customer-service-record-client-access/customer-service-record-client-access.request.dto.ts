@@ -13,8 +13,8 @@ import {
   GetCustomerServiceRecordClientAccessOptionsDto,
 } from '@application/dto';
 import {
-  CUSTOMER_SERVICE_RECORD_SORTING_PROFILES,
-  CustomerServiceRecordSortingProfile,
+  CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES,
+  CustomerServiceRecordSortStrategy,
 } from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
@@ -64,8 +64,8 @@ export class GetCustomerServiceRecordClientAccessListRequestDto extends Paginati
   @Type(() => SortDto)
   sort?: SortDto[];
   @IsOptional()
-  @IsIn(CUSTOMER_SERVICE_RECORD_SORTING_PROFILES)
-  sorting?: CustomerServiceRecordSortingProfile;
+  @IsIn(CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES)
+  sort_strategy?: CustomerServiceRecordSortStrategy;
   @IsOptional() @IsString() search?: string;
   @IsOptional() @IsString() customer_id?: string;
   @IsOptional() @IsString() service_type_code?: string;
@@ -82,7 +82,7 @@ export class GetCustomerServiceRecordClientAccessListRequestDto extends Paginati
       ...this.filters(actorUserId),
       page: this.getPage(),
       perPage: this.getPerPage(),
-      sorting: this.sorting ?? null,
+      sortStrategy: this.sort_strategy ?? null,
       sorts: this.sort ?? [],
     };
   }

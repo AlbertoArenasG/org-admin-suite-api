@@ -3,10 +3,10 @@
 ## 2026-09-17 - Spec created
 
 - Se creó la iniciativa backend para el perfil semántico
-  `sorting=work_priority`.
+  `sort_strategy=work_priority`.
 - Se documentó la prioridad aprobada para ambos listados, su uso exclusivo de
   `customer_delivery` y el requisito de ordenar antes de paginar.
-- Se aprobó que `sort[]` prevalece sobre `sorting=work_priority` cuando ambos
+- Se aprobó que `sort[]` prevalece sobre `sort_strategy=work_priority` cuando ambos
   parámetros llegan; no se agrega un `400` ni código de error nuevo.
 - Se verificó el refresher técnico: un compromiso de Cliente sin fecha se
   materializa como `SYSTEM/PENDING_ESTIMATED_DATE`; los abiertos con fecha se
@@ -38,13 +38,13 @@ implementación.
 ## 2026-09-17 - Backend implementation completed
 
 - La persona usuaria autorizó la implementación completa de backend.
-- Se agregó `sorting=work_priority` a los DTOs, contratos de repositorio y a
+- Se agregó `sort_strategy=work_priority` a los DTOs, contratos de repositorio y a
   ambos repositorios de lectura.
 - El perfil usa el método protegido compartido
   `buildWorkPriorityPipeline()` y una agregación previa a la paginación; no
   persiste la clave temporal ni deriva estatus.
 - La ruta administrativa conserva su fallback histórico `createdAt desc` cuando
-  no llega `sorting` ni `sort[]`; `sort[]` explícito prevalece sobre el perfil.
+  no llega `sort_strategy` ni `sort[]`; `sort[]` explícito prevalece sobre la estrategia.
 - Se actualizó el handoff y Postman para ambos endpoints.
 - `npx tsc --noEmit`, ESLint de los archivos modificados y `git diff --check`
   finalizaron correctamente. Queda pendiente la validación manual de la
@@ -52,13 +52,13 @@ implementación.
 
 Next step: la persona usuaria ejecuta los escenarios manuales de prioridad,
 precedencia de `sort[]`, paginación, visibilidad Client Access y compatibilidad
-sin `sorting`.
+sin `sort_strategy`.
 
 ## 2026-09-17 - Backend validation and formal closure
 
 - La persona usuaria confirmó la validación manual del contrato backend.
 - Se confirmó el perfil de prioridad, la precedencia de `sort[]`, paginación,
-  visibilidad de Client Access, compatibilidad sin `sorting` y rechazo de un
+  visibilidad de Client Access, compatibilidad sin `sort_strategy` y rechazo de un
   perfil inválido.
 - Se retiró la validación de vistas frontend de esta iniciativa: las specs
   backend son agnósticas a aplicaciones cliente. El handoff conserva solo el

@@ -21,7 +21,7 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
       return { data: [], total: 0 };
     const filter = this.filter(params);
 
-    if (params.sorting === 'work_priority' && !params.sorts?.length) {
+    if (params.sortStrategy === 'work_priority' && !params.sorts?.length) {
       return this.findAllWithWorkPriority(
         filter,
         (params.page ?? 1) - 1,

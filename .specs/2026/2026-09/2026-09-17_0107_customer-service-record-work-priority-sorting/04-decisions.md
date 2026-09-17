@@ -2,7 +2,7 @@
 
 ## Decision 01. Perfil semántico de ordenamiento
 
-Se agrega `sorting=work_priority` en vez de delegar múltiples `sort[]` al
+Se agrega `sort_strategy=work_priority` en vez de delegar múltiples `sort[]` al
 frontend. La prioridad representa una bandeja de trabajo y pertenece al
 backend, que conoce las materializaciones y puede ordenarla globalmente antes
 de paginar.
@@ -30,12 +30,12 @@ Status: approved
 
 ## Decision 04. Convivencia con ordenamiento manual
 
-Cuando una request incluye `sorting=work_priority` y `sort[]`, se aplica solo
+Cuando una request incluye `sort_strategy=work_priority` y `sort[]`, se aplica solo
 `sort[]`. Es una instrucción explícita por campo y por ello prevalece sobre el
 perfil de bandeja. No se rechaza la request ni se agrega un nuevo código de
 error.
 
-Frontend puede quitar `sorting` al solicitar un orden manual para mantener una
+Frontend puede quitar `sort_strategy` al solicitar un orden manual para mantener una
 URL limpia, pero backend no depende de que lo haga.
 
 Status: approved
@@ -69,7 +69,7 @@ Status: approved
 ## Decision 07. Agregación local y mapper existente
 
 Cada repositorio de lectura conserva su filtro actual y ejecuta, solo para
-`sorting=work_priority` sin `sort[]`, una agregación con `$match`, las etapas
+`sort_strategy=work_priority` sin `sort[]`, una agregación con `$match`, las etapas
 compartidas de prioridad, paginación y exclusión de la clave temporal. El
 conteo mantiene `countDocuments(filter)` en paralelo.
 

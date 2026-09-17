@@ -9,7 +9,7 @@ import {
 
 import {
   CustomerServiceRecordClientAccessSortField,
-  CustomerServiceRecordSortingProfile,
+  CustomerServiceRecordSortStrategy,
 } from '@domain/ports/repositories';
 
 export interface GetCustomerServiceRecordClientAccessListDto
@@ -22,7 +22,7 @@ export interface GetCustomerServiceRecordClientAccessListDto
   receivedAtTo: string | null;
   estimatedCustomerDeliveryAtFrom: string | null;
   estimatedCustomerDeliveryAtTo: string | null;
-  sorting: CustomerServiceRecordSortingProfile | null;
+  sortStrategy: CustomerServiceRecordSortStrategy | null;
   sorts: Array<{
     field: CustomerServiceRecordClientAccessSortField;
     direction: 'asc' | 'desc';
@@ -30,7 +30,7 @@ export interface GetCustomerServiceRecordClientAccessListDto
 }
 export type GetCustomerServiceRecordClientAccessOptionsDto = Omit<
   GetCustomerServiceRecordClientAccessListDto,
-  'page' | 'perPage' | 'sorting' | 'sorts'
+  'page' | 'perPage' | 'sortStrategy' | 'sorts'
 >;
 export interface CustomerServiceRecordClientAccessAssetDto {
   assetId: string;

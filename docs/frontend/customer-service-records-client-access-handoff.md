@@ -57,7 +57,7 @@ direcciones `asc` y `desc`. Default interno `created_at desc`, desempate por ID.
 Options no aplican paginacion ni sort; devuelven todas las coincidencias.
 
 Perfil semántico opcional de bandeja de trabajo:
-`sorting=work_priority`. Cuando llega sin `sort[]`, ordena antes de paginar por:
+`sort_strategy=work_priority`. Cuando llega sin `sort[]`, ordena antes de paginar por:
 
 1. abiertos `SYSTEM/OVERDUE`;
 2. abiertos sin fecha estimada de entrega;
@@ -70,7 +70,7 @@ Perfil semántico opcional de bandeja de trabajo:
 Dentro de cada nivel usa entrega estimada ascendente, `created_at` ascendente e
 ID técnico ascendente. No compara códigos ni labels de materializaciones
 `POLICY`. Si la request incluye `sort[]`, el orden explícito prevalece y el
-perfil no se aplica. Sin `sorting`, el contrato y orden histórico permanecen
+estrategia no se aplica. Sin `sort_strategy`, el contrato y orden histórico permanecen
 sin cambio.
 
 El ValidationPipe global descarta parametros no declarados; no se convierten en

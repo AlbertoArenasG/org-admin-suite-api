@@ -15,7 +15,7 @@ Validation: compilación y validación manual acordada para enum, ausencia del
 parámetro y precedencia de `sort[]` sobre el perfil.
 
 Closure: ambos listados pueden transportar el perfil sin cambiar el
-comportamiento sin `sorting`.
+comportamiento sin `sort_strategy`.
 
 ## Slice 2. Administrative Work-Priority Query
 
