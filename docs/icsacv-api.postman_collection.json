@@ -3072,7 +3072,7 @@
                 }
               ]
             },
-            "description": "Generated from cURL: curl -X PATCH \"{{HOST}}/v1/users/{{USER_ID}}\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"status_id\": \"ACTIVE\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }'\n"
+            "description": "Actualiza el usuario y devuelve la misma proyeccion administrativa que su detalle, incluyendo los resumentes de clientes relacionados en el campo customers.\n\nGenerated from cURL: curl -X PATCH \"{{HOST}}/v1/users/{{USER_ID}}\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Nombre Actualizado\",\n    \"lastname\": \"Apellido Actualizado\",\n    \"email\": \"nuevo.email@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"status_id\": \"ACTIVE\",\n    \"cell_phone\": { \"country_code\": \"+52\", \"number\": \"5512345678\" }\n  }'\n"
           },
           "response": []
         },

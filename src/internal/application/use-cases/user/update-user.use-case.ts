@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  IRoleReadRepository,
-  IRoleReadRepositoryToken,
   IUserReadRepository,
   IUserReadRepositoryToken,
   IUserWriteRepository,
@@ -21,12 +19,12 @@ import {
   InvalidValueExceptionCode,
 } from '@domain/exceptions';
 import { UpdateUserDto, UpdateUserResultDto } from '@application/dto';
-import { UserResultMapper } from '@application/mappers';
 import { UserStatus } from '@domain/entities';
 import { UserInternalStaffPolicy } from '@domain/policies';
 import {
   AuthorizationService,
   SyncUserContactService,
+  UserAdministrativeDetailResolverService,
   UserCustomerRelationshipManagerService,
 } from '@application/services';
 
@@ -35,8 +33,6 @@ export class UpdateUserUseCase {
   constructor(
     @Inject(IUserReadRepositoryToken)
     private readonly userReadRepository: IUserReadRepository,
-    @Inject(IRoleReadRepositoryToken)
-    private readonly roleReadRepository: IRoleReadRepository,
     @Inject(IUserWriteRepositoryToken)
     private readonly userWriteRepository: IUserWriteRepository,
     @Inject(ITransactionalExecutorToken)
@@ -44,6 +40,7 @@ export class UpdateUserUseCase {
     private readonly authorizationService: AuthorizationService,
     private readonly syncUserContactService: SyncUserContactService,
     private readonly relationshipManagerService: UserCustomerRelationshipManagerService,
+    private readonly detailResolver: UserAdministrativeDetailResolverService,
   ) {}
 
   async execute(input: UpdateUserDto): Promise<UpdateUserResultDto> {
@@ -184,11 +181,6 @@ export class UpdateUserUseCase {
       return data;
     });
 
-    const roleName = updated.roleId
-      ? ((await this.roleReadRepository.findById(updated.roleId)).data?.name ??
-        null)
-      : null;
-
-    return UserResultMapper.toUserViewDto(updated, roleName);
+    return this.detailResolver.resolve(updated, true);
   }
 }

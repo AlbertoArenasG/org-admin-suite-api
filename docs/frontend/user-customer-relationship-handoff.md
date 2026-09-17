@@ -97,7 +97,7 @@ is_internal_staff=true|false
 - enviar ambos parámetros devuelve `400`;
 - `has_customer_relationship` fue retirado sin compatibilidad temporal.
 
-`GET /v1/users/:userId` agrega `customers` con el mismo resumen localizado del detalle de invitación. `GET /v1/users/me`, listados y respuestas de actualización no incluyen ese campo.
+`GET /v1/users/:userId` y `PATCH /v1/users/:userId` agregan `customers` con el mismo resumen localizado del detalle de invitación. `GET /v1/users/me` y los listados no incluyen ese campo.
 
 ## Administración Contextual Desde Clientes
 
