@@ -10,6 +10,7 @@ import {
   FindOperationalCustomerServiceRecordsParams,
   ICustomerServiceRecordReadRepository,
 } from '@domain/ports/repositories';
+import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from './mongoose-customer-service-record-base.repository';
 
 @Injectable()
@@ -35,6 +36,11 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
   ): Promise<{ data: CustomerServiceRecord[]; total: number }> {
     const filter = this.buildFilter(params);
     const skip = (params.page - 1) * params.perPage;
+
+    if (params.sorting === 'work_priority' && params.sorts.length === 0) {
+      return this.findAllWithWorkPriority(filter, skip, params.perPage);
+    }
+
     const [documents, total] = await Promise.all([
       this.customerServiceRecordModel
         .find(filter)
@@ -51,6 +57,38 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
     return {
       data: documents
         .map((document) => this.toDomain(document))
+        .filter((record): record is CustomerServiceRecord => Boolean(record)),
+      total,
+    };
+  }
+
+  private async findAllWithWorkPriority(
+    filter: Record<string, unknown>,
+    skip: number,
+    perPage: number,
+  ): Promise<{ data: CustomerServiceRecord[]; total: number }> {
+    const [documents, total] = await Promise.all([
+      this.customerServiceRecordModel
+        .aggregate([
+          { $match: filter },
+          ...this.buildWorkPriorityPipeline(),
+          { $skip: skip },
+          { $limit: perPage },
+          { $project: { work_priority: 0 } },
+        ])
+        .session(this.transactionContext.getSession() ?? null)
+        .exec(),
+      this.customerServiceRecordModel
+        .countDocuments(filter)
+        .session(this.transactionContext.getSession() ?? null)
+        .exec(),
+    ]);
+
+    return {
+      data: documents
+        .map((document) =>
+          this.toDomain(document as CustomerServiceRecordDocument),
+        )
         .filter((record): record is CustomerServiceRecord => Boolean(record)),
       total,
     };

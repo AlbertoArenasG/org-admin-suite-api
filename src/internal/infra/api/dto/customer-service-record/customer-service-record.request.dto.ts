@@ -16,6 +16,10 @@ import {
   UpdateCustomerServiceRecordDto,
 } from '@application/dto';
 import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
+import {
+  CUSTOMER_SERVICE_RECORD_SORTING_PROFILES,
+  CustomerServiceRecordSortingProfile,
+} from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 class IntervalRequestDto {
@@ -274,6 +278,9 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
   @ValidateNested({ each: true })
   @Type(() => SortInstructionRequestDto)
   sort?: SortInstructionRequestDto[];
+  @IsOptional()
+  @IsIn(CUSTOMER_SERVICE_RECORD_SORTING_PROFILES)
+  sorting?: CustomerServiceRecordSortingProfile;
   @IsOptional() @IsString() search?: string;
   @IsOptional()
   @IsEnum(CustomerServiceRecordOperationalStatus)
@@ -327,10 +334,12 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
       providerEstimatedReturnAtFrom:
         this.provider_estimated_return_at_from ?? null,
       providerEstimatedReturnAtTo: this.provider_estimated_return_at_to ?? null,
-      sorts: this.sort?.map((item) => ({
-        field: item.field,
-        direction: item.direction,
-      })) ?? [{ field: 'created_at', direction: 'desc' }],
+      sorting: this.sorting ?? null,
+      sorts:
+        this.sort?.map((item) => ({
+          field: item.field,
+          direction: item.direction,
+        })) ?? [],
     };
   }
 }

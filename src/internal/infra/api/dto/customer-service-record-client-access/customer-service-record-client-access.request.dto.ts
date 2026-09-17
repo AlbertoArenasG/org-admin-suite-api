@@ -12,6 +12,10 @@ import {
   GetCustomerServiceRecordClientAccessListDto,
   GetCustomerServiceRecordClientAccessOptionsDto,
 } from '@application/dto';
+import {
+  CUSTOMER_SERVICE_RECORD_SORTING_PROFILES,
+  CustomerServiceRecordSortingProfile,
+} from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 const fields = [
@@ -59,6 +63,9 @@ export class GetCustomerServiceRecordClientAccessListRequestDto extends Paginati
   @ValidateNested({ each: true })
   @Type(() => SortDto)
   sort?: SortDto[];
+  @IsOptional()
+  @IsIn(CUSTOMER_SERVICE_RECORD_SORTING_PROFILES)
+  sorting?: CustomerServiceRecordSortingProfile;
   @IsOptional() @IsString() search?: string;
   @IsOptional() @IsString() customer_id?: string;
   @IsOptional() @IsString() service_type_code?: string;
@@ -75,6 +82,7 @@ export class GetCustomerServiceRecordClientAccessListRequestDto extends Paginati
       ...this.filters(actorUserId),
       page: this.getPage(),
       perPage: this.getPerPage(),
+      sorting: this.sorting ?? null,
       sorts: this.sort ?? [],
     };
   }

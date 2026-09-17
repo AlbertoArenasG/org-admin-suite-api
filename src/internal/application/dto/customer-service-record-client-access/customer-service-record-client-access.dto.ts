@@ -7,7 +7,10 @@ import {
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
 
-import { CustomerServiceRecordClientAccessSortField } from '@domain/ports/repositories';
+import {
+  CustomerServiceRecordClientAccessSortField,
+  CustomerServiceRecordSortingProfile,
+} from '@domain/ports/repositories';
 
 export interface GetCustomerServiceRecordClientAccessListDto
   extends PaginationParamsDto {
@@ -19,6 +22,7 @@ export interface GetCustomerServiceRecordClientAccessListDto
   receivedAtTo: string | null;
   estimatedCustomerDeliveryAtFrom: string | null;
   estimatedCustomerDeliveryAtTo: string | null;
+  sorting: CustomerServiceRecordSortingProfile | null;
   sorts: Array<{
     field: CustomerServiceRecordClientAccessSortField;
     direction: 'asc' | 'desc';
@@ -26,7 +30,7 @@ export interface GetCustomerServiceRecordClientAccessListDto
 }
 export type GetCustomerServiceRecordClientAccessOptionsDto = Omit<
   GetCustomerServiceRecordClientAccessListDto,
-  'page' | 'perPage' | 'sorts'
+  'page' | 'perPage' | 'sorting' | 'sorts'
 >;
 export interface CustomerServiceRecordClientAccessAssetDto {
   assetId: string;

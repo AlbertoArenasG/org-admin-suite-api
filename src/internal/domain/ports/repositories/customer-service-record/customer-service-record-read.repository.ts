@@ -12,6 +12,13 @@ export type CustomerServiceRecordSortField =
   | 'operational_status'
   | 'created_at';
 
+export const CUSTOMER_SERVICE_RECORD_SORTING_PROFILES = [
+  'work_priority',
+] as const;
+
+export type CustomerServiceRecordSortingProfile =
+  (typeof CUSTOMER_SERVICE_RECORD_SORTING_PROFILES)[number];
+
 export interface FindCustomerServiceRecordsParams {
   page: number;
   perPage: number;
@@ -30,6 +37,7 @@ export interface FindCustomerServiceRecordsParams {
   estimatedCustomerDeliveryAtTo?: string | null;
   providerEstimatedReturnAtFrom?: string | null;
   providerEstimatedReturnAtTo?: string | null;
+  sorting: CustomerServiceRecordSortingProfile | null;
   sorts: Array<{
     field: CustomerServiceRecordSortField;
     direction: 'asc' | 'desc';

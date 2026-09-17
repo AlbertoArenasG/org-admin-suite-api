@@ -59,6 +59,12 @@ Regla:
 
 - no empezar implementación estructural mientras existan decisiones críticas abiertas
 - cuando la definición ya no tenga gaps bloqueantes, actualizar esos flags
+- `Implementation ready: yes` requiere aprobación explícita de la persona
+  usuaria; el agente no puede marcarlo por inferencia ni iniciar código solo
+  porque considere que la definición está suficientemente detallada.
+- incluso con `Implementation ready: yes`, la implementación empieza solo
+  cuando la persona usuaria autoriza expresamente iniciar la iniciativa o la
+  slice correspondiente.
 
 ## Cierre Formal
 

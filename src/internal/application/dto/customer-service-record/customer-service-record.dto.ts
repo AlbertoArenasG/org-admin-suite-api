@@ -3,6 +3,7 @@ import {
   PaginationParamsDto,
 } from '@application/dto/shared';
 import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
+import type { CustomerServiceRecordSortingProfile } from '@domain/ports/repositories';
 
 export interface CustomerServiceRecordIntervalDto {
   years: number;
@@ -100,6 +101,7 @@ export interface GetCustomerServiceRecordsDto extends PaginationParamsDto {
   estimatedCustomerDeliveryAtTo: string | null;
   providerEstimatedReturnAtFrom: string | null;
   providerEstimatedReturnAtTo: string | null;
+  sorting: CustomerServiceRecordSortingProfile | null;
   sorts: Array<{
     field:
       | 'service_number'

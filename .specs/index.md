@@ -1,5 +1,6 @@
 # Specs Index
 
+- [customer-service-record-work-priority-sorting](./2026/2026-09/2026-09-17_0107_customer-service-record-work-priority-sorting/00-definition.md) - Completada; perfil semántico de prioridad validado
 - [administrative-user-password-update](./2026/2026-09/2026-09-14_1459_administrative-user-password-update/00-definition.md) - Completada; actualización administrativa de contraseña validada
 - [role-options-auxiliary-capability](./2026/2026-09/2026-09-09_1800_role-options-auxiliary-capability/00-definition.md) - Completada; capability de opciones de roles validada
 - [direct-backoffice-user-creation](./2026/2026-09/2026-09-06_1500_direct-backoffice-user-creation/00-definition.md) - Completada; creación directa validada

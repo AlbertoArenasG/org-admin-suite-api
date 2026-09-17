@@ -8,6 +8,7 @@ import {
   FindCustomerServiceRecordClientAccessParams,
   ICustomerServiceRecordClientAccessReadRepository,
 } from '@domain/ports/repositories';
+import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from '../customer-service-record/mongoose-customer-service-record-base.repository';
 
 @Injectable()
@@ -19,6 +20,15 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
     if (!params.isInternalStaff && !params.customerIds.length)
       return { data: [], total: 0 };
     const filter = this.filter(params);
+
+    if (params.sorting === 'work_priority' && !params.sorts?.length) {
+      return this.findAllWithWorkPriority(
+        filter,
+        (params.page ?? 1) - 1,
+        params.perPage ?? 10,
+      );
+    }
+
     const [documents, total] = await Promise.all([
       this.customerServiceRecordModel
         .find(filter)
@@ -31,6 +41,33 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
     return {
       data: documents
         .map((document) => this.toDomain(document))
+        .filter((value): value is CustomerServiceRecord => Boolean(value)),
+      total,
+    };
+  }
+
+  private async findAllWithWorkPriority(
+    filter: Record<string, unknown>,
+    page: number,
+    perPage: number,
+  ): Promise<{ data: CustomerServiceRecord[]; total: number }> {
+    const [documents, total] = await Promise.all([
+      this.customerServiceRecordModel
+        .aggregate([
+          { $match: filter },
+          ...this.buildWorkPriorityPipeline(),
+          { $skip: page * perPage },
+          { $limit: perPage },
+          { $project: { work_priority: 0 } },
+        ])
+        .exec(),
+      this.customerServiceRecordModel.countDocuments(filter).exec(),
+    ]);
+    return {
+      data: documents
+        .map((document) =>
+          this.toDomain(document as CustomerServiceRecordDocument),
+        )
         .filter((value): value is CustomerServiceRecord => Boolean(value)),
       total,
     };

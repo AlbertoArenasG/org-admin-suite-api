@@ -124,7 +124,9 @@ Al agregar una capability auxiliar reutilizable:
 1. Registrar `{ module, capability }` en el catálogo maestro de código.
 2. Definir qué módulos consumidores la derivan.
 3. Proteger el endpoint con el decorador y `AuxiliaryCapabilitiesGuard`.
-4. Cubrir derivación, persistencia y autorización con pruebas.
+4. Definir en la spec los escenarios de derivación, persistencia y autorización;
+   la persona usuaria ejecuta su validación manual y la evidencia se registra
+   conforme a la política vigente de validación.
 5. Actualizar este documento y el catálogo funcional de endpoints.
 
 Si la capability debe mostrarse de forma informativa en frontend en el futuro, deberá definirse mediante una spec propia y un contrato de API explícito. No debe exponerse ni editarse por conveniencia.

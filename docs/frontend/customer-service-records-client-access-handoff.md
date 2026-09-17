@@ -56,6 +56,23 @@ Campos: `service_number`, `received_at`, `estimated_customer_delivery_at`;
 direcciones `asc` y `desc`. Default interno `created_at desc`, desempate por ID.
 Options no aplican paginacion ni sort; devuelven todas las coincidencias.
 
+Perfil semántico opcional de bandeja de trabajo:
+`sorting=work_priority`. Cuando llega sin `sort[]`, ordena antes de paginar por:
+
+1. abiertos `SYSTEM/OVERDUE`;
+2. abiertos sin fecha estimada de entrega;
+3. abiertos con materialización de origen `POLICY`;
+4. abiertos con materialización ausente o no reconocible y fecha presente;
+5. abiertos `SYSTEM/ON_TIME`;
+6. `COMPLETED`;
+7. `CANCELLED`.
+
+Dentro de cada nivel usa entrega estimada ascendente, `created_at` ascendente e
+ID técnico ascendente. No compara códigos ni labels de materializaciones
+`POLICY`. Si la request incluye `sort[]`, el orden explícito prevalece y el
+perfil no se aplica. Sin `sorting`, el contrato y orden histórico permanecen
+sin cambio.
+
 El ValidationPipe global descarta parametros no declarados; no se convierten en
 filtros. Un valor de sort invalido en listado responde 400.
 

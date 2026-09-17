@@ -80,8 +80,12 @@ estructural. Debe indicar explicitamente:
 - `Implementation ready: no | yes`.
 
 No iniciar implementacion estructural mientras exista una decision critica
-abierta. Si el usuario autoriza una exploracion visual o tecnica, aislarla de
-la implementacion real y registrarla como experimento.
+abierta. `Implementation ready: yes` requiere aprobacion explicita de la
+persona usuaria; el agente no puede declararlo por inferencia. Aun con la
+definicion completa, no se crea ni modifica codigo hasta que la persona usuaria
+autorice expresamente iniciar la iniciativa o la slice. Si el usuario autoriza
+una exploracion visual o tecnica, aislarla de la implementacion real y
+registrarla como experimento.
 
 ### Criterios de Aceptacion y Matriz de Comportamiento
 
@@ -178,8 +182,8 @@ aplica, se registra con `not_applicable` y una razon; no se omite.
   aplique.
 - **Composicion:** modulos Nest, imports/exports, providers, registros CQRS y
   orden de rutas que pueda afectar el enrutamiento.
-- **Verificacion:** pruebas unitarias, integracion, e2e, fixtures, validacion
-  manual y comandos de build/lint.
+- **Verificacion:** validaciones aplicables, escenarios manuales y comandos de
+  build/lint.
 
 El registro tambien debe separar explicitamente:
 
@@ -289,7 +293,9 @@ la historia de lo que realmente ocurrio.
 
 Implementar una slice completa antes de abrir otra. La secuencia esperada es:
 
-1. Confirmar que la definicion esta lista o que el usuario autorizo el slice.
+1. Confirmar que la definicion esta completa **y** que la persona usuaria
+   autorizo expresamente la iniciativa o slice; ninguno de los dos requisitos
+   puede inferirse.
 2. Inspeccionar los archivos afectados y usar `git status` o `git diff` cuando
    sea necesario para revisar cambios en curso.
 3. Explicar brevemente que se modificara antes de editar.
@@ -401,7 +407,6 @@ recibir un contrato vigente conforme se completa cada endpoint.
 Seleccionar la validacion segun el alcance. No afirmar que algo esta verificado
 si una dependencia, entorno o accion manual lo impide.
 
-- Ejecutar pruebas unitarias o e2e relacionadas cuando existan.
 - Ejecutar compilacion o chequeo de tipos cuando el cambio lo requiera.
 - Ejecutar lint con cuidado: este repositorio configura `npm run lint` con
   `--fix`, por lo que puede modificar archivos. Revisar el diff despues.
@@ -418,19 +423,36 @@ estrategia de validacion para cada riesgo relevante con: riesgo, escenario,
 nivel de prueba, evidencia esperada y responsable de ejecutarla. Elegir el
 nivel mas cercano a la falla posible, no una prueba generica por costumbre.
 
-- Reglas de negocio, politicas e invariantes: pruebas unitarias.
-- Repositorios, persistencia, indices, queries y transacciones: pruebas de
-  integracion y validacion de datos cuando aplique.
-- Endpoints, DTOs, guards, permisos, envelopes y contratos: pruebas de
-  integracion o e2e, mas actualizacion de Postman.
-- Integraciones externas, notificaciones y adaptadores: pruebas del adaptador,
-  dobles controlados y validacion manual u operativa cuando sea necesaria.
+#### Política Vigente De Pruebas Unitarias
+
+Hasta nuevo acuerdo explícito, este proyecto no trabaja pruebas unitarias. No
+crear, proponer ni ejecutar suites unitarias por defecto durante una spec. La
+validación de cada iniciativa debe definir compilación, revisión estática y
+escenarios manuales u operativos proporcionales al riesgo. Si en el futuro se
+quiere incorporar pruebas unitarias, integración o e2e, requiere una decisión
+explícita de la persona usuaria y su registro en la spec correspondiente; no se
+deduce de scripts heredados de Nest ni de una recomendación genérica.
+
+La persona usuaria ejecuta las validaciones manuales. El agente prepara y
+documenta los escenarios, solicita confirmación y, una vez recibida, registra
+la evidencia en `03-task-list.md` y `05-progress.md`; usar
+`08-manual-validation.md` cuando una matriz de escenarios o preparación manual
+independiente aporte claridad. No ejecutar ni marcar esa validación por
+inferencia.
+
+- Reglas de negocio, políticas e invariantes: escenarios manuales o
+  verificación operativa definidos en la spec.
+- Repositorios, persistencia, índices, queries y transacciones: validación de
+  datos y escenarios manuales cuando aplique.
+- Endpoints, DTOs, guards, permisos, envelopes y contratos: compilación,
+  Postman y validación manual.
+- Integraciones externas, notificaciones y adaptadores: validación manual u
+  operativa cuando sea necesaria.
 - Migraciones, seeds, backfills y reparaciones: tarea de comando para el
   usuario, precondiciones, riesgo, evidencia y rollback o mitigacion.
 
-Si se omite una capa de prueba razonable, registrar la limitacion y su motivo.
-No usar "no aplica" sin explicar el riesgo que se evaluo y la evidencia
-alternativa.
+Registrar la limitación y la evidencia alternativa cuando no aplique una capa
+de validación. No usar "no aplica" sin explicar el riesgo evaluado.
 
 ### Comandos Ejecutados por el Usuario
 

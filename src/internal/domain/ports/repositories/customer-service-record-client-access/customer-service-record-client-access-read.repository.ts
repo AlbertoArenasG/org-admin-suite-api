@@ -1,4 +1,5 @@
 import { CustomerServiceRecord } from '@domain/entities';
+import type { CustomerServiceRecordSortingProfile } from '../customer-service-record';
 
 export type CustomerServiceRecordClientAccessSortField =
   | 'service_number'
@@ -18,6 +19,7 @@ export interface FindCustomerServiceRecordClientAccessParams {
   receivedAtTo?: string | null;
   estimatedCustomerDeliveryAtFrom?: string | null;
   estimatedCustomerDeliveryAtTo?: string | null;
+  sorting?: CustomerServiceRecordSortingProfile | null;
   sorts?: Array<{
     field: CustomerServiceRecordClientAccessSortField;
     direction: 'asc' | 'desc';

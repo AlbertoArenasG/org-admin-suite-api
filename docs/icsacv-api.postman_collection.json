@@ -8,7 +8,7 @@
   "item": [
     {
       "name": "Customer Service Records Client Access",
-      "description": "Slice 2. Consulta restringida. Variables: CLIENT_ACCESS_AUTH_TOKEN y CLIENT_ACCESS_RECORD_ID. Cada lookup ignora solo su propio filtro.",
+      "description": "Consulta restringida. Variables: CLIENT_ACCESS_AUTH_TOKEN y CLIENT_ACCESS_RECORD_ID. Cada lookup ignora solo su propio filtro. El listado acepta sorting=work_priority como perfil semantico opcional.",
       "item": [
         {
           "name": "Listado",
@@ -47,6 +47,11 @@
                 {
                   "key": "limit",
                   "value": "10"
+                },
+                {
+                  "key": "sorting",
+                  "value": "work_priority",
+                  "disabled": true
                 },
                 {
                   "key": "sort[0][field]",
@@ -1788,6 +1793,63 @@
               "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 400,\n  \"error_details\": {\n    \"message\": \"Mensaje localizado por backend\",\n    \"method\": \"GET\",\n    \"path\": \"/v1/customer-service-records-client-access/service-types/options\",\n    \"error_code\": \"VALIDATION.DEFAULT\",\n    \"validation_errors\": [\n      \"received_at_from must not be after received_at_to\"\n    ]\n  }\n}"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Customer Service Records",
+      "description": "Listado administrativo. El perfil sorting=work_priority es opcional; sort[] explicito tiene precedencia.",
+      "item": [
+        {
+          "name": "List Work Priority",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records?page=1&limit=10&sorting=work_priority",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sorting",
+                  "value": "work_priority"
+                },
+                {
+                  "key": "sort[0][field]",
+                  "value": "created_at",
+                  "disabled": true
+                },
+                {
+                  "key": "sort[0][direction]",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sorting."
+          },
+          "response": []
         }
       ]
     },
