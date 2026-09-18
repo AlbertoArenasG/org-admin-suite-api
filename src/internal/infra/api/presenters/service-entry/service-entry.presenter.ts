@@ -42,7 +42,10 @@ export class ServiceEntryPresenter {
     });
   }
 
-  toViewResponse(entry: ServiceEntryViewDto) {
+  toViewResponse(
+    entry: ServiceEntryViewDto,
+    options: { trackDownload?: boolean } = {},
+  ) {
     const filesMetadata = entry.filesMetadata;
     const interactionStatus = entry.interactionStatus;
 
@@ -71,7 +74,10 @@ export class ServiceEntryPresenter {
         : null,
       created_at: entry.createdAt,
       updated_at: entry.updatedAt ?? null,
-      files_metadata: this.toFilesMetadataResponse(filesMetadata, entry.id),
+      files_metadata: this.toFilesMetadataResponse(
+        filesMetadata,
+        options.trackDownload ? entry.id : null,
+      ),
       survey_status: this.toSurveyStatusResponse(
         interactionStatus.surveyStatus,
       ),
@@ -87,7 +93,7 @@ export class ServiceEntryPresenter {
 
   private toFilesMetadataResponse(
     metadata: ServiceEntryFilesMetadataDto,
-    serviceEntryId: string,
+    serviceEntryId: string | null,
   ) {
     return {
       calibration_certificate: metadata.calibrationCertificate
@@ -118,8 +124,15 @@ export class ServiceEntryPresenter {
     };
   }
 
-  private buildDownloadUrl(fileId: string, serviceEntryId: string): string {
+  private buildDownloadUrl(
+    fileId: string,
+    serviceEntryId: string | null,
+  ): string {
     const url = `${this.apiBaseUrl}/v1/files/${fileId}/download`;
+    if (!serviceEntryId) {
+      return url;
+    }
+
     return `${url}?service_entry_id=${encodeURIComponent(serviceEntryId)}`;
   }
 

@@ -21,7 +21,9 @@ export class ServiceEntryPublicController {
       GetServiceEntryByTokenQuery.create(token),
     );
 
-    const data = this.presenter.toViewResponse(result);
+    const data = this.presenter.toViewResponse(result, {
+      trackDownload: true,
+    });
 
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
