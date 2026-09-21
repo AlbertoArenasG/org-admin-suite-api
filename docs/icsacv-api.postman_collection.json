@@ -1798,7 +1798,7 @@
     },
     {
       "name": "Customer Service Records",
-      "description": "Listado administrativo. La estrategia sort_strategy=work_priority es opcional; sort[] explicito tiene precedencia.",
+      "description": "Contrato administrativo segmentado. La estrategia sort_strategy=work_priority es opcional; sort[] explicito tiene precedencia.",
       "item": [
         {
           "name": "List Work Priority",
@@ -1848,6 +1848,130 @@
               ]
             },
             "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sort_strategy."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Minimum Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"service_type_code\": \"CALIBRATION\",\n  \"requested_at\": \"2026-09-21\",\n  \"observations\": null,\n  \"customer\": {\n    \"customer_id\": \"{{CUSTOMER_ID}}\",\n    \"customer_user_ids\": []\n  },\n  \"assets\": [\n    {\n      \"name\": \"Multimetro\",\n      \"identifier\": \"DMM6500\",\n      \"brand\": \"Keithley\",\n      \"model\": \"DMM6500\",\n      \"serial_number\": \"4642997\",\n      \"observations\": null\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records"]
+            },
+            "description": "Requiere customer_service_records.CREATE. La creacion no recibe customer_delivery, provider ni adjuntos."
+          },
+          "response": []
+        },
+        {
+          "name": "Replace Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"service_type_code\": \"CALIBRATION\",\n  \"requested_at\": \"2026-09-21\",\n  \"observations\": null,\n  \"operational_status\": \"IN_PROGRESS\"\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/details",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "details"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Replace Customer And Delivery",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": {\n    \"customer_id\": \"{{CUSTOMER_ID}}\",\n    \"customer_user_ids\": []\n  },\n  \"customer_delivery\": {\n    \"received_at\": \"2026-09-21\",\n    \"estimated_delivery_interval\": { \"years\": 0, \"months\": 0, \"weeks\": 1, \"days\": 0 },\n    \"estimated_delivery_at\": null,\n    \"delivered_to_customer_at\": null,\n    \"status_policy_id\": null,\n    \"notification_policy_id\": null\n  }\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/customer",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "customer"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Replace Provider",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider\": null\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/provider",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "provider"]
+            },
+            "description": "Enviar provider completo para asignar/actualizar; { provider: null } para removerlo."
+          },
+          "response": []
+        },
+        {
+          "name": "Replace Asset And Attachments",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Multimetro\",\n  \"identifier\": \"DMM6500\",\n  \"brand\": \"Keithley\",\n  \"model\": \"DMM6500\",\n  \"serial_number\": \"4642997\",\n  \"observations\": null,\n  \"intake_condition_file_ids\": [\"{{FILE_ID}}\"],\n  \"delivery_condition_file_ids\": [],\n  \"report_file_ids\": []\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/assets/{{ASSET_ID}}",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "assets", "{{ASSET_ID}}"]
+            },
+            "description": "Cada array contiene el listado completo de asociaciones activas deseadas."
+          },
+          "response": []
+        },
+        {
+          "name": "Replace Document Collection",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference_number\": \"COT-2026-001\",\n  \"file_ids\": [\"{{FILE_ID}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/documents/quotation",
+              "host": ["{{HOST}}"],
+              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "documents", "quotation"]
+            },
+            "description": "documentType: quotation, purchase-order, invoice u other-files. other-files acepta solo file_ids."
           },
           "response": []
         }

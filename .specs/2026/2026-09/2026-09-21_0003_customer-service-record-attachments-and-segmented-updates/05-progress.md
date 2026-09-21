@@ -66,3 +66,25 @@
   conservan el maximo de diez archivos y aplican 20 MiB por archivo.
 - Verificacion estatica ejecutada: `npm run build`, `npm run lint` y
   `git diff --check`.
+
+## 2026-09-21 - Slice 4 Started
+
+- Inicio autorizado de migracion idempotente, comandos operativos y artefactos
+  de integracion.
+- La persona usuaria ejecutara primero el dry-run y revisara su evidencia antes
+  de autorizar el apply. Ningun comando de migracion ha sido ejecutado aun.
+- La migracion, scripts, handoff y ejemplos Postman estan implementados;
+  `npm run build`, `npm run lint`, `git diff --check` y el parseo del JSON de
+  Postman finalizaron correctamente.
+
+## 2026-09-21 - Slice 4 Completed
+
+- La persona usuaria ejecuto
+  `npm run db:migrate:customer-service-record-attachments:dry-run`: 13
+  registros pendientes, sin estructuras historicas invalidas y sin escrituras.
+- La persona usuaria ejecuto
+  `npm run db:migrate:customer-service-record-attachments:apply`: actualizo 13
+  registros y la verificacion posterior reporto `Integrity check: OK` y
+  `Result: SUCCESS`.
+- La migracion confirmo que excluye `createdAt`, `updatedAt`, `created_by` y
+  `updated_by` de sus actualizaciones.

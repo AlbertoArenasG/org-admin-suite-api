@@ -31,9 +31,11 @@
 
 ## Phase 5. Migration And Documentation
 
-- [ ] Implementar migracion idempotente y handoff vigente.
-  Status: pending
-  Closure: dry-run/apply, integridad, comandos y contrato de integracion estan documentados.
+- [x] Implementar migracion idempotente y handoff vigente.
+  Status: done
+  Closure: dry-run/apply ejecutados por la persona usuaria sobre 13 registros;
+  la migracion reporto integridad `OK` sin estructuras invalidas ni cambios de
+  auditoria. Comandos y contrato de integracion documentados.
 
 ## Phase 6. Manual Validation And Formal Closure
 
