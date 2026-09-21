@@ -17,7 +17,9 @@ export class GetCustomerServiceRecordClientAccessListUseCase extends CustomerSer
       ...visibility,
     });
     return {
-      items: data.map(CustomerServiceRecordClientAccessMapper.toViewDto),
+      items: data.map((record) =>
+        CustomerServiceRecordClientAccessMapper.toViewDto(record),
+      ),
       total,
       page: input.page,
       perPage: input.perPage,

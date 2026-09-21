@@ -19,7 +19,9 @@ export class GetCustomerServiceRecordsUseCase {
   ): Promise<GetCustomerServiceRecordsResultDto> {
     const { data, total } = await this.readRepository.findAll(input);
     return {
-      items: data.map(CustomerServiceRecordMapper.toViewDto),
+      items: data.map((record) =>
+        CustomerServiceRecordMapper.toViewDto(record),
+      ),
       total,
       page: input.page,
       perPage: input.perPage,

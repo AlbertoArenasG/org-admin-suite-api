@@ -27,11 +27,11 @@ export class CustomerServiceRecordMapper {
         model: asset.model,
         serialNumber: asset.serialNumber,
         observations: asset.observations,
-        intakeConditionFiles: this.toAttachments(asset.intakeConditionFiles!),
+        intakeConditionFiles: this.toAttachments(asset.intakeConditionFiles),
         deliveryConditionFiles: this.toAttachments(
-          asset.deliveryConditionFiles!,
+          asset.deliveryConditionFiles,
         ),
-        reports: this.toAttachments(asset.reports!),
+        reports: this.toAttachments(asset.reports),
       })),
       customerDelivery: record.customerDelivery,
       provider: record.provider,
@@ -56,9 +56,9 @@ export class CustomerServiceRecordMapper {
   }
 
   private static toAttachments(
-    collection: CustomerServiceRecordFileAttachmentCollectionProps,
+    collection?: CustomerServiceRecordFileAttachmentCollectionProps,
   ) {
-    return collection.files.map((file) => ({
+    return (collection?.files ?? []).map((file) => ({
       fileId: file.fileId,
       originalName: file.originalName,
       mimeType: file.mimeType,
