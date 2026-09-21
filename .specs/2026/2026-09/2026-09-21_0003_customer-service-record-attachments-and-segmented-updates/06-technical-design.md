@@ -355,7 +355,7 @@ git diff --check
 | barrel de servicios CSR | exportacion | `src/internal/application/services/customer-service-record/index.ts` | Exporta `CustomerServiceRecordAttachmentReconciliationService`. | modify |
 | barrel de casos de uso CSR | exportacion | `src/internal/application/use-cases/customer-service-record/index.ts` | Exporta los cinco casos de uso nuevos y deja de exportar `UpdateCustomerServiceRecordUseCase`. | modify |
 | `GlobalCqrsModule` | composicion Nest/CQRS | `src/modules/global-cqrs.module.ts` | Registra los cinco handlers nuevos y elimina `UpdateCustomerServiceRecordHandler`. | modify |
-| permisos, capabilities, roles, seeds e indices | autorizacion/datos | N/A | No aplica: reutiliza `customer_service_records:CREATE|UPDATE|READ`; no requiere indice ni seed. | not_applicable |
+| catalogo de permisos y endpoints | documento vivo | `docs/authorization/feature-permission-catalog.md` | Actualiza rutas segmentadas de Customer Service Records y el contrato transversal vigente de Files; reutiliza permisos existentes, sin seed ni indice. | modify |
 | handoff CSR attachments | documento vivo | `docs/frontend/customer-service-record-attachments-handoff.md` | Informa contratos a aplicaciones cliente, sin progreso ni checks. | new |
 | Postman | contrato operativo | `docs/icsacv-api.postman_collection.json` | Registra endpoints y ejemplos publicados. | modify |
 | validacion | verificacion | N/A | Build/lint aplicables y validacion manual de la persona usuaria; sin pruebas unitarias. | modify |

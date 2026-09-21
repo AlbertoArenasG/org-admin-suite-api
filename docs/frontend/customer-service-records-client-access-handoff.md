@@ -130,15 +130,18 @@ Cada fila del listado:
     "code": "IN_PROGRESS",
     "name": "En proceso",
     "name_key": "CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.IN_PROGRESS"
-  }
+  },
+  "attachments_count": 0
 }
 ```
 
 Detalle contiene la misma estructura y agrega `created_at` (timestamp ISO) y
-`customer.users: [{ user_id, name, email }]`. El folio es string con padding
-minimo de cuatro digitos. Las fechas del compromiso son date-only o null.
-Observaciones son string o null. Los nombres de Cliente y tipo son snapshots
-de negocio, no enums traducibles.
+`customer.users: [{ user_id, name, email }]`, adjuntos activos de los assets y
+las colecciones documentales visibles. Cada adjunto incluye sus URLs de descarga
+y previsualizacion; el contrato exacto esta en el [handoff de adjuntos](customer-service-record-attachments-handoff.md).
+El folio es string con padding minimo de cuatro digitos. Las fechas del
+compromiso son date-only o null. Observaciones son string o null. Los nombres de
+Cliente y tipo son snapshots de negocio, no enums traducibles.
 
 `customer_delivery` expone el compromiso completo: fechas, intervalo,
 referencias de politicas, `status_materialization` y

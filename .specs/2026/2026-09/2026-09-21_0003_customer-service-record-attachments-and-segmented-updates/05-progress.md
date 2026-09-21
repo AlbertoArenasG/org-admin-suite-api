@@ -88,3 +88,19 @@
   `Result: SUCCESS`.
 - La migracion confirmo que excluye `createdAt`, `updatedAt`, `created_by` y
   `updated_by` de sus actualizaciones.
+
+## 2026-09-21 - Slice 5 Completed And Spec Closed
+
+- La persona usuaria confirmo la validacion manual de los escenarios acordados:
+  creacion minima, actualizaciones segmentadas, reconciliacion de adjuntos,
+  conteos, proyecciones administrativa y Client Access, y entrega con descarga
+  o previsualizacion.
+- Las verificaciones tecnicas vigentes finalizaron correctamente: `npm run
+  build`, `npm run lint`, `git diff --check` y parseo de la coleccion Postman.
+- Todas las fases estan completadas; la spec queda formalmente `completed`.
+
+## 2026-09-21 - Living Documentation Alignment
+
+- Se alinearon los contratos vivos de Client Access y el catalogo de permisos
+  con adjuntos, descarga/previsualizacion y los cinco `PUT` segmentados. La
+  spec conserva su estado `completed`.

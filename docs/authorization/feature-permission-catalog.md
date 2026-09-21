@@ -448,7 +448,11 @@ Endpoints existentes:
   - nota: metadata técnica de archivo, sin UI funcional propia; en el modelo objetivo conserva `JwtAuthGuard` y pierde `PermissionsGuard`
 - `GET /v1/files/:fileId/download`
   - estado: capability transversal
-  - nota: descarga compartida entre contextos públicos y autenticados; por ahora no se modifica ni se endurece con guard en esta spec
+  - nota: descarga compartida entre contextos públicos y autenticados; no tiene guard activo y acepta `disposition=attachment|inline` sin endurecer su frontera actual
+
+Las cargas `POST /v1/files` y `POST /v1/files/public` admiten como maximo diez
+archivos por request y 20 MiB por archivo. No existe allowlist de MIME o
+extension.
 
 Decisión de esta spec:
 
@@ -734,7 +738,7 @@ Endpoints actuales:
 - `POST /v1/customer-service-records`
   - operacion: `CREATE`
   - acceso actual: autenticado
-  - nota: crea un registro con consecutivo transaccional, snapshots de Cliente, Usuarios, Proveedor y tipo de servicio, y materializaciones iniciales.
+  - nota: crea el contrato minimo con consecutivo transaccional, snapshots de Cliente, Usuarios y tipo de servicio; inicializa provider, adjuntos y conteos sin requerirlos en el body.
 - `GET /v1/customer-service-records`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -743,10 +747,26 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: devuelve el detalle, ambos compromisos y sus materializaciones.
-- `PATCH /v1/customer-service-records/:recordId`
+- `PUT /v1/customer-service-records/:recordId/details`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: PATCH por campos presentes; Cliente y activos reemplazan sus bloques y `provider: null` limpia el bloque opcional.
+  - nota: reemplaza details completos.
+- `PUT /v1/customer-service-records/:recordId/customer`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: reemplaza customer y customer delivery completos.
+- `PUT /v1/customer-service-records/:recordId/provider`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: reemplaza provider completo o lo remueve con `provider: null`.
+- `PUT /v1/customer-service-records/:recordId/assets/:assetId`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: reemplaza un activo y sus tres colecciones de adjuntos.
+- `PUT /v1/customer-service-records/:recordId/documents/:documentType`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: reemplaza quotation, purchase order, invoice u other files segun el tipo de documento.
 - `DELETE /v1/customer-service-records/:recordId`
   - operacion: `DELETE`
   - acceso actual: autenticado
@@ -761,6 +781,10 @@ Endpoints actuales:
   - nota: lookup local de tipos activos para el módulo.
 
 El refresh técnico `POST /v1/internal-jobs/customer-service-records/materializations/refresh` no usa permisos del backoffice: está protegido por `InternalJobsAuthGuard`.
+
+El `PATCH /v1/customer-service-records/:recordId` fue retirado. El contrato
+detallado de adjuntos y actualizaciones segmentadas vive en el
+[handoff de adjuntos](../frontend/customer-service-record-attachments-handoff.md).
 
 ### `customer_service_records_client_access`
 

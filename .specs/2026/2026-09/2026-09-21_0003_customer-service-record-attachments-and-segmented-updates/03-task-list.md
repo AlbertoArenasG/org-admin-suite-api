@@ -17,14 +17,14 @@
 
 ## Phase 3. Segmented Write Operations
 
-- [ ] Reemplazar el PATCH amplio por POST minimo y cinco PUT cohesionados.
+- [x] Reemplazar el PATCH amplio por POST minimo y cinco PUT cohesionados.
   Status: done
   Closure: rutas, DTOs, CQRS y casos de uso aplican autorizacion, auditoria y
   materializaciones correspondientes; el PATCH amplio fue retirado.
 
 ## Phase 4. Reads And Generic File Contract
 
-- [ ] Exponer conteos y adjuntos activos segun visibilidad, y extender descarga/carga generica.
+- [x] Exponer conteos y adjuntos activos segun visibilidad, y extender descarga/carga generica.
   Status: done
   Closure: admin y Client Access cumplen sus proyecciones; descarga soporta
   disposicion aprobada y carga aplica limites.
@@ -39,6 +39,7 @@
 
 ## Phase 6. Manual Validation And Formal Closure
 
-- [ ] Ejecutar validacion tecnica y manual acordada.
-  Status: pending
-  Closure: persona usuaria confirma escenarios manuales y se registra evidencia.
+- [x] Ejecutar validacion tecnica y manual acordada.
+  Status: done
+  Closure: verificaciones estaticas completadas y la persona usuaria confirmo
+  la validacion manual de los escenarios definidos para esta iniciativa.
