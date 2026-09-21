@@ -144,7 +144,7 @@ modificado debe especificar:
 | Ubicacion       | Ruta o directorio exacto donde vivira.                                                                                                                                                         |
 | Responsabilidad | Una sola responsabilidad y resultado esperado.                                                                                                                                                 |
 | Dependencias    | Puertos, modelos, servicios, eventos o modulos que consume o registra.                                                                                                                         |
-| Estado          | `new`, `modify`, `reuse` o `not_applicable`.                                                                                                                                                   |
+| Estado          | `new`, `modify`, `reuse`, `remove` o `not_applicable`.                                                                                                                                         |
 
 No se aceptan entradas ambiguas como “agregar repositorio” o “crear DTO”. Debe
 indicarse el nombre y la ruta esperados, por ejemplo:
@@ -157,6 +157,10 @@ Responsabilidad: define consultas visibles del aggregate Example sin exponer
 persistencia.
 Estado: new
 ```
+
+`remove` se usa cuando un artefacto existente se retira como parte del alcance
+aprobado. Debe conservar su nombre, ubicacion, motivo y reemplazo, si existe;
+no se usa para ocultar limpieza diferida ni compatibilidad pendiente.
 
 El registro debe cubrir expresamente los siguientes grupos. Si alguno no
 aplica, se registra con `not_applicable` y una razon; no se omite.
