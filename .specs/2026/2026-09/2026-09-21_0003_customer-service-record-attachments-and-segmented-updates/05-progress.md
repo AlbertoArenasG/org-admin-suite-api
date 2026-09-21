@@ -49,3 +49,20 @@
 - Se retiro el PATCH amplio, sus DTOs, adaptador, handler y caso de uso.
 - Verificacion estatica ejecutada: `npm run build`, `npm run lint` y
   `git diff --check`.
+
+## 2026-09-21 - Slice 3 Started
+
+- Inicio autorizado de proyecciones de lectura y contrato generico de entrega
+  de archivos.
+
+## 2026-09-21 - Slice 3 Completed
+
+- Los listados administrativo y Client Access exponen solo
+  `attachments_count`; sus detalles exponen snapshots activos con URLs HTTP de
+  descarga y previsualizacion.
+- Client Access conserva su frontera de visibilidad: no entrega provider,
+  historial, auditoria, bucket ni storage key.
+- La descarga generica acepta `disposition=attachment|inline`; ambas cargas
+  conservan el maximo de diez archivos y aplican 20 MiB por archivo.
+- Verificacion estatica ejecutada: `npm run build`, `npm run lint` y
+  `git diff --check`.

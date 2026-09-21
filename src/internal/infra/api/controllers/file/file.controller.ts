@@ -20,6 +20,7 @@ import { Response } from 'express';
 import { memoryStorage } from 'multer';
 
 import { CurrentUser } from '@src/common/decorators';
+import { DownloadFileRequestDto } from '@infra/api/dto';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import { FilePresenter } from '@infra/api/presenters/file';
 import { UploadFilesCommandAdapter } from '@infra/cqrs/commands';
@@ -27,6 +28,8 @@ import { DownloadFileQuery, GetFileByIdQuery } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
+
+const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 
 @Controller('v1/files')
 export class FileController {
@@ -42,6 +45,7 @@ export class FileController {
   @UseInterceptors(
     FilesInterceptor('files', 10, {
       storage: memoryStorage(),
+      limits: { fileSize: MAX_FILE_SIZE_BYTES },
     }),
   )
   @HttpCode(HttpStatus.CREATED)
@@ -63,6 +67,7 @@ export class FileController {
   @UseInterceptors(
     FilesInterceptor('files', 10, {
       storage: memoryStorage(),
+      limits: { fileSize: MAX_FILE_SIZE_BYTES },
     }),
   )
   @HttpCode(HttpStatus.CREATED)
@@ -138,20 +143,20 @@ export class FileController {
   @HttpCode(HttpStatus.OK)
   async download(
     @Param('fileId') fileId: string,
-    @Query('service_entry_id') serviceEntryId: string | undefined,
+    @Query() query: DownloadFileRequestDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.queryBus.execute(
       DownloadFileQuery.create({
         fileId,
-        serviceEntryId: serviceEntryId ?? null,
+        serviceEntryId: query.service_entry_id ?? null,
       }),
     );
 
     res.set({
       'Content-Type': result.mimeType,
       'Content-Length': result.size,
-      'Content-Disposition': `attachment; filename="${encodeURIComponent(result.filename)}"`,
+      'Content-Disposition': `${query.normalizedDisposition}; filename*=UTF-8''${encodeURIComponent(result.filename)}`,
     });
 
     return new StreamableFile(result.stream);

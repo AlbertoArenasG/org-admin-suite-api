@@ -1,11 +1,51 @@
 import { Injectable } from '@nestjs/common';
+
 import { CustomerServiceRecordViewDto } from '@application/dto';
+import { EnvService } from '@infra/env';
 import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class CustomerServiceRecordPresenter {
-  constructor(private readonly enumNameService: EnumNameService) {}
+  private readonly apiBaseUrl: string;
+
+  constructor(
+    private readonly enumNameService: EnumNameService,
+    private readonly envService: EnvService,
+  ) {
+    this.apiBaseUrl = this.envService.get('API_BASE_URL').replace(/\/$/, '');
+  }
+
   toViewResponse(result: CustomerServiceRecordViewDto) {
+    return {
+      ...this.toListResponse(result),
+      assets: result.assets.map((asset) => ({
+        asset_id: asset.assetId,
+        name: asset.name,
+        identifier: asset.identifier,
+        brand: asset.brand,
+        model: asset.model,
+        serial_number: asset.serialNumber,
+        observations: asset.observations,
+        intake_condition_files: this.toAttachments(asset.intakeConditionFiles),
+        delivery_condition_files: this.toAttachments(
+          asset.deliveryConditionFiles,
+        ),
+        reports: this.toAttachments(asset.reports),
+      })),
+      quotation: this.toDocument(result.quotation),
+      purchase_order: this.toDocument(result.purchaseOrder),
+      invoice: this.toDocument(result.invoice),
+      other_files: this.toAttachments(result.otherFiles),
+      created_at: result.createdAt,
+      updated_at: result.updatedAt,
+    };
+  }
+
+  toCollection(results: CustomerServiceRecordViewDto[]) {
+    return results.map((result) => this.toListResponse(result));
+  }
+
+  private toListResponse(result: CustomerServiceRecordViewDto) {
     return {
       customer_service_record_id: result.id,
       service_number: result.serviceNumber,
@@ -36,6 +76,7 @@ export class CustomerServiceRecordPresenter {
       })),
       customer_delivery: this.customerDelivery(result.customerDelivery),
       provider: result.provider ? this.provider(result.provider) : null,
+      attachments_count: result.attachmentsCount,
       operational_status: this.localized(
         'OPERATIONAL_STATUS',
         result.operationalStatus,
@@ -44,9 +85,48 @@ export class CustomerServiceRecordPresenter {
       updated_at: result.updatedAt,
     };
   }
-  toCollection(results: CustomerServiceRecordViewDto[]) {
-    return results.map((result) => this.toViewResponse(result));
+
+  private toAttachments(
+    files: Array<{
+      fileId: string;
+      originalName: string;
+      mimeType: string;
+      size: number;
+    }>,
+  ) {
+    return files.map((file) => ({
+      file_id: file.fileId,
+      original_name: file.originalName,
+      mime_type: file.mimeType,
+      size: file.size,
+      download_url: this.buildDownloadUrl(file.fileId),
+      preview_url: this.buildPreviewUrl(file.fileId),
+    }));
   }
+
+  private toDocument(value: {
+    referenceNumber: string | null;
+    files: Array<{
+      fileId: string;
+      originalName: string;
+      mimeType: string;
+      size: number;
+    }>;
+  }) {
+    return {
+      reference_number: value.referenceNumber,
+      files: this.toAttachments(value.files),
+    };
+  }
+
+  private buildDownloadUrl(fileId: string): string {
+    return `${this.apiBaseUrl}/v1/files/${fileId}/download`;
+  }
+
+  private buildPreviewUrl(fileId: string): string {
+    return `${this.buildDownloadUrl(fileId)}?disposition=inline`;
+  }
+
   private customerDelivery(value: any) {
     return {
       received_at: value.receivedAt,
@@ -61,10 +141,12 @@ export class CustomerServiceRecordPresenter {
       ),
     };
   }
+
   private provider(value: any) {
     return {
       provider_id: value.providerId,
       name: value.providerName,
+      work_order_reference: value.workOrderReference,
       delivered_to_provider_at: value.deliveredToProviderAt,
       estimated_return_interval: value.estimatedReturnInterval,
       estimated_return_at: value.estimatedReturnAt,
@@ -87,6 +169,7 @@ export class CustomerServiceRecordPresenter {
       ),
     };
   }
+
   private materialization(value: any) {
     if (!value) return null;
     return {
@@ -101,6 +184,7 @@ export class CustomerServiceRecordPresenter {
       effective_start_date: value.effectiveStartDate,
     };
   }
+
   private notifications(value: any) {
     if (!value) return null;
     return {
@@ -115,6 +199,7 @@ export class CustomerServiceRecordPresenter {
       })),
     };
   }
+
   private localized(group: string, code: string) {
     const nameKey = `CUSTOMER_SERVICE_RECORD.${group}.${code}`;
     return {

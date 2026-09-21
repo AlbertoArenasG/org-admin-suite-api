@@ -6,6 +6,10 @@ import {
   CustomerServiceRecordCustomerDeliveryProps,
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
+import {
+  CustomerServiceRecordDocumentViewDto,
+  CustomerServiceRecordFileAttachmentViewDto,
+} from '@application/dto/customer-service-record';
 
 import {
   CustomerServiceRecordClientAccessSortField,
@@ -40,6 +44,9 @@ export interface CustomerServiceRecordClientAccessAssetDto {
   model: string;
   serialNumber: string;
   observations: string | null;
+  intakeConditionFiles: CustomerServiceRecordFileAttachmentViewDto[];
+  deliveryConditionFiles: CustomerServiceRecordFileAttachmentViewDto[];
+  reports: CustomerServiceRecordFileAttachmentViewDto[];
 }
 export interface CustomerServiceRecordClientAccessViewDto {
   id: string;
@@ -55,6 +62,11 @@ export interface CustomerServiceRecordClientAccessViewDto {
   assets: CustomerServiceRecordClientAccessAssetDto[];
   customerDelivery: CustomerServiceRecordCustomerDeliveryProps;
   operationalStatus: CustomerServiceRecordOperationalStatus;
+  attachmentsCount: number;
+  quotation: CustomerServiceRecordDocumentViewDto;
+  purchaseOrder: CustomerServiceRecordDocumentViewDto;
+  invoice: CustomerServiceRecordDocumentViewDto;
+  otherFiles: CustomerServiceRecordFileAttachmentViewDto[];
   createdAt: Date;
 }
 export type GetCustomerServiceRecordClientAccessListResultDto =

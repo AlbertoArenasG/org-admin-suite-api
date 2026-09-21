@@ -21,6 +21,26 @@ export interface CustomerServiceRecordAssetInputDto {
   observations: string | null;
 }
 
+export interface CustomerServiceRecordFileAttachmentViewDto {
+  fileId: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+}
+
+export interface CustomerServiceRecordDocumentViewDto {
+  referenceNumber: string | null;
+  files: CustomerServiceRecordFileAttachmentViewDto[];
+}
+
+export interface CustomerServiceRecordAssetViewDto
+  extends CustomerServiceRecordAssetInputDto {
+  assetId: string;
+  intakeConditionFiles: CustomerServiceRecordFileAttachmentViewDto[];
+  deliveryConditionFiles: CustomerServiceRecordFileAttachmentViewDto[];
+  reports: CustomerServiceRecordFileAttachmentViewDto[];
+}
+
 export interface CustomerServiceRecordCustomerInputDto {
   customerId: string;
   customerUserIds: string[];
@@ -162,10 +182,15 @@ export interface CustomerServiceRecordViewDto {
     customerName: string;
     users: Array<{ userId: string; name: string; email: string }>;
   };
-  assets: Array<CustomerServiceRecordAssetInputDto & { assetId: string }>;
+  assets: CustomerServiceRecordAssetViewDto[];
   customerDelivery: any;
   provider: any;
   operationalStatus: CustomerServiceRecordOperationalStatus;
+  attachmentsCount: number;
+  quotation: CustomerServiceRecordDocumentViewDto;
+  purchaseOrder: CustomerServiceRecordDocumentViewDto;
+  invoice: CustomerServiceRecordDocumentViewDto;
+  otherFiles: CustomerServiceRecordFileAttachmentViewDto[];
   createdAt: Date;
   updatedAt: Date | null;
 }

@@ -1,19 +1,28 @@
 import { Injectable } from '@nestjs/common';
+
 import {
-  CustomerServiceRecordClientAccessViewDto,
   CustomerServiceRecordClientAccessCustomerOptionDto,
   CustomerServiceRecordClientAccessServiceTypeOptionDto,
+  CustomerServiceRecordClientAccessViewDto,
 } from '@application/dto';
 import {
   CustomerServiceRecordCustomerDeliveryProps,
   CustomerServiceRecordNotificationMaterializationProps,
   CustomerServiceRecordStatusMaterializationProps,
 } from '@domain/entities';
+import { EnvService } from '@infra/env';
 import { EnumNameService } from '@infra/i18n/services';
 
 @Injectable()
 export class CustomerServiceRecordClientAccessPresenter {
-  constructor(private readonly enumNameService: EnumNameService) {}
+  private readonly apiBaseUrl: string;
+
+  constructor(
+    private readonly enumNameService: EnumNameService,
+    private readonly envService: EnvService,
+  ) {
+    this.apiBaseUrl = this.envService.get('API_BASE_URL').replace(/\/$/, '');
+  }
 
   toListResponse(value: CustomerServiceRecordClientAccessViewDto) {
     return {
@@ -39,15 +48,18 @@ export class CustomerServiceRecordClientAccessPresenter {
         observations: asset.observations,
       })),
       customer_delivery: this.customerDelivery(value.customerDelivery),
+      attachments_count: value.attachmentsCount,
       operational_status: this.localized(
         'OPERATIONAL_STATUS',
         value.operationalStatus,
       ),
     };
   }
+
   toCollection(values: CustomerServiceRecordClientAccessViewDto[]) {
     return values.map((value) => this.toListResponse(value));
   }
+
   toViewResponse(value: CustomerServiceRecordClientAccessViewDto) {
     const result = this.toListResponse(value);
     return {
@@ -60,9 +72,28 @@ export class CustomerServiceRecordClientAccessPresenter {
           email: user.email,
         })),
       },
+      assets: value.assets.map((asset) => ({
+        asset_id: asset.assetId,
+        name: asset.name,
+        identifier: asset.identifier,
+        brand: asset.brand,
+        model: asset.model,
+        serial_number: asset.serialNumber,
+        observations: asset.observations,
+        intake_condition_files: this.toAttachments(asset.intakeConditionFiles),
+        delivery_condition_files: this.toAttachments(
+          asset.deliveryConditionFiles,
+        ),
+        reports: this.toAttachments(asset.reports),
+      })),
+      quotation: this.toDocument(value.quotation),
+      purchase_order: this.toDocument(value.purchaseOrder),
+      invoice: this.toDocument(value.invoice),
+      other_files: this.toAttachments(value.otherFiles),
       created_at: value.createdAt,
     };
   }
+
   toCustomerOptions(
     values: CustomerServiceRecordClientAccessCustomerOptionDto[],
   ) {
@@ -71,10 +102,52 @@ export class CustomerServiceRecordClientAccessPresenter {
       company_name: value.name,
     }));
   }
+
   toServiceTypeOptions(
     values: CustomerServiceRecordClientAccessServiceTypeOptionDto[],
   ) {
     return values.map((value) => ({ code: value.code, name: value.name }));
+  }
+
+  private toAttachments(
+    files: Array<{
+      fileId: string;
+      originalName: string;
+      mimeType: string;
+      size: number;
+    }>,
+  ) {
+    return files.map((file) => ({
+      file_id: file.fileId,
+      original_name: file.originalName,
+      mime_type: file.mimeType,
+      size: file.size,
+      download_url: this.buildDownloadUrl(file.fileId),
+      preview_url: this.buildPreviewUrl(file.fileId),
+    }));
+  }
+
+  private toDocument(value: {
+    referenceNumber: string | null;
+    files: Array<{
+      fileId: string;
+      originalName: string;
+      mimeType: string;
+      size: number;
+    }>;
+  }) {
+    return {
+      reference_number: value.referenceNumber,
+      files: this.toAttachments(value.files),
+    };
+  }
+
+  private buildDownloadUrl(fileId: string): string {
+    return `${this.apiBaseUrl}/v1/files/${fileId}/download`;
+  }
+
+  private buildPreviewUrl(fileId: string): string {
+    return `${this.buildDownloadUrl(fileId)}?disposition=inline`;
   }
 
   private customerDelivery(value: CustomerServiceRecordCustomerDeliveryProps) {

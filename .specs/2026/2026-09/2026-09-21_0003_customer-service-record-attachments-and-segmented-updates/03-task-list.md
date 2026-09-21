@@ -25,7 +25,7 @@
 ## Phase 4. Reads And Generic File Contract
 
 - [ ] Exponer conteos y adjuntos activos segun visibilidad, y extender descarga/carga generica.
-  Status: pending
+  Status: done
   Closure: admin y Client Access cumplen sus proyecciones; descarga soporta
   disposicion aprobada y carga aplica limites.
 
