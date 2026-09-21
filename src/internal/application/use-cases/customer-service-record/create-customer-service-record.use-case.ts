@@ -8,7 +8,11 @@ import {
   CustomerServiceRecordInputPreparationService,
   CustomerServiceRecordTechnicalMaterializationsRefresherService,
 } from '@application/services';
-import { CustomerServiceRecord } from '@domain/entities';
+import {
+  CustomerServiceRecord,
+  CustomerServiceRecordCustomerDeliveryProps,
+  CustomerServiceRecordOperationalStatus,
+} from '@domain/entities';
 import {
   ICustomerServiceRecordReadRepository,
   ICustomerServiceRecordReadRepositoryToken,
@@ -21,10 +25,7 @@ import {
   ITransactionalExecutor,
   ITransactionalExecutorToken,
 } from '@domain/ports/services/transactional-executor';
-import {
-  assertOperationalStatus,
-  normalizeAssets,
-} from './customer-service-record.shared';
+import { normalizeAssets } from './customer-service-record.shared';
 
 @Injectable()
 export class CreateCustomerServiceRecordUseCase {
@@ -43,13 +44,10 @@ export class CreateCustomerServiceRecordUseCase {
   async execute(
     input: CreateCustomerServiceRecordDto,
   ): Promise<CreateCustomerServiceRecordResultDto> {
-    const [serviceType, customer, customerDelivery, provider] =
-      await Promise.all([
-        this.inputPreparation.prepareServiceType(input.serviceTypeCode),
-        this.inputPreparation.prepareCustomer(input.customer),
-        this.inputPreparation.prepareCustomerDelivery(input.customerDelivery),
-        this.inputPreparation.prepareProvider(input.provider),
-      ]);
+    const [serviceType, customer] = await Promise.all([
+      this.inputPreparation.prepareServiceType(input.serviceTypeCode),
+      this.inputPreparation.prepareCustomer(input.customer),
+    ]);
     const record = await this.transactionalExecutor.execute(async () => {
       const serviceNumber = await this.sequenceCounterRepository.nextValue(
         'customer_service_records',
@@ -64,9 +62,9 @@ export class CreateCustomerServiceRecordUseCase {
         observations: input.observations?.trim() || null,
         customer,
         assets: normalizeAssets(input.assets),
-        customerDelivery,
-        provider,
-        operationalStatus: assertOperationalStatus(input.operationalStatus),
+        customerDelivery: this.createEmptyCustomerDelivery(),
+        provider: null,
+        operationalStatus: CustomerServiceRecordOperationalStatus.PENDING,
         createdBy: input.actorUserId,
         updatedBy: input.actorUserId,
         createdAt: new Date(),
@@ -86,5 +84,18 @@ export class CreateCustomerServiceRecordUseCase {
     });
     const { data } = await this.readRepository.findById(record.id);
     return CustomerServiceRecordMapper.toViewDto(data!);
+  }
+
+  private createEmptyCustomerDelivery(): CustomerServiceRecordCustomerDeliveryProps {
+    return {
+      receivedAt: null,
+      estimatedDeliveryInterval: { years: 0, months: 0, weeks: 0, days: 0 },
+      estimatedDeliveryAt: null,
+      deliveredToCustomerAt: null,
+      statusPolicyId: null,
+      notificationPolicyId: null,
+      statusMaterialization: null,
+      notificationMaterialization: null,
+    };
   }
 }

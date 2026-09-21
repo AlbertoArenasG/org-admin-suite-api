@@ -6,18 +6,25 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { AuthenticatedUserContextDto } from '@application/dto';
+import {
+  AuthenticatedUserContextDto,
+  CustomerServiceRecordDocumentType,
+} from '@application/dto';
 import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import {
   CreateCustomerServiceRecordRequestDto,
   GetCustomerServiceRecordsRequestDto,
-  UpdateCustomerServiceRecordRequestDto,
+  UpdateCustomerServiceRecordAssetRequestDto,
+  UpdateCustomerServiceRecordCustomerRequestDto,
+  UpdateCustomerServiceRecordDetailsRequestDto,
+  UpdateCustomerServiceRecordDocumentRequestDto,
+  UpdateCustomerServiceRecordProviderRequestDto,
 } from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { CustomerServiceRecordPresenter } from '@infra/api/presenters/customer-service-record';
@@ -25,7 +32,11 @@ import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
   CreateCustomerServiceRecordCommandAdapter,
   DeleteCustomerServiceRecordCommandAdapter,
-  UpdateCustomerServiceRecordCommandAdapter,
+  UpdateCustomerServiceRecordAssetCommandAdapter,
+  UpdateCustomerServiceRecordCustomerCommandAdapter,
+  UpdateCustomerServiceRecordDetailsCommandAdapter,
+  UpdateCustomerServiceRecordDocumentCommandAdapter,
+  UpdateCustomerServiceRecordProviderCommandAdapter,
 } from '@infra/cqrs/commands';
 import {
   GetCustomerServiceRecordByIdQuery,
@@ -81,17 +92,83 @@ export class CustomerServiceRecordController {
     );
     return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
   }
-  @Patch(':recordId')
+  @Put(':recordId/details')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('customer_service_records', 'UPDATE')
-  async update(
+  async updateDetails(
     @CurrentUser() user: AuthenticatedUserContextDto,
     @Param('recordId') recordId: string,
-    @Body() body: UpdateCustomerServiceRecordRequestDto,
+    @Body() body: UpdateCustomerServiceRecordDetailsRequestDto,
   ) {
     const result = await this.commandBus.execute(
-      UpdateCustomerServiceRecordCommandAdapter.create(
+      UpdateCustomerServiceRecordDetailsCommandAdapter.create(
         body.toDomain(recordId, user.userId),
+      ),
+    );
+    return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
+  }
+  @Put(':recordId/customer')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'UPDATE')
+  async updateCustomer(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+    @Body() body: UpdateCustomerServiceRecordCustomerRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      UpdateCustomerServiceRecordCustomerCommandAdapter.create(
+        body.toDomain(recordId, user.userId),
+      ),
+    );
+    return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
+  }
+  @Put(':recordId/provider')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'UPDATE')
+  async updateProvider(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+    @Body() body: UpdateCustomerServiceRecordProviderRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      UpdateCustomerServiceRecordProviderCommandAdapter.create(
+        body.toDomain(recordId, user.userId),
+      ),
+    );
+    return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
+  }
+  @Put(':recordId/assets/:assetId')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'UPDATE')
+  async updateAsset(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+    @Param('assetId') assetId: string,
+    @Body() body: UpdateCustomerServiceRecordAssetRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      UpdateCustomerServiceRecordAssetCommandAdapter.create(
+        body.toDomain(recordId, assetId, user.userId),
+      ),
+    );
+    return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
+  }
+  @Put(':recordId/documents/:documentType')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'UPDATE')
+  async updateDocument(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+    @Param('documentType') documentType: string,
+    @Body() body: UpdateCustomerServiceRecordDocumentRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      UpdateCustomerServiceRecordDocumentCommandAdapter.create(
+        body.toDomain(
+          recordId,
+          documentType as CustomerServiceRecordDocumentType,
+          user.userId,
+        ),
       ),
     );
     return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);

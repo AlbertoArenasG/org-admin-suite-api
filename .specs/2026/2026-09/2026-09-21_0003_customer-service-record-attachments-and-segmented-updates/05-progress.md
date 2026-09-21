@@ -34,3 +34,18 @@
 - Los repositorios estandar reutilizan el mapper comun, por lo que no requirieron
   cambios directos.
 - Verificacion estatica ejecutada: `npm run build` y `npm run lint`.
+
+## 2026-09-21 - Slice 2 Started
+
+- Inicio autorizado de contratos de escritura segmentados, CQRS, casos de uso y
+  retiro del PATCH amplio.
+
+## 2026-09-21 - Slice 2 Completed
+
+- El POST ahora recibe solo el contrato minimo e inicializa customer delivery,
+  provider, colecciones y conteos aprobados.
+- Se implementaron los PUT de details, customer, provider, asset y documents;
+  los dos ultimos reconcilian adjuntos y recalculan conteos materializados.
+- Se retiro el PATCH amplio, sus DTOs, adaptador, handler y caso de uso.
+- Verificacion estatica ejecutada: `npm run build`, `npm run lint` y
+  `git diff --check`.

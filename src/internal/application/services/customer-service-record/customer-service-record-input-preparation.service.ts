@@ -185,6 +185,7 @@ export class CustomerServiceRecordInputPreparationService {
     return {
       providerId: provider.id,
       providerName: provider.companyName,
+      workOrderReference: input.workOrderReference?.trim() || null,
       deliveredToProviderAt,
       estimatedReturnInterval: interval,
       estimatedReturnAt,

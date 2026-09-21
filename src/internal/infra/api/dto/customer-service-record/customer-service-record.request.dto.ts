@@ -2,18 +2,27 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsDefined,
   IsEnum,
   IsIn,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
   Min,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
+
 import {
   CreateCustomerServiceRecordDto,
+  CustomerServiceRecordDocumentType,
   GetCustomerServiceRecordsDto,
-  UpdateCustomerServiceRecordDto,
+  UpdateCustomerServiceRecordAssetDto,
+  UpdateCustomerServiceRecordCustomerDto,
+  UpdateCustomerServiceRecordDetailsDto,
+  UpdateCustomerServiceRecordDocumentDto,
+  UpdateCustomerServiceRecordProviderDto,
 } from '@application/dto';
 import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
 import {
@@ -23,141 +32,181 @@ import {
 import { PaginationRequestDto } from '@infra/api/dto/shared';
 
 class IntervalRequestDto {
-  @IsOptional() @Min(0) years?: number;
-  @IsOptional() @Min(0) months?: number;
-  @IsOptional() @Min(0) weeks?: number;
-  @IsOptional() @Min(0) days?: number;
+  @IsDefined() @IsInt() @Min(0) years!: number;
+  @IsDefined() @IsInt() @Min(0) months!: number;
+  @IsDefined() @IsInt() @Min(0) weeks!: number;
+  @IsDefined() @IsInt() @Min(0) days!: number;
+
   toDomain() {
     return {
-      years: Number(this.years ?? 0),
-      months: Number(this.months ?? 0),
-      weeks: Number(this.weeks ?? 0),
-      days: Number(this.days ?? 0),
+      years: this.years,
+      months: this.months,
+      weeks: this.weeks,
+      days: this.days,
     };
   }
 }
+
 class AssetRequestDto {
   @IsString() name!: string;
   @IsString() identifier!: string;
   @IsString() brand!: string;
   @IsString() model!: string;
   @IsString() serial_number!: string;
-  @IsOptional() @IsString() observations?: string | null;
-  toDomain() {
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  observations!: string | null;
+
+  toAssetDomain() {
     return {
       name: this.name,
       identifier: this.identifier,
       brand: this.brand,
       model: this.model,
       serialNumber: this.serial_number,
-      observations: this.observations ?? null,
+      observations: this.observations,
     };
   }
 }
+
 class CustomerRequestDto {
   @IsString() customer_id!: string;
-  @IsArray() @IsString({ each: true }) customer_user_ids!: string[];
+  @IsDefined()
+  @IsArray()
+  @IsString({ each: true })
+  customer_user_ids!: string[];
+
   toDomain() {
     return {
       customerId: this.customer_id,
-      customerUserIds: this.customer_user_ids ?? [],
+      customerUserIds: this.customer_user_ids,
     };
   }
 }
+
 class FollowUpRuleRequestDto {
+  @IsDefined()
   @ValidateNested()
   @Type(() => IntervalRequestDto)
   interval!: IntervalRequestDto;
-  @IsArray() @IsString({ each: true }) recipient_group_ids!: string[];
-  @IsArray() @IsString({ each: true }) cc_recipient_group_ids!: string[];
+  @IsDefined()
+  @IsArray()
+  @IsString({ each: true })
+  recipient_group_ids!: string[];
+  @IsDefined()
+  @IsArray()
+  @IsString({ each: true })
+  cc_recipient_group_ids!: string[];
+
   toDomain() {
     return {
       interval: this.interval.toDomain(),
-      recipientGroupIds: this.recipient_group_ids ?? [],
-      ccRecipientGroupIds: this.cc_recipient_group_ids ?? [],
+      recipientGroupIds: this.recipient_group_ids,
+      ccRecipientGroupIds: this.cc_recipient_group_ids,
     };
   }
 }
+
 class FollowUpRequestDto {
-  @IsBoolean() enabled!: boolean;
+  @IsDefined() @IsBoolean() enabled!: boolean;
+  @IsDefined()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => FollowUpRuleRequestDto)
   rules!: FollowUpRuleRequestDto[];
+
   toDomain() {
     return {
       enabled: this.enabled,
-      rules: (this.rules ?? []).map((rule) => rule.toDomain()),
+      rules: this.rules.map((rule) => rule.toDomain()),
     };
   }
 }
+
 class CustomerDeliveryRequestDto {
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) received_at?: string | null;
-  @IsOptional()
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  received_at!: string | null;
+  @IsDefined()
   @ValidateNested()
   @Type(() => IntervalRequestDto)
-  estimated_delivery_interval?: IntervalRequestDto;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) estimated_delivery_at?:
-    | string
-    | null;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) delivered_to_customer_at?:
-    | string
-    | null;
-  @IsOptional() @IsString() status_policy_id?: string | null;
-  @IsOptional() @IsString() notification_policy_id?: string | null;
+  estimated_delivery_interval!: IntervalRequestDto;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  estimated_delivery_at!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  delivered_to_customer_at!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  status_policy_id!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  notification_policy_id!: string | null;
+
   toDomain() {
     return {
-      ...(this.received_at === undefined
-        ? {}
-        : { receivedAt: this.received_at }),
-      ...(this.estimated_delivery_interval === undefined
-        ? {}
-        : {
-            estimatedDeliveryInterval:
-              this.estimated_delivery_interval.toDomain(),
-          }),
-      ...(this.estimated_delivery_at === undefined
-        ? {}
-        : { estimatedDeliveryAt: this.estimated_delivery_at }),
-      ...(this.delivered_to_customer_at === undefined
-        ? {}
-        : { deliveredToCustomerAt: this.delivered_to_customer_at }),
-      ...(this.status_policy_id === undefined
-        ? {}
-        : { statusPolicyId: this.status_policy_id }),
-      ...(this.notification_policy_id === undefined
-        ? {}
-        : { notificationPolicyId: this.notification_policy_id }),
+      receivedAt: this.received_at,
+      estimatedDeliveryInterval: this.estimated_delivery_interval.toDomain(),
+      estimatedDeliveryAt: this.estimated_delivery_at,
+      deliveredToCustomerAt: this.delivered_to_customer_at,
+      statusPolicyId: this.status_policy_id,
+      notificationPolicyId: this.notification_policy_id,
     };
   }
 }
+
 class ProviderRequestDto {
   @IsString() provider_id!: string;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) delivered_to_provider_at?:
-    | string
-    | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  work_order_reference!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  delivered_to_provider_at!: string | null;
+  @IsDefined()
   @ValidateNested()
   @Type(() => IntervalRequestDto)
   estimated_return_interval!: IntervalRequestDto;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) estimated_return_at?:
-    | string
-    | null;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) returned_from_provider_at?:
-    | string
-    | null;
-  @IsOptional() @IsString() status_policy_id?: string | null;
-  @IsOptional() @IsString() notification_policy_id?: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  estimated_return_at!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  returned_from_provider_at!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  status_policy_id!: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  notification_policy_id!: string | null;
+  @IsDefined()
   @ValidateNested()
   @Type(() => FollowUpRequestDto)
   follow_up!: FollowUpRequestDto;
+
   toDomain() {
     return {
       providerId: this.provider_id,
-      deliveredToProviderAt: this.delivered_to_provider_at ?? null,
+      workOrderReference: this.work_order_reference,
+      deliveredToProviderAt: this.delivered_to_provider_at,
       estimatedReturnInterval: this.estimated_return_interval.toDomain(),
-      estimatedReturnAt: this.estimated_return_at ?? null,
-      returnedFromProviderAt: this.returned_from_provider_at ?? null,
-      statusPolicyId: this.status_policy_id ?? null,
-      notificationPolicyId: this.notification_policy_id ?? null,
+      estimatedReturnAt: this.estimated_return_at,
+      returnedFromProviderAt: this.returned_from_provider_at,
+      statusPolicyId: this.status_policy_id,
+      notificationPolicyId: this.notification_policy_id,
       followUp: this.follow_up.toDomain(),
     };
   }
@@ -166,94 +215,147 @@ class ProviderRequestDto {
 export class CreateCustomerServiceRecordRequestDto {
   @IsString() service_type_code!: string;
   @Matches(/^\d{4}-\d{2}-\d{2}$/) requested_at!: string;
-  @IsOptional() @IsString() observations?: string | null;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  observations!: string | null;
+  @IsDefined()
   @ValidateNested()
   @Type(() => CustomerRequestDto)
   customer!: CustomerRequestDto;
+  @IsDefined()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AssetRequestDto)
   assets!: AssetRequestDto[];
-  @ValidateNested()
-  @Type(() => CustomerDeliveryRequestDto)
-  customer_delivery!: CustomerDeliveryRequestDto;
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ProviderRequestDto)
-  provider?: ProviderRequestDto | null;
-  @IsOptional()
-  @IsEnum(CustomerServiceRecordOperationalStatus)
-  operational_status?: CustomerServiceRecordOperationalStatus;
+
   toDomain(actorUserId: string): CreateCustomerServiceRecordDto {
     return {
       actorUserId,
       serviceTypeCode: this.service_type_code,
       requestedAt: this.requested_at,
-      observations: this.observations ?? null,
+      observations: this.observations,
       customer: this.customer.toDomain(),
-      assets: this.assets.map((asset) => asset.toDomain()),
-      customerDelivery: this.customer_delivery.toDomain() as any,
-      provider: this.provider ? this.provider.toDomain() : null,
-      operationalStatus:
-        this.operational_status ??
-        CustomerServiceRecordOperationalStatus.PENDING,
+      assets: this.assets.map((asset) => asset.toAssetDomain()),
     };
   }
 }
 
-export class UpdateCustomerServiceRecordRequestDto {
-  @IsOptional() @IsString() service_type_code?: string;
-  @IsOptional() @Matches(/^\d{4}-\d{2}-\d{2}$/) requested_at?: string;
-  @IsOptional() @IsString() observations?: string | null;
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CustomerRequestDto)
-  customer?: CustomerRequestDto;
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => AssetRequestDto)
-  assets?: AssetRequestDto[];
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CustomerDeliveryRequestDto)
-  customer_delivery?: CustomerDeliveryRequestDto;
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ProviderRequestDto)
-  provider?: ProviderRequestDto | null;
-  @IsOptional()
+export class UpdateCustomerServiceRecordDetailsRequestDto {
+  @IsString() service_type_code!: string;
+  @Matches(/^\d{4}-\d{2}-\d{2}$/) requested_at!: string;
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  observations!: string | null;
   @IsEnum(CustomerServiceRecordOperationalStatus)
-  operational_status?: CustomerServiceRecordOperationalStatus;
+  operational_status!: CustomerServiceRecordOperationalStatus;
+
   toDomain(
     recordId: string,
     actorUserId: string,
-  ): UpdateCustomerServiceRecordDto {
+  ): UpdateCustomerServiceRecordDetailsDto {
     return {
       recordId,
       actorUserId,
-      ...(this.service_type_code === undefined
+      serviceTypeCode: this.service_type_code,
+      requestedAt: this.requested_at,
+      observations: this.observations,
+      operationalStatus: this.operational_status,
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordCustomerRequestDto {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => CustomerRequestDto)
+  customer!: CustomerRequestDto;
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => CustomerDeliveryRequestDto)
+  customer_delivery!: CustomerDeliveryRequestDto;
+
+  toDomain(
+    recordId: string,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordCustomerDto {
+    return {
+      recordId,
+      actorUserId,
+      customer: this.customer.toDomain(),
+      customerDelivery: this.customer_delivery.toDomain(),
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordProviderRequestDto {
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @ValidateNested()
+  @Type(() => ProviderRequestDto)
+  provider!: ProviderRequestDto | null;
+
+  toDomain(
+    recordId: string,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordProviderDto {
+    return {
+      recordId,
+      actorUserId,
+      provider: this.provider ? this.provider.toDomain() : null,
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordAssetRequestDto extends AssetRequestDto {
+  @IsDefined()
+  @IsArray()
+  @IsString({ each: true })
+  intake_condition_file_ids!: string[];
+  @IsDefined()
+  @IsArray()
+  @IsString({ each: true })
+  delivery_condition_file_ids!: string[];
+  @IsDefined() @IsArray() @IsString({ each: true }) report_file_ids!: string[];
+
+  toDomain(
+    recordId: string,
+    assetId: string,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordAssetDto {
+    return {
+      recordId,
+      assetId,
+      actorUserId,
+      ...super.toAssetDomain(),
+      intakeConditionFileIds: this.intake_condition_file_ids,
+      deliveryConditionFileIds: this.delivery_condition_file_ids,
+      reportFileIds: this.report_file_ids,
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordDocumentRequestDto {
+  @IsOptional()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  reference_number?: string | null;
+  @IsDefined() @IsArray() @IsString({ each: true }) file_ids!: string[];
+
+  toDomain(
+    recordId: string,
+    documentType: CustomerServiceRecordDocumentType,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordDocumentDto {
+    return {
+      recordId,
+      actorUserId,
+      documentType,
+      ...(this.reference_number === undefined
         ? {}
-        : { serviceTypeCode: this.service_type_code }),
-      ...(this.requested_at === undefined
-        ? {}
-        : { requestedAt: this.requested_at }),
-      ...(this.observations === undefined
-        ? {}
-        : { observations: this.observations }),
-      ...(this.customer === undefined
-        ? {}
-        : { customer: this.customer.toDomain() }),
-      ...(this.assets === undefined
-        ? {}
-        : { assets: this.assets.map((asset) => asset.toDomain()) }),
-      ...(this.customer_delivery === undefined
-        ? {}
-        : { customerDelivery: this.customer_delivery.toDomain() }),
-      ...(this.provider === undefined
-        ? {}
-        : { provider: this.provider ? this.provider.toDomain() : null }),
-      ...(this.operational_status === undefined
-        ? {}
-        : { operationalStatus: this.operational_status }),
+        : { referenceNumber: this.reference_number }),
+      fileIds: this.file_ids,
     };
   }
 }
@@ -267,11 +369,13 @@ const SORT_FIELDS = [
   'operational_status',
   'created_at',
 ] as const;
+
 class SortInstructionRequestDto {
   @IsIn(SORT_FIELDS as unknown as string[])
   field!: (typeof SORT_FIELDS)[number];
   @IsIn(['asc', 'desc']) direction!: 'asc' | 'desc';
 }
+
 export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
   @IsOptional()
   @IsArray()
@@ -311,6 +415,7 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
   @IsOptional()
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   provider_estimated_return_at_to?: string;
+
   toDomain(): GetCustomerServiceRecordsDto {
     return {
       page: this.getPage(),

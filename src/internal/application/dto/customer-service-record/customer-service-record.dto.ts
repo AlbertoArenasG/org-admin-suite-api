@@ -34,6 +34,7 @@ export interface CustomerServiceRecordFollowUpRuleInputDto {
 
 export interface CustomerServiceRecordProviderInputDto {
   providerId: string;
+  workOrderReference: string | null;
   deliveredToProviderAt: string | null;
   estimatedReturnInterval: CustomerServiceRecordIntervalDto;
   estimatedReturnAt: string | null;
@@ -62,22 +63,56 @@ export interface CreateCustomerServiceRecordDto {
   observations: string | null;
   customer: CustomerServiceRecordCustomerInputDto;
   assets: CustomerServiceRecordAssetInputDto[];
-  customerDelivery: CustomerServiceRecordCustomerDeliveryInputDto;
-  provider: CustomerServiceRecordProviderInputDto | null;
+}
+
+export interface UpdateCustomerServiceRecordDetailsDto {
+  recordId: string;
+  actorUserId: string;
+  serviceTypeCode: string;
+  requestedAt: string;
+  observations: string | null;
   operationalStatus: CustomerServiceRecordOperationalStatus;
 }
 
-export interface UpdateCustomerServiceRecordDto {
+export interface UpdateCustomerServiceRecordCustomerDto {
   recordId: string;
   actorUserId: string;
-  serviceTypeCode?: string;
-  requestedAt?: string;
-  observations?: string | null;
-  customer?: CustomerServiceRecordCustomerInputDto;
-  assets?: CustomerServiceRecordAssetInputDto[];
-  customerDelivery?: Partial<CustomerServiceRecordCustomerDeliveryInputDto>;
-  provider?: CustomerServiceRecordProviderInputDto | null;
-  operationalStatus?: CustomerServiceRecordOperationalStatus;
+  customer: CustomerServiceRecordCustomerInputDto;
+  customerDelivery: CustomerServiceRecordCustomerDeliveryInputDto;
+}
+
+export interface UpdateCustomerServiceRecordProviderDto {
+  recordId: string;
+  actorUserId: string;
+  provider: CustomerServiceRecordProviderInputDto | null;
+}
+
+export interface UpdateCustomerServiceRecordAssetDto
+  extends CustomerServiceRecordAssetInputDto {
+  recordId: string;
+  assetId: string;
+  actorUserId: string;
+  intakeConditionFileIds: string[];
+  deliveryConditionFileIds: string[];
+  reportFileIds: string[];
+}
+
+export const CUSTOMER_SERVICE_RECORD_DOCUMENT_TYPES = [
+  'quotation',
+  'purchase-order',
+  'invoice',
+  'other-files',
+] as const;
+
+export type CustomerServiceRecordDocumentType =
+  (typeof CUSTOMER_SERVICE_RECORD_DOCUMENT_TYPES)[number];
+
+export interface UpdateCustomerServiceRecordDocumentDto {
+  recordId: string;
+  actorUserId: string;
+  documentType: CustomerServiceRecordDocumentType;
+  referenceNumber?: string | null;
+  fileIds: string[];
 }
 
 export interface DeleteCustomerServiceRecordDto {
@@ -140,7 +175,16 @@ export type GetCustomerServiceRecordsResultDto =
 export type GetCustomerServiceRecordByIdResultDto =
   CustomerServiceRecordViewDto;
 export type CreateCustomerServiceRecordResultDto = CustomerServiceRecordViewDto;
-export type UpdateCustomerServiceRecordResultDto = CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordDetailsResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordCustomerResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordProviderResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordAssetResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordDocumentResultDto =
+  CustomerServiceRecordViewDto;
 
 export interface RefreshCustomerServiceRecordMaterializationsDto {
   cursor: string | null;

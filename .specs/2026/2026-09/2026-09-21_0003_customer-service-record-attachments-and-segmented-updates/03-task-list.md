@@ -18,9 +18,9 @@
 ## Phase 3. Segmented Write Operations
 
 - [ ] Reemplazar el PATCH amplio por POST minimo y cinco PUT cohesionados.
-  Status: pending
+  Status: done
   Closure: rutas, DTOs, CQRS y casos de uso aplican autorizacion, auditoria y
-  materializaciones correspondientes.
+  materializaciones correspondientes; el PATCH amplio fue retirado.
 
 ## Phase 4. Reads And Generic File Contract
 
