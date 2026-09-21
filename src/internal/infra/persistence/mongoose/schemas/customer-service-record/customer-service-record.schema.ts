@@ -37,6 +37,63 @@ export class CustomerServiceRecordCustomerDocument {
 }
 
 @Schema({ _id: false })
+export class CustomerServiceRecordFileAttachmentDocument {
+  @Prop({ type: String, required: true }) file_id: string;
+  @Prop({ type: String, required: true }) original_name: string;
+  @Prop({ type: String, required: true }) mime_type: string;
+  @Prop({ type: Number, required: true }) size: number;
+  @Prop({ type: Date, required: true }) added_at: Date;
+  @Prop({ type: String, required: true }) added_by: string;
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordRemovedFileAttachmentDocument {
+  @Prop({ type: String, required: true }) file_id: string;
+  @Prop({ type: String, required: true }) original_name: string;
+  @Prop({ type: String, required: true }) mime_type: string;
+  @Prop({ type: Number, required: true }) size: number;
+  @Prop({ type: Date, required: true }) added_at: Date;
+  @Prop({ type: String, required: true }) added_by: string;
+  @Prop({ type: Date, required: true }) removed_at: Date;
+  @Prop({ type: String, required: true }) removed_by: string;
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordFileAttachmentCollectionDocument {
+  @Prop({
+    type: [CustomerServiceRecordFileAttachmentDocument],
+    required: true,
+    default: [],
+  })
+  files: CustomerServiceRecordFileAttachmentDocument[];
+  @Prop({
+    type: [CustomerServiceRecordRemovedFileAttachmentDocument],
+    required: true,
+    default: [],
+  })
+  removed_files: CustomerServiceRecordRemovedFileAttachmentDocument[];
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordDocumentReferenceDocument {
+  @Prop({ type: String, required: false, default: null }) reference_number?:
+    | string
+    | null;
+  @Prop({
+    type: [CustomerServiceRecordFileAttachmentDocument],
+    required: true,
+    default: [],
+  })
+  files: CustomerServiceRecordFileAttachmentDocument[];
+  @Prop({
+    type: [CustomerServiceRecordRemovedFileAttachmentDocument],
+    required: true,
+    default: [],
+  })
+  removed_files: CustomerServiceRecordRemovedFileAttachmentDocument[];
+}
+
+@Schema({ _id: false })
 export class CustomerServiceRecordAssetDocument {
   @Prop({ type: String, required: true }) asset_id: string;
   @Prop({ type: String, required: true }) name: string;
@@ -47,6 +104,24 @@ export class CustomerServiceRecordAssetDocument {
   @Prop({ type: String, required: false, default: null }) observations?:
     | string
     | null;
+  @Prop({
+    type: CustomerServiceRecordFileAttachmentCollectionDocument,
+    required: true,
+    default: {},
+  })
+  intake_condition_files: CustomerServiceRecordFileAttachmentCollectionDocument;
+  @Prop({
+    type: CustomerServiceRecordFileAttachmentCollectionDocument,
+    required: true,
+    default: {},
+  })
+  delivery_condition_files: CustomerServiceRecordFileAttachmentCollectionDocument;
+  @Prop({
+    type: CustomerServiceRecordFileAttachmentCollectionDocument,
+    required: true,
+    default: {},
+  })
+  reports: CustomerServiceRecordFileAttachmentCollectionDocument;
 }
 
 @Schema({ _id: false })
@@ -246,6 +321,8 @@ export class CustomerServiceRecordProviderDocument {
   @Prop({ type: String, required: true }) provider_id: string;
   @Prop({ type: String, required: true }) provider_name: string;
   @Prop({ type: String, required: false, default: null })
+  work_order_reference?: string | null;
+  @Prop({ type: String, required: false, default: null })
   delivered_to_provider_at?: string | null;
   @Prop({
     type: CustomerServiceRecordIntervalDocument,
@@ -342,6 +419,33 @@ export class CustomerServiceRecordDocument extends Document {
     default: null,
   })
   provider?: CustomerServiceRecordProviderDocument | null;
+  @Prop({
+    type: CustomerServiceRecordDocumentReferenceDocument,
+    required: true,
+    default: {},
+  })
+  quotation: CustomerServiceRecordDocumentReferenceDocument;
+  @Prop({
+    type: CustomerServiceRecordDocumentReferenceDocument,
+    required: true,
+    default: {},
+  })
+  purchase_order: CustomerServiceRecordDocumentReferenceDocument;
+  @Prop({
+    type: CustomerServiceRecordDocumentReferenceDocument,
+    required: true,
+    default: {},
+  })
+  invoice: CustomerServiceRecordDocumentReferenceDocument;
+  @Prop({
+    type: CustomerServiceRecordFileAttachmentCollectionDocument,
+    required: true,
+    default: {},
+  })
+  other_files: CustomerServiceRecordFileAttachmentCollectionDocument;
+  @Prop({ type: Number, required: true, default: 0 }) attachments_count: number;
+  @Prop({ type: Number, required: true, default: 0 })
+  customer_visible_attachments_count: number;
   @Prop({
     type: String,
     enum: Object.values(CustomerServiceRecordStatus),

@@ -17,3 +17,20 @@
   planificados con reemplazo documentado.
 - La persona usuaria aprobo `Implementation ready: yes`.
 - No se ha iniciado implementacion de codigo.
+
+## 2026-09-21 - Slice 1 Started
+
+- Inicio autorizado de modelo, persistencia y reconciliacion compartida.
+- Esta slice no incluye rutas HTTP, DTOs de request, casos de uso, migracion ni
+  proyecciones de lectura.
+
+## 2026-09-21 - Slice 1 Completed
+
+- Se incorporaron snapshots activos, historial de removidos, referencias de
+  documentos, `workOrderReference` y conteos materializados al aggregate,
+  schema y mapper Mongoose.
+- Se creo el reconciliador compartido: conserva auditoria de activos, resuelve
+  IDs nuevos en lote, archiva ausencias y preserva orden y duplicados.
+- Los repositorios estandar reutilizan el mapper comun, por lo que no requirieron
+  cambios directos.
+- Verificacion estatica ejecutada: `npm run build` y `npm run lint`.

@@ -62,6 +62,31 @@ export interface CustomerServiceRecordCustomerProps {
   users: CustomerServiceRecordCustomerUserProps[];
 }
 
+export interface CustomerServiceRecordFileAttachmentProps {
+  fileId: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+  addedAt: Date;
+  addedBy: string;
+}
+
+export interface CustomerServiceRecordRemovedFileAttachmentProps
+  extends CustomerServiceRecordFileAttachmentProps {
+  removedAt: Date;
+  removedBy: string;
+}
+
+export interface CustomerServiceRecordFileAttachmentCollectionProps {
+  files: CustomerServiceRecordFileAttachmentProps[];
+  removedFiles: CustomerServiceRecordRemovedFileAttachmentProps[];
+}
+
+export interface CustomerServiceRecordDocumentProps
+  extends CustomerServiceRecordFileAttachmentCollectionProps {
+  referenceNumber: string | null;
+}
+
 export interface CustomerServiceRecordAssetProps {
   assetId?: string;
   name: string;
@@ -70,6 +95,9 @@ export interface CustomerServiceRecordAssetProps {
   model: string;
   serialNumber: string;
   observations: string | null;
+  intakeConditionFiles?: CustomerServiceRecordFileAttachmentCollectionProps;
+  deliveryConditionFiles?: CustomerServiceRecordFileAttachmentCollectionProps;
+  reports?: CustomerServiceRecordFileAttachmentCollectionProps;
 }
 
 export interface CustomerServiceRecordStatusMaterializationProps {
@@ -150,6 +178,7 @@ export interface CustomerServiceRecordCustomerDeliveryProps {
 export interface CustomerServiceRecordProviderProps {
   providerId: string;
   providerName: string;
+  workOrderReference?: string | null;
   deliveredToProviderAt: string | null;
   estimatedReturnInterval: CustomerServiceRecordIntervalProps;
   estimatedReturnAt: string | null;
@@ -173,6 +202,12 @@ export interface CustomerServiceRecordProps {
   assets: CustomerServiceRecordAssetProps[];
   customerDelivery: CustomerServiceRecordCustomerDeliveryProps;
   provider?: CustomerServiceRecordProviderProps | null;
+  quotation?: CustomerServiceRecordDocumentProps;
+  purchaseOrder?: CustomerServiceRecordDocumentProps;
+  invoice?: CustomerServiceRecordDocumentProps;
+  otherFiles?: CustomerServiceRecordFileAttachmentCollectionProps;
+  attachmentsCount?: number;
+  customerVisibleAttachmentsCount?: number;
   status?: CustomerServiceRecordStatus;
   operationalStatus?: CustomerServiceRecordOperationalStatus;
   createdBy?: string | null;
@@ -194,6 +229,19 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     );
     props.provider = CustomerServiceRecord.normalizeProvider(
       props.provider ?? null,
+    );
+    props.quotation = CustomerServiceRecord.normalizeDocument(props.quotation);
+    props.purchaseOrder = CustomerServiceRecord.normalizeDocument(
+      props.purchaseOrder,
+    );
+    props.invoice = CustomerServiceRecord.normalizeDocument(props.invoice);
+    props.otherFiles = CustomerServiceRecord.normalizeAttachmentCollection(
+      props.otherFiles,
+    );
+    props.attachmentsCount = Math.max(0, props.attachmentsCount ?? 0);
+    props.customerVisibleAttachmentsCount = Math.max(
+      0,
+      props.customerVisibleAttachmentsCount ?? 0,
     );
     props.createdBy = props.createdBy ?? null;
     props.updatedBy = props.updatedBy ?? null;
@@ -232,6 +280,24 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
   }
   get provider(): CustomerServiceRecordProviderProps | null {
     return this.props.provider ? structuredClone(this.props.provider) : null;
+  }
+  get quotation(): CustomerServiceRecordDocumentProps {
+    return structuredClone(this.props.quotation!);
+  }
+  get purchaseOrder(): CustomerServiceRecordDocumentProps {
+    return structuredClone(this.props.purchaseOrder!);
+  }
+  get invoice(): CustomerServiceRecordDocumentProps {
+    return structuredClone(this.props.invoice!);
+  }
+  get otherFiles(): CustomerServiceRecordFileAttachmentCollectionProps {
+    return structuredClone(this.props.otherFiles!);
+  }
+  get attachmentsCount(): number {
+    return this.props.attachmentsCount ?? 0;
+  }
+  get customerVisibleAttachmentsCount(): number {
+    return this.props.customerVisibleAttachmentsCount ?? 0;
   }
   get status(): CustomerServiceRecordStatus {
     return this.props.status ?? CustomerServiceRecordStatus.ACTIVE;
@@ -287,6 +353,28 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
       this.props.provider = CustomerServiceRecord.normalizeProvider(
         details.provider,
       );
+    if (details.quotation !== undefined)
+      this.props.quotation = CustomerServiceRecord.normalizeDocument(
+        details.quotation,
+      );
+    if (details.purchaseOrder !== undefined)
+      this.props.purchaseOrder = CustomerServiceRecord.normalizeDocument(
+        details.purchaseOrder,
+      );
+    if (details.invoice !== undefined)
+      this.props.invoice = CustomerServiceRecord.normalizeDocument(
+        details.invoice,
+      );
+    if (details.otherFiles !== undefined)
+      this.props.otherFiles =
+        CustomerServiceRecord.normalizeAttachmentCollection(details.otherFiles);
+    if (details.attachmentsCount !== undefined)
+      this.props.attachmentsCount = Math.max(0, details.attachmentsCount);
+    if (details.customerVisibleAttachmentsCount !== undefined)
+      this.props.customerVisibleAttachmentsCount = Math.max(
+        0,
+        details.customerVisibleAttachmentsCount,
+      );
     if (details.operationalStatus !== undefined)
       this.props.operationalStatus = details.operationalStatus;
     this.touch(updatedBy);
@@ -327,6 +415,17 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
         assetId: asset.assetId ?? genId(),
         identifier,
         observations: asset.observations ?? null,
+        intakeConditionFiles:
+          CustomerServiceRecord.normalizeAttachmentCollection(
+            asset.intakeConditionFiles,
+          ),
+        deliveryConditionFiles:
+          CustomerServiceRecord.normalizeAttachmentCollection(
+            asset.deliveryConditionFiles,
+          ),
+        reports: CustomerServiceRecord.normalizeAttachmentCollection(
+          asset.reports,
+        ),
       };
     });
   }
@@ -352,6 +451,7 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     if (!value) return null;
     return {
       ...value,
+      workOrderReference: value.workOrderReference ?? null,
       estimatedReturnInterval: CustomerServiceRecord.normalizeInterval(
         value.estimatedReturnInterval,
       ),
@@ -382,6 +482,24 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
       statusMaterialization: value.statusMaterialization ?? null,
       notificationMaterialization: value.notificationMaterialization ?? null,
       followUpMaterialization: value.followUpMaterialization ?? [],
+    };
+  }
+
+  private static normalizeDocument(
+    value?: CustomerServiceRecordDocumentProps,
+  ): CustomerServiceRecordDocumentProps {
+    return {
+      ...CustomerServiceRecord.normalizeAttachmentCollection(value),
+      referenceNumber: value?.referenceNumber ?? null,
+    };
+  }
+
+  private static normalizeAttachmentCollection(
+    value?: CustomerServiceRecordFileAttachmentCollectionProps,
+  ): CustomerServiceRecordFileAttachmentCollectionProps {
+    return {
+      files: value?.files ?? [],
+      removedFiles: value?.removedFiles ?? [],
     };
   }
 }

@@ -1,5 +1,7 @@
 import {
   CustomerServiceRecord,
+  CustomerServiceRecordDocumentProps,
+  CustomerServiceRecordFileAttachmentCollectionProps,
   CustomerServiceRecordNotificationMaterializationProps,
   CustomerServiceRecordStatusMaterializationProps,
 } from '@domain/entities';
@@ -35,9 +37,23 @@ export class MongooseCustomerServiceRecordMapper {
         model: asset.model,
         serialNumber: asset.serial_number,
         observations: asset.observations ?? null,
+        intakeConditionFiles: this.toAttachmentCollection(
+          asset.intake_condition_files,
+        ),
+        deliveryConditionFiles: this.toAttachmentCollection(
+          asset.delivery_condition_files,
+        ),
+        reports: this.toAttachmentCollection(asset.reports),
       })),
       customerDelivery: this.toCustomerDelivery(value.customer_delivery),
       provider: value.provider ? this.toProvider(value.provider) : null,
+      quotation: this.toDocumentReference(value.quotation),
+      purchaseOrder: this.toDocumentReference(value.purchase_order),
+      invoice: this.toDocumentReference(value.invoice),
+      otherFiles: this.toAttachmentCollection(value.other_files),
+      attachmentsCount: value.attachments_count ?? 0,
+      customerVisibleAttachmentsCount:
+        value.customer_visible_attachments_count ?? 0,
       status: value.status,
       operationalStatus: value.operational_status,
       createdBy: value.created_by ?? null,
@@ -73,6 +89,13 @@ export class MongooseCustomerServiceRecordMapper {
         model: asset.model,
         serial_number: asset.serialNumber,
         observations: asset.observations,
+        intake_condition_files: this.toMongooseAttachmentCollection(
+          asset.intakeConditionFiles,
+        ),
+        delivery_condition_files: this.toMongooseAttachmentCollection(
+          asset.deliveryConditionFiles,
+        ),
+        reports: this.toMongooseAttachmentCollection(asset.reports),
       })),
       customer_delivery: this.toMongooseCustomerDelivery(
         record.customerDelivery,
@@ -80,6 +103,13 @@ export class MongooseCustomerServiceRecordMapper {
       provider: record.provider
         ? this.toMongooseProvider(record.provider)
         : null,
+      quotation: this.toMongooseDocumentReference(record.quotation),
+      purchase_order: this.toMongooseDocumentReference(record.purchaseOrder),
+      invoice: this.toMongooseDocumentReference(record.invoice),
+      other_files: this.toMongooseAttachmentCollection(record.otherFiles),
+      attachments_count: record.attachmentsCount,
+      customer_visible_attachments_count:
+        record.customerVisibleAttachmentsCount,
       status: record.status,
       operational_status: record.operationalStatus,
       created_by: record.createdBy,
@@ -168,6 +198,7 @@ export class MongooseCustomerServiceRecordMapper {
     return {
       providerId: value.provider_id,
       providerName: value.provider_name,
+      workOrderReference: value.work_order_reference ?? null,
       deliveredToProviderAt: value.delivered_to_provider_at ?? null,
       estimatedReturnInterval: this.toInterval(value.estimated_return_interval),
       estimatedReturnAt: value.estimated_return_at ?? null,
@@ -274,6 +305,7 @@ export class MongooseCustomerServiceRecordMapper {
     return {
       provider_id: value.providerId,
       provider_name: value.providerName,
+      work_order_reference: value.workOrderReference,
       delivered_to_provider_at: value.deliveredToProviderAt,
       estimated_return_interval: this.toMongooseInterval(
         value.estimatedReturnInterval,
@@ -325,6 +357,74 @@ export class MongooseCustomerServiceRecordMapper {
       months: value.months,
       weeks: value.weeks,
       days: value.days,
+    };
+  }
+
+  private static toAttachmentCollection(
+    value: any,
+  ): CustomerServiceRecordFileAttachmentCollectionProps {
+    return {
+      files: (value?.files ?? []).map((file: any) => ({
+        fileId: file.file_id,
+        originalName: file.original_name,
+        mimeType: file.mime_type,
+        size: file.size,
+        addedAt: file.added_at,
+        addedBy: file.added_by,
+      })),
+      removedFiles: (value?.removed_files ?? []).map((file: any) => ({
+        fileId: file.file_id,
+        originalName: file.original_name,
+        mimeType: file.mime_type,
+        size: file.size,
+        addedAt: file.added_at,
+        addedBy: file.added_by,
+        removedAt: file.removed_at,
+        removedBy: file.removed_by,
+      })),
+    };
+  }
+
+  private static toDocumentReference(
+    value: any,
+  ): CustomerServiceRecordDocumentProps {
+    return {
+      ...this.toAttachmentCollection(value),
+      referenceNumber: value?.reference_number ?? null,
+    };
+  }
+
+  private static toMongooseAttachmentCollection(
+    value: CustomerServiceRecordFileAttachmentCollectionProps,
+  ) {
+    return {
+      files: value.files.map((file) => ({
+        file_id: file.fileId,
+        original_name: file.originalName,
+        mime_type: file.mimeType,
+        size: file.size,
+        added_at: file.addedAt,
+        added_by: file.addedBy,
+      })),
+      removed_files: value.removedFiles.map((file) => ({
+        file_id: file.fileId,
+        original_name: file.originalName,
+        mime_type: file.mimeType,
+        size: file.size,
+        added_at: file.addedAt,
+        added_by: file.addedBy,
+        removed_at: file.removedAt,
+        removed_by: file.removedBy,
+      })),
+    };
+  }
+
+  private static toMongooseDocumentReference(
+    value: CustomerServiceRecordDocumentProps,
+  ) {
+    return {
+      ...this.toMongooseAttachmentCollection(value),
+      reference_number: value.referenceNumber,
     };
   }
 }

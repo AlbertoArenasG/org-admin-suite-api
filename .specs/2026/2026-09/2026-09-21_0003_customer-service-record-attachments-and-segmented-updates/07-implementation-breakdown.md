@@ -2,8 +2,9 @@
 
 ## Slice 1. Model And Persistence
 
-Implements Phase 2. Extiende entity, DTOs, schema, mapper y puertos; crea el
-reconciliador. No expone rutas aun. Validar compilacion y que snapshots no
+Implements Phase 2. Extiende entity, schema y mapper; crea el reconciliador.
+Los puertos y repositorios estandar se reutilizan mediante el mapper comun. No
+expone rutas ni modifica DTOs aun. Validar compilacion y que snapshots no
 requieran read-time lookup.
 
 ## Slice 2. Write Contracts

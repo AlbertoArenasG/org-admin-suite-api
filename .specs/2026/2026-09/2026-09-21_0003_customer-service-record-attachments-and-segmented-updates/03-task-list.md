@@ -9,10 +9,11 @@
 
 ## Phase 2. Domain, Persistence And Shared Reconciliation
 
-- [ ] Incorporar modelo de adjuntos, snapshots, historial y conteos.
-  Status: pending
-  Closure: dominio, schema, mapper y repositorios persisten las estructuras
-  aprobadas sin alterar campos existentes.
+- [x] Incorporar modelo de adjuntos, snapshots, historial y conteos.
+  Status: done
+  Closure: dominio, schema y mapper persisten las estructuras aprobadas sin
+  alterar campos existentes; los repositorios estandar reutilizan el mapper
+  comun y la reconciliacion compartida queda disponible para los PUT futuros.
 
 ## Phase 3. Segmented Write Operations
 
