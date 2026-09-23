@@ -10,6 +10,7 @@ import {
   FindOperationalCustomerServiceRecordsParams,
   ICustomerServiceRecordReadRepository,
 } from '@domain/ports/repositories';
+import { buildAccentInsensitiveRegex } from '@src/common/utils';
 import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from './mongoose-customer-service-record-base.repository';
 
@@ -143,7 +144,10 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
       status: CustomerServiceRecordStatus.ACTIVE,
     };
     if (params.search?.trim()) {
-      const expression = { $regex: escapeRegex(params.search), $options: 'i' };
+      const expression = {
+        $regex: buildAccentInsensitiveRegex(params.search),
+        $options: 'i',
+      };
       filter.$or = [
         { service_number_display: expression },
         { service_type_name: expression },
@@ -225,8 +229,4 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
     if (!result.createdAt) result.createdAt = -1;
     return result;
   }
-}
-
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

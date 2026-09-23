@@ -8,6 +8,7 @@ import {
   FindCustomerServiceRecordClientAccessParams,
   ICustomerServiceRecordClientAccessReadRepository,
 } from '@domain/ports/repositories';
+import { buildAccentInsensitiveRegex } from '@src/common/utils';
 import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from '../customer-service-record/mongoose-customer-service-record-base.repository';
 
@@ -171,7 +172,10 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
       params.estimatedCustomerDeliveryAtTo,
     );
     if (params.search?.trim()) {
-      const regex = { $regex: escapeRegex(params.search), $options: 'i' };
+      const regex = {
+        $regex: buildAccentInsensitiveRegex(params.search),
+        $options: 'i',
+      };
       filter.$or = [
         { service_number_display: regex },
         { service_type_name: regex },
@@ -211,7 +215,4 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
     sort.customer_service_record_id = 1;
     return sort;
   }
-}
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
