@@ -8,7 +8,7 @@
 | `PUT /v1/customer-service-records/:recordId/details` | `customer_service_records:UPDATE` | tipo, fecha solicitada, observaciones, operational status | `200` y detalle completo |
 | `PUT /v1/customer-service-records/:recordId/customer` | `customer_service_records:UPDATE` | customer y customer delivery completos | `200` y detalle completo |
 | `PUT /v1/customer-service-records/:recordId/provider` | `customer_service_records:UPDATE` | provider completo o `null` | `200` y detalle completo |
-| `PUT /v1/customer-service-records/:recordId/assets/:assetId` | `customer_service_records:UPDATE` | datos completos del activo y sus tres arrays de IDs | `200` y detalle completo |
+| `PATCH /v1/customer-service-records/:recordId/assets/:assetId` | `customer_service_records:UPDATE` | al menos un campo o una coleccion del activo | `200` y detalle completo |
 | `PUT /v1/customer-service-records/:recordId/documents/:documentType` | `customer_service_records:UPDATE` | referencia y archivos de una coleccion, o solo archivos para `other-files` | `200` y detalle completo |
 
 `documentType` solo acepta `quotation`, `purchase-order`, `invoice` y
@@ -16,7 +16,7 @@
 registro, activo, archivo, cliente, usuario o proveedor inexistente conserva el
 tratamiento estandar vigente de recurso no encontrado o validacion aplicable.
 
-El PATCH actual se elimina sin coexistencia temporal.
+El `PATCH /assets/:assetId` sustituye el `PUT` de asset sin coexistencia temporal.
 
 ## Request Bodies
 
@@ -126,8 +126,9 @@ completo o `{ "provider": null }` para removerlo:
 `work_order_reference` es `string|null`. Las fechas, politicas y la fecha de
 retorno conservan las reglas de derivacion vigentes.
 
-`PUT /v1/customer-service-records/:recordId/assets/:assetId` recibe el activo
-completo y siempre sus tres listados activos:
+`PATCH /v1/customer-service-records/:recordId/assets/:assetId` recibe cualquier
+subconjunto de campos y colecciones. Las propiedades ausentes no se modifican;
+un array presente, incluso vacio, reemplaza y reconcilia esa coleccion:
 
 ```json
 {
@@ -161,7 +162,8 @@ envian completos, pueden ser vacios y representan solo relaciones activas.
 
 ## Pipeline Compliance
 
-Cada `POST` y `PUT` de Customer Service Records sigue este flujo sin excepcion:
+Cada `POST`, `PUT` y `PATCH` de Customer Service Records sigue este flujo sin
+excepcion:
 
 ```text
 Controller -> Request DTO.toDomain() -> Command Adapter -> BaseCommandHandler

@@ -308,16 +308,31 @@ export class UpdateCustomerServiceRecordProviderRequestDto {
   }
 }
 
-export class UpdateCustomerServiceRecordAssetRequestDto extends AssetRequestDto {
-  @IsDefined()
+export class UpdateCustomerServiceRecordAssetRequestDto {
+  @ValidateIf((_, value) => value !== undefined) @IsString() name?: string;
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  identifier?: string;
+  @ValidateIf((_, value) => value !== undefined) @IsString() brand?: string;
+  @ValidateIf((_, value) => value !== undefined) @IsString() model?: string;
+  @ValidateIf((_, value) => value !== undefined)
+  @IsString()
+  serial_number?: string;
+  @ValidateIf((_, value) => value !== undefined && value !== null)
+  @IsString()
+  observations?: string | null;
+  @ValidateIf((_, value) => value !== undefined)
   @IsArray()
   @IsString({ each: true })
-  intake_condition_file_ids!: string[];
-  @IsDefined()
+  intake_condition_file_ids?: string[];
+  @ValidateIf((_, value) => value !== undefined)
   @IsArray()
   @IsString({ each: true })
-  delivery_condition_file_ids!: string[];
-  @IsDefined() @IsArray() @IsString({ each: true }) report_file_ids!: string[];
+  delivery_condition_file_ids?: string[];
+  @ValidateIf((_, value) => value !== undefined)
+  @IsArray()
+  @IsString({ each: true })
+  report_file_ids?: string[];
 
   toDomain(
     recordId: string,
@@ -328,10 +343,25 @@ export class UpdateCustomerServiceRecordAssetRequestDto extends AssetRequestDto 
       recordId,
       assetId,
       actorUserId,
-      ...super.toAssetDomain(),
-      intakeConditionFileIds: this.intake_condition_file_ids,
-      deliveryConditionFileIds: this.delivery_condition_file_ids,
-      reportFileIds: this.report_file_ids,
+      ...(this.name === undefined ? {} : { name: this.name }),
+      ...(this.identifier === undefined ? {} : { identifier: this.identifier }),
+      ...(this.brand === undefined ? {} : { brand: this.brand }),
+      ...(this.model === undefined ? {} : { model: this.model }),
+      ...(this.serial_number === undefined
+        ? {}
+        : { serialNumber: this.serial_number }),
+      ...(this.observations === undefined
+        ? {}
+        : { observations: this.observations }),
+      ...(this.intake_condition_file_ids === undefined
+        ? {}
+        : { intakeConditionFileIds: this.intake_condition_file_ids }),
+      ...(this.delivery_condition_file_ids === undefined
+        ? {}
+        : { deliveryConditionFileIds: this.delivery_condition_file_ids }),
+      ...(this.report_file_ids === undefined
+        ? {}
+        : { reportFileIds: this.report_file_ids }),
     };
   }
 }

@@ -759,10 +759,10 @@ Endpoints actuales:
   - operacion: `UPDATE`
   - acceso actual: autenticado
   - nota: reemplaza provider completo o lo remueve con `provider: null`.
-- `PUT /v1/customer-service-records/:recordId/assets/:assetId`
+- `PATCH /v1/customer-service-records/:recordId/assets/:assetId`
   - operacion: `UPDATE`
   - acceso actual: autenticado
-  - nota: reemplaza un activo y sus tres colecciones de adjuntos.
+  - nota: actualiza parcialmente un activo y/o sus tres colecciones de adjuntos.
 - `PUT /v1/customer-service-records/:recordId/documents/:documentType`
   - operacion: `UPDATE`
   - acceso actual: autenticado

@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Param,
   Post,
   Put,
@@ -137,7 +138,7 @@ export class CustomerServiceRecordController {
     );
     return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
   }
-  @Put(':recordId/assets/:assetId')
+  @Patch(':recordId/assets/:assetId')
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @RequirePermission('customer_service_records', 'UPDATE')
   async updateAsset(

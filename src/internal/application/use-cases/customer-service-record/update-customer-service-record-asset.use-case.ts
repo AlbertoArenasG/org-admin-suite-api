@@ -6,6 +6,7 @@ import {
 } from '@application/dto';
 import { CustomerServiceRecordMapper } from '@application/mappers';
 import { CustomerServiceRecordAttachmentReconciliationService } from '@application/services';
+import { CustomerServiceRecordFileAttachmentCollectionProps } from '@domain/entities';
 import {
   EntityNotFoundException,
   EntityNotFoundExceptionCode,
@@ -33,6 +34,7 @@ export class UpdateCustomerServiceRecordAssetUseCase {
   async execute(
     input: UpdateCustomerServiceRecordAssetDto,
   ): Promise<UpdateCustomerServiceRecordAssetResultDto> {
+    this.assertHasUpdate(input);
     const { data: record } = await this.readRepository.findById(input.recordId);
     if (!record)
       throw EntityNotFoundException.create(
@@ -51,23 +53,35 @@ export class UpdateCustomerServiceRecordAssetUseCase {
 
     const [intakeConditionFiles, deliveryConditionFiles, reports] =
       await Promise.all([
-        this.attachmentReconciliation.reconcile({
-          collection: existingAsset.intakeConditionFiles!,
-          fileIds: input.intakeConditionFileIds,
-          actorUserId: input.actorUserId,
-        }),
-        this.attachmentReconciliation.reconcile({
-          collection: existingAsset.deliveryConditionFiles!,
-          fileIds: input.deliveryConditionFileIds,
-          actorUserId: input.actorUserId,
-        }),
-        this.attachmentReconciliation.reconcile({
-          collection: existingAsset.reports!,
-          fileIds: input.reportFileIds,
-          actorUserId: input.actorUserId,
-        }),
+        this.reconcileCollection(
+          existingAsset.intakeConditionFiles!,
+          input.intakeConditionFileIds,
+          input.actorUserId,
+        ),
+        this.reconcileCollection(
+          existingAsset.deliveryConditionFiles!,
+          input.deliveryConditionFileIds,
+          input.actorUserId,
+        ),
+        this.reconcileCollection(
+          existingAsset.reports!,
+          input.reportFileIds,
+          input.actorUserId,
+        ),
       ]);
-    const normalizedAsset = normalizeAssets([input])[0];
+    const normalizedAsset = normalizeAssets([
+      {
+        name: input.name ?? existingAsset.name,
+        identifier: input.identifier ?? existingAsset.identifier,
+        brand: input.brand ?? existingAsset.brand,
+        model: input.model ?? existingAsset.model,
+        serialNumber: input.serialNumber ?? existingAsset.serialNumber,
+        observations:
+          input.observations === undefined
+            ? existingAsset.observations
+            : input.observations,
+      },
+    ])[0];
     const assets = record.assets.map((asset) =>
       asset.assetId === input.assetId
         ? {
@@ -87,5 +101,37 @@ export class UpdateCustomerServiceRecordAssetUseCase {
     );
     const { data } = await this.writeRepository.update(record);
     return CustomerServiceRecordMapper.toViewDto(data!);
+  }
+
+  private assertHasUpdate(input: UpdateCustomerServiceRecordAssetDto): void {
+    const hasUpdate = [
+      input.name,
+      input.identifier,
+      input.brand,
+      input.model,
+      input.serialNumber,
+      input.observations,
+      input.intakeConditionFileIds,
+      input.deliveryConditionFileIds,
+      input.reportFileIds,
+    ].some((value) => value !== undefined);
+    if (!hasUpdate)
+      throw InvalidValueException.create(InvalidValueExceptionCode.DEFAULT, {
+        field: 'asset',
+        reason: 'EMPTY_UPDATE',
+      });
+  }
+
+  private async reconcileCollection(
+    collection: CustomerServiceRecordFileAttachmentCollectionProps,
+    fileIds: string[] | undefined,
+    actorUserId: string,
+  ) {
+    if (fileIds === undefined) return collection;
+    return this.attachmentReconciliation.reconcile({
+      collection,
+      fileIds,
+      actorUserId,
+    });
   }
 }

@@ -63,8 +63,9 @@ cliente concreta.
   consultan en lote y se snapshottean una sola vez. IDs duplicados existentes
   se aceptan y cuentan tal como llegan.
 - Los cinco patrones de actualizacion son `details`, `customer`, `provider`,
-  `assets/:assetId` y `documents/:documentType`. Cada `PUT` recibe el bloque
-  completo y responde el detalle administrativo completo actualizado.
+  `assets/:assetId` y `documents/:documentType`. El asset usa `PATCH` y acepta
+  cualquier subconjunto de campos o colecciones; los demas `PUT` reciben su
+  bloque completo. Todos responden el detalle administrativo completo actualizado.
 - `documentType` admite `quotation`, `purchase-order`, `invoice` y
   `other-files`.
 - El `POST` solo exige datos minimos: tipo, fecha solicitada, cliente, usuarios

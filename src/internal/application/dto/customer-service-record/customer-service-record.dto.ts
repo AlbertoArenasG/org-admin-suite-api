@@ -108,13 +108,13 @@ export interface UpdateCustomerServiceRecordProviderDto {
 }
 
 export interface UpdateCustomerServiceRecordAssetDto
-  extends CustomerServiceRecordAssetInputDto {
+  extends Partial<CustomerServiceRecordAssetInputDto> {
   recordId: string;
   assetId: string;
   actorUserId: string;
-  intakeConditionFileIds: string[];
-  deliveryConditionFileIds: string[];
-  reportFileIds: string[];
+  intakeConditionFileIds?: string[];
+  deliveryConditionFileIds?: string[];
+  reportFileIds?: string[];
 }
 
 export const CUSTOMER_SERVICE_RECORD_DOCUMENT_TYPES = [

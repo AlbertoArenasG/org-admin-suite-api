@@ -6,7 +6,8 @@ Base administrativa: `/v1/customer-service-records`. Todas sus rutas requieren
 Bearer JWT y los permisos existentes de `customer_service_records`.
 
 La creacion es minima y no recibe adjuntos. Los adjuntos se cargan primero con
-`POST /v1/files` y despues se asocian mediante el `PUT` completo de su bloque.
+`POST /v1/files` y despues se asocian mediante el `PATCH` parcial del activo o
+el `PUT` completo de su bloque documental.
 Los arrays de `file_ids` expresan exclusivamente las relaciones activas
 deseadas: pueden ser vacios, conservan orden y permiten IDs repetidos.
 
@@ -16,11 +17,12 @@ deseadas: pueden ser vacios, conservan orden y permiten IDs repetidos.
 | `PUT` | `/:recordId/details` | `UPDATE` | Reemplaza details: tipo, fecha solicitada, observaciones y estatus operativo. |
 | `PUT` | `/:recordId/customer` | `UPDATE` | Reemplaza customer y customer delivery completos. |
 | `PUT` | `/:recordId/provider` | `UPDATE` | Reemplaza provider completo o lo elimina con `{ "provider": null }`. |
-| `PUT` | `/:recordId/assets/:assetId` | `UPDATE` | Reemplaza un activo y sus adjuntos de condicion/reports. |
+| `PATCH` | `/:recordId/assets/:assetId` | `UPDATE` | Actualiza campos y/o colecciones de adjuntos de un activo. |
 | `PUT` | `/:recordId/documents/:documentType` | `UPDATE` | Reemplaza una coleccion documental raiz. |
 
-No existe `PATCH /:recordId`. Cada `PUT` recibe siempre el bloque completo y
-responde el detalle administrativo actualizado.
+No existe `PATCH /:recordId`. El `PATCH` de asset recibe al menos una propiedad
+del activo o una coleccion de adjuntos y responde el detalle administrativo
+actualizado.
 
 ## Adjuntos
 
@@ -28,7 +30,10 @@ Los tres grupos de adjuntos por activo son `intake_condition_files`,
 `delivery_condition_files` y `reports`. Los documentos raiz son `quotation`,
 `purchase_order`, `invoice` y `other_files`.
 
-El `PUT /:recordId/assets/:assetId` requiere los datos completos del activo y:
+El `PATCH /:recordId/assets/:assetId` acepta cualquier subconjunto de los datos
+del activo y de sus colecciones. Una propiedad ausente conserva su valor; un
+array presente, incluido `[]`, reemplaza y reconcilia exclusivamente esa
+coleccion:
 
 ```json
 {
