@@ -31,6 +31,7 @@ import {
 } from '@infra/cqrs/queries';
 import { GetServicePackageRecordsRequestDto } from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import { normalizeMultipartFilename } from '@src/common/utils';
 
 @Controller('v1/service-packages')
 export class ServicePackageController {
@@ -54,7 +55,9 @@ export class ServicePackageController {
     }
 
     const command = IngestServicePackageCommandAdapter.create({
-      filename: uploadedFile.originalname ?? null,
+      filename: uploadedFile.originalname
+        ? normalizeMultipartFilename(uploadedFile.originalname)
+        : null,
       buffer: uploadedFile.buffer,
     });
 

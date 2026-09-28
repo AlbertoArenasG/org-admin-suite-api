@@ -28,6 +28,7 @@ import { DownloadFileQuery, GetFileByIdQuery } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 import { JwtAuthGuard } from '@infra/api/guards';
 import { AuthenticatedUserContextDto } from '@application/dto';
+import { normalizeMultipartFilename } from '@src/common/utils';
 
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 
@@ -102,7 +103,7 @@ export class FileController {
 
     const command = UploadFilesCommandAdapter.create({
       files: files.map((file, index) => ({
-        originalName: file.originalname,
+        originalName: normalizeMultipartFilename(file.originalname),
         mimeType: file.mimetype,
         size: file.size,
         buffer: file.buffer,
