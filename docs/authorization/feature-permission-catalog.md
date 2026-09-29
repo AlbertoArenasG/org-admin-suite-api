@@ -482,6 +482,12 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: expone los tipos de servicio disponibles para filtros; protegido por `PermissionsGuard` con `service_packages.READ`
+- `GET /v1/service-packages/records/:recordId/files/:fileId/download`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: entrega o previsualiza un archivo embebido del record; protegido por
+    `PermissionsGuard` con `service_packages.READ` y valida la pertenencia del
+    archivo al registro antes de leer storage
 - `GET /v1/service-packages/records/:recordId`
   - operacion: `READ`
   - acceso actual: autenticado

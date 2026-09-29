@@ -6,9 +6,9 @@
 - Date: `2026-09-29`
 - Definition status: completed
 - Implementation ready: yes
-- Implementation status: not_started
-- Validation status: not_started
-- Spec status: active
+- Implementation status: completed
+- Validation status: completed
+- Spec status: completed
 
 ## Objective
 
@@ -59,8 +59,8 @@ exponer claves ni URLs directas de S3.
   `s3_key` como contrato publico.
 - `relative_path` puede conservarse como metadata especifica del paquete, pero
   no es dependencia del componente generico de documentos.
-- La respuesta de listado conserva su proyeccion actual y no necesita URLs de
-  archivo porque no entrega archivos.
+- El presenter compartido normaliza `files[]` tanto en listado como en detalle;
+  ambas respuestas dejan de exponer `s3_key` y `content_type`.
 
 ## Acceptance Criteria
 

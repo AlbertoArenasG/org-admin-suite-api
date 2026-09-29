@@ -34,8 +34,9 @@ Query: disposition=attachment|inline
 
 ## Read Descriptor
 
-Solo `GET /v1/service-packages/records/:recordId` modifica su proyeccion de
-archivos. Cada elemento de `files[]` sera:
+El presenter compartido aplica esta proyeccion a `files[]` en
+`GET /v1/service-packages/records` y
+`GET /v1/service-packages/records/:recordId`. Cada elemento sera:
 
 ```json
 {
@@ -51,8 +52,9 @@ archivos. Cada elemento de `files[]` sera:
 
 El nucleo del descriptor (`file_id`, `original_name`, `mime_type`, `size`,
 `download_url`, `preview_url`) es identico al de Customer Service Records.
-`relative_path` permanece como metadata especifica opcional. `s3_key` no se
-expone. El listado no cambia porque no proyecta archivos.
+`relative_path` permanece como metadata especifica opcional. `s3_key` y
+`content_type` no se exponen. No existe compatibilidad temporal con las URLs
+directas de S3 porque la migracion frontend y backend se desplegaran juntas.
 
 ## Flow By Layer
 
@@ -103,7 +105,7 @@ existente de `GlobalApplicationModule` basado en exports.
 
 | Consumer | Previous contract | New contract | Compatibility and required action | Validation owner | Permanent document |
 | --- | --- | --- | --- | --- | --- |
-| `org-admin-suite-frontend` | `files[]` exposes `content_type` and direct `s3_key`; it cannot use the generic document descriptor safely. | Detail `files[]` exposes `mime_type`, `download_url` and `preview_url`; the new stream endpoint supports `attachment` and `inline`. | Breaking read-field replacement, adopted together with the upcoming Next Dashboard detail migration. Frontend must stop reading `s3_key` and use the supplied URLs. | Frontend owner | `docs/frontend/service-package-record-file-delivery-handoff.md` |
+| `org-admin-suite-frontend` | `files[]` in both list and detail expose `content_type` and direct `s3_key`; they cannot use the generic document descriptor safely. | Both responses expose `mime_type`, `download_url` and `preview_url`; the new stream endpoint supports `attachment` and `inline`. | Intentional breaking replacement in the development contract. Frontend migration must stop reading `s3_key` and use the supplied URLs before joint deployment. | Frontend owner | `docs/frontend/service-package-record-file-delivery-handoff.md` |
 | PWA Recoleccion | Creates embedded file snapshots through ZIP ingestion. | No contract or behavior change. | Fully compatible; no action. | Backend owner | N/A |
 
 ## Artifact Register

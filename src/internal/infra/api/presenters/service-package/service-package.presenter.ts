@@ -5,9 +5,16 @@ import {
   ServicePackageRecordViewDto,
   GetServicePackageRecordsResultDto,
 } from '@application/dto';
+import { EnvService } from '@infra/env';
 
 @Injectable()
 export class ServicePackagePresenter {
+  private readonly apiBaseUrl: string;
+
+  constructor(private readonly envService: EnvService) {
+    this.apiBaseUrl = this.envService.get('API_BASE_URL').replace(/\/$/, '');
+  }
+
   toIngestResponse(result: IngestServicePackageResultDto) {
     return {
       package_id: result.packageId,
@@ -47,10 +54,19 @@ export class ServicePackagePresenter {
         file_id: file.fileId,
         relative_path: file.relativePath,
         original_name: file.originalName,
-        s3_key: `https://icsacv-files.s3.us-east-1.amazonaws.com/${file.s3Key}`,
+        mime_type: file.contentType,
         size: file.size,
-        content_type: file.contentType,
+        download_url: this.buildDownloadUrl(record.id, file.fileId),
+        preview_url: this.buildPreviewUrl(record.id, file.fileId),
       })),
     };
+  }
+
+  private buildDownloadUrl(recordId: string, fileId: string): string {
+    return `${this.apiBaseUrl}/v1/service-packages/records/${recordId}/files/${fileId}/download`;
+  }
+
+  private buildPreviewUrl(recordId: string, fileId: string): string {
+    return `${this.buildDownloadUrl(recordId, fileId)}?disposition=inline`;
   }
 }

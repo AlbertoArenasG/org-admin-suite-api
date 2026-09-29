@@ -8,6 +8,8 @@ import {
   Param,
   Post,
   Query,
+  Res,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -15,6 +17,7 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer, memoryStorage } from 'multer';
+import { Response } from 'express';
 
 import { RequirePermission } from '@src/common/decorators';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
@@ -28,8 +31,12 @@ import {
   GetServicePackageRecordsQuery,
   GetServicePackageRecordByIdQuery,
   GetServicePackageRecordServiceTypeOptionsQuery,
+  DownloadServicePackageRecordFileQuery,
 } from '@infra/cqrs/queries';
-import { GetServicePackageRecordsRequestDto } from '@infra/api/dto';
+import {
+  GetServicePackageRecordsRequestDto,
+  ServicePackageRecordFileDownloadRequestDto,
+} from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { normalizeMultipartFilename } from '@src/common/utils';
 
@@ -105,6 +112,29 @@ export class ServicePackageController {
       .withData({ service_types: data })
       .withStatus(HttpStatus.OK)
       .build();
+  }
+
+  @Get('records/:recordId/files/:fileId/download')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('service_packages', 'READ')
+  @HttpCode(HttpStatus.OK)
+  async downloadRecordFile(
+    @Param('recordId') recordId: string,
+    @Param('fileId') fileId: string,
+    @Query() query: ServicePackageRecordFileDownloadRequestDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.queryBus.execute(
+      DownloadServicePackageRecordFileQuery.create({ recordId, fileId }),
+    );
+
+    res.set({
+      'Content-Type': result.mimeType,
+      'Content-Length': result.size,
+      'Content-Disposition': `${query.normalizedDisposition}; filename*=UTF-8''${encodeURIComponent(result.filename)}`,
+    });
+
+    return new StreamableFile(result.stream);
   }
 
   @Get('records/:recordId')

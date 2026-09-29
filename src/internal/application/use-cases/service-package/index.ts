@@ -3,3 +3,4 @@ export * from './get-service-package-records.use-case';
 export * from './get-service-package-record-service-type-options.use-case';
 export * from './get-service-package-record-by-id.use-case';
 export * from './delete-service-package-record.use-case';
+export * from './download-service-package-record-file.use-case';
