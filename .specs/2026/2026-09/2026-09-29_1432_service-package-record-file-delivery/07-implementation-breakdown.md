@@ -1,6 +1,6 @@
 # Implementation Breakdown
 
-## Slice 1. Secure File Contract And Delivery
+## Slice 1. Public File Contract And Delivery
 
 Implements task-list phases 1 and 2, plus the mandatory endpoint handoff.
 Status: completed
@@ -20,7 +20,7 @@ Execution order:
 2. Implement the use case: record lookup, active-status and membership checks,
    then storage lookup with metadata fallback.
 3. Add and register the thin CQRS adapter.
-4. Add the guarded route before `records/:recordId`, headers and stream.
+4. Add the public route before `records/:recordId`, headers and stream.
 5. Adapt the shared presenter and build URLs from `API_BASE_URL` for list and
    detail responses.
 6. Update the three contract documents during this slice, not at global close.
@@ -31,12 +31,13 @@ Compatibility and limits:
   ingestion or PWA behavior changes;
 - list and detail normalize the public file descriptor without changing the
   persisted shape;
-- existing `service_packages.READ` remains the only authorization requirement;
+- file delivery does not require JWT or `service_packages.READ`; the use case
+  still validates active ownership and file membership;
 - no unit tests are created or executed.
 
 Validation: run `npm run build` and `git diff --check`. Prepare Postman/manual
 scenarios for attachment, inline PDF/image, accented filename, missing/foreign
-file, deleted record, missing JWT and missing permission.
+file, deleted record and direct browser access without JWT.
 
 Closure: static commands passed; endpoint, presenter and mandatory handoff
 documents match the technical contract. The user confirmed manual validation.

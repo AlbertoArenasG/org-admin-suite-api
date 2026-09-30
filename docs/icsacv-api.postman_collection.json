@@ -5913,10 +5913,6 @@
             "method": "GET",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
-              },
-              {
                 "key": "x-user-lang",
                 "value": "es",
                 "type": "text"
@@ -5927,19 +5923,14 @@
               "host": ["{{HOST}}"],
               "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF", "files", "A0M2a3kutUb1WN0fhBONplep", "download"]
             },
-            "description": "Descarga un archivo embebido del registro. Requiere service_packages.READ y responde un stream con Content-Disposition: attachment."
+            "description": "Descarga publica de un archivo embebido del registro. Responde un stream con Content-Disposition: attachment."
           },
           "response": [
             {
               "name": "attachment stream",
               "originalRequest": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download",
                   "host": ["{{HOST}}"],
@@ -5970,10 +5961,6 @@
             "method": "GET",
             "header": [
               {
-                "key": "Authorization",
-                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
-              },
-              {
                 "key": "x-user-lang",
                 "value": "es",
                 "type": "text"
@@ -5997,12 +5984,7 @@
               "name": "inline stream",
               "originalRequest": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download?disposition=inline",
                   "host": ["{{HOST}}"],

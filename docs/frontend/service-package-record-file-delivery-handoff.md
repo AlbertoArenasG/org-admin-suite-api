@@ -3,7 +3,7 @@
 ## Alcance
 
 La API entrega la coleccion plana `files[]` de los registros de paquetes de
-servicio mediante URLs protegidas. Los archivos siguen embebidos en el registro;
+servicio mediante URLs publicas mediadas por API. Los archivos siguen embebidos en el registro;
 no son recursos del agregado generico `files`.
 
 ## Lecturas Afectadas
@@ -39,8 +39,6 @@ no debe construir URLs de S3 ni inferir rutas de descarga.
 
 ```text
 GET /v1/service-packages/records/:recordId/files/:fileId/download
-Authorization: Bearer JWT
-Permission: service_packages:READ
 Query: disposition=attachment|inline
 ```
 
@@ -54,8 +52,6 @@ Query: disposition=attachment|inline
 
 ## Errores Y Reglas De UI
 
-- JWT ausente o invalido: respuesta estandar de autenticacion.
-- Sin `service_packages.READ`: respuesta estandar de autorizacion.
 - Registro eliminado, archivo inexistente o archivo que pertenece a otro
   registro: respuesta estandar de recurso no encontrado.
 - El frontend debe ocultar `application/json` cuando corresponda al archivo

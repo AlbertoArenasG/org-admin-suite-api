@@ -17,8 +17,9 @@ no hay URL de descarga/previsualizacion diferenciada ni control de disposition.
 - `IFileStorageService` ya entrega el objeto almacenado por key.
 - `DownloadFileRequestDto` ya normaliza `attachment|inline` para el modulo
   generico; su semantica puede reutilizarse sin reutilizar su query de dominio.
-- `ApiResponseBuilder`, CQRS, guards y `ServicePackagePresenter` conservan el
-  pipeline canónico.
+- CQRS y `ServicePackagePresenter` conservan el pipeline canónico; la entrega
+  de archivos se expone sin guards para que el navegador consuma sus URLs
+  directamente.
 
 ## Constraints
 

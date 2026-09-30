@@ -26,13 +26,13 @@
   verificación por riesgo.
 - La iniciativa queda lista para implementar la slice 1.
 
-Next step: implementar la slice 1 de entrega segura y descriptor público.
+Next step: implementar la slice 1 de entrega publica mediada por API y descriptor público.
 
 ## 2026-09-29 - Slice 1 implemented
 
 - Se creó el caso de uso de entrega de archivo, su DTO, query/handler CQRS y
   registro en `GlobalCqrsModule`.
-- La ruta protegida `GET /v1/service-packages/records/:recordId/files/:fileId/download`
+- La ruta publica `GET /v1/service-packages/records/:recordId/files/:fileId/download`
   valida registro activo y pertenencia antes de acceder a S3; soporta
   `attachment` e `inline` con headers UTF-8.
 - El presenter compartido normaliza `files[]` de listado y detalle a
@@ -43,13 +43,13 @@ Next step: implementar la slice 1 de entrega segura y descriptor público.
 - `npm run build` y `git diff --check` finalizaron correctamente. No se
   ejecutaron pruebas unitarias ni lint, de acuerdo con la politica vigente.
 
-Next step: la persona usuaria valida manualmente descarga, preview, permisos y
-casos de recurso no encontrado para cerrar la spec.
+Next step: la persona usuaria valida manualmente descarga, preview y casos de
+recurso no encontrado para cerrar la spec.
 
 ## 2026-09-29 - Manual validation and closure
 
 - La persona usuaria confirmó la validación manual de descarga,
-  previsualización, autorización y recursos no encontrados.
+  previsualización y recursos no encontrados.
 - No quedan tareas pendientes, decisiones abiertas ni riesgos residuales
   conocidos dentro del alcance aprobado.
 - La iniciativa queda formalmente completada.

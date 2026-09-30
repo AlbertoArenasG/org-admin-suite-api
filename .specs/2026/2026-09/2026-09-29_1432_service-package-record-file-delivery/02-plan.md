@@ -9,7 +9,7 @@ mediante el puerto existente de almacenamiento.
 
 ## Phase 2. HTTP Composition And Read Projection
 
-Exponer el subrecurso protegido desde `ServicePackageController`, aplicar los
+Exponer el subrecurso publico desde `ServicePackageController`, aplicar los
 headers de stream existentes y transformar `files[]` en el presenter al
 descriptor publico de documentos. No se modifica el DTO interno, la entidad,
 el schema, el mapper de persistencia ni la ingesta ZIP.
@@ -18,4 +18,4 @@ el schema, el mapper de persistencia ni la ingesta ZIP.
 
 Actualizar Postman, el catalogo de permisos y el handoff de frontend. Ejecutar
 validacion estatica aplicable y dejar la validacion manual de descarga,
-previsualizacion, pertenencia y autorizacion como evidencia de cierre.
+previsualizacion y pertenencia como evidencia de cierre.

@@ -19,10 +19,12 @@ paquete sin ser requerida por el componente generico.
 
 Status: approved
 
-## Decision 03. Autorizacion existente
+## Decision 03. Entrega Publica Mediada Por API
 
-La ruta reutiliza `JwtAuthGuard`, `PermissionsGuard` y
-`service_packages:READ`. No se agregan capacidades ni excepciones de acceso.
+La ruta no usa `JwtAuthGuard`, `PermissionsGuard` ni un permiso de modulo. Es
+publica para permitir consumo directo del navegador, pero el caso de uso
+conserva la validacion de registro activo y pertenencia del archivo antes de
+leer storage. No se exponen claves ni URLs directas de S3.
 
 Status: approved
 
@@ -30,7 +32,7 @@ Status: approved
 
 `ServicePackageRecordFileProps`, el schema Mongo y la ingesta ZIP conservan
 sus campos actuales. El presenter traduce `contentType` a `mime_type` y
-construye las URLs publicas protegidas; el caso de uso conserva `s3Key` solo
+construye las URLs publicas mediadas por API; el caso de uso conserva `s3Key` solo
 para solicitar el stream al storage.
 
 La alternativa descartada es migrar los archivos embebidos al agregado generico

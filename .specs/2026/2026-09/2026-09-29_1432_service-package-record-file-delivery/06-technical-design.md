@@ -10,14 +10,12 @@ ni modificar su modelo persistido.
 
 ```text
 GET /v1/service-packages/records/:recordId/files/:fileId/download
-Authorization: Bearer JWT
-Permission: service_packages:READ
 Query: disposition=attachment|inline
 ```
 
 - `disposition` es opcional y por defecto es `attachment`.
-- La ruta usa `JwtAuthGuard`, `PermissionsGuard` y
-  `@RequirePermission('service_packages', 'READ')`.
+- La ruta es publica; no usa `JwtAuthGuard`, `PermissionsGuard` ni
+  `@RequirePermission`.
 - La respuesta es un stream, no un envelope `ApiResponseBuilder`.
 - Los headers son:
 
@@ -114,7 +112,7 @@ existente de `GlobalApplicationModule` basado en exports.
 | --- | --- | --- | --- | --- | --- |
 | `ServicePackageRecord` and `ServicePackageRecordFileProps` | domain entity and embedded value shape | `src/internal/domain/entities/service-package-record.entity.ts` | Preserve the persisted record and its file metadata. | Existing read repository and ingestion. | reuse |
 | `IServicePackageRecordReadRepository` | domain read port | `src/internal/domain/ports/repositories/service-package-record/service-package-record-read.repository.ts` | Read the owner record by ID without adding a file-specific query. | Existing Mongoose adapter. | reuse |
-| `IFileStorageService` | domain external-service port | `src/internal/domain/ports/services/file-storage/file-storage.service.ts` | Retrieve the authorized object stream by private storage key. | `S3FileStorageService`. | reuse |
+| `IFileStorageService` | domain external-service port | `src/internal/domain/ports/services/file-storage/file-storage.service.ts` | Retrieve the object stream by private storage key after owner/file validation. | `S3FileStorageService`. | reuse |
 | `EntityNotFoundException` and `EntityNotFoundExceptionCode.SERVICE_PACKAGE_RECORD` | domain exception | `src/internal/domain/exceptions/entity-not-found.exception.ts` | Return the established not-found result for missing, deleted or unrelated resources. | API exception filter. | reuse |
 | `DownloadServicePackageRecordFileDto` and `DownloadServicePackageRecordFileResultDto` | application DTOs | `src/internal/application/dto/service-package/download-service-package-record-file.dto.ts` | Carry record/file identifiers and the resolved stream result. | Node readable stream; delivery use case. | new |
 | service-package DTO barrel | application composition | `src/internal/application/dto/service-package/index.ts` | Export the delivery DTOs to query and controller layers. | New application DTO file. | modify |
@@ -126,16 +124,15 @@ existente de `GlobalApplicationModule` basado en exports.
 | `GlobalCqrsModule` | Nest CQRS registration | `src/modules/global-cqrs.module.ts` | Register `DownloadServicePackageRecordFileHandler`. | Query barrel export. | modify |
 | `ServicePackageRecordFileDownloadRequestDto` | HTTP request DTO | `src/internal/infra/api/dto/service-package/service-package-record-file-download.request.dto.ts` | Validate optional `disposition` and expose normalized default. | `class-validator`; controller. | new |
 | service-package API DTO barrel | HTTP composition | `src/internal/infra/api/dto/service-package/index.ts` | Export the request DTO. | New request DTO. | modify |
-| `ServicePackageController` | HTTP controller | `src/internal/infra/api/controllers/service-package/service-package.controller.ts` | Expose `GET /v1/service-packages/records/:recordId/files/:fileId/download`, apply guards, write headers and return `StreamableFile`. | Request DTO, query bus, `JwtAuthGuard`, `PermissionsGuard`, `RequirePermission`. | modify |
-| `ServicePackagePresenter` | HTTP presenter | `src/internal/infra/api/presenters/service-package/service-package.presenter.ts` | Build protected URLs and translate the public detail descriptor. | `EnvService`, internal record DTO. | modify |
-| `JwtAuthGuard`, `PermissionsGuard`, `RequirePermission('service_packages', 'READ')` | authorization enforcement | Existing guards/decorator and controller route | Reuse the established authorization boundary; no permission code, role or seed changes. | Existing `service_packages.READ` catalog entry. | reuse |
-| `S3FileStorageService` | infrastructure storage adapter | `src/internal/infra/services/file-storage/s3-file-storage.service.ts` | Serve the object stream after application authorization. | `IFileStorageService`. | reuse |
+| `ServicePackageController` | HTTP controller | `src/internal/infra/api/controllers/service-package/service-package.controller.ts` | Expose the public `GET /v1/service-packages/records/:recordId/files/:fileId/download`, write headers and return `StreamableFile`. | Request DTO and query bus. | modify |
+| `ServicePackagePresenter` | HTTP presenter | `src/internal/infra/api/presenters/service-package/service-package.presenter.ts` | Build public API URLs and translate the public detail descriptor. | `EnvService`, internal record DTO. | modify |
+| `S3FileStorageService` | infrastructure storage adapter | `src/internal/infra/services/file-storage/s3-file-storage.service.ts` | Serve the object stream after active-owner and membership validation. | `IFileStorageService`. | reuse |
 | `MongooseServicePackageRecordReadRepositoryImpl`, schema and mapper | persistence adapter, schema and mapper | `src/internal/infra/persistence/mongoose/repositories/service-package/mongoose-service-package-record-read.repository.ts`; `src/internal/infra/persistence/mongoose/schemas/service-package/service-package-record.schema.ts`; `src/internal/infra/persistence/mongoose/mappers/service-package/mongoose-service-package-record.mapper.ts` | Keep current persisted shape and owner lookup. | Existing model and domain mapper. | reuse |
 | migrations, backfill, indexes and rollback procedure | persistence/data operation | N/A | Not applicable: no data or query-shape persistence change occurs. | Existing data remains valid. | not_applicable |
 | ZIP ingestion | external ingestion flow | `src/internal/application/use-cases/service-package/ingest-service-package.use-case.ts` | Preserve file creation and embedded snapshots. | PWA Recoleccion and storage service. | reuse |
 | `GlobalApplicationModule` and `GlobalHttpModule` | Nest composition | `src/modules/global-application.module.ts`; `src/modules/global-http.module.ts` | Keep automatic registration through existing barrels; no module declaration changes. | Updated exports and existing module conventions. | reuse |
-| `docs/icsacv-api.postman_collection.json` | API contract documentation | `docs/icsacv-api.postman_collection.json` | Add authenticated download and inline-preview requests with representative outcomes. | Final endpoint contract. | modify |
-| `docs/authorization/feature-permission-catalog.md` | authorization documentation | `docs/authorization/feature-permission-catalog.md` | Document the additional route covered by existing `service_packages.READ`. | Controller route. | modify |
+| `docs/icsacv-api.postman_collection.json` | API contract documentation | `docs/icsacv-api.postman_collection.json` | Add public download and inline-preview requests with representative outcomes. | Final endpoint contract. | modify |
+| `docs/authorization/feature-permission-catalog.md` | authorization documentation | `docs/authorization/feature-permission-catalog.md` | Document the public file-delivery exception within the service packages domain. | Controller route. | modify |
 | `service-package-record-file-delivery-handoff.md` | frontend integration handoff | `docs/frontend/service-package-record-file-delivery-handoff.md` | Specify descriptor fields, endpoint behavior, errors and preview/download consumption. | Final presenter and endpoint contract. | new |
 | static and manual verification | verification | `package.json`; this spec | Compile, inspect diff and document endpoint scenarios; unit tests are expressly excluded. | Implemented slice and user API environment. | modify |
 
@@ -146,7 +143,7 @@ existente de `GlobalApplicationModule` basado en exports.
 | Descriptor incompatible | Detail contains PDF, image and non-previewable file. | Static review and manual API check | No `s3_key`; each item contains the six common fields and optional `relative_path`. | Agent, then frontend owner |
 | Unsafe object access | `fileId` belongs to a different record or the owner is deleted. | Manual API validation | Standard not-found response; no storage stream is requested. | User |
 | Content delivery regression | PDF/image opened with `inline`; download with accented filename. | Manual API validation | Correct MIME, length and UTF-8 `Content-Disposition`; browser previews supported types. | User |
-| Authorization bypass | Missing JWT or actor without `service_packages.READ`. | Manual API validation | Existing guards return the standard authentication/authorization response before use case access. | User |
+| Browser delivery regression | Direct URL without JWT for download, inline PDF or image preview. | Manual API validation | The route returns the stream and headers without exposing S3 URLs. | User |
 | Type or wiring failure | New DTO, CQRS and DI exports. | Static validation | `npm run build` and `git diff --check` pass. | Agent |
 
 No se agregan, proponen ni ejecutan pruebas unitarias: la politica vigente del

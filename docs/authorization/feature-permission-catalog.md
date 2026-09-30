@@ -483,11 +483,11 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: expone los tipos de servicio disponibles para filtros; protegido por `PermissionsGuard` con `service_packages.READ`
 - `GET /v1/service-packages/records/:recordId/files/:fileId/download`
-  - operacion: `READ`
-  - acceso actual: autenticado
-  - nota: entrega o previsualiza un archivo embebido del record; protegido por
-    `PermissionsGuard` con `service_packages.READ` y valida la pertenencia del
-    archivo al registro antes de leer storage
+  - operacion: fuera del catalogo de backoffice
+  - acceso actual: publico
+  - nota: entrega o previsualiza un archivo embebido del record sin exponer la
+    ruta de storage; valida que el registro este activo y que el archivo le
+    pertenezca antes de leerlo
 - `GET /v1/service-packages/records/:recordId`
   - operacion: `READ`
   - acceso actual: autenticado

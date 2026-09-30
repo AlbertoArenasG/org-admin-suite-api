@@ -18,12 +18,12 @@
 
 ## Phase 2. HTTP Composition And Read Projection
 
-- [x] Exponer el subrecurso protegido con headers `Content-Type`,
+- [x] Exponer el subrecurso publico con headers `Content-Type`,
   `Content-Length` y `Content-Disposition` codificado en UTF-8.
   Status: done
   Depends on: delivery query and use case.
-  Closure: controller route follows the defined order, reuses READ guards and
-  streams the result with attachment/inline semantics.
+  Closure: controller route follows the defined order, does not require
+  guards and streams the result with attachment/inline semantics.
 
 - [x] Adaptar el presenter compartido al descriptor publico de
   documentos y retirar `s3_key` de esa respuesta.
@@ -38,7 +38,7 @@
 - [x] Actualizar Postman, catalogo de permisos y handoff de frontend.
   Status: done
   Depends on: implemented endpoint and presenter contract.
-  Closure: all three documents reflect method, URL, authorization, descriptor,
+  Closure: all three documents reflect method, URL, public delivery, descriptor,
   query, representative errors and frontend action.
 
 - [x] Ejecutar validacion estatica y registrar la evidencia de validacion

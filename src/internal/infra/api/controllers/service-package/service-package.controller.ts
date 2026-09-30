@@ -115,8 +115,6 @@ export class ServicePackageController {
   }
 
   @Get('records/:recordId/files/:fileId/download')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('service_packages', 'READ')
   @HttpCode(HttpStatus.OK)
   async downloadRecordFile(
     @Param('recordId') recordId: string,

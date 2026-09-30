@@ -13,14 +13,14 @@
 ## Objective
 
 Entregar los archivos de un registro de paquete de servicio mediante URLs de
-descarga y previsualizacion controladas por la API. El contrato habilita que el
+descarga y previsualizacion mediadas por la API. El contrato habilita que el
 detalle administrativo adopte las primitives documentales reutilizables sin
 exponer claves ni URLs directas de S3.
 
 ## Included Scope
 
 - Lectura de un archivo embebido que pertenezca a un registro de paquete activo.
-- Ruta protegida para descargar o previsualizar en linea mediante
+- Ruta publica para descargar o previsualizar en linea mediante
   `disposition=attachment|inline`.
 - Descriptor de archivo del detalle alineado al contrato de adjunto activo de
   Customer Service Records: `file_id`, `original_name`, `mime_type`, `size`,
@@ -50,8 +50,8 @@ exponer claves ni URLs directas de S3.
   GET /v1/service-packages/records/:recordId/files/:fileId/download
   ```
 
-  Acepta el query `disposition=attachment|inline` y requiere
-  `service_packages:READ`.
+  Acepta el query `disposition=attachment|inline` sin requerir JWT ni un
+  permiso de modulo.
 - El `fileId` se resuelve solo dentro del `recordId` solicitado. Un registro o
   archivo inexistente, eliminado o no relacionado conserva la respuesta
   estandar de recurso no encontrado.
@@ -66,10 +66,10 @@ exponer claves ni URLs directas de S3.
 
 | Flow | Observable result |
 | --- | --- |
-| Descarga autorizada | La ruta entrega el stream, MIME, tamano y nombre original con `Content-Disposition: attachment`. |
-| Vista previa autorizada | La misma ruta con `disposition=inline` conserva MIME y responde `Content-Disposition: inline`. |
+| Descarga | La ruta entrega el stream, MIME, tamano y nombre original con `Content-Disposition: attachment`. |
+| Vista previa | La misma ruta con `disposition=inline` conserva MIME y responde `Content-Disposition: inline`. |
 | Archivo ajeno o ausente | No se lee S3 y responde el error estandar de recurso no encontrado. |
-| Sin permiso | `JwtAuthGuard` y `PermissionsGuard` rechazan antes de acceder al archivo. |
+| Entrega publica mediada | La ruta no requiere JWT ni permiso, pero nunca expone claves ni URLs directas de S3. |
 | Detalle administrativo | Cada archivo expone metadata, `download_url` y `preview_url`, sin `s3_key`. |
 | Compatibilidad de ingesta | La ingesta ZIP y el esquema persistido siguen sin cambios. |
 
