@@ -6,6 +6,7 @@ import {
   NotificationServiceTokens,
   NotificationServicesConfig,
 } from '@infra/notification';
+import { ServicePackageUploadAlertService } from '@infra/notification/services/service-package-upload-alert.service';
 
 @Global()
 @Module({
@@ -28,7 +29,7 @@ import {
       inject: [EnvService],
     }),
   ],
-  providers: NotificationServicesConfig,
-  exports: NotificationServiceTokens,
+  providers: [...NotificationServicesConfig, ServicePackageUploadAlertService],
+  exports: [...NotificationServiceTokens, ServicePackageUploadAlertService],
 })
 export class GlobalNotificationModule {}

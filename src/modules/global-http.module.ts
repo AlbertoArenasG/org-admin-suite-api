@@ -5,6 +5,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import * as controllers from '@infra/api/controllers';
 import * as presenters from '@infra/api/presenters';
 import * as guards from '@src/internal/infra/api/guards';
+import { ServicePackageUploadAlertInterceptor } from '@infra/api/interceptors/service-package-upload-alert.interceptor';
 
 const controllersList = Object.values(controllers);
 const guardsList = Object.values(guards);
@@ -14,6 +15,10 @@ const presentersList = Object.values(presenters);
 @Module({
   imports: [CqrsModule, TerminusModule],
   controllers: [...controllersList],
-  providers: [...presentersList, ...guardsList],
+  providers: [
+    ...presentersList,
+    ...guardsList,
+    ServicePackageUploadAlertInterceptor,
+  ],
 })
 export class GlobalHttpModule {}

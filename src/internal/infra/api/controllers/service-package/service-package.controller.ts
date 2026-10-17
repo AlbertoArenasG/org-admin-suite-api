@@ -39,6 +39,7 @@ import {
 } from '@infra/api/dto';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import { normalizeMultipartFilename } from '@src/common/utils';
+import { ServicePackageUploadAlertInterceptor } from '@infra/api/interceptors/service-package-upload-alert.interceptor';
 
 @Controller('v1/service-packages')
 export class ServicePackageController {
@@ -51,6 +52,7 @@ export class ServicePackageController {
 
   @Post('uploads')
   @UseInterceptors(
+    ServicePackageUploadAlertInterceptor,
     FileInterceptor('package', {
       storage: memoryStorage(),
     }),
