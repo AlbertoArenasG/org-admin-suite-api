@@ -473,7 +473,7 @@ Endpoints actuales:
 - `POST /v1/service-packages/uploads`
   - operacion: fuera del catalogo de backoffice
   - acceso actual: sin `JwtAuthGuard`
-  - nota: capability operativa externa consumida por `pwa-recoleccion`; se mantiene fuera del catálogo autenticado mientras ese flujo siga dependiendo de operación offline
+  - nota: capability operativa consumida por `pwa-recoleccion` y por la carga ZIP del listado de Next Dashboard con `origin=backoffice`; la accion del backoffice solo es visible a quien puede leer el listado, pero el endpoint sigue siendo publico y no identifica al actor
 - `GET /v1/service-packages/records`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -501,7 +501,7 @@ Decisión de esta spec:
 
 - `service_packages` se mantiene como módulo funcional de negocio para consulta y eliminación de records
 - `POST /v1/service-packages/uploads` no se modela por ahora como operación `CREATE` de backoffice
-- ese endpoint se mantiene fuera del catálogo autenticado mientras la creación real siga ocurriendo desde `pwa-recoleccion` sin flujo de autenticación
+- ese endpoint se mantiene fuera del catálogo autenticado para conservar el flujo de la PWA; la visibilidad de la accion en Next Dashboard no sustituye una politica de autorizacion del API
 
 ### `user_registration_invitations`
 
