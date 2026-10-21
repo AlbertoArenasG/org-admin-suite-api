@@ -35,7 +35,7 @@ jobs:
       - name: Prepare bundle
         run: |
           mkdir -p bundle
-          cp -r dist package.json package-lock.json Procfile bundle/
+          cp -r dist package.json package-lock.json Procfile .platform bundle/
           # Instalar solo deps de runtime dentro del bundle
           pushd bundle
           npm ci --omit=dev

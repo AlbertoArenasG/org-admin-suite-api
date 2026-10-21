@@ -55,6 +55,7 @@ export class ServicePackageController {
     ServicePackageUploadAlertInterceptor,
     FileInterceptor('package', {
       storage: memoryStorage(),
+      limits: { fileSize: 65_000_000 },
     }),
   )
   @HttpCode(HttpStatus.CREATED)
