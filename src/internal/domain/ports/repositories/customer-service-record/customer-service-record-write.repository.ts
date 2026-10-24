@@ -34,6 +34,12 @@ export interface ICustomerServiceRecordWriteRepository {
     record: CustomerServiceRecord,
     expectedStatus: CustomerServiceRecordBillingStatus,
   ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingInvoice(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
   updateMaterializations(
     params: UpdateCustomerServiceRecordMaterializationsParams,
   ): Promise<{ updated: boolean }>;

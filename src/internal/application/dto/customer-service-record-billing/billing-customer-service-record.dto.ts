@@ -69,3 +69,23 @@ export interface GetBillingCustomerServiceRecordsResultDto {
 
 export type GetBillingCustomerServiceRecordByIdResultDto =
   BillingCustomerServiceRecordViewDto;
+
+export interface UpdateBillingCustomerServiceRecordStatusDto {
+  recordId: string;
+  actorUserId: string;
+  billingStatus:
+    | CustomerServiceRecordBillingStatus.SUBMITTED
+    | CustomerServiceRecordBillingStatus.INVOICED;
+}
+
+export interface UpdateBillingCustomerServiceRecordInvoiceDto {
+  recordId: string;
+  actorUserId: string;
+  referenceNumber: string | null;
+  fileIds: string[];
+}
+
+export type UpdateBillingCustomerServiceRecordStatusResultDto =
+  BillingCustomerServiceRecordViewDto;
+export type UpdateBillingCustomerServiceRecordInvoiceResultDto =
+  BillingCustomerServiceRecordViewDto;

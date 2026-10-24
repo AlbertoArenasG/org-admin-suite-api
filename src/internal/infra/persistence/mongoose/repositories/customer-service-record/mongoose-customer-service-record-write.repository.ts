@@ -55,6 +55,40 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
     return this.updateBillingFields(record, expectedStatus, false);
   }
 
+  async updateBillingInvoice(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const mapped = MongooseCustomerServiceRecordMapper.toMongoose(record);
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: expectedStatus,
+        },
+        {
+          $set: {
+            invoice: mapped.invoice,
+            attachments_count: record.attachmentsCount,
+            customer_visible_attachments_count:
+              record.customerVisibleAttachmentsCount,
+            updated_by: record.updatedBy,
+            updatedAt: record.updatedAt,
+          },
+        },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
   private async updateBillingFields(
     record: CustomerServiceRecord,
     expectedStatus: CustomerServiceRecordBillingStatus,

@@ -21,8 +21,8 @@
 
 ## Fase 4. Escritura de facturacion
 
-- [ ] Implementar actualizacion de estado y de factura bajo `BILLING_CUSTOMER_SERVICE_RECORDS:UPDATE`.
-  Status: pending. Dependencia: fases 2 y 3. Cierre: solo `SUBMITTED`/`INVOICED`, referencia y archivos de factura; otros segmentos no editables; adjuntar factura no cambia estado.
+- [x] Implementar actualizacion de estado y de factura bajo `BILLING_CUSTOMER_SERVICE_RECORDS:UPDATE`.
+  Status: completed. Dependencia: fases 2 y 3. Cierre: dos rutas con DTO, comandos, casos de uso y permisos propios; solo `SUBMITTED`/`INVOICED`, referencia y archivos de factura; escritura dirigida sin alterar otros segmentos ni cambiar el estado al adjuntar factura. Build, ESLint enfocado y comprobaciones aisladas pasaron; validacion HTTP integrada pendiente en fase 5.
 
 ## Fase 5. Validacion y operacion
 
