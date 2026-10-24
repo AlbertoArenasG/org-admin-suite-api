@@ -1,5 +1,6 @@
 export * from './create-customer-service-record.use-case';
 export * from './get-customer-service-records.use-case';
+export * from './get-customer-service-record-billing-status-options.use-case';
 export * from './get-customer-service-record-by-id.use-case';
 export * from './update-customer-service-record-details.use-case';
 export * from './update-customer-service-record-customer.use-case';

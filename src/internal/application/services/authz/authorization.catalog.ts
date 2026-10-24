@@ -76,6 +76,11 @@ export const AUTHORIZATION_CATALOG = {
     nameKey: 'AUTHORIZATION.MODULE.CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS',
     operations: ['READ'],
   },
+  BILLING_CUSTOMER_SERVICE_RECORDS: {
+    code: 'BILLING_CUSTOMER_SERVICE_RECORDS',
+    nameKey: 'AUTHORIZATION.MODULE.BILLING_CUSTOMER_SERVICE_RECORDS',
+    operations: ['READ', 'UPDATE'],
+  },
 } as const satisfies Record<
   string,
   {

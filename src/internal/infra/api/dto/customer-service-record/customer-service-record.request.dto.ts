@@ -429,6 +429,9 @@ class SortInstructionRequestDto {
 
 export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
   @IsOptional()
+  @IsEnum(CustomerServiceRecordBillingStatus)
+  billing_status?: CustomerServiceRecordBillingStatus;
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SortInstructionRequestDto)
@@ -472,6 +475,7 @@ export class GetCustomerServiceRecordsRequestDto extends PaginationRequestDto {
       page: this.getPage(),
       perPage: this.getPerPage(),
       search: this.search ?? null,
+      billingStatus: this.billing_status ?? null,
       operationalStatus: this.operational_status ?? null,
       serviceTypeCode: this.service_type_code ?? null,
       customerId: this.customer_id ?? null,

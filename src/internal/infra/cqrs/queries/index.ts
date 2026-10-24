@@ -20,4 +20,5 @@ export * from './expiration-notification-policy';
 export * from './internal-asset-maintenance-record';
 export * from './customer-service-record-service-type';
 export * from './customer-service-record';
+export * from './customer-service-record-billing';
 export * from './customer-service-record-client-access';

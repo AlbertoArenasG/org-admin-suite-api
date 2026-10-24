@@ -130,6 +130,10 @@ import {
   GetRecipientGroupOptionsHandler,
   GetCustomerServiceRecordsHandler,
   GetCustomerServiceRecordByIdHandler,
+  GetCustomerServiceRecordBillingStatusOptionsHandler,
+  GetBillingCustomerServiceRecordsHandler,
+  GetBillingCustomerServiceRecordByIdHandler,
+  GetBillingCustomerServiceRecordStatusOptionsHandler,
 } from '@infra/cqrs/queries';
 
 const providers = [
@@ -257,6 +261,10 @@ const providers = [
   GetRecipientGroupOptionsHandler,
   GetCustomerServiceRecordsHandler,
   GetCustomerServiceRecordByIdHandler,
+  GetCustomerServiceRecordBillingStatusOptionsHandler,
+  GetBillingCustomerServiceRecordsHandler,
+  GetBillingCustomerServiceRecordByIdHandler,
+  GetBillingCustomerServiceRecordStatusOptionsHandler,
 ];
 
 @Global()

@@ -201,7 +201,8 @@
       "EXPIRATION_NOTIFICATION_POLICIES": "Políticas de notificación por vencimiento",
       "INTERNAL_ASSET_MAINTENANCE_RECORDS": "Control de activos y pagos",
       "CUSTOMER_SERVICE_RECORDS": "Registros de servicio a clientes",
-      "CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS": "Acceso de clientes a registros de servicio"
+      "CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS": "Acceso de clientes a registros de servicio",
+      "BILLING_CUSTOMER_SERVICE_RECORDS": "Facturación de registros de servicio a clientes"
     },
     "OPERATION": {
       "CREATE": "Crear",

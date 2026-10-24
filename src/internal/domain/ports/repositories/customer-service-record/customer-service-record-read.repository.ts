@@ -1,5 +1,6 @@
 import {
   CustomerServiceRecord,
+  CustomerServiceRecordBillingStatus,
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
 
@@ -23,6 +24,7 @@ export interface FindCustomerServiceRecordsParams {
   page: number;
   perPage: number;
   search?: string | null;
+  billingStatus?: CustomerServiceRecordBillingStatus | null;
   operationalStatus?: CustomerServiceRecordOperationalStatus | null;
   serviceTypeCode?: string | null;
   customerId?: string | null;

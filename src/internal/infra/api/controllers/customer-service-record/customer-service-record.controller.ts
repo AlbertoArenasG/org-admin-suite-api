@@ -43,6 +43,7 @@ import {
 } from '@infra/cqrs/commands';
 import {
   GetCustomerServiceRecordByIdQuery,
+  GetCustomerServiceRecordBillingStatusOptionsQuery,
   GetCustomerServiceRecordsQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
@@ -85,6 +86,18 @@ export class CustomerServiceRecordController {
       .withPagination(result.page, result.perPage, result.total)
       .withStatus(HttpStatus.OK)
       .build();
+  }
+  @Get('billing-statuses/options')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'READ')
+  async billingStatusOptions() {
+    const result = await this.queryBus.execute(
+      GetCustomerServiceRecordBillingStatusOptionsQuery.create(),
+    );
+    return this.response(
+      this.presenter.toBillingStatusOptions(result),
+      HttpStatus.OK,
+    );
   }
   @Get(':recordId')
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -152,6 +152,7 @@ export interface DeleteCustomerServiceRecordDto {
 
 export interface GetCustomerServiceRecordsDto extends PaginationParamsDto {
   search: string | null;
+  billingStatus: CustomerServiceRecordBillingStatus | null;
   operationalStatus: CustomerServiceRecordOperationalStatus | null;
   serviceTypeCode: string | null;
   customerId: string | null;

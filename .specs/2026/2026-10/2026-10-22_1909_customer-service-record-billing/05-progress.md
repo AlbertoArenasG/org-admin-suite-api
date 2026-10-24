@@ -116,3 +116,10 @@
 
 - A solicitud del usuario, las variables del sender se renombraron a `BILLING_NOTIFICATION_RECIPIENTS_TO` y `BILLING_NOTIFICATION_RECIPIENTS_CC` para que futuros modulos de facturacion puedan usar las mismas listas.
 - Se actualizaron el contrato en definicion y diseno tecnico, el schema de entorno, el adaptador, el `.env` local y `.env.example`. El ejemplo ahora usa el mismo encabezado de seccion que los bloques existentes. No se cambiaron los valores privados ni se agregaron archivos al stage.
+
+## 2026-10-24 - Slice 3 implementada
+
+- Se agrego `BILLING_CUSTOMER_SERVICE_RECORDS` con operaciones `READ` y `UPDATE` en el catalogo, con nombres ES/EN. Los tres GET nuevos de facturacion usan JWT y el `READ` propio; el detalle no visible responde `404`.
+- La lectura de facturacion tiene puerto, repositorio Mongoose, DTO, mapper, casos de uso, queries/handlers, presenter y controlador independientes de los administrativos. El repositorio filtra `ACTIVE` y `SUBMITTED`/`INVOICED` antes de contar, paginar o consultar el detalle. Busqueda, orden y paginacion siguen el diseno; lista y detalle conservan paridad de campos con administracion.
+- El listado administrativo acepta `billing_status` entre los tres estados. Ambos modulos exponen un GET local de opciones internacionalizadas: tres estados en administracion y dos en facturacion. Los DTO rechazan valores fuera de su conjunto.
+- `npm run build` y ESLint enfocado pasaron. Comprobaciones aisladas cubrieron validacion de filtros, limites de paginacion, opciones, filtros Mongo de lista/detalle, paridad de presenters, metadatos de guards y detalle no visible. No hubo llamadas HTTP reales ni acceso a MongoDB; la validacion integrada y el seed de roles permanecen pendientes en la fase 5. No se agregaron archivos al stage.

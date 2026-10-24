@@ -14,10 +14,10 @@
 
 ## Fase 3. Lectura de facturacion
 
-- [ ] Registrar modulo de permiso y pipeline independiente de listado/detalle.
-  Status: pending. Dependencia: fase 1. Cierre: permiso `READ`, filtro backend aplicado antes de count/paginacion/detalle y paridad de campos con administracion.
-- [ ] Agregar filtro de estado y endpoint local de opciones en ambos listados.
-  Status: pending. Dependencia: fase 1. Cierre: administracion ofrece y acepta tres valores; facturacion solo `SUBMITTED`/`INVOICED`, rechaza valores invalidos con `400` y excluye `NOT_SUBMITTED` aun sin filtro; cada endpoint de opciones usa el `READ` de su modulo sin capability derivada nueva.
+- [x] Registrar modulo de permiso y pipeline independiente de listado/detalle.
+  Status: completed. Dependencia: fase 1. Cierre: permiso `READ`, filtro backend aplicado antes de count/paginacion/detalle y paridad de campos con administracion; build, lint y comprobaciones aisladas pasaron. Validacion HTTP manual sigue en fase 5.
+- [x] Agregar filtro de estado y endpoint local de opciones en ambos listados.
+  Status: completed. Dependencia: fase 1. Cierre: administracion ofrece y acepta tres valores; facturacion solo `SUBMITTED`/`INVOICED`, rechaza valores invalidos con `400` y excluye `NOT_SUBMITTED` aun sin filtro; cada endpoint de opciones usa el `READ` de su modulo sin capability derivada nueva. DTOs y guards comprobados sin acceso a la base real.
 
 ## Fase 4. Escritura de facturacion
 

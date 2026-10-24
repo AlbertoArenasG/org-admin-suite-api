@@ -45,6 +45,10 @@ export class CustomerServiceRecordPresenter {
     return results.map((result) => this.toListResponse(result));
   }
 
+  toBillingStatusOptions(codes: string[]) {
+    return codes.map((code) => this.localized('BILLING_STATUS', code));
+  }
+
   private toListResponse(result: CustomerServiceRecordViewDto) {
     return {
       customer_service_record_id: result.id,

@@ -160,6 +160,7 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
     }
     if (params.operationalStatus)
       filter.operational_status = params.operationalStatus;
+    if (params.billingStatus) filter.billing_status = params.billingStatus;
     if (params.serviceTypeCode)
       filter.service_type_code = params.serviceTypeCode;
     if (params.customerId) filter['customer.customer_id'] = params.customerId;
