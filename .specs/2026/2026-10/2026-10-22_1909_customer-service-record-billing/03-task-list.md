@@ -26,8 +26,8 @@
 
 ## Fase 5. Validacion y operacion
 
-- [ ] Actualizar documentacion viva, handoff y coleccion Postman; verificar el ejemplo de variables agregado en la fase 2.
-  Status: pending. Dependencia: fases 1-4. Cierre: contrato, permisos y configuracion coinciden con codigo y matriz de comportamiento.
+- [x] Actualizar documentacion viva, handoff y coleccion Postman; verificar el ejemplo de variables agregado en la fase 2.
+  Status: completed. Dependencia: fases 1-4. Cierre: catalogo de permisos, handoff y requests/ejemplos Postman reflejan el contrato implementado de ambos modulos; `.env.example` conserva las dos listas CSV sin direcciones reales. Validacion HTTP y operaciones desplegadas siguen pendientes en tareas separadas.
 - [ ] Validar build, lint y escenarios HTTP/permisos/error de correo, y registrar evidencia.
   Status: pending. Dependencia: fases 1-4. Cierre: casos de `06` comprobados, fallos y limitaciones documentados.
 - [ ] Confirmar entorno objetivo y ausencia de nuevas altas durante la ventana; configurar las dos variables de destinatarios antes del despliegue y tambien antes de la migracion si ya forman parte del `envSchema` vigente.
@@ -36,9 +36,9 @@
   Status: completed. Ejecuta: usuario. Reporte revisado antes de apply: 57 registros, todos `NOT_SUBMITTED`, 0 `INVOICED`, 0 invalidos y sin escrituras. La persona usuaria procedio con apply tras revisar la clasificacion.
 - [x] Ejecutar `npm run db:migrate:customer-service-record-billing:apply` y luego dry-run de verificacion.
   Status: completed. Ejecuta: usuario. Apply: 57 actualizados, 0 pendientes, auditoria intacta y resultado SUCCESS. Segundo dry-run: 57 estados existentes, 0 estados o avisos pendientes y 0 registros invalidos; no hubo escrituras. No se exige respaldo adicional.
+- [ ] Ejecutar `npm run db:seed:roles`.
+  Status: pending. Ejecuta: usuario, con este codigo local y `MONGO_URI` del entorno objetivo confirmada; no depende del despliegue de la API. Riesgo: recalculo de permisos de roles de sistema; el nuevo permiso no se asigna automaticamente a roles personalizados. Cierre: seed reportado y permisos `READ`/`UPDATE` verificados.
 - [ ] Desplegar API y verificar el indice de facturacion declarado en el schema.
   Status: pending. Ejecuta: usuario, tras backfill y con variables desplegadas. Cierre: arranque correcto e indice presente; Mongoose lo crea automaticamente con la configuracion actual, no el script de migracion.
-- [ ] Ejecutar `npm run db:seed:roles`.
-  Status: pending. Ejecuta: usuario, tras desplegar catalogo nuevo. Riesgo: recalculo de permisos de roles de sistema; el nuevo permiso no se asigna automaticamente a roles personalizados. Cierre: seed reportado y permisos `READ`/`UPDATE` verificados.
 - [ ] Confirmar validacion manual final y cerrar spec/documentacion viva.
   Status: pending. Ejecuta: usuario y agente. Cierre: evidencia en `05-progress.md`, tasks y estados formales completos; no cerrar por compilacion solamente.

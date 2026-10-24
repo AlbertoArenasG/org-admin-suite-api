@@ -62,7 +62,7 @@ Frontera complementaria:
 Runbook operativo:
 
 - si agregas un nuevo módulo o cambias las operaciones válidas de uno existente, actualiza primero el catálogo en código
-- después corre `npm run db:seed`
+- después corre `npm run db:seed:roles`
 - ese seed sincroniza de forma idempotente los permisos completos de `MASTER_ADMIN_DEFAULT` y `ADMIN_DEFAULT`
 - los roles custom no se alteran automáticamente
 
@@ -114,6 +114,7 @@ Los modulos actuales del sistema son:
 - `internal_asset_maintenance_records`
 - `customer_service_records`
 - `customer_service_records_client_access`
+- `billing_customer_service_records`
 
 Nota:
 
@@ -748,7 +749,11 @@ Endpoints actuales:
 - `GET /v1/customer-service-records`
   - operacion: `READ`
   - acceso actual: autenticado
-  - nota: listado paginado con filtros, rangos date-only y ordenamientos permitidos.
+  - nota: listado paginado con filtros, rangos date-only y ordenamientos permitidos; `billing_status` acepta `NOT_SUBMITTED`, `SUBMITTED` e `INVOICED`.
+- `GET /v1/customer-service-records/billing-statuses/options`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: endpoint de opciones local del modulo; devuelve los tres estados internacionalizados. No es una capability auxiliar derivada.
 - `GET /v1/customer-service-records/:recordId`
   - operacion: `READ`
   - acceso actual: autenticado
@@ -757,6 +762,10 @@ Endpoints actuales:
   - operacion: `UPDATE`
   - acceso actual: autenticado
   - nota: reemplaza details completos.
+- `PATCH /v1/customer-service-records/:recordId/billing-status`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: permite los tres estados de facturacion; la entrada efectiva a `SUBMITTED` envia el aviso antes de persistir el cambio.
 - `PUT /v1/customer-service-records/:recordId/customer`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -791,6 +800,36 @@ El refresh técnico `POST /v1/internal-jobs/customer-service-records/materializa
 El `PATCH /v1/customer-service-records/:recordId` fue retirado. El contrato
 detallado de adjuntos y actualizaciones segmentadas vive en el
 [handoff de adjuntos](../frontend/customer-service-record-attachments-handoff.md).
+
+El listado y el detalle administrativos exponen `billing_status` y el estado del
+ultimo `billing_notification`. El contrato de facturacion se documenta en el
+[handoff de facturacion](../frontend/customer-service-record-billing-handoff.md).
+
+### `billing_customer_service_records`
+
+Modulo tecnico `BILLING_CUSTOMER_SERVICE_RECORDS`, separado del permiso
+administrativo aunque consulte el mismo agregado. Solo define `READ` y `UPDATE`.
+Todas las rutas requieren JWT y `PermissionsGuard`; un permiso del modulo
+administrativo no concede acceso a este modulo.
+
+Controller actual:
+
+- `src/internal/infra/api/controllers/customer-service-record-billing/billing-customer-service-record.controller.ts`
+
+Endpoints actuales:
+
+- `GET /v1/billing/customer-service-records`: `READ`; listado paginado solo de registros `ACTIVE` con estado `SUBMITTED` o `INVOICED`.
+- `GET /v1/billing/customer-service-records/billing-statuses/options`: `READ`; opciones locales internacionalizadas, solo `SUBMITTED` e `INVOICED`; sin capability auxiliar derivada.
+- `GET /v1/billing/customer-service-records/:recordId`: `READ`; mismo alcance; un registro fuera de alcance responde `404`.
+- `PATCH /v1/billing/customer-service-records/:recordId/billing-status`: `UPDATE`; acepta solo `SUBMITTED` e `INVOICED`; la transicion efectiva hacia `SUBMITTED` envia aviso.
+- `PUT /v1/billing/customer-service-records/:recordId/invoice`: `UPDATE`; edita solo referencia y archivos de factura, sin cambiar estado ni datos operativos.
+
+Las escrituras respetan el mismo alcance de lectura del modulo. Para otorgar
+los permisos nuevos en el entorno, el responsable ejecuta
+`npm run db:seed:roles` con el catalogo local actualizado y la base objetivo
+confirmada, sin esperar al despliegue; los roles personalizados se
+revisan y asignan por administracion. Contrato completo en el
+[handoff de facturacion](../frontend/customer-service-record-billing-handoff.md).
 
 ### `customer_service_records_client_access`
 

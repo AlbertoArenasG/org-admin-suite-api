@@ -1798,7 +1798,7 @@
     },
     {
       "name": "Customer Service Records",
-      "description": "Contrato administrativo segmentado. La estrategia sort_strategy=work_priority es opcional; sort[] explicito tiene precedencia.",
+      "description": "Registros administrativos. Permisos customer_service_records:READ/UPDATE según ruta. El listado y detalle exponen billing_status y billing_notification; ver docs/frontend/customer-service-record-billing-handoff.md.",
       "item": [
         {
           "name": "List Work Priority",
@@ -1844,10 +1844,15 @@
                   "key": "sort[0][direction]",
                   "value": "desc",
                   "disabled": true
+                },
+                {
+                  "key": "billing_status",
+                  "value": "SUBMITTED",
+                  "disabled": true
                 }
               ]
             },
-            "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sort_strategy."
+            "description": "Requiere customer_service_records.READ. Activa sort[] para comprobar que el orden explicito prevalece sobre sort_strategy. billing_status opcional: NOT_SUBMITTED, SUBMITTED o INVOICED. Filas incluyen billing_status y billing_notification."
           },
           "response": []
         },
@@ -1974,6 +1979,969 @@
             "description": "documentType: quotation, purchase-order, invoice u other-files. other-files acepta solo file_ids."
           },
           "response": []
+        },
+        {
+          "name": "Get Record by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}"
+              ]
+            },
+            "description": "Requiere customer_service_records:READ. Detalle administrativo con billing_status, billing_notification e invoice."
+          },
+          "response": [
+            {
+              "name": "200 - Detalle ilustrativo",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}"
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Detalle administrativo con billing_status, billing_notification e invoice."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Billing Status Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/billing-statuses/options",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "billing-statuses",
+                "options"
+              ]
+            },
+            "description": "Requiere customer_service_records:READ. Opciones locales: NOT_SUBMITTED, SUBMITTED e INVOICED."
+          },
+          "response": [
+            {
+              "name": "200 - Opciones administrativas",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/billing-statuses/options",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "billing-statuses",
+                    "options"
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Opciones locales: NOT_SUBMITTED, SUBMITTED e INVOICED."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": [\n    {\n      \"code\": \"NOT_SUBMITTED\",\n      \"name\": \"Sin enviar a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.NOT_SUBMITTED\"\n    },\n    {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    {\n      \"code\": \"INVOICED\",\n      \"name\": \"Facturado\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.INVOICED\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Billing Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "billing-status"
+              ]
+            },
+            "description": "Requiere customer_service_records:UPDATE. Admite NOT_SUBMITTED, SUBMITTED e INVOICED. Transición efectiva a SUBMITTED envía aviso antes de guardar; fallo conocido: 502.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"billing_status\": \"SUBMITTED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Estado actualizado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "billing-status"
+                  ]
+                },
+                "description": "Requiere customer_service_records:UPDATE. Admite NOT_SUBMITTED, SUBMITTED e INVOICED. Transición efectiva a SUBMITTED envía aviso antes de guardar; fallo conocido: 502.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"billing_status\": \"SUBMITTED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": []\n  }\n}"
+            },
+            {
+              "name": "502 - Aviso rechazado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "billing-status"
+                  ]
+                },
+                "description": "Requiere customer_service_records:UPDATE. Admite NOT_SUBMITTED, SUBMITTED e INVOICED. Transición efectiva a SUBMITTED envía aviso antes de guardar; fallo conocido: 502.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"billing_status\": \"SUBMITTED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 502,\n  \"error_details\": {\n    \"message\": \"No se pudo enviar el aviso a facturación. Vuelve a intentarlo\",\n    \"method\": \"PATCH\",\n    \"path\": \"/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status\",\n    \"error_code\": \"BILLING_NOTIFICATION.DELIVERY_FAILED\",\n    \"validation_errors\": []\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Billing Customer Service Records",
+      "description": "Módulo de permisos independiente BILLING_CUSTOMER_SERVICE_RECORDS; solo ACTIVE con SUBMITTED/INVOICED. Ver docs/frontend/customer-service-record-billing-handoff.md. Usa ADMIN_AUTH_TOKEN y CUSTOMER_SERVICE_RECORD_ID de ejemplo.",
+      "item": [
+        {
+          "name": "List Billing Records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records?page=1&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "cliente",
+                  "disabled": true
+                },
+                {
+                  "key": "billing_status",
+                  "value": "SUBMITTED",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:READ. Paginación por defecto 1/10, máximo 100; billing_status opcional SUBMITTED o INVOICED; NOT_SUBMITTED devuelve 400."
+          },
+          "response": [
+            {
+              "name": "200 - Listado ilustrativo",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records?page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "cliente",
+                      "disabled": true
+                    },
+                    {
+                      "key": "billing_status",
+                      "value": "SUBMITTED",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:READ. Paginación por defecto 1/10, máximo 100; billing_status opcional SUBMITTED o INVOICED; NOT_SUBMITTED devuelve 400."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": [\n    {\n      \"customer_service_record_id\": \"record-example-id\",\n      \"service_number\": 123,\n      \"service_number_display\": \"000123\",\n      \"service_type\": {\n        \"service_type_code\": \"CALIBRATION\",\n        \"name\": \"Calibración\"\n      },\n      \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n      \"observations\": null,\n      \"customer\": {\n        \"customer_id\": \"customer-example-id\",\n        \"name\": \"Cliente ejemplo\",\n        \"users\": []\n      },\n      \"assets\": [],\n      \"customer_delivery\": {\n        \"received_at\": null,\n        \"estimated_delivery_interval\": null,\n        \"estimated_delivery_at\": null,\n        \"delivered_to_customer_at\": null,\n        \"status_policy_id\": null,\n        \"notification_policy_id\": null,\n        \"status_materialization\": null,\n        \"notification_materialization\": null\n      },\n      \"provider\": null,\n      \"attachments_count\": 0,\n      \"operational_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n      },\n      \"billing_status\": {\n        \"code\": \"SUBMITTED\",\n        \"name\": \"Enviado a facturación\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n      },\n      \"billing_notification\": {\n        \"status\": {\n          \"code\": \"SENT\",\n          \"name\": \"Enviado\",\n          \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n        },\n        \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n        \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n        \"failure_reason\": null\n      },\n      \"created_at\": \"2026-10-24T16:00:00.000Z\",\n      \"updated_at\": \"2026-10-24T18:00:01.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"per_page\": 10,\n    \"total\": 1,\n    \"total_pages\": 1\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Billing Status Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/billing-statuses/options",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "billing-statuses",
+                "options"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:READ. Opciones locales SUBMITTED e INVOICED."
+          },
+          "response": [
+            {
+              "name": "200 - Opciones de facturación",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/billing-statuses/options",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "billing-statuses",
+                    "options"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:READ. Opciones locales SUBMITTED e INVOICED."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": [\n    {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    {\n      \"code\": \"INVOICED\",\n      \"name\": \"Facturado\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.INVOICED\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Billing Record by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:READ. Detalle paritario al administrativo; fuera de alcance devuelve 404."
+          },
+          "response": [
+            {
+              "name": "200 - Detalle ilustrativo",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:READ. Detalle paritario al administrativo; fuera de alcance devuelve 404."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": []\n  }\n}"
+            },
+            {
+              "name": "404 - Registro fuera de alcance",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:READ. Detalle paritario al administrativo; fuera de alcance devuelve 404."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 404,\n  \"error_details\": {\n    \"message\": \"No se encontró el registro de servicio\",\n    \"method\": \"GET\",\n    \"path\": \"/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}\",\n    \"error_code\": \"ENTITY_NOT_FOUND.CUSTOMER_SERVICE_RECORD\",\n    \"validation_errors\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Billing Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "billing-status"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Admite solo SUBMITTED o INVOICED; no-op no envía. INVOICED a SUBMITTED envía aviso; fallo conocido 502.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"billing_status\": \"INVOICED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Estado actualizado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "billing-status"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Admite solo SUBMITTED o INVOICED; no-op no envía. INVOICED a SUBMITTED envía aviso; fallo conocido 502.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"billing_status\": \"INVOICED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"INVOICED\",\n      \"name\": \"Facturado\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.INVOICED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": []\n  }\n}"
+            },
+            {
+              "name": "502 - Aviso rechazado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "billing-status"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Admite solo SUBMITTED o INVOICED; no-op no envía. INVOICED a SUBMITTED envía aviso; fallo conocido 502.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"billing_status\": \"INVOICED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 502,\n  \"error_details\": {\n    \"message\": \"No se pudo enviar el aviso a facturación. Vuelve a intentarlo\",\n    \"method\": \"PATCH\",\n    \"path\": \"/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status\",\n    \"error_code\": \"BILLING_NOTIFICATION.DELIVERY_FAILED\",\n    \"validation_errors\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Replace Invoice",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. reference_number puede ser null; file_ids es el conjunto completo. [] retira todos. No cambia billing_status ni acepta document_type. Para dar de alta archivos, usar el flujo de files existente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference_number\": \"FAC-2026-001\",\n  \"file_ids\": [\n    \"{{FILE_ID}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Factura actualizada",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. reference_number puede ser null; file_ids es el conjunto completo. [] retira todos. No cambia billing_status ni acepta document_type. Para dar de alta archivos, usar el flujo de files existente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference_number\": \"FAC-2026-001\",\n  \"file_ids\": [\n    \"{{FILE_ID}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 1,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": \"FAC-2026-001\",\n      \"files\": [\n        {\n          \"file_id\": \"file-example-id\",\n          \"original_name\": \"factura.pdf\",\n          \"mime_type\": \"application/pdf\",\n          \"size\": 10000,\n          \"download_url\": \"{{HOST}}/v1/files/file-example-id/download\",\n          \"preview_url\": \"{{HOST}}/v1/files/file-example-id/download?disposition=inline\"\n        }\n      ]\n    },\n    \"other_files\": []\n  }\n}"
+            },
+            {
+              "name": "409 - Cambio concurrente de estado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. reference_number puede ser null; file_ids es el conjunto completo. [] retira todos. No cambia billing_status ni acepta document_type. Para dar de alta archivos, usar el flujo de files existente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference_number\": \"FAC-2026-001\",\n  \"file_ids\": [\n    \"{{FILE_ID}}\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 409,\n  \"error_details\": {\n    \"message\": \"El estado de facturación cambió; vuelve a cargar el registro\",\n    \"method\": \"PUT\",\n    \"path\": \"/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice\",\n    \"error_code\": \"STATE_CONFLICT.CUSTOMER_SERVICE_RECORD.BILLING_STATUS_CHANGED\",\n    \"validation_errors\": []\n  }\n}"
+            }
+          ]
         }
       ]
     },

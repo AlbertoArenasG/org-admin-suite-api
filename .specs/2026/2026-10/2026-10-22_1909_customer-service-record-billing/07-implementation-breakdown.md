@@ -46,7 +46,7 @@ Artefactos: handoff de frontend, catalogo vivo de autorizacion, coleccion Postma
 2. `npm run db:migrate:customer-service-record-billing:dry-run` antes del despliegue. Precondiciones: entorno y variables exigidas por el schema vigente correctos; revisar conteos. Riesgo: lectura de produccion. Evidencia: clasificacion por estado y casos de referencia sola. Si el resultado no cuadra, detenerse sin aplicar.
 3. `npm run db:migrate:customer-service-record-billing:apply` tras aprobar dry-run. Precondiciones: ventana operativa y entorno confirmados, reporte dry-run aprobado; no se exige respaldo adicional. Riesgo: escritura masiva. Evidencia: integridad OK, timestamps y `updated_by` sin cambios.
 4. Repetir `npm run db:migrate:customer-service-record-billing:dry-run` para demostrar idempotencia; evidencia: cero pendientes.
-5. Desplegar API con variables configuradas; comprobar que Mongoose creo el indice declarado en el schema. La migracion no crea indices.
-6. Ejecutar `npm run db:seed:roles` con el catalogo nuevo desplegado. Riesgo: recalculo de roles de sistema. Evidencia: seed reportado, permisos disponibles; roles personalizados revisados por administracion.
+5. Ejecutar `npm run db:seed:roles` desde este checkout con `MONGO_URI` del entorno objetivo confirmada. El script toma el catalogo del codigo local y conecta directamente a MongoDB; no requiere API desplegada. Riesgo: recalculo de roles de sistema. Evidencia: seed reportado, permisos disponibles; roles personalizados revisados por administracion.
+6. Desplegar API con variables configuradas; comprobar que Mongoose creo el indice declarado en el schema. La migracion no crea indices.
 
 Cierre: confirmacion manual del usuario, `05-progress.md` actualizado, documentacion viva consistente y estados formales de `00` completados solo con evidencia suficiente.

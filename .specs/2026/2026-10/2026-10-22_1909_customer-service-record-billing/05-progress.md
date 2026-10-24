@@ -130,3 +130,16 @@
 - Las escrituras consultan el alcance de lectura de facturacion y usan filtros condicionados por registro activo y estado anterior. Un registro fuera de alcance responde `404`; un cambio concurrente devuelve `409`. El no-op de estado no escribe ni envia correo; `INVOICED` a `SUBMITTED` envia antes de persistir y conserva la politica de fallo de la slice 2.
 - La factura reutiliza el reconciliador de adjuntos y actualiza solo `invoice`, conteos y auditoria. No cambia el estado ni otros documentos. El cuerpo no acepta un tipo documental alternativo.
 - `npm run build`, ESLint enfocado y comprobaciones aisladas de validacion, transiciones, fallo del sender, reconciliacion y escritura dirigida pasaron. No se enviaron correos ni se hicieron escrituras a MongoDB. La validacion HTTP integrada, documentacion viva y operaciones desplegadas permanecen en fase 5. No se agregaron archivos al stage.
+
+## 2026-10-24 - Documentacion de integracion de la fase 5
+
+- Se actualizo el catalogo vivo de permisos con `BILLING_CUSTOMER_SERVICE_RECORDS` (`READ`/`UPDATE`), sus cinco rutas, las dos rutas administrativas nuevas y el filtro administrativo. Se mantuvo la distincion entre opciones locales y capabilities auxiliares derivadas.
+- Se creo el handoff de frontend con contratos de lectura/escritura, permisos independientes, filtros, envelopes, estados y ultimo aviso, factura, fallos `400`/`401`/`403`/`404`/`409`/`502`, y el limite conocido de correo aceptado seguido de escritura fallida.
+- La coleccion Postman incluye las siete rutas nuevas, detalle administrativo de apoyo, el filtro del listado administrativo y ejemplos ilustrativos de respuestas exitosas y errores. Se verifico que el JSON es parseable y que `.env.example` documenta `BILLING_NOTIFICATION_RECIPIENTS_TO`/`CC` como listas CSV de ejemplo.
+- El registro de artefactos en `06-technical-design.md` se alineo con los nombres de clases y rutas de archivo que efectivamente quedaron implementados; se comprobo que no queden rutas `src/*.ts` inexistentes en ese registro.
+- Se completo solo la tarea documental de fase 5. La validacion HTTP manual, la configuracion desplegada, el indice, el seed de roles y el cierre formal de la spec siguen pendientes. No se agregaron archivos al stage.
+
+## 2026-10-24 - Aclaracion del orden del seed de roles
+
+- Se verifico que `npm run db:seed:roles` carga `AUTHORIZATION_CATALOG` del checkout local y se conecta a `MONGO_URI` directamente; no depende del proceso ni del despliegue de la API. La indicacion anterior de esperar al despliegue confundia un orden propuesto con una precondicion tecnica.
+- Se corrigieron tarea, breakdown y documentacion viva. El usuario puede ejecutar el seed con el codigo actual y la base objetivo confirmada. El seed sigue pendiente hasta recibir su salida; no se ejecuto desde esta sesion.
