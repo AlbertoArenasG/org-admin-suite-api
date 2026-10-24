@@ -23,7 +23,7 @@ Un registro conserva estados tecnico, operativo y de facturacion independientes.
 
 ## Orden de despliegue previsto
 
-1. Configurar las dos variables de destinatarios en el `.env` desde el que se ejecutara la migracion y en el entorno desplegado, sin registrar direcciones en la spec. La migracion no envia correos; las variables se requieren porque el loader compartido valida todo `envSchema` antes de conectarse a MongoDB.
+1. Confirmar las variables que exige el `envSchema` vigente en el momento de ejecutar la migracion. Si las variables de destinatarios ya se incorporaron al schema, configurarlas tambien en el `.env` de ejecucion; el script no envia correos. Configurarlas siempre en el entorno desplegado antes de iniciar la API con el sender.
 2. Confirmar entorno destino y verificar que no se creen registros nuevos durante la ventana entre migracion y despliegue. El usuario planea realizarla en un dia sin actividad operativa. Si esa condicion deja de cumplirse, ejecutar de nuevo dry-run y aplicar el backfill pendiente antes de dar el despliegue por validado.
 3. Validar `dry-run` de migracion y sus conteos; si la clasificacion no cuadra, detenerse sin ejecutar `apply`. Ejecutar `apply` solo tras revisar y aprobar el reporte; despues verificar integridad, auditoria e idempotencia. El script es independiente de la app nueva y puede ejecutarse antes de desplegarla. No se exige un respaldo adicional como precondicion de esta spec.
 4. Desplegar API con las variables ya configuradas. Mongoose crea el indice declarado en el schema al iniciar con `autoIndex` habilitado en la configuracion actual; verificar su presencia despues del arranque. La migracion no crea ese indice.

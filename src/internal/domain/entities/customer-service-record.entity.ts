@@ -24,6 +24,25 @@ export enum CustomerServiceRecordOperationalStatus {
   CANCELLED = 'CANCELLED',
 }
 
+export enum CustomerServiceRecordBillingStatus {
+  NOT_SUBMITTED = 'NOT_SUBMITTED',
+  SUBMITTED = 'SUBMITTED',
+  INVOICED = 'INVOICED',
+}
+
+export enum CustomerServiceRecordBillingNotificationStatus {
+  NOT_REQUESTED = 'NOT_REQUESTED',
+  SENT = 'SENT',
+  FAILED = 'FAILED',
+}
+
+export interface CustomerServiceRecordBillingNotificationProps {
+  status: CustomerServiceRecordBillingNotificationStatus;
+  attemptedAt: Date | null;
+  sentAt: Date | null;
+  failureReason: string | null;
+}
+
 export enum CustomerServiceRecordMaterializationSource {
   SYSTEM = 'SYSTEM',
   POLICY = 'POLICY',
@@ -210,6 +229,8 @@ export interface CustomerServiceRecordProps {
   customerVisibleAttachmentsCount?: number;
   status?: CustomerServiceRecordStatus;
   operationalStatus?: CustomerServiceRecordOperationalStatus;
+  billingStatus?: CustomerServiceRecordBillingStatus;
+  billingNotification?: CustomerServiceRecordBillingNotificationProps;
   createdBy?: string | null;
   updatedBy?: string | null;
   createdAt?: Date;
@@ -223,6 +244,14 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     props.status = props.status ?? CustomerServiceRecordStatus.ACTIVE;
     props.operationalStatus =
       props.operationalStatus ?? CustomerServiceRecordOperationalStatus.PENDING;
+    props.billingStatus =
+      props.billingStatus ?? CustomerServiceRecordBillingStatus.NOT_SUBMITTED;
+    props.billingNotification = props.billingNotification ?? {
+      status: CustomerServiceRecordBillingNotificationStatus.NOT_REQUESTED,
+      attemptedAt: null,
+      sentAt: null,
+      failureReason: null,
+    };
     props.assets = CustomerServiceRecord.normalizeAssets(props.assets ?? []);
     props.customerDelivery = CustomerServiceRecord.normalizeCustomerDelivery(
       props.customerDelivery,
@@ -308,6 +337,22 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
       CustomerServiceRecordOperationalStatus.PENDING
     );
   }
+  get billingStatus(): CustomerServiceRecordBillingStatus {
+    return this.props.billingStatus!;
+  }
+  get billingNotification(): CustomerServiceRecordBillingNotificationProps {
+    return structuredClone(this.props.billingNotification!);
+  }
+
+  updateBilling(
+    status: CustomerServiceRecordBillingStatus,
+    notification: CustomerServiceRecordBillingNotificationProps,
+    updatedBy: string,
+  ): void {
+    this.props.billingStatus = status;
+    this.props.billingNotification = structuredClone(notification);
+    this.touch(updatedBy);
+  }
   get createdBy(): string | null {
     return this.props.createdBy ?? null;
   }
@@ -328,7 +373,12 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     details: Partial<
       Omit<
         CustomerServiceRecordProps,
-        'id' | 'serviceNumber' | 'createdBy' | 'createdAt'
+        | 'id'
+        | 'serviceNumber'
+        | 'createdBy'
+        | 'createdAt'
+        | 'billingStatus'
+        | 'billingNotification'
       >
     >,
     updatedBy?: string | null,

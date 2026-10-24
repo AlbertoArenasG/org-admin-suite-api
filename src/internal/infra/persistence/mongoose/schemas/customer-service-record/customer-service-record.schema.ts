@@ -2,12 +2,28 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import {
+  CustomerServiceRecordBillingNotificationStatus,
+  CustomerServiceRecordBillingStatus,
   CustomerServiceRecordMaterializationSource,
   CustomerServiceRecordNotificationTriggerEventStatus,
   CustomerServiceRecordOperationalStatus,
   CustomerServiceRecordProviderFollowUpEventStatus,
   CustomerServiceRecordStatus,
 } from '@domain/entities';
+
+@Schema({ _id: false })
+export class CustomerServiceRecordBillingNotificationDocument {
+  @Prop({
+    type: String,
+    enum: Object.values(CustomerServiceRecordBillingNotificationStatus),
+    required: true,
+    default: CustomerServiceRecordBillingNotificationStatus.NOT_REQUESTED,
+  })
+  status: CustomerServiceRecordBillingNotificationStatus;
+  @Prop({ type: Date, default: null }) attempted_at: Date | null;
+  @Prop({ type: Date, default: null }) sent_at: Date | null;
+  @Prop({ type: String, default: null }) failure_reason: string | null;
+}
 
 @Schema({ _id: false })
 export class CustomerServiceRecordIntervalDocument {
@@ -462,6 +478,19 @@ export class CustomerServiceRecordDocument extends Document {
     index: true,
   })
   operational_status: CustomerServiceRecordOperationalStatus;
+  @Prop({
+    type: String,
+    enum: Object.values(CustomerServiceRecordBillingStatus),
+    required: true,
+    default: CustomerServiceRecordBillingStatus.NOT_SUBMITTED,
+  })
+  billing_status: CustomerServiceRecordBillingStatus;
+  @Prop({
+    type: CustomerServiceRecordBillingNotificationDocument,
+    required: true,
+    default: {},
+  })
+  billing_notification: CustomerServiceRecordBillingNotificationDocument;
   @Prop({ type: String, required: false, default: null, index: true })
   created_by?: string | null;
   @Prop({ type: String, required: false, default: null }) updated_by?:
@@ -476,6 +505,12 @@ export const CustomerServiceRecordSchema = SchemaFactory.createForClass(
 );
 CustomerServiceRecordSchema.index({
   status: 1,
+  createdAt: -1,
+  customer_service_record_id: 1,
+});
+CustomerServiceRecordSchema.index({
+  status: 1,
+  billing_status: 1,
   createdAt: -1,
   customer_service_record_id: 1,
 });

@@ -56,6 +56,15 @@ export class MongooseCustomerServiceRecordMapper {
         value.customer_visible_attachments_count ?? 0,
       status: value.status,
       operationalStatus: value.operational_status,
+      billingStatus: value.billing_status,
+      billingNotification: value.billing_notification
+        ? {
+            status: value.billing_notification.status,
+            attemptedAt: value.billing_notification.attempted_at ?? null,
+            sentAt: value.billing_notification.sent_at ?? null,
+            failureReason: value.billing_notification.failure_reason ?? null,
+          }
+        : undefined,
       createdBy: value.created_by ?? null,
       updatedBy: value.updated_by ?? null,
       createdAt: value.createdAt,
@@ -112,6 +121,13 @@ export class MongooseCustomerServiceRecordMapper {
         record.customerVisibleAttachmentsCount,
       status: record.status,
       operational_status: record.operationalStatus,
+      billing_status: record.billingStatus,
+      billing_notification: {
+        status: record.billingNotification.status,
+        attempted_at: record.billingNotification.attemptedAt,
+        sent_at: record.billingNotification.sentAt,
+        failure_reason: record.billingNotification.failureReason,
+      },
       created_by: record.createdBy,
       updated_by: record.updatedBy,
       createdAt: value.createdAt,

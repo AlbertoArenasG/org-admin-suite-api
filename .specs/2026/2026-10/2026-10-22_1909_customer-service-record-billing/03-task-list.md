@@ -2,10 +2,10 @@
 
 ## Fase 1. Modelo y datos
 
-- [ ] Incorporar estado y ultimo aviso en dominio, DTO, mappers, schemas, presenters e i18n de lecturas administrativas.
-  Status: pending. Cierre: nuevos registros usan defaults; listado y detalle administrativos exponen los dos campos sin alterar campos previos.
-- [ ] Crear migracion idempotente con dry-run, apply y verificacion sin cambio de auditoria.
-  Status: pending. Cierre: conteos por clasificacion, referencia sola y archivos removidos; verificacion tras apply y segunda ejecucion sin cambios.
+- [x] Incorporar estado y ultimo aviso en dominio, DTO, mappers, schemas, presenters e i18n de lecturas administrativas.
+  Status: completed. Cierre: nuevos registros usan defaults; listado y detalle administrativos exponen los dos campos sin alterar campos previos.
+- [x] Crear migracion idempotente con dry-run, apply y verificacion sin cambio de auditoria.
+  Status: completed. Cierre: conteos por clasificacion, referencia sola y archivos removidos; verificacion codificada tras apply y segunda ejecucion sin cambios comprobada con fixtures aisladas. La ejecucion en la base objetivo sigue pendiente en la fase operativa.
 
 ## Fase 2. Transicion administrativa y correo
 
@@ -30,12 +30,12 @@
   Status: pending. Dependencia: fases 1-4. Cierre: contrato y permisos coinciden con codigo y matriz de comportamiento.
 - [ ] Validar build, lint y escenarios HTTP/permisos/error de correo, y registrar evidencia.
   Status: pending. Dependencia: fases 1-4. Cierre: casos de `06` comprobados, fallos y limitaciones documentados.
-- [ ] Configurar las dos variables de destinatarios en el entorno que ejecutara la migracion y en el despliegue; confirmar entorno objetivo y ausencia de nuevas altas durante la ventana.
-  Status: pending. Ejecuta: usuario, antes del dry-run. Las variables son exigidas por el loader compartido, no porque la migracion envie correos. Cierre: configuracion validada y ventana operativa confirmada; si aparece actividad, repetir backfill pendiente antes de cerrar.
-- [ ] Ejecutar `npm run db:migrate:customer-service-record-billing:dry-run` en el entorno objetivo.
-  Status: pending. Ejecuta: usuario, tras configurar variables y verificar el entorno. Riesgo: lectura de datos reales. Cierre: reporte revisado y clasificacion aprobada antes de apply; si no cuadra, no ejecutar apply.
-- [ ] Ejecutar `npm run db:migrate:customer-service-record-billing:apply` y luego dry-run de verificacion.
-  Status: pending. Ejecuta: usuario, solo tras el dry-run aprobado y con entorno correcto. Riesgo: escritura masiva. Cierre: integridad OK, auditoria intacta y cero pendientes en segundo dry-run; no se exige respaldo adicional.
+- [ ] Confirmar entorno objetivo y ausencia de nuevas altas durante la ventana; configurar las dos variables de destinatarios antes del despliegue y tambien antes de la migracion si ya forman parte del `envSchema` vigente.
+  Status: pending. Ejecuta: usuario. El script no envia correos; el loader compartido solo exige las variables presentes en el schema al ejecutarlo. Cierre: configuracion validada y ventana operativa confirmada; si aparece actividad, repetir backfill pendiente antes de cerrar.
+- [x] Ejecutar `npm run db:migrate:customer-service-record-billing:dry-run` en el entorno objetivo.
+  Status: completed. Ejecuta: usuario. Reporte revisado antes de apply: 57 registros, todos `NOT_SUBMITTED`, 0 `INVOICED`, 0 invalidos y sin escrituras. La persona usuaria procedio con apply tras revisar la clasificacion.
+- [x] Ejecutar `npm run db:migrate:customer-service-record-billing:apply` y luego dry-run de verificacion.
+  Status: completed. Ejecuta: usuario. Apply: 57 actualizados, 0 pendientes, auditoria intacta y resultado SUCCESS. Segundo dry-run: 57 estados existentes, 0 estados o avisos pendientes y 0 registros invalidos; no hubo escrituras. No se exige respaldo adicional.
 - [ ] Desplegar API y verificar el indice de facturacion declarado en el schema.
   Status: pending. Ejecuta: usuario, tras backfill y con variables desplegadas. Cierre: arranque correcto e indice presente; Mongoose lo crea automaticamente con la configuracion actual, no el script de migracion.
 - [ ] Ejecutar `npm run db:seed:roles`.

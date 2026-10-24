@@ -72,3 +72,30 @@
 - Tras una nueva revision sin contradicciones ni gaps materiales, la persona usuaria autorizo expresamente marcar la spec lista para implementacion.
 - `Definition status: completed` e `Implementation ready: yes`; implementacion y validacion siguen pendientes. Se actualizaron la definicion, las decisiones, el diseno tecnico y el indice para reflejar el gate aprobado.
 - No se inicio codigo ni se agregaron archivos al stage.
+
+## 2026-10-24 - Slice 1 implementada
+
+- Se agregaron `billingStatus` y `billingNotification` al agregado, DTO de lectura, mappers, schema e indice declarado para Mongoose. El presenter administrativo incorpora ambos campos en listado y detalle con traducciones ES/EN; la edicion operativa ordinaria no acepta esos campos.
+- Se creo la migracion con comandos `dry-run` y `apply`. Solo escribe campos faltantes mediante MongoDB nativo; clasifica archivos vigentes frente a referencia sola y archivos removidos, verifica pendientes y auditoria tras aplicar. No crea indices ni envia correos.
+- `npm run build` y ESLint enfocado pasaron. Fixtures aisladas comprobaron clasificacion, preservacion de estado existente, auditoria e idempotencia de segundo apply, asi como los campos del presenter en lista/detalle y el indice declarado en el schema. No se conecto a MongoDB ni se ejecuto el backfill real.
+- Las dos tareas de la fase 1 quedan completadas; las fases siguientes y la validacion operativa permanecen pendientes. No se agregaron archivos al stage.
+
+## 2026-10-24 - Secuencia del backfill antes del sender
+
+- La persona usuaria confirmo que ejecutara personalmente todos los comandos que muten la base de datos. Puede iniciar ahora con dry-run y, tras revisar los conteos, ejecutar apply.
+- Se corrigio la precondicion de variables de destinatarios: aun no forman parte del `envSchema` vigente en la slice 1. Solo se requieren al correr la migracion si ya se agregaron al schema; para el despliegue de la API con sender si son obligatorias. Se actualizaron definicion, plan, tareas, diseno y breakdown para reflejar esta secuencia.
+
+## 2026-10-24 - Dry-run del backfill ejecutado por el usuario
+
+- El usuario ejecuto `npm run db:migrate:customer-service-record-billing:dry-run` y compartio el reporte: 57 registros totales; 57 estados y 57 avisos pendientes; 0 clasificados `INVOICED`, 57 `NOT_SUBMITTED`; 0 con solo referencia, 0 con solo archivos removidos, 0 estados preexistentes y 0 registros invalidos. El script informo que termino sin escrituras.
+- Los conteos son internamente consistentes. Queda confirmar con la persona usuaria que 0 registros con archivos de factura vigentes refleja los datos esperados antes de ejecutar `apply`. Aun no hay evidencia de escritura ni verificacion posterior.
+
+## 2026-10-24 - Apply del backfill ejecutado por el usuario
+
+- Tras revisar el dry-run, la persona usuaria ejecuto `npm run db:migrate:customer-service-record-billing:apply` y compartio el resultado: 57 registros actualizados, 0 pendientes tras apply, `Audit unchanged: true` y `Result: SUCCESS`.
+- El apply verifica integridad y auditoria en la misma ejecucion. Falta repetir dry-run para demostrar que el backfill no intenta nuevas escrituras. No se ejecutaron comandos de base de datos por el agente.
+
+## 2026-10-24 - Verificacion final del backfill
+
+- La persona usuaria repitio `npm run db:migrate:customer-service-record-billing:dry-run`: 57 registros totales, 57 con estado existente, 0 estados pendientes, 0 avisos pendientes y 0 invalidos. Termino sin escrituras.
+- Quedo demostrada la idempotencia del backfill en la base objetivo junto con la verificacion de auditoria reportada por apply. Se completo la tarea operativa de migracion; el despliegue y las slices 2-5 siguen pendientes.

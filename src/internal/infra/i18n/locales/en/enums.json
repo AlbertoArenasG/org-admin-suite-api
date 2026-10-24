@@ -139,6 +139,16 @@
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled"
     },
+    "BILLING_STATUS": {
+      "NOT_SUBMITTED": "Not submitted for invoicing",
+      "SUBMITTED": "Submitted for invoicing",
+      "INVOICED": "Invoiced"
+    },
+    "BILLING_NOTIFICATION_STATUS": {
+      "NOT_REQUESTED": "No attempt",
+      "SENT": "Sent",
+      "FAILED": "Failed"
+    },
     "DERIVED_STATUS": {
       "PENDING_ESTIMATED_DATE": "No estimated date",
       "NOT_APPLICABLE": "Not applicable",

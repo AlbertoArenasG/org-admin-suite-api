@@ -6,7 +6,7 @@
 - Date: `2026-10-22`
 - Definition status: completed
 - Implementation ready: yes
-- Implementation status: pending
+- Implementation status: in_progress
 - Validation status: pending
 - Spec status: in_progress
 
@@ -30,7 +30,7 @@ Los registros de servicio a clientes ya tienen estatus tecnico y operativo, pero
 - Persistir y exponer `billing_notification` como objeto del ultimo intento de aviso de facturacion, independiente de `billing_status` (campo al nivel del registro) y de las notificaciones operativas ya existentes. Sus estados son `NOT_REQUESTED` (sin intento), `SENT` (aceptado por el proveedor) y `FAILED` (intento fallido). `NOT_REQUESTED` tiene fechas y causa nulas; `SENT` tiene fecha de intento y aceptacion, con causa nula; `FAILED` tiene fecha de intento y causa sanitizada, con fecha de aceptacion nula. Cada intento reemplaza los datos del anterior. El envio es sincrono; no se necesita un `PENDING` persistido. `SENT` no garantiza entrega al buzon. La migracion historica no crea intentos: deja `NOT_REQUESTED` incluso para registros clasificados como `INVOICED`.
 - Para una transicion explicita hacia `SUBMITTED`, intentar primero el correo. Solo si el proveedor lo acepta, persistir `billing_status = SUBMITTED` y el resultado `SENT` juntos. Si falla el envio, conservar el `billing_status` anterior, registrar `FAILED` para el intento y responder con error HTTP de codigo estable y mensaje internacionalizado. Si el correo fue aceptado pero falla la escritura, devolver el error de persistencia; el registro conserva su estado anterior y puede volver a intentarse.
 - Configurar destinatarios mediante `CUSTOMER_SERVICE_BILLING_NOTIFICATION_RECIPIENTS_TO` y copias mediante `CUSTOMER_SERVICE_BILLING_NOTIFICATION_RECIPIENTS_CC`. Ambas variables representan listas de direcciones de correo; sus valores no se registran en esta spec. El adaptador de infraestructura interpreta y valida las listas. Los valores reales se configuraran en `.env` y en el entorno desplegado durante implementacion/operacion.
-- La migracion no envia correos ni crea indices; requiere las variables de destinatarios presentes antes de ejecutarse solo porque el loader compartido valida la configuracion completa. El indice nuevo se declara en el schema y Mongoose lo crea al arrancar la API con la configuracion actual. El backfill y el despliegue se haran en una ventana sin nuevas altas; si las hubiera, se repite el backfill pendiente antes de cerrar la validacion.
+- La migracion no envia correos ni crea indices. Puede ejecutarse antes de agregar las variables de destinatarios al `envSchema`; si se ejecuta despues, el loader compartido exigira esas variables aunque el script no envie correos. Deben estar configuradas antes de desplegar la API con el sender. El indice nuevo se declara en el schema y Mongoose lo crea al arrancar la API con la configuracion actual. El backfill y el despliegue se haran en una ventana sin nuevas altas; si las hubiera, se repite el backfill pendiente antes de cerrar la validacion.
 - Conservar el contrato y los permisos de las rutas operativas y de acceso de clientes salvo las adiciones expresamente definidas. Documentar el nuevo contrato para el frontend y actualizar la documentacion viva de autorizacion al implementar.
 - El modulo de acceso de clientes externo no adquiere por inferencia los campos de facturacion; su contrato acotado queda sin cambios salvo decision posterior explicita.
 

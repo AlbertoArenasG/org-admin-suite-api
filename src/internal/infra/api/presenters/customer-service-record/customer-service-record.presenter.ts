@@ -81,6 +81,16 @@ export class CustomerServiceRecordPresenter {
         'OPERATIONAL_STATUS',
         result.operationalStatus,
       ),
+      billing_status: this.localized('BILLING_STATUS', result.billingStatus),
+      billing_notification: {
+        status: this.localized(
+          'BILLING_NOTIFICATION_STATUS',
+          result.billingNotification.status,
+        ),
+        attempted_at: result.billingNotification.attemptedAt,
+        sent_at: result.billingNotification.sentAt,
+        failure_reason: result.billingNotification.failureReason,
+      },
       created_at: result.createdAt,
       updated_at: result.updatedAt,
     };

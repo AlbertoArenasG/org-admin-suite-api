@@ -42,8 +42,8 @@ Artefactos: handoff de frontend, catalogo vivo de autorizacion, coleccion Postma
 
 **Pasos del usuario, en orden:**
 
-1. Configurar las dos variables de destinatarios en el `.env` de ejecucion de la migracion y en el entorno desplegado, fuera de la spec. El loader del script valida todo `envSchema`, pero el script no envia correos. Confirmar base de datos destino y ventana sin nuevas altas entre backfill y despliegue; si aparecen altas, repetir dry-run/apply para los pendientes antes de cerrar la validacion.
-2. `npm run db:migrate:customer-service-record-billing:dry-run` antes del despliegue. Precondiciones: variables y entorno correctos; revisar conteos. Riesgo: lectura de produccion. Evidencia: clasificacion por estado y casos de referencia sola. Si el resultado no cuadra, detenerse sin aplicar.
+1. Confirmar base de datos destino y ventana sin nuevas altas entre backfill y despliegue; si aparecen altas, repetir dry-run/apply para los pendientes antes de cerrar la validacion. Configurar las dos variables de destinatarios en el entorno desplegado antes de iniciar la API con el sender. Si ya forman parte del `envSchema` al ejecutar la migracion, configurarlas tambien en su `.env`; el script no envia correos.
+2. `npm run db:migrate:customer-service-record-billing:dry-run` antes del despliegue. Precondiciones: entorno y variables exigidas por el schema vigente correctos; revisar conteos. Riesgo: lectura de produccion. Evidencia: clasificacion por estado y casos de referencia sola. Si el resultado no cuadra, detenerse sin aplicar.
 3. `npm run db:migrate:customer-service-record-billing:apply` tras aprobar dry-run. Precondiciones: ventana operativa y entorno confirmados, reporte dry-run aprobado; no se exige respaldo adicional. Riesgo: escritura masiva. Evidencia: integridad OK, timestamps y `updated_by` sin cambios.
 4. Repetir `npm run db:migrate:customer-service-record-billing:dry-run` para demostrar idempotencia; evidencia: cero pendientes.
 5. Desplegar API con variables configuradas; comprobar que Mongoose creo el indice declarado en el schema. La migracion no crea indices.

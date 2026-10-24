@@ -2,7 +2,11 @@ import {
   PaginatedResultDto,
   PaginationParamsDto,
 } from '@application/dto/shared';
-import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
+import {
+  CustomerServiceRecordBillingNotificationProps,
+  CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordOperationalStatus,
+} from '@domain/entities';
 import type { CustomerServiceRecordSortStrategy } from '@domain/ports/repositories';
 
 export interface CustomerServiceRecordIntervalDto {
@@ -186,6 +190,8 @@ export interface CustomerServiceRecordViewDto {
   customerDelivery: any;
   provider: any;
   operationalStatus: CustomerServiceRecordOperationalStatus;
+  billingStatus: CustomerServiceRecordBillingStatus;
+  billingNotification: CustomerServiceRecordBillingNotificationProps;
   attachmentsCount: number;
   quotation: CustomerServiceRecordDocumentViewDto;
   purchaseOrder: CustomerServiceRecordDocumentViewDto;
