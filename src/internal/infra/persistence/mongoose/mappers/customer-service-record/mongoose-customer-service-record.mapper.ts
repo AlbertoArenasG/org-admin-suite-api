@@ -1,5 +1,6 @@
 import {
   CustomerServiceRecord,
+  CustomerServiceRecordBillingNotificationProps,
   CustomerServiceRecordDocumentProps,
   CustomerServiceRecordFileAttachmentCollectionProps,
   CustomerServiceRecordNotificationMaterializationProps,
@@ -122,12 +123,9 @@ export class MongooseCustomerServiceRecordMapper {
       status: record.status,
       operational_status: record.operationalStatus,
       billing_status: record.billingStatus,
-      billing_notification: {
-        status: record.billingNotification.status,
-        attempted_at: record.billingNotification.attemptedAt,
-        sent_at: record.billingNotification.sentAt,
-        failure_reason: record.billingNotification.failureReason,
-      },
+      billing_notification: this.toMongooseBillingNotification(
+        record.billingNotification,
+      ),
       created_by: record.createdBy,
       updated_by: record.updatedBy,
       createdAt: value.createdAt,
@@ -155,6 +153,17 @@ export class MongooseCustomerServiceRecordMapper {
           }
         : null,
       last_materialized_at: materialization.lastMaterializedAt,
+    };
+  }
+
+  static toMongooseBillingNotification(
+    notification: CustomerServiceRecordBillingNotificationProps,
+  ) {
+    return {
+      status: notification.status,
+      attempted_at: notification.attemptedAt,
+      sent_at: notification.sentAt,
+      failure_reason: notification.failureReason,
     };
   }
 

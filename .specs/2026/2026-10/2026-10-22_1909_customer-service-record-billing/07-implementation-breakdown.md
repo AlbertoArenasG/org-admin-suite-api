@@ -14,7 +14,7 @@ Validacion: build, lint enfocado, ejemplos de presenter, fixtures de migracion c
 
 **Fase:** 2. **Resultado:** `PATCH /v1/customer-service-records/:recordId/billing-status` bajo `customer_service_records:UPDATE`.
 
-Artefactos: DTO, command/handler/caso de uso administrativos, puerto sender, adaptador de correo, error y traducciones, configuracion `TO`/`CC`, wiring y endpoint de `06`. Validar estado anterior y destino; si destino `SUBMITTED` y anterior distinto, enviar primero; en aceptacion persistir `SUBMITTED` y `SENT` juntos. En rechazo conocido, conservar estado anterior y registrar `FAILED` con causa sanitizada; devolver `502` y codigo dedicado. No enviar en no-op, migracion, adjuntos ni cambios a otros estados. No crear endpoint de reenvio.
+Artefactos: DTO, command/handler/caso de uso administrativos, puerto sender, adaptador de correo, error y traducciones, configuracion `TO`/`CC`, `.env.example` sin direcciones reales, wiring y endpoint de `06`. Validar estado anterior y destino; si destino `SUBMITTED` y anterior distinto, enviar primero; en aceptacion persistir `SUBMITTED` y `SENT` juntos. En rechazo conocido, conservar estado anterior y registrar `FAILED` con causa sanitizada; devolver `502` y codigo dedicado. No enviar en no-op, migracion, adjuntos ni cambios a otros estados. No crear endpoint de reenvio.
 
 Validacion: build/lint y matriz de transiciones, multiples equipos, fallo del proveedor, fallo de persistencia despues de aceptacion, permisos, i18n y variables invalidas. Cierre: contrato HTTP y semantica de fallo comprobados sin tocar otros segmentos.
 
@@ -38,7 +38,7 @@ Validacion: permisos, limites de estado, adjuntos validos/invalidos, sustitucion
 
 **Fase:** 5. **Resultado:** integracion documentada y evidencia operacional registrada.
 
-Artefactos: handoff de frontend, catalogo vivo de autorizacion, coleccion Postman, `.env.example`, tareas/progreso. Documentar siete rutas nuevas, filtro extendido del listado administrativo, opciones locales, envelopes, permisos, error `502`, estado de aviso y el limite de correo aceptado con escritura fallida. Verificar build, lint, matriz de `06` y revisar diff; no ejecutar operaciones reales de datos sin aprobacion.
+Artefactos: handoff de frontend, catalogo vivo de autorizacion, coleccion Postman, tareas/progreso. Verificar que `.env.example` ya documente la configuracion agregada en la slice 2. Documentar siete rutas nuevas, filtro extendido del listado administrativo, opciones locales, envelopes, permisos, error `502`, estado de aviso y el limite de correo aceptado con escritura fallida. Verificar build, lint, matriz de `06` y revisar diff; no ejecutar operaciones reales de datos sin aprobacion.
 
 **Pasos del usuario, en orden:**
 

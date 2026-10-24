@@ -63,7 +63,13 @@
   "INTERNAL_JOB": {
     "LOCK_ACTIVE": "El proceso técnico ya se encuentra en ejecución"
   },
+  "BILLING_NOTIFICATION": {
+    "DELIVERY_FAILED": "No se pudo enviar el aviso a facturación. Vuelve a intentarlo"
+  },
   "STATE_CONFLICT": {
+    "CUSTOMER_SERVICE_RECORD": {
+      "BILLING_STATUS_CHANGED": "El estado de facturación cambió; vuelve a cargar el registro"
+    },
     "USER_CUSTOMER_RELATIONSHIP": {
       "ALREADY_EXISTS": "El usuario ya está relacionado con este cliente",
       "NOT_FOUND": "El usuario no está relacionado con este cliente"

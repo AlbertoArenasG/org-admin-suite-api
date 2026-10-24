@@ -1,5 +1,6 @@
 import {
   CustomerServiceRecord,
+  CustomerServiceRecordBillingStatus,
   CustomerServiceRecordNotificationMaterializationProps,
   CustomerServiceRecordProviderFollowUpMaterializationProps,
   CustomerServiceRecordStatusMaterializationProps,
@@ -24,6 +25,14 @@ export interface ICustomerServiceRecordWriteRepository {
   ): Promise<{ data: CustomerServiceRecord | null }>;
   update(
     record: CustomerServiceRecord,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingStatus(
+    record: CustomerServiceRecord,
+    expectedStatus: CustomerServiceRecordBillingStatus,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingNotification(
+    record: CustomerServiceRecord,
+    expectedStatus: CustomerServiceRecordBillingStatus,
   ): Promise<{ data: CustomerServiceRecord | null }>;
   updateMaterializations(
     params: UpdateCustomerServiceRecordMaterializationsParams,

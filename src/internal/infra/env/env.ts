@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+const emailRecipients = z
+  .string()
+  .transform((value) => value.split(',').map((email) => email.trim()))
+  .pipe(z.array(z.string().email()).min(1));
+
 export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'local', 'production'])
@@ -27,6 +32,8 @@ export const envSchema = z.object({
   MAILER_USER: z.string(),
   MAILER_PASSWORD: z.string(),
   MAILER_FROM: z.string(),
+  BILLING_NOTIFICATION_RECIPIENTS_TO: emailRecipients,
+  BILLING_NOTIFICATION_RECIPIENTS_CC: emailRecipients,
 });
 
 export type Env = z.infer<typeof envSchema>;

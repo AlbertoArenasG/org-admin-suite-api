@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { CustomerServiceRecord } from '@domain/entities';
+import {
+  CustomerServiceRecord,
+  CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordStatus,
+} from '@domain/entities';
 import {
   ICustomerServiceRecordWriteRepository,
   UpdateCustomerServiceRecordMaterializationsParams,
@@ -32,6 +36,53 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
         { customer_service_record_id: record.id },
         this.toMongoose(record),
         { new: true, session: this.transactionContext.getSession() },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
+  async updateBillingStatus(
+    record: CustomerServiceRecord,
+    expectedStatus: CustomerServiceRecordBillingStatus,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    return this.updateBillingFields(record, expectedStatus, true);
+  }
+
+  async updateBillingNotification(
+    record: CustomerServiceRecord,
+    expectedStatus: CustomerServiceRecordBillingStatus,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    return this.updateBillingFields(record, expectedStatus, false);
+  }
+
+  private async updateBillingFields(
+    record: CustomerServiceRecord,
+    expectedStatus: CustomerServiceRecordBillingStatus,
+    includeStatus: boolean,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const fields: Record<string, unknown> = {
+      billing_notification:
+        MongooseCustomerServiceRecordMapper.toMongooseBillingNotification(
+          record.billingNotification,
+        ),
+      updated_by: record.updatedBy,
+      updatedAt: record.updatedAt,
+    };
+    if (includeStatus) fields.billing_status = record.billingStatus;
+
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: expectedStatus,
+        },
+        { $set: fields },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
       )
       .exec();
     return { data: this.toDomain(updated) };

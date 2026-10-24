@@ -5,6 +5,8 @@ import {
   DeleteCustomerServiceRecordDto,
   UpdateCustomerServiceRecordAssetDto,
   UpdateCustomerServiceRecordAssetResultDto,
+  UpdateCustomerServiceRecordBillingStatusDto,
+  UpdateCustomerServiceRecordBillingStatusResultDto,
   UpdateCustomerServiceRecordCustomerDto,
   UpdateCustomerServiceRecordCustomerResultDto,
   UpdateCustomerServiceRecordDetailsDto,
@@ -18,6 +20,7 @@ import {
   CreateCustomerServiceRecordUseCase,
   DeleteCustomerServiceRecordUseCase,
   UpdateCustomerServiceRecordAssetUseCase,
+  UpdateCustomerServiceRecordBillingStatusUseCase,
   UpdateCustomerServiceRecordCustomerUseCase,
   UpdateCustomerServiceRecordDetailsUseCase,
   UpdateCustomerServiceRecordDocumentUseCase,
@@ -52,6 +55,32 @@ export class UpdateCustomerServiceRecordDetailsCommandAdapter
   ) {}
   static create(payload: UpdateCustomerServiceRecordDetailsDto) {
     return new UpdateCustomerServiceRecordDetailsCommandAdapter(payload);
+  }
+}
+export class UpdateCustomerServiceRecordBillingStatusCommandAdapter
+  implements ICommand
+{
+  private constructor(
+    public readonly payload: UpdateCustomerServiceRecordBillingStatusDto,
+  ) {}
+  static create(payload: UpdateCustomerServiceRecordBillingStatusDto) {
+    return new UpdateCustomerServiceRecordBillingStatusCommandAdapter(payload);
+  }
+}
+@CommandHandler(UpdateCustomerServiceRecordBillingStatusCommandAdapter)
+export class UpdateCustomerServiceRecordBillingStatusHandler extends BaseCommandHandler<
+  UpdateCustomerServiceRecordBillingStatusCommandAdapter,
+  UpdateCustomerServiceRecordBillingStatusResultDto
+> {
+  constructor(
+    private readonly useCase: UpdateCustomerServiceRecordBillingStatusUseCase,
+  ) {
+    super();
+  }
+  async execute(
+    command: UpdateCustomerServiceRecordBillingStatusCommandAdapter,
+  ) {
+    return this.run(command, () => this.useCase.execute(command.payload));
   }
 }
 @CommandHandler(UpdateCustomerServiceRecordDetailsCommandAdapter)

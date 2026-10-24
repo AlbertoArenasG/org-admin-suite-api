@@ -19,12 +19,16 @@ import {
   CustomerServiceRecordDocumentType,
   GetCustomerServiceRecordsDto,
   UpdateCustomerServiceRecordAssetDto,
+  UpdateCustomerServiceRecordBillingStatusDto,
   UpdateCustomerServiceRecordCustomerDto,
   UpdateCustomerServiceRecordDetailsDto,
   UpdateCustomerServiceRecordDocumentDto,
   UpdateCustomerServiceRecordProviderDto,
 } from '@application/dto';
-import { CustomerServiceRecordOperationalStatus } from '@domain/entities';
+import {
+  CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordOperationalStatus,
+} from '@domain/entities';
 import {
   CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES,
   CustomerServiceRecordSortStrategy,
@@ -262,6 +266,23 @@ export class UpdateCustomerServiceRecordDetailsRequestDto {
       requestedAt: this.requested_at,
       observations: this.observations,
       operationalStatus: this.operational_status,
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordBillingStatusRequestDto {
+  @IsDefined()
+  @IsEnum(CustomerServiceRecordBillingStatus)
+  billing_status!: CustomerServiceRecordBillingStatus;
+
+  toDomain(
+    recordId: string,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordBillingStatusDto {
+    return {
+      recordId,
+      actorUserId,
+      billingStatus: this.billing_status,
     };
   }
 }

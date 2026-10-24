@@ -7,6 +7,8 @@ import {
   NotificationServicesConfig,
 } from '@infra/notification';
 import { ServicePackageUploadAlertService } from '@infra/notification/services/service-package-upload-alert.service';
+import { ICustomerServiceRecordBillingNoticeSenderToken } from '@domain/ports/services';
+import { MailerCustomerServiceRecordBillingNoticeSender } from '@infra/notification/services/customer-service-record-billing-notice.service';
 
 @Global()
 @Module({
@@ -29,7 +31,18 @@ import { ServicePackageUploadAlertService } from '@infra/notification/services/s
       inject: [EnvService],
     }),
   ],
-  providers: [...NotificationServicesConfig, ServicePackageUploadAlertService],
-  exports: [...NotificationServiceTokens, ServicePackageUploadAlertService],
+  providers: [
+    ...NotificationServicesConfig,
+    ServicePackageUploadAlertService,
+    {
+      provide: ICustomerServiceRecordBillingNoticeSenderToken,
+      useClass: MailerCustomerServiceRecordBillingNoticeSender,
+    },
+  ],
+  exports: [
+    ...NotificationServiceTokens,
+    ServicePackageUploadAlertService,
+    ICustomerServiceRecordBillingNoticeSenderToken,
+  ],
 })
 export class GlobalNotificationModule {}

@@ -353,6 +353,13 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     this.props.billingNotification = structuredClone(notification);
     this.touch(updatedBy);
   }
+  updateBillingNotification(
+    notification: CustomerServiceRecordBillingNotificationProps,
+    updatedBy: string,
+  ): void {
+    this.props.billingNotification = structuredClone(notification);
+    this.touch(updatedBy);
+  }
   get createdBy(): string | null {
     return this.props.createdBy ?? null;
   }

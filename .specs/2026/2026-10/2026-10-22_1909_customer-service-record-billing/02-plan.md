@@ -10,7 +10,7 @@ Un registro conserva estados tecnico, operativo y de facturacion independientes.
 2. Transicion administrativa y aviso. Nuevo comando/caso de uso propio; sender por puerto y adaptador; error internacionalizado. No cambiar los otros segmentos operativos.
 3. Lecturas y opciones de estados. Modulo de permisos `BILLING_CUSTOMER_SERVICE_RECORDS`, puerto y repositorio de lectura propios, listado y detalle acotados a `ACTIVE` y `SUBMITTED`/`INVOICED`; filtro `billing_status` y opciones auxiliares locales en ambos listados, con tres valores en administracion y dos en facturacion; respuesta de campos equivalente a administracion.
 4. Escritura de facturacion. Comandos/casos de uso separados para estado y factura; `UPDATE` del modulo nuevo no permite modificar otros campos. Reutilizar reconciliacion de adjuntos, no el caso de uso documental administrativo.
-5. Documentacion, validacion y pasos operativos. Actualizar catalogo de permisos, handoff de frontend, coleccion Postman y ejemplos de entorno. Solicitar ejecucion humana del dry-run/apply de migracion y seed de roles con evidencia antes de cierre.
+5. Documentacion, validacion y pasos operativos. Actualizar catalogo de permisos, handoff de frontend y coleccion Postman; verificar el ejemplo de entorno agregado junto con el sender en la fase 2. Solicitar ejecucion humana del dry-run/apply de migracion y seed de roles con evidencia antes de cierre.
 
 ## Compatibilidad y limites
 

@@ -7,3 +7,4 @@ export * from './entity-not-found.exception';
 export * from './internal-job.exception';
 export * from './state-conflict.exception';
 export * from './user-registration-invitation.exception';
+export * from './billing-notification-delivery.exception';

@@ -9,8 +9,8 @@
 
 ## Fase 2. Transicion administrativa y correo
 
-- [ ] Implementar el endpoint de cambio de estado administrativo y el aviso sincrono por puerto/adaptador.
-  Status: pending. Dependencia: fase 1. Cierre: solo transicion a `SUBMITTED` envia, `SENT` se persiste con el estado y `FAILED` conserva el estado previo con error traducido.
+- [x] Implementar el endpoint de cambio de estado administrativo y el aviso sincrono por puerto/adaptador.
+  Status: completed. Dependencia: fase 1. Cierre: solo transicion a `SUBMITTED` envia; `SENT` se persiste con el estado y `FAILED` conserva el estado previo con error traducido. Build, lint y fixtures aisladas pasaron; `envSchema`, `.env` local y `.env.example` tienen las dos listas. La validacion manual de correo/HTTP y la configuracion desplegada siguen pendientes en la fase 5.
 
 ## Fase 3. Lectura de facturacion
 
@@ -26,8 +26,8 @@
 
 ## Fase 5. Validacion y operacion
 
-- [ ] Actualizar documentacion viva, handoff, coleccion Postman y ejemplo de variables sin direcciones reales.
-  Status: pending. Dependencia: fases 1-4. Cierre: contrato y permisos coinciden con codigo y matriz de comportamiento.
+- [ ] Actualizar documentacion viva, handoff y coleccion Postman; verificar el ejemplo de variables agregado en la fase 2.
+  Status: pending. Dependencia: fases 1-4. Cierre: contrato, permisos y configuracion coinciden con codigo y matriz de comportamiento.
 - [ ] Validar build, lint y escenarios HTTP/permisos/error de correo, y registrar evidencia.
   Status: pending. Dependencia: fases 1-4. Cierre: casos de `06` comprobados, fallos y limitaciones documentados.
 - [ ] Confirmar entorno objetivo y ausencia de nuevas altas durante la ventana; configurar las dos variables de destinatarios antes del despliegue y tambien antes de la migracion si ya forman parte del `envSchema` vigente.

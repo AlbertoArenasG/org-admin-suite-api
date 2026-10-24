@@ -98,6 +98,12 @@ export interface UpdateCustomerServiceRecordDetailsDto {
   operationalStatus: CustomerServiceRecordOperationalStatus;
 }
 
+export interface UpdateCustomerServiceRecordBillingStatusDto {
+  recordId: string;
+  actorUserId: string;
+  billingStatus: CustomerServiceRecordBillingStatus;
+}
+
 export interface UpdateCustomerServiceRecordCustomerDto {
   recordId: string;
   actorUserId: string;
@@ -215,6 +221,8 @@ export type UpdateCustomerServiceRecordProviderResultDto =
 export type UpdateCustomerServiceRecordAssetResultDto =
   CustomerServiceRecordViewDto;
 export type UpdateCustomerServiceRecordDocumentResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordBillingStatusResultDto =
   CustomerServiceRecordViewDto;
 
 export interface RefreshCustomerServiceRecordMaterializationsDto {

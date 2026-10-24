@@ -63,7 +63,13 @@
   "INTERNAL_JOB": {
     "LOCK_ACTIVE": "The internal job is already running"
   },
+  "BILLING_NOTIFICATION": {
+    "DELIVERY_FAILED": "The billing notice could not be sent. Please try again"
+  },
   "STATE_CONFLICT": {
+    "CUSTOMER_SERVICE_RECORD": {
+      "BILLING_STATUS_CHANGED": "Billing status changed; reload the record"
+    },
     "USER_CUSTOMER_RELATIONSHIP": {
       "ALREADY_EXISTS": "The user is already related to this customer",
       "NOT_FOUND": "The user is not related to this customer"

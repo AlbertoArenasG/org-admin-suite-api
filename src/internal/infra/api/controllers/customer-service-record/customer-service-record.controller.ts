@@ -22,6 +22,7 @@ import {
   CreateCustomerServiceRecordRequestDto,
   GetCustomerServiceRecordsRequestDto,
   UpdateCustomerServiceRecordAssetRequestDto,
+  UpdateCustomerServiceRecordBillingStatusRequestDto,
   UpdateCustomerServiceRecordCustomerRequestDto,
   UpdateCustomerServiceRecordDetailsRequestDto,
   UpdateCustomerServiceRecordDocumentRequestDto,
@@ -34,6 +35,7 @@ import {
   CreateCustomerServiceRecordCommandAdapter,
   DeleteCustomerServiceRecordCommandAdapter,
   UpdateCustomerServiceRecordAssetCommandAdapter,
+  UpdateCustomerServiceRecordBillingStatusCommandAdapter,
   UpdateCustomerServiceRecordCustomerCommandAdapter,
   UpdateCustomerServiceRecordDetailsCommandAdapter,
   UpdateCustomerServiceRecordDocumentCommandAdapter,
@@ -103,6 +105,21 @@ export class CustomerServiceRecordController {
   ) {
     const result = await this.commandBus.execute(
       UpdateCustomerServiceRecordDetailsCommandAdapter.create(
+        body.toDomain(recordId, user.userId),
+      ),
+    );
+    return this.response(this.presenter.toViewResponse(result), HttpStatus.OK);
+  }
+  @Patch(':recordId/billing-status')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'UPDATE')
+  async updateBillingStatus(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Param('recordId') recordId: string,
+    @Body() body: UpdateCustomerServiceRecordBillingStatusRequestDto,
+  ) {
+    const result = await this.commandBus.execute(
+      UpdateCustomerServiceRecordBillingStatusCommandAdapter.create(
         body.toDomain(recordId, user.userId),
       ),
     );

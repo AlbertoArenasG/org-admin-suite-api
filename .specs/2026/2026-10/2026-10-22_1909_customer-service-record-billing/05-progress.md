@@ -99,3 +99,20 @@
 
 - La persona usuaria repitio `npm run db:migrate:customer-service-record-billing:dry-run`: 57 registros totales, 57 con estado existente, 0 estados pendientes, 0 avisos pendientes y 0 invalidos. Termino sin escrituras.
 - Quedo demostrada la idempotencia del backfill en la base objetivo junto con la verificacion de auditoria reportada por apply. Se completo la tarea operativa de migracion; el despliegue y las slices 2-5 siguen pendientes.
+
+## 2026-10-24 - Ejemplo de entorno en slice 2
+
+- Se adelanto la actualizacion de `.env.example` a la slice 2, junto con `envSchema` y el sender, para que la configuracion quede documentada al incorporarse. La slice 5 solo verificara esa consistencia; no se agregan direcciones reales al archivo de ejemplo.
+
+## 2026-10-24 - Slice 2 implementada
+
+- Se agrego `PATCH /v1/customer-service-records/:recordId/billing-status` bajo JWT y `customer_service_records:UPDATE`, con DTO, command/handler y caso de uso administrativos propios. Un no-op responde sin escritura ni correo; las transiciones a `NOT_SUBMITTED`/`INVOICED` conservan el ultimo aviso; una entrada real a `SUBMITTED` envia primero y despues persiste estado y `SENT` juntos.
+- En rechazo del sender se conserva el estado anterior, se guarda `FAILED` con causa generica y se devuelve `502` con `BILLING_NOTIFICATION.DELIVERY_FAILED` traducido. Las escrituras dirigidas y condicionadas usan el estado anterior esperado y solo afectan estado/aviso y auditoria; un conflicto devuelve `409`. Un fallo de escritura posterior a la aceptacion del correo se propaga sin revertir el envio.
+- El adaptador SMTP usa TO/CC validados como CSV por `envSchema`; el template de texto incluye consecutivo, cliente y todos los equipos. `.env.example` muestra solo direcciones de ejemplo y `.env` local contiene los valores entregados por la persona usuaria; la configuracion del entorno desplegado sigue pendiente.
+- `npm run build`, ESLint enfocado, traducciones y parsing de entorno Nest pasaron. Fixtures aisladas con correo/repositorio simulados cubrieron no-op, envio, fallo, reintento, conflicto, `502`, destinatarios/equipos y actualizacion dirigida. No se enviaron correos reales ni se hicieron escrituras a MongoDB; la validacion manual de HTTP/correo sigue pendiente.
+- No se agregaron archivos al stage.
+
+## 2026-10-24 - Destinatarios generales de facturacion
+
+- A solicitud del usuario, las variables del sender se renombraron a `BILLING_NOTIFICATION_RECIPIENTS_TO` y `BILLING_NOTIFICATION_RECIPIENTS_CC` para que futuros modulos de facturacion puedan usar las mismas listas.
+- Se actualizaron el contrato en definicion y diseno tecnico, el schema de entorno, el adaptador, el `.env` local y `.env.example`. El ejemplo ahora usa el mismo encabezado de seccion que los bloques existentes. No se cambiaron los valores privados ni se agregaron archivos al stage.

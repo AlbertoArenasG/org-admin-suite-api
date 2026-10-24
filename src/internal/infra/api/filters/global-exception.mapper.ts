@@ -5,6 +5,7 @@ import {
   AuthenticationExceptionCode,
   AuthorizationException,
   AuthorizationExceptionCode,
+  BillingNotificationDeliveryException,
   DomainException,
   EntityAlreadyExistsException,
   InvalidValueException,
@@ -205,6 +206,10 @@ export class GlobalExceptionMapper {
 
     if (domainException instanceof StateConflictException) {
       return HttpStatus.CONFLICT;
+    }
+
+    if (domainException instanceof BillingNotificationDeliveryException) {
+      return HttpStatus.BAD_GATEWAY;
     }
 
     if (domainException instanceof UserRegistrationInvitationException) {
