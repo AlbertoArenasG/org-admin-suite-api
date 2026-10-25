@@ -1,13 +1,14 @@
 # Política De Validación
 
-## Estado Vigente
+## Criterio de trabajo
 
-Hasta nuevo acuerdo explícito, `org-admin-suite-api` no trabaja pruebas
-unitarias. Ninguna sesión o agente debe crear, proponer o ejecutar suites
-unitarias por defecto al implementar una iniciativa.
+Para mantener la agilidad y ahorrar tiempo de desarrollo y revisión,
+`org-admin-suite-api` no añade ni ejecuta pruebas automatizadas por defecto.
+Esto incluye pruebas unitarias, de integración y e2e. Si la persona usuaria
+las pide explícitamente, se acuerda el alcance y se realizan como parte del
+trabajo solicitado.
 
-Los comandos y menciones de pruebas heredados de Nest no constituyen una norma
-del proyecto.
+Los comandos y menciones de pruebas heredados de Nest no cambian este criterio.
 
 ## Evidencia Requerida Por Cambio
 
@@ -31,9 +32,11 @@ Tras la confirmación, la evidencia se registra en la spec:
 La validación manual no se infiere ni se marca como realizada sin confirmación
 de la persona usuaria.
 
-## Cambio De Política
+## Pruebas automatizadas
 
-Incorporar pruebas unitarias, integración o e2e requiere una decisión explícita
-de la persona usuaria y una spec que defina alcance, infraestructura,
-mantenimiento y criterios de adopción. No se activa por la presencia de scripts
-heredados en `package.json` o `README.md`.
+Cuando la persona usuaria solicite pruebas automatizadas para un cambio,
+acordar qué comportamiento se verificará y ejecutar solo las necesarias para
+ese alcance. Si se decide adoptar una estrategia permanente de pruebas para el
+proyecto, documentar en una spec su infraestructura, mantenimiento y criterios
+de uso. La presencia de scripts heredados en `package.json` o `README.md` no
+implica esa adopción.

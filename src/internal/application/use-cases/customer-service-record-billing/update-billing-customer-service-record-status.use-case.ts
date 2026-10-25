@@ -86,8 +86,9 @@ export class UpdateBillingCustomerServiceRecordStatusUseCase {
     }
 
     const attemptedAt = new Date();
+    let noticeSent = false;
     try {
-      await this.noticeSender.send({
+      noticeSent = await this.noticeSender.send({
         serviceNumberDisplay: record.serviceNumberDisplay,
         customerName: record.customer.customerName,
         assets: record.assets.map((asset) => ({
@@ -119,12 +120,20 @@ export class UpdateBillingCustomerServiceRecordStatusUseCase {
 
     record.updateBilling(
       CustomerServiceRecordBillingStatus.SUBMITTED,
-      {
-        status: CustomerServiceRecordBillingNotificationStatus.SENT,
-        attemptedAt,
-        sentAt: new Date(),
-        failureReason: null,
-      },
+      noticeSent
+        ? {
+            status: CustomerServiceRecordBillingNotificationStatus.SENT,
+            attemptedAt,
+            sentAt: new Date(),
+            failureReason: null,
+          }
+        : {
+            status:
+              CustomerServiceRecordBillingNotificationStatus.NOT_REQUESTED,
+            attemptedAt: null,
+            sentAt: null,
+            failureReason: null,
+          },
       input.actorUserId,
     );
     return this.persistStatus(record, previousStatus);

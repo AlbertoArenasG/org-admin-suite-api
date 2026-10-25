@@ -2,8 +2,14 @@ import { z } from 'zod';
 
 const emailRecipients = z
   .string()
-  .transform((value) => value.split(',').map((email) => email.trim()))
-  .pipe(z.array(z.string().email()).min(1));
+  .default('')
+  .transform((value) =>
+    value
+      .split(',')
+      .map((email) => email.trim())
+      .filter(Boolean),
+  )
+  .pipe(z.array(z.string().email()));
 
 export const envSchema = z.object({
   NODE_ENV: z

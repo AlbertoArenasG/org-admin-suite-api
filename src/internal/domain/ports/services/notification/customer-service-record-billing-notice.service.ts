@@ -12,7 +12,8 @@ export interface CustomerServiceRecordBillingNotice {
 }
 
 export interface ICustomerServiceRecordBillingNoticeSender {
-  send(notice: CustomerServiceRecordBillingNotice): Promise<void>;
+  /** Returns false when there are no recipients and no delivery was attempted. */
+  send(notice: CustomerServiceRecordBillingNotice): Promise<boolean>;
 }
 
 export const ICustomerServiceRecordBillingNoticeSenderToken = Symbol(

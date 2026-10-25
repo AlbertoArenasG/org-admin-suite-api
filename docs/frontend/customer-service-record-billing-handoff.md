@@ -47,7 +47,8 @@ facturación no permiten editar cliente, equipos, servicio ni otros documentos.
 del registro. Sus códigos son `NOT_SUBMITTED`, `SUBMITTED` e `INVOICED`.
 `billing_notification` informa solo el último intento de aviso: `NOT_REQUESTED`,
 `SENT` o `FAILED`. `SENT` significa que el proveedor de correo aceptó el mensaje;
-no garantiza entrega en el buzón.
+no garantiza entrega en el buzón. `NOT_REQUESTED` también se conserva al pasar a
+`SUBMITTED` cuando no hay destinatarios configurados y se omite el aviso.
 
 Los dos listados admiten `page`, `limit` o `items_per_page`; la página inicial es
 1, el límite inicial 10 y el máximo 100. El listado administrativo conserva sus
@@ -117,8 +118,11 @@ de facturación sobre un ID inexistente, eliminado o `NOT_SUBMITTED` responden
 `404`. Un no-op devuelve `200` sin escritura ni correo.
 
 Una transición real hacia `SUBMITTED`, desde cualquiera de los dos módulos,
-intenta enviar el aviso antes de persistir el nuevo estado. Si el proveedor
-rechaza el envío, el estado anterior se conserva, se guarda
+intenta enviar el aviso antes de persistir el nuevo estado cuando hay
+destinatarios configurados. Si ambas listas están vacías, omite el envío,
+guarda `SUBMITTED` con `billing_notification.status = NOT_REQUESTED` y fechas
+de aviso nulas, y responde normalmente. Si el proveedor rechaza el envío, el
+estado anterior se conserva, se guarda
 `billing_notification.status = FAILED` y la API devuelve `502` con
 `error_details.error_code = BILLING_NOTIFICATION.DELIVERY_FAILED` y mensaje
 localizado. El usuario puede repetir la misma transición; no hay endpoint de
@@ -151,9 +155,13 @@ Los errores usan `success: false`, `status_code` y
 
 El sender usa las listas CSV `BILLING_NOTIFICATION_RECIPIENTS_TO` y
 `BILLING_NOTIFICATION_RECIPIENTS_CC`; el `.env.example` muestra el formato
-con valores de ejemplo. Las direcciones reales pertenecen al entorno, no a
-este contrato. El responsable puede ejecutar `npm run db:seed:roles` desde el
-checkout actualizado contra la base objetivo antes del despliegue de la API.
+con valores de ejemplo. Cada lista puede estar vacía o ausente; si solo hay
+destinatarios en CC, se usan como destinatarios principales. Si ambas están
+vacías, la API arranca y omite el correo sin impedir el cambio de estado. Las
+direcciones no vacías siguen validándose al arrancar. Las direcciones reales
+pertenecen al entorno, no a este contrato. El responsable puede ejecutar
+`npm run db:seed:roles` desde el checkout actualizado contra la base objetivo
+antes del despliegue de la API.
 La migración histórica ya se ejecutó y verificó en la base objetivo según la
 spec. La publicación y supervisión del backend se gestionan fuera de esta
 spec de desarrollo.

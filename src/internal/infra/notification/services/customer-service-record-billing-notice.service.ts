@@ -21,13 +21,25 @@ export class MailerCustomerServiceRecordBillingNoticeSender
     private readonly envService: EnvService,
   ) {}
 
-  async send(notice: CustomerServiceRecordBillingNotice): Promise<void> {
+  async send(notice: CustomerServiceRecordBillingNotice): Promise<boolean> {
+    const configuredTo = this.envService.get(
+      'BILLING_NOTIFICATION_RECIPIENTS_TO',
+    );
+    const configuredCc = this.envService.get(
+      'BILLING_NOTIFICATION_RECIPIENTS_CC',
+    );
+    if (configuredTo.length === 0 && configuredCc.length === 0) {
+      this.logger.log('Billing notice skipped: no recipients configured');
+      return false;
+    }
+
     const content = customerServiceRecordBillingNoticeTemplate(notice);
-    const to = this.envService.get('BILLING_NOTIFICATION_RECIPIENTS_TO');
-    const cc = this.envService.get('BILLING_NOTIFICATION_RECIPIENTS_CC');
+    // A CC-only configuration still delivers the notice to those addresses.
+    const to = configuredTo.length > 0 ? configuredTo : configuredCc;
+    const cc = configuredTo.length > 0 ? configuredCc : [];
     const result: unknown = await this.mailerService.sendMail({
       to,
-      cc,
+      ...(cc.length > 0 ? { cc } : {}),
       subject: content.subject,
       text: content.text,
     });
@@ -56,5 +68,6 @@ export class MailerCustomerServiceRecordBillingNoticeSender
     this.logger.log(
       `Billing notice accepted for record ${notice.serviceNumberDisplay}`,
     );
+    return true;
   }
 }
