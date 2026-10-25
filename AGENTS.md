@@ -8,6 +8,11 @@
 - Respetar las decisiones y el alcance aprobados. Para trabajo de una spec activa, seguir `.specs/SPEC_WORKFLOW.md`; un cambio solicitado fuera de la spec no se incorpora a ella por defecto.
 - Antes de ampliar el contrato de un componente o servicio compartido, revisar sus consumidores y discutir el cambio cuando implique una decisión arquitectónica o afecte otros módulos.
 
+## Antes de redactar una spec
+
+- Investigar el código y los contratos vigentes, conversar el alcance y resolver con el usuario las decisiones relevantes antes de crear los documentos de la spec. El propósito es evitar escribir como definitivas afirmaciones todavía provisionales que luego se repitan en varios documentos y deban corregirse. Buscar reducir esas incertidumbres, sin prohibir preguntas ni cambios posteriores.
+- Si una decisión cambia durante la redacción, actualizar todas sus referencias en definición, análisis, plan, decisiones, diseño técnico, tareas, slices y validación que correspondan. Revisar la carpeta completa antes de afirmar que la spec está lista, para no conservar premisas obsoletas o documentos contradictorios.
+
 ## Arquitectura de la API
 
 - Seguir `docs/api-pipeline.md` como referencia normativa. El flujo habitual es controller → request DTO → command/query → handler → caso de uso → dominio, puertos y adaptadores → DTO de aplicación → presenter → `ApiResponseBuilder`.

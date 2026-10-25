@@ -42,6 +42,22 @@ Antes de trabajar una iniciativa, leer en este orden:
 4. Las guidelines y contratos relacionados en `docs/`.
 5. El codigo, pruebas y configuracion afectados.
 
+## Preparacion Antes De Redactar
+
+Antes de crear la carpeta o los documentos de una spec, revisar las fuentes
+vigentes y conversar con la persona usuaria el problema, alcance, contratos y
+decisiones relevantes. Reducir las incertidumbres que puedan cambiar el diseno
+antes de escribirlas como afirmaciones definitivas en varios documentos. Asi
+se reduce la cantidad de premisas provisionales que habria que corregir y el
+riesgo de conservar referencias obsoletas. Esta preparacion no impide hacer
+preguntas ni revisar decisiones despues: la spec sigue siendo editable.
+
+Si una decision cambia durante la redaccion, identificar todos los documentos
+que dependen de ella y corregir sus referencias, incluidos artefactos, tareas,
+slices y criterios de validacion cuando apliquen. Antes de marcar la definicion
+lista para implementar, revisar la carpeta completa para detectar premisas
+obsoletas, referencias incorrectas y contradicciones entre documentos.
+
 ## Estructura de una Spec
 
 Cada iniciativa relevante usa una carpeta:
