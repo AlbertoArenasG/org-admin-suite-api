@@ -1,7 +1,7 @@
 # Handoff frontend: facturación de registros de servicio a clientes
 
 **Fecha:** 2026-10-24  
-**Estado:** Contrato implementado en backend; validación HTTP integrada y despliegue pendientes.  
+**Estado:** Contrato implementado y validación manual confirmada por el usuario.
 **Spec:** [Facturación de registros de servicio a clientes](../../.specs/2026/2026-10/2026-10-22_1909_customer-service-record-billing/00-definition.md).
 
 ## Alcance y permisos
@@ -154,6 +154,6 @@ El sender usa las listas CSV `BILLING_NOTIFICATION_RECIPIENTS_TO` y
 con valores de ejemplo. Las direcciones reales pertenecen al entorno, no a
 este contrato. El responsable puede ejecutar `npm run db:seed:roles` desde el
 checkout actualizado contra la base objetivo antes del despliegue de la API.
-La migración histórica ya se ejecutó y verificó en
-el entorno objetivo según la spec; el despliegue, el índice y las pruebas HTTP
-integradas permanecen pendientes.
+La migración histórica ya se ejecutó y verificó en la base objetivo según la
+spec. La publicación y supervisión del backend se gestionan fuera de esta
+spec de desarrollo.

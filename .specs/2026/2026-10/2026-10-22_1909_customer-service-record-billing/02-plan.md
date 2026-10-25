@@ -10,7 +10,7 @@ Un registro conserva estados tecnico, operativo y de facturacion independientes.
 2. Transicion administrativa y aviso. Nuevo comando/caso de uso propio; sender por puerto y adaptador; error internacionalizado. No cambiar los otros segmentos operativos.
 3. Lecturas y opciones de estados. Modulo de permisos `BILLING_CUSTOMER_SERVICE_RECORDS`, puerto y repositorio de lectura propios, listado y detalle acotados a `ACTIVE` y `SUBMITTED`/`INVOICED`; filtro `billing_status` y opciones auxiliares locales en ambos listados, con tres valores en administracion y dos en facturacion; respuesta de campos equivalente a administracion.
 4. Escritura de facturacion. Comandos/casos de uso separados para estado y factura; `UPDATE` del modulo nuevo no permite modificar otros campos. Reutilizar reconciliacion de adjuntos, no el caso de uso documental administrativo.
-5. Documentacion, validacion y pasos operativos. Actualizar catalogo de permisos, handoff de frontend y coleccion Postman; verificar el ejemplo de entorno agregado junto con el sender en la fase 2. Solicitar ejecucion humana del dry-run/apply de migracion y seed de roles con evidencia antes de cierre.
+5. Documentacion, validacion y preparacion de datos. Actualizar catalogo de permisos, handoff de frontend y coleccion Postman; verificar el ejemplo de entorno agregado junto con el sender en la fase 2. Solicitar ejecucion humana del dry-run/apply de migracion y seed de roles con evidencia antes de cierre.
 
 ## Compatibilidad y limites
 
@@ -21,13 +21,10 @@ Un registro conserva estados tecnico, operativo y de facturacion independientes.
 - El seed agrega los nuevos permisos directos de facturacion a los roles de sistema, pero no los concede automaticamente a roles personalizados. La asignacion del nuevo modulo a roles personalizados queda bajo control administrativo.
 - No se toca frontend en esta iniciativa. La integracion visual se definira en una spec independiente.
 
-## Orden de despliegue previsto
+## Validacion de desarrollo y preparacion de datos
 
-1. Confirmar las variables que exige el `envSchema` vigente en el momento de ejecutar la migracion. Si las variables de destinatarios ya se incorporaron al schema, configurarlas tambien en el `.env` de ejecucion; el script no envia correos. Configurarlas siempre en el entorno desplegado antes de iniciar la API con el sender.
-2. Confirmar entorno destino y verificar que no se creen registros nuevos durante la ventana entre migracion y despliegue. El usuario planea realizarla en un dia sin actividad operativa. Si esa condicion deja de cumplirse, ejecutar de nuevo dry-run y aplicar el backfill pendiente antes de dar el despliegue por validado.
-3. Validar `dry-run` de migracion y sus conteos; si la clasificacion no cuadra, detenerse sin ejecutar `apply`. Ejecutar `apply` solo tras revisar y aprobar el reporte; despues verificar integridad, auditoria e idempotencia. El script es independiente de la app nueva y puede ejecutarse antes de desplegarla. No se exige un respaldo adicional como precondicion de esta spec.
-4. Desplegar API con las variables ya configuradas. Mongoose crea el indice declarado en el schema al iniciar con `autoIndex` habilitado en la configuracion actual; verificar su presencia despues del arranque. La migracion no crea ese indice.
-5. Ejecutar `npm run db:seed:roles` para actualizar roles de sistema; verificar permisos de `READ` y `UPDATE`. Los roles personalizados requieren asignacion explicita.
-6. Validar API con datos de prueba, permisos, envio y error. La UI se implementara mas adelante.
-
-No ejecutar migracion, seed, envio real ni despliegue sin autorizacion operativa expresa. El orden se revisa antes de la implementacion y se ajusta si aparece una incompatibilidad real.
+1. Confirmar las variables que exige el `envSchema` vigente en el momento de ejecutar la migracion. Si las variables de destinatarios ya se incorporaron al schema, configurarlas tambien en el `.env` de ejecucion; el script no envia correos.
+2. Confirmar la base destino y la ventana sin altas nuevas durante el backfill. Si esa condicion deja de cumplirse, repetir dry-run y aplicar solo los registros pendientes.
+3. Validar `dry-run` y sus conteos; si la clasificacion no cuadra, detenerse sin ejecutar `apply`. Ejecutar `apply` solo tras revisar el reporte; verificar integridad, auditoria e idempotencia. No se exige un respaldo adicional como precondicion de esta spec.
+4. Ejecutar `npm run db:seed:roles` desde el checkout actualizado para sincronizar los roles de sistema; los roles personalizados requieren asignacion explicita.
+5. Validar la API con datos de prueba, permisos, envio y error. La UI se implementara en una spec independiente.

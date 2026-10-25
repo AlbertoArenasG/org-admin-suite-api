@@ -1,6 +1,6 @@
 # Specs Index
 
-- [customer-service-record-billing](./2026/2026-10/2026-10-22_1909_customer-service-record-billing/00-definition.md) - Lista para implementacion; estado, migracion y modulo de facturacion
+- [customer-service-record-billing](./2026/2026-10/2026-10-22_1909_customer-service-record-billing/00-definition.md) - Completada; estado de facturacion, aviso, migracion y modulo independiente validados
 - [service-package-record-file-delivery](./2026/2026-09/2026-09-29_1432_service-package-record-file-delivery/00-definition.md) - Completada; entrega segura y descriptor normalizado de archivos validados
 - [customer-service-record-attachments-and-segmented-updates](./2026/2026-09/2026-09-21_0003_customer-service-record-attachments-and-segmented-updates/00-definition.md) - Completada; adjuntos, actualizaciones segmentadas y migracion validados
 - [customer-service-record-work-priority-sorting](./2026/2026-09/2026-09-17_0107_customer-service-record-work-priority-sorting/00-definition.md) - Completada; perfil semántico de prioridad validado

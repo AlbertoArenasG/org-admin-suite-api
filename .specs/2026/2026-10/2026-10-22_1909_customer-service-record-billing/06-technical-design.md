@@ -37,7 +37,7 @@ El puerto de escritura incorpora actualizaciones dirigidas y condicionales para 
 
 La aplicacion depende del puerto `ICustomerServiceRecordBillingNoticeSender` con payload de consecutivo, cliente y arreglo de equipos. El adaptador de infraestructura usa el `MailerService` configurado, construye texto seguro sin adjuntos y lee dos variables generales tipadas para avisos de facturacion: `BILLING_NOTIFICATION_RECIPIENTS_TO` y `BILLING_NOTIFICATION_RECIPIENTS_CC`. Se pueden compartir con futuros modulos de facturacion. Ambas son listas no vacias de correos, codificadas como CSV en entorno; se recortan espacios, validan direcciones y rechazan listas invalidas al iniciar. No se colocan valores concretos en esta spec ni en `.env.example`. El cuerpo dice que el registro fue enviado a facturacion, no que el servicio se completo; incluye numero/consecutivo, cliente y por cada equipo nombre, identificador, marca, modelo, serie y observaciones disponibles. El asunto incluye el consecutivo. El resultado aceptado por el proveedor se registra como `SENT`.
 
-El helper de migraciones `loadMigrationEnv()` usa el `envSchema` completo. Si las variables de destinatarios ya se agregaron al schema cuando se ejecute dry-run/apply, deben estar presentes en ese entorno, aunque el script no envie correos. Antes de incorporar el sender, el schema vigente aun no las exige y la migracion puede ejecutarse. Deben configurarse en el entorno de la API antes del despliegue con el sender.
+El helper de migraciones `loadMigrationEnv()` usa el `envSchema` completo. Si las variables de destinatarios ya se agregaron al schema cuando se ejecute dry-run/apply, deben estar presentes en ese entorno, aunque el script no envie correos. Antes de incorporar el sender, el schema vigente aun no las exige y la migracion puede ejecutarse. `.env.example` documenta el formato requerido por la API.
 
 El sender es un adaptador tecnico compartido por los dos casos de uso de transicion; no comparte controlador, handler ni caso de uso. Las direcciones no atraviesan dominio ni aplicacion. La nueva excepcion es traducida por `GlobalExceptionMapper` y conservada en el envelope estandar: `success: false`, `status_code: 502`, `error_details.error_code`, `error_details.message`, `validation_errors: []`.
 
@@ -132,7 +132,6 @@ Se reutiliza sin modificar `CustomerServiceRecordAttachmentReconciliationService
 | `Env` | configuracion | `src/internal/infra/env/env.ts` | Validar listas TO/CC al arranque; Zod | modify |
 | Ejemplo de entorno | configuracion | `.env.example` | Documentar nombres y formato CSV sin direcciones reales; Env | modify |
 | Configuracion local real | configuracion | `.env` | Valores privados al implementar, no registrados en spec ni versionados; Env | modify (operacional) |
-| Configuracion desplegada | configuracion externa | entorno Elastic Beanstalk | Valores privados TO/CC en despliegue; Env | modify (operacional) |
 | `MailerCustomerServiceRecordBillingNoticeSender` | adaptador | `src/internal/infra/notification/services/customer-service-record-billing-notice.service.ts` | Enviar email sincrono con TO/CC de entorno; MailerService/EnvService/template | new |
 | `customerServiceRecordBillingNoticeTemplate` | template | `src/internal/infra/notification/services/templates/customer-service-record-billing-notice.template.ts` | Asunto/texto con todos los equipos y sin adjuntos; payload del puerto | new |
 | `GlobalNotificationModule` | DI | `src/modules/global-notification.module.ts` | Registrar/exportar token del sender billing; adaptador | modify |
@@ -141,7 +140,7 @@ Se reutiliza sin modificar `CustomerServiceRecordAttachmentReconciliationService
 | `GlobalHttpModule` | DI | `src/modules/global-http.module.ts` | Registro automatico de controllers/presenters por exports; confirmar en validacion | reuse |
 | `systemRolesSeed` | seed | `src/internal/infra/persistence/mongoose/seeds/roles/system-roles.seed.ts` | Deriva permisos de `AUTHORIZATION_CATALOG`; ejecutar, no modificar algoritmo | reuse |
 
-No hay coleccion nueva ni integracion con proveedor de facturacion externo (`not_applicable`). La creacion del indice corresponde a Mongoose al iniciar la API con `autoIndex` habilitado, como en la configuracion actual; se comprueba que exista despues del despliegue y se valida con `explain`/volumen representativo. No se condiciona su declaracion a datos que aun no existen.
+No hay coleccion nueva ni integracion con proveedor de facturacion externo (`not_applicable`). El indice de lectura se declara en el schema, con las claves `{ status: 1, billing_status: 1, createdAt: -1, customer_service_record_id: 1 }`; su definicion se verifico contra el codigo y los filtros de consulta. La migracion no crea indices.
 
 ### HTTP, CQRS, autorizacion y documentacion
 

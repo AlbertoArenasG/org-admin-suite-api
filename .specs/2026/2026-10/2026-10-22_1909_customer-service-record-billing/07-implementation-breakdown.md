@@ -34,19 +34,18 @@ Artefactos: DTO, commands/handlers/casos de uso, controlador y registros `UPDATE
 
 Validacion: permisos, limites de estado, adjuntos validos/invalidos, sustitucion/eliminacion, referencia vacia, conteos y ausencia de mutacion de otros documentos. Cierre: dos escrituras independientes y sin escape a edicion operativa.
 
-## Slice 5. Contratos, validacion y operaciones
+## Slice 5. Contratos y validacion
 
-**Fase:** 5. **Resultado:** integracion documentada y evidencia operacional registrada.
+**Fase:** 5. **Resultado:** integracion documentada y evidencia de desarrollo registrada.
 
 Artefactos: handoff de frontend, catalogo vivo de autorizacion, coleccion Postman, tareas/progreso. Verificar que `.env.example` ya documente la configuracion agregada en la slice 2. Documentar siete rutas nuevas, filtro extendido del listado administrativo, opciones locales, envelopes, permisos, error `502`, estado de aviso y el limite de correo aceptado con escritura fallida. Verificar build, lint, matriz de `06` y revisar diff; no ejecutar operaciones reales de datos sin aprobacion.
 
 **Pasos del usuario, en orden:**
 
-1. Confirmar base de datos destino y ventana sin nuevas altas entre backfill y despliegue; si aparecen altas, repetir dry-run/apply para los pendientes antes de cerrar la validacion. Configurar las dos variables de destinatarios en el entorno desplegado antes de iniciar la API con el sender. Si ya forman parte del `envSchema` al ejecutar la migracion, configurarlas tambien en su `.env`; el script no envia correos.
-2. `npm run db:migrate:customer-service-record-billing:dry-run` antes del despliegue. Precondiciones: entorno y variables exigidas por el schema vigente correctos; revisar conteos. Riesgo: lectura de produccion. Evidencia: clasificacion por estado y casos de referencia sola. Si el resultado no cuadra, detenerse sin aplicar.
+1. Confirmar base de datos destino y ventana sin nuevas altas durante el backfill; si aparecen altas, repetir dry-run/apply para los pendientes antes de cerrar la validacion. Si las variables de destinatarios ya forman parte del `envSchema` al ejecutar la migracion, configurarlas en su `.env`; el script no envia correos.
+2. `npm run db:migrate:customer-service-record-billing:dry-run`. Precondiciones: entorno y variables exigidas por el schema vigente correctos; revisar conteos. Riesgo: lectura de la base objetivo. Evidencia: clasificacion por estado y casos de referencia sola. Si el resultado no cuadra, detenerse sin aplicar.
 3. `npm run db:migrate:customer-service-record-billing:apply` tras aprobar dry-run. Precondiciones: ventana operativa y entorno confirmados, reporte dry-run aprobado; no se exige respaldo adicional. Riesgo: escritura masiva. Evidencia: integridad OK, timestamps y `updated_by` sin cambios.
 4. Repetir `npm run db:migrate:customer-service-record-billing:dry-run` para demostrar idempotencia; evidencia: cero pendientes.
-5. Ejecutar `npm run db:seed:roles` desde este checkout con `MONGO_URI` del entorno objetivo confirmada. El script toma el catalogo del codigo local y conecta directamente a MongoDB; no requiere API desplegada. Riesgo: recalculo de roles de sistema. Evidencia: seed reportado, permisos disponibles; roles personalizados revisados por administracion.
-6. Desplegar API con variables configuradas; comprobar que Mongoose creo el indice declarado en el schema. La migracion no crea indices.
+5. Ejecutar `npm run db:seed:roles` desde este checkout con `MONGO_URI` del entorno objetivo confirmada. El script toma el catalogo del codigo local y conecta directamente a MongoDB. Riesgo: recalculo de roles de sistema. Evidencia: seed reportado, permisos disponibles; roles personalizados revisados por administracion.
 
 Cierre: confirmacion manual del usuario, `05-progress.md` actualizado, documentacion viva consistente y estados formales de `00` completados solo con evidencia suficiente.

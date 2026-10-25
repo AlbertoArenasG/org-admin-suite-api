@@ -143,3 +143,30 @@
 
 - Se verifico que `npm run db:seed:roles` carga `AUTHORIZATION_CATALOG` del checkout local y se conecta a `MONGO_URI` directamente; no depende del proceso ni del despliegue de la API. La indicacion anterior de esperar al despliegue confundia un orden propuesto con una precondicion tecnica.
 - Se corrigieron tarea, breakdown y documentacion viva. El usuario puede ejecutar el seed con el codigo actual y la base objetivo confirmada. El seed sigue pendiente hasta recibir su salida; no se ejecuto desde esta sesion.
+
+## 2026-10-24 - Seed de roles ejecutado por el usuario
+
+- La persona usuaria confirmo que ejecuto `npm run db:seed:roles`. Se marca completada la tarea de ejecucion; no se recibio el reporte del comando y no se atribuyen conteos de roles creados, actualizados o sin cambios.
+- La comprobacion de permisos `BILLING_CUSTOMER_SERVICE_RECORDS:READ`/`UPDATE` y la validacion HTTP siguen pendientes; los roles personalizados requieren asignacion expresa. No se ejecuto ninguna escritura a la base desde esta sesion.
+
+## 2026-10-24 - Validacion manual confirmada por el usuario
+
+- La persona usuaria confirmo que ya realizo las validaciones manuales. No se recibio salida ni desglose por escenario, por lo que no se atribuyen resultados individuales adicionales a su confirmacion.
+- En esta revision, `npm run build` y `npx eslint 'src/**/*.ts'` finalizaron con codigo 0. Se marco la tarea de validacion como completada por confirmacion del usuario y verificacion estatica local.
+- Permanecen pendientes la configuracion del entorno desplegado, el despliegue y la verificacion del indice; los estados formales de validacion y spec siguen abiertos hasta completar esas operaciones.
+
+## 2026-10-24 - Variables de Elastic Beanstalk configuradas
+
+- La persona usuaria confirmo que configuro las dos variables de destinatarios de facturacion en Elastic Beanstalk. No se leyeron sus valores desde la consola ni se realizo un despliegue desde esta sesion.
+- El usuario ya habia confirmado una ventana sin nuevas altas durante el dia. Se retiro la comprobacion redundante como pendiente y se completo la tarea de preparacion operativa. El despliegue y la verificacion del indice siguen pendientes.
+
+## 2026-10-24 - Auditoria de pendientes de la spec
+
+- Todas las slices de codigo, la migracion, el seed, la documentacion viva y la validacion manual estan reportadas como completadas. Se actualizo `Implementation status: completed` y el indice de specs, que aun mostraban el estado previo a la implementacion.
+- Solo permanecen abiertas la tarea operativa de despliegue con verificacion del indice y la tarea de cierre formal posterior. `Validation status` y `Spec status` siguen pendientes/en progreso hasta contar con esa evidencia; la validacion manual no se solicita de nuevo.
+
+## 2026-10-24 - Cierre de la spec de desarrollo
+
+- La persona usuaria corrigio el alcance: esta spec documenta y valida desarrollo, no el despliegue de la API ni la inspeccion del indice en infraestructura. Se retiro esa condicion de cierre de la definicion, plan, tareas, decisiones, diseno y breakdown; el registro historico anterior explica por que aparecio.
+- El indice requerido esta declarado en el schema con las claves previstas y su definicion se reviso durante la slice 1. Migracion dry-run/apply/idempotencia, seed de roles, contratos, permisos, documentacion viva, build, lint y validacion manual fueron completados o confirmados segun la evidencia registrada arriba.
+- La persona usuaria no compartio el reporte del seed ni el desglose individual de pruebas manuales; se conserva esa limitacion sin inventar resultados. No quedan checks de desarrollo pendientes. `Definition status`, `Implementation status`, `Validation status` y `Spec status` quedaron en `completed`; `.specs/index.md` se actualizo. No se realizo despliegue ni se agregaron archivos al stage.
