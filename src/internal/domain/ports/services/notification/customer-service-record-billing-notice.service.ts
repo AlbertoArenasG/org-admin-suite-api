@@ -1,13 +1,14 @@
 export interface CustomerServiceRecordBillingNotice {
   serviceNumberDisplay: string;
   customerName: string;
+  requestedAt: string;
+  createdAt: Date | null;
   assets: Array<{
     name: string;
     identifier: string;
     brand: string;
     model: string;
     serialNumber: string;
-    observations: string | null;
   }>;
 }
 

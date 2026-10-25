@@ -91,13 +91,14 @@ export class UpdateBillingCustomerServiceRecordStatusUseCase {
       noticeSent = await this.noticeSender.send({
         serviceNumberDisplay: record.serviceNumberDisplay,
         customerName: record.customer.customerName,
+        requestedAt: record.requestedAt,
+        createdAt: record.createdAt ?? null,
         assets: record.assets.map((asset) => ({
           name: asset.name,
           identifier: asset.identifier,
           brand: asset.brand,
           model: asset.model,
           serialNumber: asset.serialNumber,
-          observations: asset.observations,
         })),
       });
     } catch {
