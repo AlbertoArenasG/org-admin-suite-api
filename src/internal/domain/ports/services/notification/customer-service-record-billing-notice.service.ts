@@ -1,4 +1,5 @@
 export interface CustomerServiceRecordBillingNotice {
+  attemptedAt: Date;
   serviceNumberDisplay: string;
   customerName: string;
   requestedAt: string;

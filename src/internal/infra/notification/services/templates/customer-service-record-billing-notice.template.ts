@@ -17,6 +17,11 @@ export function customerServiceRecordBillingNoticeTemplate(
   const createdAt = notice.createdAt
     ? formatDate(notice.createdAt, 'America/Mexico_City')
     : 'No disponible';
+  const attemptedAt = new Intl.DateTimeFormat('es-MX', {
+    dateStyle: 'medium',
+    timeStyle: 'medium',
+    timeZone: 'America/Mexico_City',
+  }).format(notice.attemptedAt);
   const lines = [
     `El registro de servicio ${notice.serviceNumberDisplay} fue enviado a facturación.`,
     `Cliente: ${notice.customerName}`,
@@ -34,7 +39,7 @@ export function customerServiceRecordBillingNoticeTemplate(
   ];
 
   return {
-    subject: `Registro ${notice.serviceNumberDisplay} enviado a facturación`,
+    subject: `Registro ${notice.serviceNumberDisplay} enviado a facturación — ${attemptedAt}`,
     text: lines.join('\n'),
   };
 }

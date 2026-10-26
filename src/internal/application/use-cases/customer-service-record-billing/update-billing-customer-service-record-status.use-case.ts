@@ -89,6 +89,7 @@ export class UpdateBillingCustomerServiceRecordStatusUseCase {
     let noticeSent = false;
     try {
       noticeSent = await this.noticeSender.send({
+        attemptedAt,
         serviceNumberDisplay: record.serviceNumberDisplay,
         customerName: record.customer.customerName,
         requestedAt: record.requestedAt,
