@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { CustomerServiceRecordViewDto } from '@application/dto';
+import {
+  CustomerServiceRecordViewDto,
+  CustomerServiceRecordTimelineViewDto,
+} from '@application/dto';
 import { EnvService } from '@infra/env';
 import { EnumNameService } from '@infra/i18n/services';
 
@@ -43,6 +46,51 @@ export class CustomerServiceRecordPresenter {
 
   toCollection(results: CustomerServiceRecordViewDto[]) {
     return results.map((result) => this.toListResponse(result));
+  }
+
+  toTimelineCollection(results: CustomerServiceRecordTimelineViewDto[]) {
+    return results.map((result) => ({
+      customer_service_record_id: result.id,
+      service_number: result.serviceNumber,
+      service_number_display: result.serviceNumberDisplay,
+      service_type: {
+        service_type_code: result.serviceType.code,
+        name: result.serviceType.name,
+      },
+      requested_at: result.requestedAt,
+      customer: {
+        customer_id: result.customer.customerId,
+        name: result.customer.name,
+      },
+      assets: result.assets.map((asset) => ({
+        asset_id: asset.assetId,
+        name: asset.name,
+        identifier: asset.identifier,
+      })),
+      operational_status: this.localized(
+        'OPERATIONAL_STATUS',
+        result.operationalStatus,
+      ),
+      customer_delivery: {
+        received_at: result.customerDelivery.receivedAt,
+        estimated_delivery_at: result.customerDelivery.estimatedDeliveryAt,
+        status_materialization: this.materialization(
+          result.customerDelivery.statusMaterialization,
+        ),
+      },
+      provider: result.provider
+        ? {
+            provider_id: result.provider.providerId,
+            name: result.provider.name,
+            delivered_to_provider_at: result.provider.deliveredToProviderAt,
+            estimated_return_at: result.provider.estimatedReturnAt,
+            returned_from_provider_at: result.provider.returnedFromProviderAt,
+            status_materialization: this.materialization(
+              result.provider.statusMaterialization,
+            ),
+          }
+        : null,
+    }));
   }
 
   toBillingStatusOptions(codes: string[]) {

@@ -1798,8 +1798,441 @@
     },
     {
       "name": "Customer Service Records",
-      "description": "Registros administrativos. Permisos customer_service_records:READ/UPDATE según ruta. El listado y detalle exponen billing_status y billing_notification; ver docs/frontend/customer-service-record-billing-handoff.md.",
+      "description": "Registros administrativos. Permisos customer_service_records:READ/UPDATE según ruta. El listado y detalle exponen billing_status y billing_notification; la consulta timeline usa READ, match=periods|customer_milestones y rango maximo de 42 dias. Ver docs/frontend/customer-service-record-billing-handoff.md y docs/frontend/customer-service-record-timeline-handoff.md.",
       "item": [
+        {
+          "name": "Timeline - Periods",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=periods&page=1&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "timeline"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-10-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-10-31"
+                },
+                {
+                  "key": "match",
+                  "value": "periods"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+          },
+          "response": [
+            {
+              "name": "200 - Periodos",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=periods&page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "timeline"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2026-10-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2026-10-31"
+                    },
+                    {
+                      "key": "match",
+                      "value": "periods"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"Mensaje localizado por backend\",\n  \"status_code\": 200,\n  \"data\": [\n    {\n      \"customer_service_record_id\": \"record-id\",\n      \"service_number\": 42,\n      \"service_number_display\": \"0042\",\n      \"service_type\": {\n        \"service_type_code\": \"CALIBRATION\",\n        \"name\": \"Calibración\"\n      },\n      \"requested_at\": \"2026-10-01\",\n      \"customer\": {\n        \"customer_id\": \"customer-id\",\n        \"name\": \"Cliente\"\n      },\n      \"assets\": [\n        {\n          \"asset_id\": \"asset-id\",\n          \"name\": \"Equipo\",\n          \"identifier\": \"EQ-1\"\n        }\n      ],\n      \"operational_status\": {\n        \"code\": \"IN_PROGRESS\",\n        \"name\": \"En progreso\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.IN_PROGRESS\"\n      },\n      \"customer_delivery\": {\n        \"received_at\": \"2026-10-02\",\n        \"estimated_delivery_at\": \"2026-10-30\",\n        \"status_materialization\": null\n      },\n      \"provider\": {\n        \"provider_id\": \"provider-id\",\n        \"name\": \"Proveedor\",\n        \"delivered_to_provider_at\": \"2026-10-05\",\n        \"estimated_return_at\": \"2026-10-20\",\n        \"returned_from_provider_at\": null,\n        \"status_materialization\": null\n      }\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"per_page\": 10,\n    \"total\": 1,\n    \"total_pages\": 1\n  }\n}"
+            },
+            {
+              "name": "400 - Rango invalido",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-11-15&match=periods&page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "timeline"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2026-10-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2026-11-15"
+                    },
+                    {
+                      "key": "match",
+                      "value": "periods"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 400,\n  \"error_details\": {\n    \"message\": \"Mensaje localizado por backend\",\n    \"method\": \"GET\",\n    \"path\": \"/v1/customer-service-records/timeline\",\n    \"error_code\": \"VALIDATION.DEFAULT\",\n    \"validation_errors\": [\n      \"from and to must be real ordered dates within 42 inclusive days\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "401 - Sin token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=periods&page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "timeline"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2026-10-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2026-10-31"
+                    },
+                    {
+                      "key": "match",
+                      "value": "periods"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 401,\n  \"error_details\": {\n    \"message\": \"Mensaje localizado por backend\",\n    \"method\": \"GET\",\n    \"path\": \"/v1/customer-service-records/timeline\",\n    \"error_code\": \"AUTHENTICATION.TOKEN_MISSING\",\n    \"validation_errors\": []\n  }\n}"
+            },
+            {
+              "name": "403 - Sin READ",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{TOKEN_WITHOUT_CUSTOMER_SERVICE_RECORD_READ}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=periods&page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "timeline"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2026-10-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2026-10-31"
+                    },
+                    {
+                      "key": "match",
+                      "value": "periods"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Ejemplo ilustrativo: usar un token autenticado sin customer_service_records:READ."
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 403,\n  \"error_details\": {\n    \"message\": \"Mensaje localizado por backend\",\n    \"method\": \"GET\",\n    \"path\": \"/v1/customer-service-records/timeline\",\n    \"error_code\": \"AUTHORIZATION.ROLE_PRIVILEGES_INSUFFICIENT\",\n    \"validation_errors\": []\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Timeline - Customer Milestones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=customer_milestones&page=1&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "timeline"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-10-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-10-31"
+                },
+                {
+                  "key": "match",
+                  "value": "customer_milestones"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+          },
+          "response": [
+            {
+              "name": "200 - Sin coincidencias",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-user-lang",
+                    "value": "es"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/customer-service-records/timeline?from=2026-10-01&to=2026-10-31&match=customer_milestones&page=1&limit=10",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customer-service-records",
+                    "timeline"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2026-10-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2026-10-31"
+                    },
+                    {
+                      "key": "match",
+                      "value": "customer_milestones"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Requiere customer_service_records:READ. Rango civil inclusivo maximo 42 dias. Orden ID ascendente. Ver docs/frontend/customer-service-record-timeline-handoff.md."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"Mensaje localizado por backend\",\n  \"status_code\": 200,\n  \"data\": [],\n  \"pagination\": {\n    \"page\": 1,\n    \"per_page\": 10,\n    \"total\": 0,\n    \"total_pages\": 0\n  }\n}"
+            }
+          ]
+        },
         {
           "name": "List Work Priority",
           "request": {

@@ -7,11 +7,16 @@ import {
 } from '@domain/entities';
 import {
   FindCustomerServiceRecordsParams,
+  FindCustomerServiceRecordTimelineParams,
   FindOperationalCustomerServiceRecordsParams,
   ICustomerServiceRecordReadRepository,
+  CustomerServiceRecordTimelineReadModel,
 } from '@domain/ports/repositories';
 import { buildAccentInsensitiveRegex } from '@src/common/utils';
-import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
+import {
+  CustomerServiceRecordDocument,
+  CustomerServiceRecordStatusMaterializationDocument,
+} from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from './mongoose-customer-service-record-base.repository';
 
 @Injectable()
@@ -19,6 +24,149 @@ export class MongooseCustomerServiceRecordReadRepositoryImpl
   extends MongooseCustomerServiceRecordBaseRepository
   implements ICustomerServiceRecordReadRepository
 {
+  async findTimeline(params: FindCustomerServiceRecordTimelineParams): Promise<{
+    data: CustomerServiceRecordTimelineReadModel[];
+    total: number;
+  }> {
+    const inRange = (field: string) => ({
+      [field]: { $gte: params.from, $lte: params.to },
+    });
+    const crosses = (start: string, end: string) => ({
+      [start]: { $lte: params.to },
+      [end]: { $gte: params.from },
+    });
+    const customerStart = 'customer_delivery.received_at';
+    const customerEnd = 'customer_delivery.estimated_delivery_at';
+    const providerStart = 'provider.delivered_to_provider_at';
+    const providerRealEnd = 'provider.returned_from_provider_at';
+    const providerEstimatedEnd = 'provider.estimated_return_at';
+    const customerMilestones = [inRange(customerStart), inRange(customerEnd)];
+    const providerReal = { [providerRealEnd]: { $type: 'string' } };
+    const providerEstimated = { [providerRealEnd]: null };
+    const periodBranches: Record<string, unknown>[] = [
+      ...customerMilestones,
+      crosses(customerStart, customerEnd),
+      { $and: [providerReal, inRange(providerStart)] },
+      { $and: [providerReal, inRange(providerRealEnd)] },
+      { $and: [providerReal, crosses(providerStart, providerRealEnd)] },
+      { $and: [providerEstimated, inRange(providerStart)] },
+      { $and: [providerEstimated, inRange(providerEstimatedEnd)] },
+      {
+        $and: [providerEstimated, crosses(providerStart, providerEstimatedEnd)],
+      },
+    ];
+    const filter = {
+      status: CustomerServiceRecordStatus.ACTIVE,
+      $or:
+        params.match === 'customer_milestones'
+          ? customerMilestones
+          : periodBranches,
+    };
+    const fields = [
+      'customer_service_record_id',
+      'service_number',
+      'service_type_code',
+      'service_type_name',
+      'requested_at',
+      'customer.customer_id',
+      'customer.customer_name',
+      'assets.asset_id',
+      'assets.name',
+      'assets.identifier',
+      'operational_status',
+      customerStart,
+      customerEnd,
+      'customer_delivery.status_materialization.source',
+      'customer_delivery.status_materialization.code',
+      'customer_delivery.status_materialization.label',
+      'customer_delivery.status_materialization.label_key',
+      'customer_delivery.status_materialization.color_hex',
+      'customer_delivery.status_materialization.effective_start_date',
+      'provider.provider_id',
+      'provider.provider_name',
+      providerStart,
+      providerEstimatedEnd,
+      providerRealEnd,
+      'provider.status_materialization.source',
+      'provider.status_materialization.code',
+      'provider.status_materialization.label',
+      'provider.status_materialization.label_key',
+      'provider.status_materialization.color_hex',
+      'provider.status_materialization.effective_start_date',
+    ];
+    const session = this.transactionContext.getSession() ?? null;
+    const [documents, total] = await Promise.all([
+      this.customerServiceRecordModel
+        .find(filter)
+        .select(fields.join(' '))
+        .sort({ customer_service_record_id: 1 })
+        .skip((params.page - 1) * params.perPage)
+        .limit(params.perPage)
+        .session(session)
+        .lean()
+        .exec(),
+      this.customerServiceRecordModel
+        .countDocuments(filter)
+        .session(session)
+        .exec(),
+    ]);
+    return {
+      data: documents.map((document) => ({
+        id: document.customer_service_record_id,
+        serviceNumber: document.service_number,
+        serviceTypeCode: document.service_type_code,
+        serviceTypeName: document.service_type_name,
+        requestedAt: document.requested_at,
+        customer: {
+          customerId: document.customer.customer_id,
+          name: document.customer.customer_name,
+        },
+        assets: (document.assets ?? []).map((asset) => ({
+          assetId: asset.asset_id,
+          name: asset.name,
+          identifier: asset.identifier,
+        })),
+        operationalStatus: document.operational_status,
+        customerDelivery: {
+          receivedAt: document.customer_delivery.received_at ?? null,
+          estimatedDeliveryAt:
+            document.customer_delivery.estimated_delivery_at ?? null,
+          statusMaterialization: this.toTimelineMaterialization(
+            document.customer_delivery.status_materialization,
+          ),
+        },
+        provider: document.provider
+          ? {
+              providerId: document.provider.provider_id,
+              name: document.provider.provider_name,
+              deliveredToProviderAt:
+                document.provider.delivered_to_provider_at ?? null,
+              estimatedReturnAt: document.provider.estimated_return_at ?? null,
+              returnedFromProviderAt:
+                document.provider.returned_from_provider_at ?? null,
+              statusMaterialization: this.toTimelineMaterialization(
+                document.provider.status_materialization,
+              ),
+            }
+          : null,
+      })),
+      total,
+    };
+  }
+
+  private toTimelineMaterialization(
+    value?: CustomerServiceRecordStatusMaterializationDocument | null,
+  ) {
+    if (!value) return null;
+    return {
+      source: value.source,
+      code: value.code,
+      label: value.label,
+      labelKey: value.label_key ?? null,
+      colorHex: value.color_hex,
+      effectiveStartDate: value.effective_start_date ?? null,
+    };
+  }
   async findById(
     recordId: string,
   ): Promise<{ data: CustomerServiceRecord | null }> {

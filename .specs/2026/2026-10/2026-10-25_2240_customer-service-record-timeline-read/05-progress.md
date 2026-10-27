@@ -20,3 +20,16 @@
 - Una segunda comprobación del mapper de dominio identificó el formateador vigente de `service_number_display`; el diseño temporal ahora indica su reutilización y lo incluye en el registro de artefactos.
 - En esa revisión seguía pendiente la aprobación explícita para `Implementation ready: yes`, requerida por el workflow. No se implementó código ni se realizaron validaciones HTTP.
 - El usuario autorizó expresamente marcar la definición como lista para implementar el 2026-10-27. Se cerró la Fase 1 y se actualizó el índice. La siguiente fase es la implementación de la consulta de lectura, pendiente de autorización para iniciar la Slice 1; no se ha escrito código ni validado HTTP.
+
+## 2026-10-27 — implementación de Slices 1 y 2
+
+- El usuario autorizó implementar en una entrega todas las tareas de código. Se añadió la consulta temporal a puerto y adaptador de lectura, con proyección ligera, selección `periods`/`customer_milestones`, prioridad de retorno real, orden por ID y tres índices compuestos declarados en el schema. Se añadieron DTO, mapper estático, caso de uso y exports.
+- Se añadió el request DTO con validación de fechas reales, rango inclusivo máximo de 42 días y selección; query/handler y registro CQRS; ruta READ antes de `:recordId`; presenter con la proyección documentada. El listado y el detalle anteriores no se modificaron.
+- Se creó `docs/frontend/customer-service-record-timeline-handoff.md` y se actualizaron catálogo de autorización y Postman con ambos modos de consulta y ejemplos de éxito/error. `npm run build` y lint enfocado finalizaron correctamente. No se ejecutaron pruebas automatizadas ni solicitudes HTTP.
+- Pendiente en Slice 3: validación manual del usuario (fechas, rangos, modos, paginación, permisos y errores), comprobación de índices efectivos y plan de consulta en el entorno autorizado. No se ejecutaron escrituras en BD.
+
+## 2026-10-27 — validación manual y cierre
+
+- El usuario confirmó haber realizado toda la matriz manual solicitada: periodos y hitos, fechas incompletas, prioridad del retorno real, semana/mes, paginación, entradas inválidas, permisos, compatibilidad de lista/detalle e inspección de índices y plan de consulta. Esta confirmación es la evidencia disponible; no se recibieron capturas, salidas HTTP ni métricas del plan, por lo que no se registran resultados específicos adicionales.
+- Se cotejaron el endpoint y el presenter con el handoff, la entrada READ del catálogo de autorización y las solicitudes de Postman. Se actualizó el estado del handoff y la descripción de la colección. La comprobación previa de `npm run build` y lint enfocado fue satisfactoria; no se añadieron ni ejecutaron suites automatizadas.
+- Se cerraron Fase 4 y Slice 3; definición, implementación, validación y spec quedaron `completed`. Se actualizó `.specs/index.md`. La futura integración visual de frontend permanece fuera del alcance de esta spec.

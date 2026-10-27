@@ -8,6 +8,42 @@ import {
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
 import type { CustomerServiceRecordSortStrategy } from '@domain/ports/repositories';
+import type { CustomerServiceRecordTimelineMatch } from '@domain/ports/repositories';
+import type { CustomerServiceRecordTimelineMaterialization } from '@domain/ports/repositories';
+
+export interface GetCustomerServiceRecordTimelineDto
+  extends PaginationParamsDto {
+  from: string;
+  to: string;
+  match: CustomerServiceRecordTimelineMatch;
+}
+
+export interface CustomerServiceRecordTimelineViewDto {
+  id: string;
+  serviceNumber: number;
+  serviceNumberDisplay: string;
+  serviceType: { code: string; name: string };
+  requestedAt: string;
+  customer: { customerId: string; name: string };
+  assets: Array<{ assetId: string; name: string; identifier: string }>;
+  operationalStatus: CustomerServiceRecordOperationalStatus;
+  customerDelivery: {
+    receivedAt: string | null;
+    estimatedDeliveryAt: string | null;
+    statusMaterialization: CustomerServiceRecordTimelineMaterialization | null;
+  };
+  provider: {
+    providerId: string;
+    name: string;
+    deliveredToProviderAt: string | null;
+    estimatedReturnAt: string | null;
+    returnedFromProviderAt: string | null;
+    statusMaterialization: CustomerServiceRecordTimelineMaterialization | null;
+  } | null;
+}
+
+export type GetCustomerServiceRecordTimelineResultDto =
+  PaginatedResultDto<CustomerServiceRecordTimelineViewDto>;
 
 export interface CustomerServiceRecordIntervalDto {
   years: number;

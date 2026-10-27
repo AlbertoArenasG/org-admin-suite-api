@@ -750,6 +750,10 @@ Endpoints actuales:
   - operacion: `READ`
   - acceso actual: autenticado
   - nota: listado paginado con filtros, rangos date-only y ordenamientos permitidos; `billing_status` acepta `NOT_SUBMITTED`, `SUBMITTED` e `INVOICED`.
+- `GET /v1/customer-service-records/timeline`
+  - operacion: `READ`
+  - acceso actual: autenticado
+  - nota: consulta temporal paginada para hitos de cliente o periodos de cliente y proveedor. Endpoint local del módulo; no crea capability ni permiso nuevo.
 - `GET /v1/customer-service-records/billing-statuses/options`
   - operacion: `READ`
   - acceso actual: autenticado

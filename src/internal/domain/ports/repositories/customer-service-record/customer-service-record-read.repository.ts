@@ -1,8 +1,50 @@
 import {
   CustomerServiceRecord,
   CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordStatusMaterializationProps,
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
+
+export type CustomerServiceRecordTimelineMatch =
+  | 'periods'
+  | 'customer_milestones';
+
+export type CustomerServiceRecordTimelineMaterialization = Pick<
+  CustomerServiceRecordStatusMaterializationProps,
+  'source' | 'code' | 'label' | 'labelKey' | 'colorHex' | 'effectiveStartDate'
+>;
+
+export interface FindCustomerServiceRecordTimelineParams {
+  from: string;
+  to: string;
+  match: CustomerServiceRecordTimelineMatch;
+  page: number;
+  perPage: number;
+}
+
+export interface CustomerServiceRecordTimelineReadModel {
+  id: string;
+  serviceNumber: number;
+  serviceTypeCode: string;
+  serviceTypeName: string;
+  requestedAt: string;
+  customer: { customerId: string; name: string };
+  assets: Array<{ assetId: string; name: string; identifier: string }>;
+  operationalStatus: CustomerServiceRecordOperationalStatus;
+  customerDelivery: {
+    receivedAt: string | null;
+    estimatedDeliveryAt: string | null;
+    statusMaterialization: CustomerServiceRecordTimelineMaterialization | null;
+  };
+  provider: {
+    providerId: string;
+    name: string;
+    deliveredToProviderAt: string | null;
+    estimatedReturnAt: string | null;
+    returnedFromProviderAt: string | null;
+    statusMaterialization: CustomerServiceRecordTimelineMaterialization | null;
+  } | null;
+}
 
 export type CustomerServiceRecordSortField =
   | 'service_number'
@@ -60,6 +102,9 @@ export interface FindOperationalCustomerServiceRecordsParams {
 }
 
 export interface ICustomerServiceRecordReadRepository {
+  findTimeline(
+    params: FindCustomerServiceRecordTimelineParams,
+  ): Promise<{ data: CustomerServiceRecordTimelineReadModel[]; total: number }>;
   findById(recordId: string): Promise<{ data: CustomerServiceRecord | null }>;
   findAll(
     params: FindCustomerServiceRecordsParams,

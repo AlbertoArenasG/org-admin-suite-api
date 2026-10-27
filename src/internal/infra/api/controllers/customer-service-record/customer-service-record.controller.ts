@@ -21,6 +21,7 @@ import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import {
   CreateCustomerServiceRecordRequestDto,
   GetCustomerServiceRecordsRequestDto,
+  GetCustomerServiceRecordTimelineRequestDto,
   UpdateCustomerServiceRecordAssetRequestDto,
   UpdateCustomerServiceRecordBillingStatusRequestDto,
   UpdateCustomerServiceRecordCustomerRequestDto,
@@ -45,6 +46,7 @@ import {
   GetCustomerServiceRecordByIdQuery,
   GetCustomerServiceRecordBillingStatusOptionsQuery,
   GetCustomerServiceRecordsQuery,
+  GetCustomerServiceRecordTimelineQuery,
 } from '@infra/cqrs/queries';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 @Controller('v1/customer-service-records')
@@ -83,6 +85,22 @@ export class CustomerServiceRecordController {
     return ApiResponseBuilder.create()
       .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
       .withData(this.presenter.toCollection(result.items))
+      .withPagination(result.page, result.perPage, result.total)
+      .withStatus(HttpStatus.OK)
+      .build();
+  }
+  @Get('timeline')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('customer_service_records', 'READ')
+  async findTimeline(
+    @Query() query: GetCustomerServiceRecordTimelineRequestDto,
+  ) {
+    const result = await this.queryBus.execute(
+      GetCustomerServiceRecordTimelineQuery.create(query.toDomain()),
+    );
+    return ApiResponseBuilder.create()
+      .withSuccessMessage(this.successMsgService.getMsg('DEFAULT'))
+      .withData(this.presenter.toTimelineCollection(result.items))
       .withPagination(result.page, result.perPage, result.total)
       .withStatus(HttpStatus.OK)
       .build();

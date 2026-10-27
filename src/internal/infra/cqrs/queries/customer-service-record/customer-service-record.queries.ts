@@ -3,13 +3,45 @@ import {
   GetCustomerServiceRecordByIdResultDto,
   GetCustomerServiceRecordsDto,
   GetCustomerServiceRecordsResultDto,
+  GetCustomerServiceRecordTimelineDto,
+  GetCustomerServiceRecordTimelineResultDto,
 } from '@application/dto';
 import {
   GetCustomerServiceRecordByIdUseCase,
   GetCustomerServiceRecordBillingStatusOptionsUseCase,
   GetCustomerServiceRecordsUseCase,
+  GetCustomerServiceRecordTimelineUseCase,
 } from '@application/use-cases';
 import { BaseQueryHandler } from '@infra/cqrs/base-query.handler';
+
+export class GetCustomerServiceRecordTimelineQuery {
+  private constructor(
+    public readonly payload: GetCustomerServiceRecordTimelineDto,
+  ) {}
+
+  static create(payload: GetCustomerServiceRecordTimelineDto) {
+    return new GetCustomerServiceRecordTimelineQuery(payload);
+  }
+}
+
+@QueryHandler(GetCustomerServiceRecordTimelineQuery)
+export class GetCustomerServiceRecordTimelineHandler
+  extends BaseQueryHandler<
+    GetCustomerServiceRecordTimelineQuery,
+    GetCustomerServiceRecordTimelineResultDto
+  >
+  implements IQueryHandler<GetCustomerServiceRecordTimelineQuery>
+{
+  constructor(
+    private readonly useCase: GetCustomerServiceRecordTimelineUseCase,
+  ) {
+    super();
+  }
+
+  async execute(query: GetCustomerServiceRecordTimelineQuery) {
+    return this.run(query, () => this.useCase.execute(query.payload));
+  }
+}
 export class GetCustomerServiceRecordsQuery {
   private constructor(public readonly payload: GetCustomerServiceRecordsDto) {}
   static create(payload: GetCustomerServiceRecordsDto) {

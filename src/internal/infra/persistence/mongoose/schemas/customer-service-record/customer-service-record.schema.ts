@@ -545,5 +545,17 @@ CustomerServiceRecordSchema.index({
 });
 CustomerServiceRecordSchema.index({
   status: 1,
+  'customer_delivery.received_at': 1,
+});
+CustomerServiceRecordSchema.index({
+  status: 1,
+  'provider.delivered_to_provider_at': 1,
+});
+CustomerServiceRecordSchema.index({
+  status: 1,
+  'provider.returned_from_provider_at': 1,
+});
+CustomerServiceRecordSchema.index({
+  status: 1,
   'provider.estimated_return_at': 1,
 });

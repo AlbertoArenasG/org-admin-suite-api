@@ -10,14 +10,19 @@ import {
   IsString,
   Matches,
   Min,
+  Validate,
   ValidateIf,
   ValidateNested,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
 
 import {
   CreateCustomerServiceRecordDto,
   CustomerServiceRecordDocumentType,
   GetCustomerServiceRecordsDto,
+  GetCustomerServiceRecordTimelineDto,
   UpdateCustomerServiceRecordAssetDto,
   UpdateCustomerServiceRecordBillingStatusDto,
   UpdateCustomerServiceRecordCustomerDto,
@@ -34,6 +39,62 @@ import {
   CustomerServiceRecordSortStrategy,
 } from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
+
+@ValidatorConstraint({ name: 'CustomerServiceRecordTimelineRange' })
+class CustomerServiceRecordTimelineRangeValidator
+  implements ValidatorConstraintInterface
+{
+  validate(to: unknown, args: ValidationArguments): boolean {
+    const from = (args.object as GetCustomerServiceRecordTimelineRequestDto)
+      .from;
+    if (typeof from !== 'string' || typeof to !== 'string') return false;
+    const parseDay = (value: string): number | null => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+      const millis = Date.parse(`${value}T00:00:00.000Z`);
+      if (!Number.isFinite(millis)) return null;
+      return new Date(millis).toISOString().slice(0, 10) === value
+        ? millis
+        : null;
+    };
+    const first = parseDay(from);
+    const last = parseDay(to);
+    return (
+      first !== null &&
+      last !== null &&
+      last >= first &&
+      (last - first) / 86_400_000 < 42
+    );
+  }
+
+  defaultMessage(): string {
+    return 'from and to must be real ordered dates within 42 inclusive days';
+  }
+}
+
+export class GetCustomerServiceRecordTimelineRequestDto extends PaginationRequestDto {
+  @IsDefined()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  from!: string;
+
+  @IsDefined()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  @Validate(CustomerServiceRecordTimelineRangeValidator)
+  to!: string;
+
+  @IsOptional()
+  @IsIn(['periods', 'customer_milestones'])
+  match?: 'periods' | 'customer_milestones';
+
+  toDomain(): GetCustomerServiceRecordTimelineDto {
+    return {
+      from: this.from,
+      to: this.to,
+      match: this.match ?? 'periods',
+      page: this.getPage(),
+      perPage: this.getPerPage(),
+    };
+  }
+}
 
 class IntervalRequestDto {
   @IsDefined() @IsInt() @Min(0) years!: number;
