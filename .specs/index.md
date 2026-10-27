@@ -1,5 +1,6 @@
 # Specs Index
 
+- [customer-service-record-timeline-read](./2026/2026-10/2026-10-25_2240_customer-service-record-timeline-read/00-definition.md) - Lista para implementación; consulta temporal de servicio y proveedor, Slice 1 pendiente de inicio
 - [customer-service-record-billing](./2026/2026-10/2026-10-22_1909_customer-service-record-billing/00-definition.md) - Completada; estado de facturacion, aviso, migracion y modulo independiente validados
 - [service-package-record-file-delivery](./2026/2026-09/2026-09-29_1432_service-package-record-file-delivery/00-definition.md) - Completada; entrega segura y descriptor normalizado de archivos validados
 - [customer-service-record-attachments-and-segmented-updates](./2026/2026-09/2026-09-21_0003_customer-service-record-attachments-and-segmented-updates/00-definition.md) - Completada; adjuntos, actualizaciones segmentadas y migracion validados

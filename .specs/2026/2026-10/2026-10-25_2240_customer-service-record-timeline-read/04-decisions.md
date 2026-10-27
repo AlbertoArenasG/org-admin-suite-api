@@ -1,0 +1,10 @@
+# Decisiones
+
+1. **Una consulta temporal bajo el módulo administrativo.** La escala de semana o mes se expresa con `from`/`to`; no hay un endpoint por vista. Consume `customer_service_records:READ`.
+2. **Proyección de registro, no DTO de Kibo.** Backend devuelve fechas y contexto del registro; frontend construye hitos y barras.
+3. **El Gantt representa plazo del servicio y tramo de proveedor.** Tramo principal: inicio `received_at`, fin `estimated_delivery_at`. Tramo subordinado: inicio `delivered_to_provider_at`, fin `returned_from_provider_at` cuando existe; en otro caso `estimated_return_at`. Una sola fecha por tramo equivale visualmente a un día. Un registro agrupado por cliente, con el tramo del proveedor debajo del principal cuando existe; si faltan las dos fechas del cliente, se muestra la fila del registro únicamente con el tramo del proveedor.
+4. **El calendario conserva dos hitos de cliente.** Recepción y entrega estimada son los eventos acordados. Las fechas del proveedor se devuelven para el Gantt; no se añaden como eventos de calendario por inferencia.
+5. **Lectura sin mutaciones.** Crear, arrastrar o actualizar fechas/estados desde el bloque no forma parte de esta versión.
+6. **Límite aprobado:** máximo de 42 días inclusivos, suficiente para una semana o mes visible más los días adyacentes. La paginación usa el envelope existente y orden estable; la revisión técnica del contrato quedó completada, pero no equivale a aprobación de implementación.
+7. **Selección por propósito temporal:** `match` es opcional y por defecto `periods`, que incluye cruces de cliente y proveedor para Gantt. Calendario envía `customer_milestones`, que solo incluye recepción o entrega estimada al cliente dentro del rango. No cambia los campos de la respuesta.
+8. **Proyección ligera tipada:** el adaptador mapea los campos proyectados a un read model y un mapper de aplicación específico lo transforma al DTO temporal. El mapper existente de la entidad completa requiere adjuntos y facturación, por lo que no se reutiliza en esta consulta.
