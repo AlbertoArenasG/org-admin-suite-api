@@ -1,10 +1,12 @@
 import {
   CustomerServiceRecord,
   CustomerServiceRecordBillingNotificationProps,
+  CustomerServiceRecordBillingStatus,
   CustomerServiceRecordDocumentProps,
   CustomerServiceRecordFileAttachmentCollectionProps,
   CustomerServiceRecordNotificationMaterializationProps,
   CustomerServiceRecordStatusMaterializationProps,
+  CustomerServiceRecordInvoiceStatus,
 } from '@domain/entities';
 import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
 
@@ -50,7 +52,32 @@ export class MongooseCustomerServiceRecordMapper {
       provider: value.provider ? this.toProvider(value.provider) : null,
       quotation: this.toDocumentReference(value.quotation),
       purchaseOrder: this.toDocumentReference(value.purchase_order),
-      invoice: this.toDocumentReference(value.invoice),
+      invoice: {
+        ...this.toDocumentReference(value.invoice),
+        paymentComplements: (value.invoice?.payment_complements ?? []).map(
+          (item: any) => ({
+            ...this.toDocumentReference(item),
+            id: item.complement_id,
+          }),
+        ),
+      },
+      billing: {
+        instructions: value.billing?.instructions ?? null,
+        invoiceStatus:
+          value.billing?.invoice_status ??
+          (value.billing_status ===
+          CustomerServiceRecordBillingStatus.NOT_SUBMITTED
+            ? null
+            : CustomerServiceRecordInvoiceStatus.PENDING),
+        issuedAt: value.billing?.issued_at ?? null,
+        deliveredAt: value.billing?.delivered_at ?? null,
+        paymentTerm: value.billing?.payment_term
+          ? this.toInterval(value.billing.payment_term)
+          : null,
+        estimatedPaymentAt: value.billing?.estimated_payment_at ?? null,
+        paidAt: value.billing?.paid_at ?? null,
+      },
+      invoiceRevision: value.invoice_revision ?? 0,
       otherFiles: this.toAttachmentCollection(value.other_files),
       attachmentsCount: value.attachments_count ?? 0,
       customerVisibleAttachmentsCount:
@@ -115,7 +142,25 @@ export class MongooseCustomerServiceRecordMapper {
         : null,
       quotation: this.toMongooseDocumentReference(record.quotation),
       purchase_order: this.toMongooseDocumentReference(record.purchaseOrder),
-      invoice: this.toMongooseDocumentReference(record.invoice),
+      invoice: {
+        ...this.toMongooseDocumentReference(record.invoice),
+        payment_complements: record.invoice.paymentComplements.map((item) => ({
+          ...this.toMongooseDocumentReference(item),
+          complement_id: item.id,
+        })),
+      },
+      billing: {
+        instructions: record.billing.instructions,
+        invoice_status: record.billing.invoiceStatus,
+        issued_at: record.billing.issuedAt,
+        delivered_at: record.billing.deliveredAt,
+        payment_term: record.billing.paymentTerm
+          ? this.toMongooseInterval(record.billing.paymentTerm)
+          : null,
+        estimated_payment_at: record.billing.estimatedPaymentAt,
+        paid_at: record.billing.paidAt,
+      },
+      invoice_revision: record.invoiceRevision,
       other_files: this.toMongooseAttachmentCollection(record.otherFiles),
       attachments_count: record.attachmentsCount,
       customer_visible_attachments_count:

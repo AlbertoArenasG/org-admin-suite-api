@@ -1,6 +1,6 @@
 # Specs Index
 
-- [customer-service-record-billing-lifecycle](./2026/2026-11/2026-11-04_2100_customer-service-record-billing-lifecycle/00-definition.md) - Lista para implementación; codificación y validación pendientes
+- [customer-service-record-billing-lifecycle](./2026/2026-11/2026-11-04_2100_customer-service-record-billing-lifecycle/00-definition.md) - Completada; código, migración, documentación y validación manual cerrados
 - [customer-service-record-timeline-read](./2026/2026-10/2026-10-25_2240_customer-service-record-timeline-read/00-definition.md) - Completada; consulta temporal, contrato y validación manual confirmados
 - [customer-service-record-billing](./2026/2026-10/2026-10-22_1909_customer-service-record-billing/00-definition.md) - Completada; estado de facturacion, aviso, migracion y modulo independiente validados
 - [service-package-record-file-delivery](./2026/2026-09/2026-09-29_1432_service-package-record-file-delivery/00-definition.md) - Completada; entrega segura y descriptor normalizado de archivos validados

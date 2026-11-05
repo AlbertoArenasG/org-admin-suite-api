@@ -27,6 +27,13 @@ export function customerServiceRecordBillingNoticeTemplate(
     `Cliente: ${notice.customerName}`,
     `Fecha de solicitud: ${requestedAt}`,
     `Fecha de creación: ${createdAt}`,
+    ...(notice.billingInstructions?.trim()
+      ? [
+          '',
+          'Indicaciones para facturación:',
+          notice.billingInstructions.trim(),
+        ]
+      : []),
     '',
     'Equipos:',
     ...notice.assets.flatMap((asset, index) => [

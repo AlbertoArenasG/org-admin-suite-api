@@ -144,6 +144,14 @@
       "SUBMITTED": "Enviado a facturación",
       "INVOICED": "Facturado"
     },
+    "INVOICE_STATUS": {
+      "PENDING": "Pendiente",
+      "IN_PROCESS_PAYMENT": "En proceso de pago",
+      "PAID": "Pagada",
+      "CANCELLED": "Cancelada",
+      "REJECTED": "Rechazada",
+      "OVERDUE": "Vencida"
+    },
     "BILLING_NOTIFICATION_STATUS": {
       "NOT_REQUESTED": "Sin intento",
       "SENT": "Enviado",

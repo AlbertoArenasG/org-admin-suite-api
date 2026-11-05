@@ -34,12 +34,37 @@ export interface ICustomerServiceRecordWriteRepository {
     record: CustomerServiceRecord,
     expectedStatus: CustomerServiceRecordBillingStatus,
   ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingInstructions(
+    record: CustomerServiceRecord,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
   updateBillingInvoice(
     record: CustomerServiceRecord,
     expectedStatus:
       | CustomerServiceRecordBillingStatus.SUBMITTED
       | CustomerServiceRecordBillingStatus.INVOICED,
   ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingLifecycle(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
+  updateBillingPurchaseOrder(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
+  archiveBillingInvoice(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }>;
+  markInvoiceOverdueIfCurrent(
+    record: CustomerServiceRecord,
+    today: string,
+  ): Promise<boolean>;
   updateMaterializations(
     params: UpdateCustomerServiceRecordMaterializationsParams,
   ): Promise<{ updated: boolean }>;

@@ -96,6 +96,7 @@ export class CustomerServiceRecordAttachmentReconciliationService {
       record.quotation,
       record.purchaseOrder,
       record.invoice,
+      ...record.invoice.paymentComplements,
       record.otherFiles,
     ];
     const attachmentsCount = collections.reduce(

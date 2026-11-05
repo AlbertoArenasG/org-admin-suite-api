@@ -68,7 +68,8 @@
   },
   "STATE_CONFLICT": {
     "CUSTOMER_SERVICE_RECORD": {
-      "BILLING_STATUS_CHANGED": "Billing status changed; reload the record"
+      "BILLING_STATUS_CHANGED": "Billing status changed; reload the record",
+      "INVOICE_CHANGED": "The invoice changed; reload the record"
     },
     "USER_CUSTOMER_RELATIONSHIP": {
       "ALREADY_EXISTS": "The user is already related to this customer",
@@ -88,6 +89,7 @@
     "PROVIDER_BANKING_INFO": "Provider banking information not found",
     "SERVICE_PACKAGE_RECORD": "Service package record not found",
     "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "Service type not found",
-    "CUSTOMER_SERVICE_RECORD": "Customer service record not found"
+    "CUSTOMER_SERVICE_RECORD": "Customer service record not found",
+    "BILLING_RECORD_ARCHIVE": "Archived invoice not found"
   }
 }

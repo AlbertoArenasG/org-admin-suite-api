@@ -15,6 +15,8 @@ import {
   EntityNotFoundExceptionCode,
   InvalidValueException,
   InvalidValueExceptionCode,
+  StateConflictException,
+  StateConflictExceptionCode,
 } from '@domain/exceptions';
 import {
   ICustomerServiceRecordReadRepository,
@@ -67,7 +69,13 @@ export class UpdateCustomerServiceRecordDocumentUseCase {
         break;
       case 'invoice':
         record.updateDetails(
-          { invoice: { ...reconciled, referenceNumber } },
+          {
+            invoice: {
+              ...reconciled,
+              referenceNumber,
+              paymentComplements: record.invoice.paymentComplements,
+            },
+          },
           input.actorUserId,
         );
         break;
@@ -81,7 +89,11 @@ export class UpdateCustomerServiceRecordDocumentUseCase {
     );
 
     const { data } = await this.writeRepository.update(record);
-    return CustomerServiceRecordMapper.toViewDto(data!);
+    if (!data)
+      throw StateConflictException.create(
+        StateConflictExceptionCode.CUSTOMER_SERVICE_RECORD_INVOICE_CHANGED,
+      );
+    return CustomerServiceRecordMapper.toViewDto(data);
   }
 
   private assertReferenceNumberContract(

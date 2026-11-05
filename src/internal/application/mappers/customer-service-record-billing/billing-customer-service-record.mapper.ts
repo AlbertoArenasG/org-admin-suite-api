@@ -38,6 +38,7 @@ export class BillingCustomerServiceRecordMapper {
       operationalStatus: record.operationalStatus,
       billingStatus: record.billingStatus,
       billingNotification: record.billingNotification,
+      billing: record.billing,
       attachmentsCount: record.attachmentsCount,
       quotation: {
         referenceNumber: record.quotation.referenceNumber,
@@ -50,6 +51,11 @@ export class BillingCustomerServiceRecordMapper {
       invoice: {
         referenceNumber: record.invoice.referenceNumber,
         files: this.toAttachments(record.invoice),
+        paymentComplements: record.invoice.paymentComplements.map((item) => ({
+          id: item.id,
+          referenceNumber: item.referenceNumber,
+          files: this.toAttachments(item),
+        })),
       },
       otherFiles: this.toAttachments(record.otherFiles),
       createdAt: record.createdAt ?? new Date(),

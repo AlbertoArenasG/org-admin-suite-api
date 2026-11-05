@@ -61,6 +61,7 @@ export class UpdateBillingCustomerServiceRecordInvoiceUseCase {
         invoice: {
           ...invoice,
           referenceNumber: input.referenceNumber?.trim() || null,
+          paymentComplements: record.invoice.paymentComplements,
         },
       },
       input.actorUserId,
@@ -76,7 +77,7 @@ export class UpdateBillingCustomerServiceRecordInvoiceUseCase {
     );
     if (!data) {
       throw StateConflictException.create(
-        StateConflictExceptionCode.CUSTOMER_SERVICE_RECORD_BILLING_STATUS_CHANGED,
+        StateConflictExceptionCode.CUSTOMER_SERVICE_RECORD_INVOICE_CHANGED,
       );
     }
     return BillingCustomerServiceRecordMapper.toViewDto(data);

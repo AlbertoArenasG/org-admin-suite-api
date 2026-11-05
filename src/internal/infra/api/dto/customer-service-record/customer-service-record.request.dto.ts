@@ -25,6 +25,7 @@ import {
   GetCustomerServiceRecordTimelineDto,
   UpdateCustomerServiceRecordAssetDto,
   UpdateCustomerServiceRecordBillingStatusDto,
+  UpdateCustomerServiceRecordBillingInstructionsDto,
   UpdateCustomerServiceRecordCustomerDto,
   UpdateCustomerServiceRecordDetailsDto,
   UpdateCustomerServiceRecordDocumentDto,
@@ -336,6 +337,10 @@ export class UpdateCustomerServiceRecordBillingStatusRequestDto {
   @IsEnum(CustomerServiceRecordBillingStatus)
   billing_status!: CustomerServiceRecordBillingStatus;
 
+  @ValidateIf((_, value) => value !== undefined && value !== null)
+  @IsString()
+  billing_instructions?: string | null;
+
   toDomain(
     recordId: string,
     actorUserId: string,
@@ -344,6 +349,27 @@ export class UpdateCustomerServiceRecordBillingStatusRequestDto {
       recordId,
       actorUserId,
       billingStatus: this.billing_status,
+      ...(this.billing_instructions === undefined
+        ? {}
+        : { billingInstructions: this.billing_instructions }),
+    };
+  }
+}
+
+export class UpdateCustomerServiceRecordBillingInstructionsRequestDto {
+  @IsDefined()
+  @ValidateIf((_, value) => value !== null)
+  @IsString()
+  billing_instructions!: string | null;
+
+  toDomain(
+    recordId: string,
+    actorUserId: string,
+  ): UpdateCustomerServiceRecordBillingInstructionsDto {
+    return {
+      recordId,
+      actorUserId,
+      billingInstructions: this.billing_instructions,
     };
   }
 }

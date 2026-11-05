@@ -94,6 +94,14 @@ export const configSchemas = [
     schema: schemas.CustomerServiceRecordSchema,
   },
   {
+    name: schemas.BillingRecordArchiveDocument.name,
+    schema: schemas.BillingRecordArchiveSchema,
+  },
+  {
+    name: schemas.BillingRecordCommentDocument.name,
+    schema: schemas.BillingRecordCommentSchema,
+  },
+  {
     name: schemas.CustomerServiceRecordServiceTypeDocument.name,
     schema: schemas.CustomerServiceRecordServiceTypeSchema,
   },

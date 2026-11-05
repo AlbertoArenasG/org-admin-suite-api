@@ -4,7 +4,7 @@ El diseño es una propuesta revisable. Ninguna slice inicia sin autorización ex
 
 ## Slice 1 — Modelo, persistencia y migración
 
-Entregar entidad especializada de factura, bloque billing, enums localizados, schema/mapper/repositorio y script histórico idempotente. Mantener lectura de documentos anteriores con defaults. Ajustar las dos escrituras actuales de factura para preservar complementos y actualizar el conteo de adjuntos. Agregar scripts npm de dry-run/apply/verificación; **solo el usuario ejecuta los tres**. Cierre: build/lint enfocado y revisión del diff, sin asumir que la migración real ocurrió.
+Entregar entidad especializada de factura, bloque billing, enums localizados, schema/mapper/repositorio y script histórico idempotente. Mantener lectura de documentos anteriores con defaults. Ajustar las dos escrituras actuales de factura para preservar complementos y actualizar el conteo de adjuntos. Agregar scripts npm de dry-run/apply/verificación; los ejecuta el usuario salvo autorización expresa para que los ejecute el agente. Cierre: build/lint enfocado y revisión del diff, sin asumir que la migración real ocurrió.
 
 ## Slice 2 — Instrucciones y transición administrativa
 
@@ -28,4 +28,4 @@ Implementar consulta por lotes, cursor estable, lock y actualización condiciona
 
 ## Comandos reservados al usuario
 
-En la Slice 1, después del build y de revisar el destino de `MONGO_URI`, el usuario ejecutará en este repositorio los scripts que se añadan a `package.json`: `npm run db:migrate:customer-service-record-invoice-lifecycle:dry-run`; tras revisar conteos, `npm run db:migrate:customer-service-record-invoice-lifecycle:apply`; finalmente repetir dry-run para verificar cero pendientes. `apply` modifica datos; no ejecutarlo si el reporte no coincide con lo esperado. Compartir conteos y resultado de auditoría para registrarlos en `05-progress.md`. No hace falta seed de roles porque se reutilizan permisos existentes.
+En la Slice 1, después del build y de revisar el destino de `MONGO_URI`, el usuario o el agente con su autorización expresa ejecuta en este repositorio los scripts que se añadan a `package.json`: `npm run db:migrate:customer-service-record-invoice-lifecycle:dry-run`; tras revisar conteos, `npm run db:migrate:customer-service-record-invoice-lifecycle:apply`; finalmente repetir dry-run para verificar cero pendientes. `apply` modifica datos; no ejecutarlo si el reporte no coincide con lo esperado. Compartir conteos y resultado de auditoría para registrarlos en `05-progress.md`. No hace falta seed de roles porque se reutilizan permisos existentes.

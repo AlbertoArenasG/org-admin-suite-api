@@ -4,6 +4,7 @@ export interface CustomerServiceRecordBillingNotice {
   customerName: string;
   requestedAt: string;
   createdAt: Date | null;
+  billingInstructions: string | null;
   assets: Array<{
     name: string;
     identifier: string;

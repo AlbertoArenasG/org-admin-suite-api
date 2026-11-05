@@ -144,6 +144,14 @@
       "SUBMITTED": "Submitted for invoicing",
       "INVOICED": "Invoiced"
     },
+    "INVOICE_STATUS": {
+      "PENDING": "Pending",
+      "IN_PROCESS_PAYMENT": "In payment process",
+      "PAID": "Paid",
+      "CANCELLED": "Cancelled",
+      "REJECTED": "Rejected",
+      "OVERDUE": "Overdue"
+    },
     "BILLING_NOTIFICATION_STATUS": {
       "NOT_REQUESTED": "No attempt",
       "SENT": "Sent",

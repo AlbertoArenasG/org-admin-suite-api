@@ -94,6 +94,7 @@ export class UpdateBillingCustomerServiceRecordStatusUseCase {
         customerName: record.customer.customerName,
         requestedAt: record.requestedAt,
         createdAt: record.createdAt ?? null,
+        billingInstructions: record.billing.instructions,
         assets: record.assets.map((asset) => ({
           name: asset.name,
           identifier: asset.identifier,

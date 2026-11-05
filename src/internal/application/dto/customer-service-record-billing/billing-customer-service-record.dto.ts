@@ -1,6 +1,8 @@
 import {
   CustomerServiceRecordBillingNotificationProps,
   CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordBillingProps,
+  CustomerServiceRecordInvoiceStatus,
   CustomerServiceRecordOperationalStatus,
 } from '@domain/entities';
 import { FindBillingCustomerServiceRecordsParams } from '@domain/ports/repositories/customer-service-record-billing';
@@ -18,6 +20,12 @@ export interface BillingCustomerServiceRecordFileAttachmentViewDto {
 export interface BillingCustomerServiceRecordDocumentViewDto {
   referenceNumber: string | null;
   files: BillingCustomerServiceRecordFileAttachmentViewDto[];
+}
+export interface BillingCustomerServiceRecordInvoiceViewDto
+  extends BillingCustomerServiceRecordDocumentViewDto {
+  paymentComplements: Array<
+    BillingCustomerServiceRecordDocumentViewDto & { id: string }
+  >;
 }
 
 export interface BillingCustomerServiceRecordAssetViewDto {
@@ -54,7 +62,8 @@ export interface BillingCustomerServiceRecordViewDto {
   attachmentsCount: number;
   quotation: BillingCustomerServiceRecordDocumentViewDto;
   purchaseOrder: BillingCustomerServiceRecordDocumentViewDto;
-  invoice: BillingCustomerServiceRecordDocumentViewDto;
+  invoice: BillingCustomerServiceRecordInvoiceViewDto;
+  billing: CustomerServiceRecordBillingProps;
   otherFiles: BillingCustomerServiceRecordFileAttachmentViewDto[];
   createdAt: Date;
   updatedAt: Date | null;
@@ -83,6 +92,46 @@ export interface UpdateBillingCustomerServiceRecordInvoiceDto {
   actorUserId: string;
   referenceNumber: string | null;
   fileIds: string[];
+}
+
+export interface UpdateBillingCustomerServiceRecordDetailsDto {
+  recordId: string;
+  actorUserId: string;
+  changes: Partial<
+    Pick<
+      CustomerServiceRecordBillingProps,
+      | 'issuedAt'
+      | 'deliveredAt'
+      | 'paymentTerm'
+      | 'estimatedPaymentAt'
+      | 'paidAt'
+    >
+  >;
+}
+
+export interface UpdateBillingCustomerServiceRecordInvoiceStatusDto {
+  recordId: string;
+  actorUserId: string;
+  invoiceStatus: CustomerServiceRecordInvoiceStatus;
+}
+
+export interface UpdateBillingCustomerServiceRecordPurchaseOrderDto {
+  recordId: string;
+  actorUserId: string;
+  referenceNumber: string | null;
+  fileIds: string[];
+}
+
+export interface CreateBillingCustomerServiceRecordPaymentComplementDto {
+  recordId: string;
+  actorUserId: string;
+  referenceNumber: string | null;
+  fileIds: string[];
+}
+
+export interface UpdateBillingCustomerServiceRecordPaymentComplementDto
+  extends CreateBillingCustomerServiceRecordPaymentComplementDto {
+  complementId: string;
 }
 
 export type UpdateBillingCustomerServiceRecordStatusResultDto =

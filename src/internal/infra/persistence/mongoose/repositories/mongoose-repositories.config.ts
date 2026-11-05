@@ -43,6 +43,8 @@ import {
   MongooseUserCustomerRelationshipWriteRepositoryImpl,
   MongooseCustomerServiceRecordReadRepositoryImpl,
   MongooseBillingCustomerServiceRecordReadRepositoryImpl,
+  MongooseBillingRecordArchiveRepositoryImpl,
+  MongooseBillingRecordCommentRepositoryImpl,
   MongooseCustomerServiceRecordClientAccessReadRepositoryImpl,
   MongooseCustomerServiceRecordWriteRepositoryImpl,
   MongooseCustomerServiceRecordServiceTypeReadRepositoryImpl,
@@ -95,6 +97,8 @@ import {
   IUserCustomerRelationshipWriteRepositoryToken,
   ICustomerServiceRecordReadRepositoryToken,
   IBillingCustomerServiceRecordReadRepositoryToken,
+  IBillingRecordArchiveRepositoryToken,
+  IBillingRecordCommentRepositoryToken,
   ICustomerServiceRecordClientAccessReadRepositoryToken,
   ICustomerServiceRecordWriteRepositoryToken,
   ICustomerServiceRecordServiceTypeReadRepositoryToken,
@@ -108,6 +112,14 @@ import {
 } from '@infra/persistence/mongoose/transactions';
 
 export const MongooseRepositoriesConfig = [
+  {
+    provide: IBillingRecordCommentRepositoryToken,
+    useClass: MongooseBillingRecordCommentRepositoryImpl,
+  },
+  {
+    provide: IBillingRecordArchiveRepositoryToken,
+    useClass: MongooseBillingRecordArchiveRepositoryImpl,
+  },
   {
     provide: IUserReadRepositoryToken,
     useClass: MongooseUserReadRepositoryImpl,
@@ -312,6 +324,8 @@ export const MongooseRepositoriesConfig = [
 ];
 
 export const MongooseRepositoryTokens = [
+  IBillingRecordCommentRepositoryToken,
+  IBillingRecordArchiveRepositoryToken,
   IUserReadRepositoryToken,
   IUserWriteRepositoryToken,
   IRoleReadRepositoryToken,

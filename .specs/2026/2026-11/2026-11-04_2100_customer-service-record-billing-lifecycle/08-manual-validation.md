@@ -1,6 +1,6 @@
-# Matriz de validación manual propuesta
+# Matriz de validación manual
 
-**Responsable:** usuario. Ningún caso está marcado como ejecutado; se registrará evidencia real en `05-progress.md`.
+**Responsable:** usuario. El 2026-11-05 confirmó que realizó las validaciones manuales de la spec. No se proporcionó un desglose de resultados por escenario; la confirmación general se registra en `05-progress.md`.
 
 | Escenario | Resultado esperado |
 | --- | --- |
@@ -20,7 +20,7 @@
 
 | Riesgo | Nivel y evidencia esperada | Responsable |
 | --- | --- | --- |
-| Migración sobre datos históricos | Dry-run con conteos; apply y segundo dry-run sin pendientes; comparación de `updatedAt`/`updatedBy` anterior y posterior. | Usuario. |
+| Migración sobre datos históricos | Dry-run con conteos; apply y segundo dry-run sin pendientes; comparación de los cuatro campos de auditoría anterior y posterior. | Agente, por autorización expresa del usuario. |
 | Pérdida o duplicación de factura al archivar | Validación manual de dos intentos y de dos escrituras concurrentes; un solo snapshot y versión coherente. | Usuario. |
 | Cálculo de fechas y vencimiento | Casos manuales de fin de mes, día local de Ciudad de México y fecha manual independiente; respuesta y estado persistido. | Usuario. |
 | Archivos y compatibilidad de rutas actuales | Edición de factura en ambos módulos, descarga de archivados, conteo visible y respuesta previa compatible. | Usuario. |

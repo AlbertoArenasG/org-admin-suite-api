@@ -138,6 +138,13 @@ export interface UpdateCustomerServiceRecordBillingStatusDto {
   recordId: string;
   actorUserId: string;
   billingStatus: CustomerServiceRecordBillingStatus;
+  billingInstructions?: string | null;
+}
+
+export interface UpdateCustomerServiceRecordBillingInstructionsDto {
+  recordId: string;
+  actorUserId: string;
+  billingInstructions: string | null;
 }
 
 export interface UpdateCustomerServiceRecordCustomerDto {
@@ -235,6 +242,7 @@ export interface CustomerServiceRecordViewDto {
   operationalStatus: CustomerServiceRecordOperationalStatus;
   billingStatus: CustomerServiceRecordBillingStatus;
   billingNotification: CustomerServiceRecordBillingNotificationProps;
+  billingInstructions: string | null;
   attachmentsCount: number;
   quotation: CustomerServiceRecordDocumentViewDto;
   purchaseOrder: CustomerServiceRecordDocumentViewDto;
@@ -260,6 +268,8 @@ export type UpdateCustomerServiceRecordAssetResultDto =
 export type UpdateCustomerServiceRecordDocumentResultDto =
   CustomerServiceRecordViewDto;
 export type UpdateCustomerServiceRecordBillingStatusResultDto =
+  CustomerServiceRecordViewDto;
+export type UpdateCustomerServiceRecordBillingInstructionsResultDto =
   CustomerServiceRecordViewDto;
 
 export interface RefreshCustomerServiceRecordMaterializationsDto {

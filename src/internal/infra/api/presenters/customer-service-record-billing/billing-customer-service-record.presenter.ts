@@ -34,7 +34,24 @@ export class BillingCustomerServiceRecordPresenter {
       })),
       quotation: this.toDocument(result.quotation),
       purchase_order: this.toDocument(result.purchaseOrder),
-      invoice: this.toDocument(result.invoice),
+      invoice: {
+        ...this.toDocument(result.invoice),
+        payment_complements: result.invoice.paymentComplements.map((item) => ({
+          complement_id: item.id,
+          ...this.toDocument(item),
+        })),
+      },
+      billing: {
+        instructions: result.billing.instructions,
+        invoice_status: result.billing.invoiceStatus
+          ? this.localized('INVOICE_STATUS', result.billing.invoiceStatus)
+          : null,
+        issued_at: result.billing.issuedAt,
+        delivered_at: result.billing.deliveredAt,
+        payment_term: result.billing.paymentTerm,
+        estimated_payment_at: result.billing.estimatedPaymentAt,
+        paid_at: result.billing.paidAt,
+      },
       other_files: this.toAttachments(result.otherFiles),
       created_at: result.createdAt,
       updated_at: result.updatedAt,
@@ -47,6 +64,9 @@ export class BillingCustomerServiceRecordPresenter {
 
   toBillingStatusOptions(codes: string[]) {
     return codes.map((code) => this.localized('BILLING_STATUS', code));
+  }
+  toInvoiceStatusOptions(codes: string[]) {
+    return codes.map((code) => this.localized('INVOICE_STATUS', code));
   }
 
   private toListResponse(result: BillingCustomerServiceRecordViewDto) {
@@ -86,6 +106,10 @@ export class BillingCustomerServiceRecordPresenter {
         result.operationalStatus,
       ),
       billing_status: this.localized('BILLING_STATUS', result.billingStatus),
+      invoice_status: result.billing.invoiceStatus
+        ? this.localized('INVOICE_STATUS', result.billing.invoiceStatus)
+        : null,
+      estimated_payment_at: result.billing.estimatedPaymentAt,
       billing_notification: {
         status: this.localized(
           'BILLING_NOTIFICATION_STATUS',

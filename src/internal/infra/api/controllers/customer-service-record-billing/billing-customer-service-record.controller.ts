@@ -28,6 +28,7 @@ import {
   GetBillingCustomerServiceRecordsQuery,
   GetBillingCustomerServiceRecordByIdQuery,
   GetBillingCustomerServiceRecordStatusOptionsQuery,
+  GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery,
 } from '@infra/cqrs/queries/customer-service-record-billing';
 import { SuccessMessageService } from '@infra/i18n/services/success-message.service';
 
@@ -63,6 +64,16 @@ export class BillingCustomerServiceRecordController {
       GetBillingCustomerServiceRecordStatusOptionsQuery.create(),
     );
     return this.response(this.presenter.toBillingStatusOptions(result));
+  }
+
+  @Get('invoice-statuses/options')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @RequirePermission('billing_customer_service_records', 'READ')
+  async invoiceStatusOptions() {
+    const result = await this.queryBus.execute(
+      GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery.create(),
+    );
+    return this.response(this.presenter.toInvoiceStatusOptions(result));
   }
 
   @Get(':recordId')

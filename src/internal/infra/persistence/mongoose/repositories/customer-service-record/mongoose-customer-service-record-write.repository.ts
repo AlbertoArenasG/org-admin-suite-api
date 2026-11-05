@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CustomerServiceRecord,
   CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordInvoiceStatus,
   CustomerServiceRecordStatus,
 } from '@domain/entities';
 import {
@@ -17,6 +18,41 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
   extends MongooseCustomerServiceRecordBaseRepository
   implements ICustomerServiceRecordWriteRepository
 {
+  async markInvoiceOverdueIfCurrent(
+    record: CustomerServiceRecord,
+    today: string,
+  ): Promise<boolean> {
+    const result = await this.customerServiceRecordModel
+      .updateOne(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: {
+            $in: [
+              CustomerServiceRecordBillingStatus.SUBMITTED,
+              CustomerServiceRecordBillingStatus.INVOICED,
+            ],
+          },
+          invoice_revision: record.invoiceRevision,
+          'billing.invoice_status': record.billing.invoiceStatus,
+          'billing.estimated_payment_at': {
+            $type: 'string',
+            $lt: today,
+            $eq: record.billing.estimatedPaymentAt,
+          },
+        },
+        {
+          $set: {
+            'billing.invoice_status':
+              CustomerServiceRecordInvoiceStatus.OVERDUE,
+          },
+          $inc: { invoice_revision: 1 },
+        },
+        { timestamps: false, session: this.transactionContext.getSession() },
+      )
+      .exec();
+    return result.modifiedCount === 1;
+  }
   async create(
     record: CustomerServiceRecord,
   ): Promise<{ data: CustomerServiceRecord | null }> {
@@ -33,7 +69,10 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
   ): Promise<{ data: CustomerServiceRecord | null }> {
     const updated = await this.customerServiceRecordModel
       .findOneAndUpdate(
-        { customer_service_record_id: record.id },
+        {
+          customer_service_record_id: record.id,
+          invoice_revision: record.originalInvoiceRevision,
+        },
         this.toMongoose(record),
         { new: true, session: this.transactionContext.getSession() },
       )
@@ -55,6 +94,32 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
     return this.updateBillingFields(record, expectedStatus, false);
   }
 
+  async updateBillingInstructions(
+    record: CustomerServiceRecord,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+        },
+        {
+          $set: {
+            'billing.instructions': record.billing.instructions,
+            updated_by: record.updatedBy,
+            updatedAt: record.updatedAt,
+          },
+        },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
   async updateBillingInvoice(
     record: CustomerServiceRecord,
     expectedStatus:
@@ -68,10 +133,129 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
           customer_service_record_id: record.id,
           status: CustomerServiceRecordStatus.ACTIVE,
           billing_status: expectedStatus,
+          invoice_revision: record.originalInvoiceRevision,
         },
         {
           $set: {
             invoice: mapped.invoice,
+            invoice_revision: record.invoiceRevision,
+            attachments_count: record.attachmentsCount,
+            customer_visible_attachments_count:
+              record.customerVisibleAttachmentsCount,
+            updated_by: record.updatedBy,
+            updatedAt: record.updatedAt,
+          },
+        },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
+  async updateBillingLifecycle(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const billing = MongooseCustomerServiceRecordMapper.toMongoose(record)
+      .billing as Record<string, unknown>;
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: expectedStatus,
+          invoice_revision: record.originalInvoiceRevision,
+        },
+        {
+          $set: {
+            'billing.invoice_status': billing.invoice_status,
+            'billing.issued_at': billing.issued_at,
+            'billing.delivered_at': billing.delivered_at,
+            'billing.payment_term': billing.payment_term,
+            'billing.estimated_payment_at': billing.estimated_payment_at,
+            'billing.paid_at': billing.paid_at,
+            invoice_revision: record.invoiceRevision,
+            updated_by: record.updatedBy,
+            updatedAt: record.updatedAt,
+          },
+        },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
+  async updateBillingPurchaseOrder(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const mapped = MongooseCustomerServiceRecordMapper.toMongoose(record);
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: expectedStatus,
+          invoice_revision: record.originalInvoiceRevision,
+        },
+        {
+          $set: {
+            purchase_order: mapped.purchase_order,
+            attachments_count: record.attachmentsCount,
+            customer_visible_attachments_count:
+              record.customerVisibleAttachmentsCount,
+            updated_by: record.updatedBy,
+            updatedAt: record.updatedAt,
+          },
+        },
+        {
+          new: true,
+          timestamps: false,
+          session: this.transactionContext.getSession(),
+        },
+      )
+      .exec();
+    return { data: this.toDomain(updated) };
+  }
+
+  async archiveBillingInvoice(
+    record: CustomerServiceRecord,
+    expectedStatus:
+      | CustomerServiceRecordBillingStatus.SUBMITTED
+      | CustomerServiceRecordBillingStatus.INVOICED,
+  ): Promise<{ data: CustomerServiceRecord | null }> {
+    const mapped = MongooseCustomerServiceRecordMapper.toMongoose(record);
+    const billing = mapped.billing as Record<string, unknown>;
+    const updated = await this.customerServiceRecordModel
+      .findOneAndUpdate(
+        {
+          customer_service_record_id: record.id,
+          status: CustomerServiceRecordStatus.ACTIVE,
+          billing_status: expectedStatus,
+          invoice_revision: record.originalInvoiceRevision,
+        },
+        {
+          $set: {
+            invoice: mapped.invoice,
+            'billing.invoice_status': billing.invoice_status,
+            'billing.issued_at': billing.issued_at,
+            'billing.delivered_at': billing.delivered_at,
+            'billing.payment_term': billing.payment_term,
+            'billing.estimated_payment_at': billing.estimated_payment_at,
+            'billing.paid_at': billing.paid_at,
+            invoice_revision: record.invoiceRevision,
             attachments_count: record.attachmentsCount,
             customer_visible_attachments_count:
               record.customerVisibleAttachmentsCount,
@@ -103,6 +287,15 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
       updatedAt: record.updatedAt,
     };
     if (includeStatus) fields.billing_status = record.billingStatus;
+    if (includeStatus)
+      fields['billing.instructions'] = record.billing.instructions;
+    if (
+      includeStatus &&
+      record.invoiceRevision !== record.originalInvoiceRevision
+    ) {
+      fields['billing.invoice_status'] = record.billing.invoiceStatus;
+      fields.invoice_revision = record.invoiceRevision;
+    }
 
     const updated = await this.customerServiceRecordModel
       .findOneAndUpdate(
@@ -110,6 +303,7 @@ export class MongooseCustomerServiceRecordWriteRepositoryImpl
           customer_service_record_id: record.id,
           status: CustomerServiceRecordStatus.ACTIVE,
           billing_status: expectedStatus,
+          invoice_revision: record.originalInvoiceRevision,
         },
         { $set: fields },
         {

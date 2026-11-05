@@ -64,10 +64,25 @@ export class UpdateCustomerServiceRecordBillingStatusUseCase {
 
     const previousStatus = record.billingStatus;
     if (previousStatus === input.billingStatus) {
+      if (input.billingInstructions !== undefined) {
+        record.updateBillingInstructions(
+          input.billingInstructions,
+          input.actorUserId,
+        );
+        const { data } =
+          await this.writeRepository.updateBillingInstructions(record);
+        if (!data) throw this.statusChanged();
+        return CustomerServiceRecordMapper.toViewDto(data);
+      }
       return CustomerServiceRecordMapper.toViewDto(record);
     }
 
     if (input.billingStatus !== CustomerServiceRecordBillingStatus.SUBMITTED) {
+      if (input.billingInstructions !== undefined)
+        record.updateBillingInstructions(
+          input.billingInstructions,
+          input.actorUserId,
+        );
       record.updateBilling(
         input.billingStatus,
         record.billingNotification,
@@ -85,6 +100,10 @@ export class UpdateCustomerServiceRecordBillingStatusUseCase {
         customerName: record.customer.customerName,
         requestedAt: record.requestedAt,
         createdAt: record.createdAt ?? null,
+        billingInstructions:
+          input.billingInstructions === undefined
+            ? record.billing.instructions
+            : input.billingInstructions,
         assets: record.assets.map((asset) => ({
           name: asset.name,
           identifier: asset.identifier,
@@ -129,6 +148,11 @@ export class UpdateCustomerServiceRecordBillingStatusUseCase {
           },
       input.actorUserId,
     );
+    if (input.billingInstructions !== undefined)
+      record.updateBillingInstructions(
+        input.billingInstructions,
+        input.actorUserId,
+      );
     return this.persistStatus(record, previousStatus);
   }
 

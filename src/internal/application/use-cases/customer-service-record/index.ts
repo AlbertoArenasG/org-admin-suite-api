@@ -11,3 +11,4 @@ export * from './update-customer-service-record-document.use-case';
 export * from './delete-customer-service-record.use-case';
 export * from './refresh-customer-service-record-materializations.use-case';
 export * from './update-customer-service-record-billing-status.use-case';
+export * from './update-customer-service-record-billing-instructions.use-case';

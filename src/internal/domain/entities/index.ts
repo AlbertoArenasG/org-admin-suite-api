@@ -20,3 +20,5 @@ export * from './internal-asset-maintenance-record.entity';
 export * from './user-customer-relationship.entity';
 export * from './customer-service-record.entity';
 export * from './customer-service-record-service-type.entity';
+export * from './billing-record-archive.entity';
+export * from './billing-record-comment.entity';

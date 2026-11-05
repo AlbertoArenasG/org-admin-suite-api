@@ -770,6 +770,10 @@ Endpoints actuales:
   - operacion: `UPDATE`
   - acceso actual: autenticado
   - nota: permite los tres estados de facturacion; la entrada efectiva a `SUBMITTED` envia el aviso antes de persistir el cambio.
+- `PATCH /v1/customer-service-records/:recordId/billing-instructions`
+  - operacion: `UPDATE`
+  - acceso actual: autenticado
+  - nota: edita instrucciones administrativas sin enviar aviso.
 - `PUT /v1/customer-service-records/:recordId/customer`
   - operacion: `UPDATE`
   - acceso actual: autenticado
@@ -827,6 +831,20 @@ Endpoints actuales:
 - `GET /v1/billing/customer-service-records/:recordId`: `READ`; mismo alcance; un registro fuera de alcance responde `404`.
 - `PATCH /v1/billing/customer-service-records/:recordId/billing-status`: `UPDATE`; acepta solo `SUBMITTED` e `INVOICED`; la transicion efectiva hacia `SUBMITTED` envia aviso.
 - `PUT /v1/billing/customer-service-records/:recordId/invoice`: `UPDATE`; edita solo referencia y archivos de factura, sin cambiar estado ni datos operativos.
+- `GET /v1/billing/customer-service-records/invoice-statuses/options`: `READ`; seis opciones localizadas.
+- `PATCH /v1/billing/customer-service-records/:recordId/billing-details`: `UPDATE`; fechas y plazo de pago.
+- `PATCH /v1/billing/customer-service-records/:recordId/invoice-status`: `UPDATE`; estado explícito de factura.
+- `PUT /v1/billing/customer-service-records/:recordId/purchase-order`: `UPDATE`; referencia y archivos de orden de compra.
+- `POST /v1/billing/customer-service-records/:recordId/invoice/payment-complements`: `UPDATE`; crea complemento.
+- `PUT /v1/billing/customer-service-records/:recordId/invoice/payment-complements/:complementId`: `UPDATE`; actualiza complemento.
+- `POST /v1/billing/customer-service-records/:recordId/invoice/archive`: `UPDATE`; archiva snapshot íntegro.
+- `GET /v1/billing/customer-service-records/:recordId/invoice/archives`: `READ`; historial paginado.
+- `GET /v1/billing/customer-service-records/:recordId/invoice/archives/:archiveId`: `READ`; snapshot individual.
+- `POST /v1/billing/customer-service-records/:recordId/comments`: `UPDATE`; crea comentario de facturación.
+- `GET /v1/billing/customer-service-records/:recordId/comments`: `READ`; consulta comentarios paginados.
+
+El job `POST /v1/internal-jobs/customer-service-records/invoices/overdue/refresh`
+usa `InternalJobsAuthGuard`; no emplea permisos del backoffice.
 
 Las escrituras respetan el mismo alcance de lectura del modulo. Para otorgar
 los permisos nuevos en el entorno, el responsable ejecuta

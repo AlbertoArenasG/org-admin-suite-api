@@ -2253,8 +2253,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records?page=1&limit=10&sort_strategy=work_priority",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -2294,8 +2299,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2303,8 +2314,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records"
+              ]
             },
             "description": "Requiere customer_service_records.CREATE. La creacion no recibe customer_delivery, provider ni adjuntos."
           },
@@ -2315,8 +2331,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2324,8 +2346,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/details",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "details"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "details"
+              ]
             }
           },
           "response": []
@@ -2335,8 +2364,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2344,8 +2379,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/customer",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "customer"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "customer"
+              ]
             }
           },
           "response": []
@@ -2355,8 +2397,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2364,8 +2412,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/provider",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "provider"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "provider"
+              ]
             },
             "description": "Enviar provider completo para asignar/actualizar; { provider: null } para removerlo."
           },
@@ -2376,8 +2431,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2385,8 +2446,16 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/assets/{{ASSET_ID}}",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "assets", "{{ASSET_ID}}"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "assets",
+                "{{ASSET_ID}}"
+              ]
             },
             "description": "Cada array contiene el listado completo de asociaciones activas deseadas."
           },
@@ -2397,8 +2466,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{ADMIN_AUTH_TOKEN}}" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2406,8 +2481,16 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/documents/quotation",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customer-service-records", "{{CUSTOMER_SERVICE_RECORD_ID}}", "documents", "quotation"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "documents",
+                "quotation"
+              ]
             },
             "description": "documentType: quotation, purchase-order, invoice u other-files. other-files acepta solo file_ids."
           },
@@ -2601,10 +2684,10 @@
                 "billing-status"
               ]
             },
-            "description": "Requiere customer_service_records:UPDATE. Admite NOT_SUBMITTED, SUBMITTED e INVOICED. Transición efectiva a SUBMITTED envía aviso antes de guardar; fallo conocido: 502.",
+            "description": "Requiere customer_service_records:UPDATE. Acepta billing_instructions opcional; solo la transición real a SUBMITTED envía aviso con esas instrucciones. El mismo estado con instrucciones las actualiza sin correo. Fallo de envío: 502 y se conservan estado e instrucciones previos.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"billing_status\": \"SUBMITTED\"\n}",
+              "raw": "{\n  \"billing_status\": \"SUBMITTED\",\n  \"billing_instructions\": \"Enviar factura con la orden de compra.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2667,7 +2750,7 @@
                   "value": "application/json; charset=utf-8"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": []\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"success_message\": \"La solicitud se ha procesado correctamente\",\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"service_number\": 123,\n    \"service_number_display\": \"000123\",\n    \"service_type\": {\n      \"service_type_code\": \"CALIBRATION\",\n      \"name\": \"Calibración\"\n    },\n    \"requested_at\": \"2026-10-24T16:00:00.000Z\",\n    \"observations\": null,\n    \"customer\": {\n      \"customer_id\": \"customer-example-id\",\n      \"name\": \"Cliente ejemplo\",\n      \"users\": []\n    },\n    \"assets\": [],\n    \"customer_delivery\": {\n      \"received_at\": null,\n      \"estimated_delivery_interval\": null,\n      \"estimated_delivery_at\": null,\n      \"delivered_to_customer_at\": null,\n      \"status_policy_id\": null,\n      \"notification_policy_id\": null,\n      \"status_materialization\": null,\n      \"notification_materialization\": null\n    },\n    \"provider\": null,\n    \"attachments_count\": 0,\n    \"operational_status\": {\n      \"code\": \"PENDING\",\n      \"name\": \"Pendiente\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.OPERATIONAL_STATUS.PENDING\"\n    },\n    \"billing_status\": {\n      \"code\": \"SUBMITTED\",\n      \"name\": \"Enviado a facturación\",\n      \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_STATUS.SUBMITTED\"\n    },\n    \"billing_notification\": {\n      \"status\": {\n        \"code\": \"SENT\",\n        \"name\": \"Enviado\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.BILLING_NOTIFICATION_STATUS.SENT\"\n      },\n      \"attempted_at\": \"2026-10-24T18:00:00.000Z\",\n      \"sent_at\": \"2026-10-24T18:00:01.000Z\",\n      \"failure_reason\": null\n    },\n    \"created_at\": \"2026-10-24T16:00:00.000Z\",\n    \"updated_at\": \"2026-10-24T18:00:01.000Z\",\n    \"quotation\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"purchase_order\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": []\n    },\n    \"other_files\": [],\n    \"billing_instructions\": \"Enviar factura con la orden de compra.\"\n  }\n}"
             },
             {
               "name": "502 - Aviso rechazado",
@@ -2726,6 +2809,53 @@
               "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 502,\n  \"error_details\": {\n    \"message\": \"No se pudo enviar el aviso a facturación. Vuelve a intentarlo\",\n    \"method\": \"PATCH\",\n    \"path\": \"/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-status\",\n    \"error_code\": \"BILLING_NOTIFICATION.DELIVERY_FAILED\",\n    \"validation_errors\": []\n  }\n}"
             }
           ]
+        },
+        {
+          "name": "Update Billing Instructions",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-instructions",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "billing-instructions"
+              ]
+            },
+            "description": "Requiere customer_service_records:UPDATE. Edita billing_instructions (texto o null) sin enviar aviso.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"billing_instructions\": \"Enviar factura con la orden de compra.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3375,6 +3505,719 @@
               "body": "{\n  \"success\": false,\n  \"success_message\": null,\n  \"status_code\": 409,\n  \"error_details\": {\n    \"message\": \"El estado de facturación cambió; vuelve a cargar el registro\",\n    \"method\": \"PUT\",\n    \"path\": \"/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice\",\n    \"error_code\": \"STATE_CONFLICT.CUSTOMER_SERVICE_RECORD.BILLING_STATUS_CHANGED\",\n    \"validation_errors\": []\n  }\n}"
             }
           ]
+        },
+        {
+          "name": "Invoice Status Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/invoice-statuses/options",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "invoice-statuses",
+                "options"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:READ. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente."
+          },
+          "response": [
+            {
+              "name": "200 - Confirmado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/invoice-statuses/options",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice-statuses",
+                    "options"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:READ. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Billing Details",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-details",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "billing-details"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"issued_at\": \"2026-11-04\",\n  \"delivered_at\": \"2026-11-04\",\n  \"payment_term\": {\n    \"years\": 0,\n    \"months\": 1,\n    \"weeks\": 0,\n    \"days\": 0\n  },\n  \"estimated_payment_at\": null,\n  \"paid_at\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Confirmado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/billing-details",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "billing-details"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"issued_at\": \"2026-11-04\",\n  \"delivered_at\": \"2026-11-04\",\n  \"payment_term\": {\n    \"years\": 0,\n    \"months\": 1,\n    \"weeks\": 0,\n    \"days\": 0\n  },\n  \"estimated_payment_at\": null,\n  \"paid_at\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Invoice Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice-status",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice-status"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invoice_status\": \"IN_PROCESS_PAYMENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Confirmado",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice-status",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice-status"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"invoice_status\": \"IN_PROCESS_PAYMENT\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Replace Purchase Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/purchase-order",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "purchase-order"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference_number\": \"OC-2026-001\",\n  \"file_ids\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Confirmado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/purchase-order",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "purchase-order"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference_number\": \"OC-2026-001\",\n  \"file_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Payment Complement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/payment-complements",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice",
+                "payment-complements"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference_number\": \"CP-001\",\n  \"file_ids\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Confirmado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/payment-complements",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice",
+                    "payment-complements"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference_number\": \"CP-001\",\n  \"file_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 201,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Replace Payment Complement",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/payment-complements/{{PAYMENT_COMPLEMENT_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice",
+                "payment-complements",
+                "{{PAYMENT_COMPLEMENT_ID}}"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference_number\": \"CP-001\",\n  \"file_ids\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Confirmado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/payment-complements/{{PAYMENT_COMPLEMENT_ID}}",
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billing",
+                    "customer-service-records",
+                    "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                    "invoice",
+                    "payment-complements",
+                    "{{PAYMENT_COMPLEMENT_ID}}"
+                  ]
+                },
+                "description": "Requiere billing_customer_service_records:UPDATE. Responde 401 sin sesión, 403 sin permiso, 404 si el registro no es visible, 400 si el body es inválido y 409 ante versión concurrente.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"reference_number\": \"CP-001\",\n  \"file_ids\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"status_code\": 200,\n  \"data\": {\n    \"customer_service_record_id\": \"record-example-id\",\n    \"billing\": {\n      \"invoice_status\": {\n        \"code\": \"PENDING\",\n        \"name\": \"Pendiente\",\n        \"name_key\": \"CUSTOMER_SERVICE_RECORD.INVOICE_STATUS.PENDING\"\n      },\n      \"issued_at\": null,\n      \"delivered_at\": null,\n      \"payment_term\": null,\n      \"estimated_payment_at\": null,\n      \"paid_at\": null\n    },\n    \"invoice\": {\n      \"reference_number\": null,\n      \"files\": [],\n      \"payment_complements\": []\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Archive Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/archive",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice",
+                "archive"
+              ]
+            },
+            "description": "UPDATE: guarda snapshot íntegro y limpia factura vigente. 409 si no hay datos o cambió la revisión."
+          },
+          "response": []
+        },
+        {
+          "name": "List Invoice Archives",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/archives?page=1&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice",
+                "archives"
+              ]
+            },
+            "description": "READ: historial paginado, orden descendente estable."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invoice Archive",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/invoice/archives/{{ARCHIVE_ID}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "invoice",
+                "archives",
+                "{{ARCHIVE_ID}}"
+              ]
+            },
+            "description": "READ: snapshot completo y URLs de archivos históricos; 404 si no existe."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Billing Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/comments",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "comments"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:UPDATE. Comentarios inmutables; EXTERNAL no se publica en portal.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Factura recibida, verificar datos.\",\n  \"visibility\": \"INTERNAL\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Billing Comments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/v1/billing/customer-service-records/{{CUSTOMER_SERVICE_RECORD_ID}}/comments?page=1&limit=10",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "billing",
+                "customer-service-records",
+                "{{CUSTOMER_SERVICE_RECORD_ID}}",
+                "comments"
+              ]
+            },
+            "description": "Requiere billing_customer_service_records:READ. Comentarios inmutables; EXTERNAL no se publica en portal."
+          },
+          "response": []
         }
       ]
     },
@@ -3421,8 +4264,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/auth/login",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "login"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
             },
             "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/auth/login \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"email\": \"admin@example.com\",\n    \"password\": \"ChangeMe123!\"\n  }'\n"
           },
@@ -3448,8 +4297,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/login",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "login"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
                 }
               },
               "status": "OK",
@@ -3540,8 +4395,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/auth/login",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "login"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
             },
             "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/auth/login \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"email\": \"admin@example.com\",\n    \"password\": \"ChangeMe123!\"\n  }'\n"
           },
@@ -3567,8 +4428,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/login",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "login"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
                 }
               },
               "status": "OK",
@@ -3659,8 +4526,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/auth/login",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "login"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
             },
             "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/auth/login \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"email\": \"admin@example.com\",\n    \"password\": \"ChangeMe123!\"\n  }'\n"
           },
@@ -3686,8 +4559,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/login",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "login"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
                 }
               },
               "status": "OK",
@@ -3759,8 +4638,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/auth/me/permissions",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "me", "permissions"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "me",
+                "permissions"
+              ]
             },
             "description": "Consulta el contexto efectivo de autorización del usuario autenticado."
           },
@@ -3781,8 +4667,15 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/auth/me/permissions",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "me", "permissions"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "me",
+                    "permissions"
+                  ]
                 }
               },
               "status": "OK",
@@ -3818,8 +4711,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/auth/password-reset/request",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "password-reset", "request"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "password-reset",
+                "request"
+              ]
             },
             "description": "Generated from cURL: curl -X POST https://tu-api.com/v1/auth/password-reset/request \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"email\": \"usuario@cliente.com\"\n  }'\n"
           },
@@ -3845,8 +4745,15 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/password-reset/request",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "password-reset", "request"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "password-reset",
+                    "request"
+                  ]
                 }
               },
               "status": "OK",
@@ -3918,8 +4825,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/auth/password-reset/confirm",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "auth", "password-reset", "confirm"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "password-reset",
+                "confirm"
+              ]
             },
             "description": "Generated from cURL: curl -X POST https://tu-api.com/v1/auth/password-reset/confirm \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"token\": \"TOKEN_RECIBIDO_EN_CORREO\",\n    \"password\": \"NuevaClaveSegura123\"\n  }'"
           },
@@ -3945,8 +4859,15 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/password-reset/confirm",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "password-reset", "confirm"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "password-reset",
+                    "confirm"
+                  ]
                 }
               },
               "status": "Bad Request",
@@ -4021,8 +4942,15 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/auth/password-reset/confirm",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "auth", "password-reset", "confirm"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "auth",
+                    "password-reset",
+                    "confirm"
+                  ]
                 }
               },
               "status": "OK",
@@ -4099,8 +5027,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users/me",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", "me"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                "me"
+              ]
             },
             "description": "Generated from cURL: curl -X GET \"{{HOST}}/v1/users/me\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Accept: application/json\"\n"
           },
@@ -4121,8 +5055,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/users/me",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users", "me"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users",
+                    "me"
+                  ]
                 }
               },
               "status": "OK",
@@ -4203,8 +5143,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/users/me",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", "me"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                "me"
+              ]
             },
             "description": "Generated from cURL: curl -X PATCH \"{{HOST}}/v1/users/me\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"NuevoNombre\",\n    \"lastname\": \"Actualizado\",\n    \"cell_phone\": { \"country_code\": \"+34\", \"number\": \"600123456\" },\n    \"password\": \"ClaveSegura123!\"\n  }'\n"
           },
@@ -4234,8 +5180,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/users/me",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users", "me"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users",
+                    "me"
+                  ]
                 }
               },
               "status": "OK",
@@ -4320,8 +5272,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/users",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users"
+              ]
             },
             "description": "Requiere users.CREATE. customer_id es opcional y solo se acepta para system_role USER. Omitir customer_id para crear un usuario sin Cliente."
           },
@@ -4357,8 +5314,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users/creation-roles",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", "creation-roles"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                "creation-roles"
+              ]
             },
             "description": "Roles asignables para creacion directa. Requiere users.CREATE; no depende de invitaciones."
           },
@@ -4441,8 +5404,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/users?page=1&limit=10&items_per_page=10&search=garcía&sort[0][field]=lastname&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -4501,8 +5469,13 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/users?page=1&limit=10&items_per_page=10&search=garcía&sort[0][field]=lastname&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users"
+                  ],
                   "query": [
                     {
                       "key": "page",
@@ -4604,8 +5577,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users?page=1&limit=10&customer_id={{CUSTOMER_ID}}",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -4650,8 +5628,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/users/:USER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", ":USER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                ":USER_ID"
+              ],
               "variable": [
                 {
                   "key": "USER_ID",
@@ -4692,8 +5676,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/users/{{USER_ID}}/password",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", "{{USER_ID}}", "password"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                "{{USER_ID}}",
+                "password"
+              ]
             },
             "description": "Requiere users.UPDATE_PASSWORD. Permite cambiar la contraseña propia con esa capability; para otro usuario aplica la jerarquía de roles. No devuelve contraseña, hash ni representación del usuario."
           },
@@ -4725,8 +5716,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users/:USER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", ":USER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                ":USER_ID"
+              ],
               "variable": [
                 {
                   "key": "USER_ID",
@@ -4762,8 +5759,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/users/:USER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users", ":USER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users",
+                    ":USER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "USER_ID",
@@ -4837,8 +5840,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users/:userId",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", ":userId"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                ":userId"
+              ],
               "variable": [
                 {
                   "key": "userId",
@@ -4864,8 +5873,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/users/:userId",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users", ":userId"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users",
+                    ":userId"
+                  ],
                   "variable": [
                     {
                       "key": "userId",
@@ -4946,8 +5961,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/users/roles",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "users", "roles"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                "roles"
+              ]
             }
           },
           "response": [
@@ -4972,8 +5993,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/users/roles",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "users", "roles"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "users",
+                    "roles"
+                  ]
                 }
               },
               "status": "OK",
@@ -5059,8 +6086,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "user-registration-invitations"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations"
+              ]
             },
             "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/user-registration-invitations \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer <ACCESS_TOKEN>\" \\\n  -d '{\n    \"email\": \"invitee@example.com\",\n    \"system_role\": \"USER\",\n    \"role_id\": \"{{USER_ROLE_ID}}\",\n    \"is_internal_staff\": false,\n    \"name\": \"Invitee\",\n    \"lastname\": \"Example\"\n  }'\n"
           },
@@ -5095,8 +6127,13 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/user-registration-invitations",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "user-registration-invitations"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "user-registration-invitations"
+                  ]
                 }
               },
               "status": "Created",
@@ -5164,8 +6201,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations?page=1&limit=10&sort[0][field]=created_at&sort[0][direction]=desc",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "user-registration-invitations"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -5206,8 +6248,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "user-registration-invitations", ":INVITATION_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "user-registration-invitations",
+                ":INVITATION_ID"
+              ],
               "variable": [
                 {
                   "key": "INVITATION_ID",
@@ -5236,7 +6284,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID/resend",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "user-registration-invitations",
@@ -5271,7 +6321,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_ID/revoke",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "user-registration-invitations",
@@ -5296,7 +6348,9 @@
             "header": [],
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_TOKEN",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "user-registration-invitations",
@@ -5319,7 +6373,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_TOKEN",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "user-registration-invitations",
@@ -5402,7 +6458,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_TOKEN/complete-registration",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "user-registration-invitations",
@@ -5440,7 +6498,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/user-registration-invitations/:INVITATION_TOKEN/complete-registration",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "user-registration-invitations",
@@ -5524,8 +6584,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/roles?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -5565,8 +6630,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/roles",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles"
+              ]
             }
           },
           "response": []
@@ -5583,8 +6653,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/roles/:ROLE_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles", ":ROLE_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles",
+                ":ROLE_ID"
+              ],
               "variable": [
                 {
                   "key": "ROLE_ID",
@@ -5620,8 +6696,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/roles/:ROLE_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles", ":ROLE_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles",
+                ":ROLE_ID"
+              ],
               "variable": [
                 {
                   "key": "ROLE_ID",
@@ -5657,8 +6739,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/roles/:ROLE_ID/status",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles", ":ROLE_ID", "status"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles",
+                ":ROLE_ID",
+                "status"
+              ],
               "variable": [
                 {
                   "key": "ROLE_ID",
@@ -5681,8 +6770,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/roles/:ROLE_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles", ":ROLE_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles",
+                ":ROLE_ID"
+              ],
               "variable": [
                 {
                   "key": "ROLE_ID",
@@ -5705,8 +6800,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/roles/modules",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "roles", "modules"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "roles",
+                "modules"
+              ]
             }
           },
           "response": []
@@ -5744,8 +6845,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/master-admin/users",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "master-admin", "users"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "master-admin",
+                    "users"
+                  ]
                 },
                 "description": "Generated from cURL: curl -X POST <BASE_URL>/v1/master-admin/users \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer <MASTER_TOKEN>\" \\\n  -d '{\n    \"name\": \"Mario\",\n    \"lastname\": \"Supervisor\",\n    \"email\": \"mario.supervisor@example.com\",\n    \"password\": \"SuperSecure123!\",\n    \"system_role\": \"MASTER_ADMIN\"\n  }'\n"
               },
@@ -5781,7 +6888,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/master-admin/user-registration-invitations",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "master-admin",
@@ -5845,8 +6954,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/files",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "files"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "files"
+              ]
             }
           },
           "response": [
@@ -5895,8 +7009,13 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/files",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "files"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "files"
+                  ]
                 }
               },
               "status": "Created",
@@ -5976,8 +7095,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/files/public",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "files", "public"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "files",
+                "public"
+              ]
             },
             "description": "Generated from cURL: curl -X POST https://api.example.com/v1/files/public \\\n  -F 'files=@/absolute/path/to/archivo.pdf' \\\n  -F 'files=@/absolute/path/to/otro-archivo.png' \\\n  -F 'metadata={\"entity\":\"CUSTOMER_FISCAL_PROFILE\",\"context\":\"public-submission\"}'\n"
           },
@@ -5993,12 +7118,16 @@
                     {
                       "key": "files",
                       "type": "file",
-                      "src": ["/Users/alberto/Downloads/dummy-doc.pdf"]
+                      "src": [
+                        "/Users/alberto/Downloads/dummy-doc.pdf"
+                      ]
                     },
                     {
                       "key": "files",
                       "type": "file",
-                      "src": ["/absolute/path/to/otro-archivo.png"],
+                      "src": [
+                        "/absolute/path/to/otro-archivo.png"
+                      ],
                       "disabled": true
                     },
                     {
@@ -6011,8 +7140,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/files/public",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "files", "public"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "files",
+                    "public"
+                  ]
                 }
               },
               "status": "Created",
@@ -6079,8 +7214,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/files/:FILE_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "files", ":FILE_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "files",
+                ":FILE_ID"
+              ],
               "variable": [
                 {
                   "key": "FILE_ID",
@@ -6107,8 +7248,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/files/:FILE_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "files", ":FILE_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "files",
+                    ":FILE_ID"
+                  ],
                   "variable": [
                     {
                       "key": "FILE_ID",
@@ -6178,8 +7325,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/files/:FILE_ID/download",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "files", ":FILE_ID", "download"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "files",
+                ":FILE_ID",
+                "download"
+              ],
               "query": [
                 {
                   "key": "service_entry_id",
@@ -6228,8 +7382,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry"
+              ]
             },
             "description": "Generated from cURL: curl -X POST \"{{HOST}}/v1/services/service-entry\" \\\n  -H \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"company_name\": \"Empresa Ejemplo\",\n    \"contact_name\": \"Juan Pérez\",\n    \"contact_email\": \"juan.perez@example.com\",\n    \"service_order_identifier\": \"ORD-2024-001\",\n    \"category_id\": \"CALIBRATION\",\n    \"calibration_certificate_file_id\": \"FILE_ID_CERTIFICADO\",\n    \"attachment_file_ids\": [\n      \"FILE_ID_ADJUNTO_1\",\n      \"FILE_ID_ADJUNTO_2\"\n    ]\n  }'\n"
           },
@@ -6259,8 +7419,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "services", "service-entry"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "services",
+                    "service-entry"
+                  ]
                 }
               },
               "status": "Created",
@@ -6376,8 +7542,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry?page=1&limit=20&search=empresa&sort[0][field]=created_at&sort[0][direction]=desc&sort[1][field]=company_name&sort[1][direction]=asc",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -6428,8 +7600,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry?page=1&limit=20&search=empresa&sort[0][field]=created_at&sort[0][direction]=desc&sort[1][field]=company_name&sort[1][direction]=asc",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "services", "service-entry"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "services",
+                    "service-entry"
+                  ],
                   "query": [
                     {
                       "key": "page",
@@ -6526,8 +7704,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", ":SERVICE_ENTRY_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                ":SERVICE_ENTRY_ID"
+              ],
               "variable": [
                 {
                   "key": "SERVICE_ENTRY_ID",
@@ -6554,7 +7739,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "services",
@@ -6651,8 +7838,15 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", ":SERVICE_ENTRY_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                ":SERVICE_ENTRY_ID"
+              ],
               "variable": [
                 {
                   "key": "SERVICE_ENTRY_ID",
@@ -6687,7 +7881,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "services",
@@ -6762,8 +7958,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", ":SERVICE_ENTRY_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                ":SERVICE_ENTRY_ID"
+              ],
               "variable": [
                 {
                   "key": "SERVICE_ENTRY_ID",
@@ -6786,7 +7989,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/:SERVICE_ENTRY_ID",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "services",
@@ -6870,8 +8075,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/categories",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", "categories"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                "categories"
+              ]
             },
             "description": "Generated from cURL: curl --request GET \\\n  --url \"{{HOST}}/v1/services/service-entry/categories\" \\\n  --header \"Authorization: Bearer {{AUTH_TOKEN}}\" \\\n  --header \"Accept: application/json\"\n"
           },
@@ -6897,8 +8109,15 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/categories",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "services", "service-entry", "categories"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "services",
+                    "service-entry",
+                    "categories"
+                  ]
                 }
               },
               "status": "OK",
@@ -6971,8 +8190,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/service-packages/uploads",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "uploads"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "uploads"
+              ]
             },
             "description": "Generated from cURL: curl -X POST http://localhost:3000/v1/service-packages/uploads \\\n  -H \"Content-Type: multipart/form-data\" \\\n  -F \"package=@/ruta/al/archivo.zip\"\n"
           },
@@ -6994,8 +8219,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/uploads",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "service-packages", "uploads"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "service-packages",
+                    "uploads"
+                  ]
                 }
               },
               "status": "Created",
@@ -7061,8 +8292,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records?page=1&limit=20&search=john&service_type=Entrega%20de%20Equipo",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -7098,8 +8335,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records?page=1&limit=20&search=john&service_type=Entrega%20de%20Equipo",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "service-packages", "records"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "service-packages",
+                    "records"
+                  ],
                   "query": [
                     {
                       "key": "page",
@@ -7185,8 +8428,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records/options",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records", "options"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                "options"
+              ]
             },
             "description": "Devuelve tipos de servicio distintos de registros activos. Usar service_types[].value para filtrar Get Service Package Records."
           },
@@ -7203,8 +8453,15 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/options",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "service-packages", "records", "options"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "service-packages",
+                    "records",
+                    "options"
+                  ]
                 }
               },
               "status": "OK",
@@ -7233,8 +8490,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                "4I3K62B6Az2biorF"
+              ]
             },
             "description": "Generated from cURL: curl -X GET \"http://localhost:3000/v1/service-packages/records?page=1&limit=20\" \\\n  -H \"Authorization: Bearer $JWT\""
           },
@@ -7251,7 +8515,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "service-packages",
@@ -7321,8 +8587,18 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF", "files", "A0M2a3kutUb1WN0fhBONplep", "download"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                "4I3K62B6Az2biorF",
+                "files",
+                "A0M2a3kutUb1WN0fhBONplep",
+                "download"
+              ]
             },
             "description": "Descarga publica de un archivo embebido del registro. Responde un stream con Content-Disposition: attachment."
           },
@@ -7334,8 +8610,18 @@
                 "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF", "files", "A0M2a3kutUb1WN0fhBONplep", "download"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "service-packages",
+                    "records",
+                    "4I3K62B6Az2biorF",
+                    "files",
+                    "A0M2a3kutUb1WN0fhBONplep",
+                    "download"
+                  ]
                 }
               },
               "status": "OK",
@@ -7369,8 +8655,18 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download?disposition=inline",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF", "files", "A0M2a3kutUb1WN0fhBONplep", "download"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                "4I3K62B6Az2biorF",
+                "files",
+                "A0M2a3kutUb1WN0fhBONplep",
+                "download"
+              ],
               "query": [
                 {
                   "key": "disposition",
@@ -7388,8 +8684,18 @@
                 "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download?disposition=inline",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF", "files", "A0M2a3kutUb1WN0fhBONplep", "download"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "service-packages",
+                    "records",
+                    "4I3K62B6Az2biorF",
+                    "files",
+                    "A0M2a3kutUb1WN0fhBONplep",
+                    "download"
+                  ],
                   "query": [
                     {
                       "key": "disposition",
@@ -7433,8 +8739,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "service-packages", "records", "4I3K62B6Az2biorF"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                "4I3K62B6Az2biorF"
+              ]
             },
             "description": "Generated from cURL: curl -X GET \"http://localhost:3000/v1/service-packages/records?page=1&limit=20\" \\\n  -H \"Authorization: Bearer $JWT\""
           },
@@ -7451,7 +8764,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "service-packages",
@@ -7530,8 +8845,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/public/service-entry/:PUBLIC_TOKEN",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "public", "service-entry", ":PUBLIC_TOKEN"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "public",
+                "service-entry",
+                ":PUBLIC_TOKEN"
+              ],
               "variable": [
                 {
                   "key": "PUBLIC_TOKEN",
@@ -7559,8 +8881,15 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/public/service-entry/:PUBLIC_TOKEN",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "public", "service-entry", ":PUBLIC_TOKEN"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "public",
+                    "service-entry",
+                    ":PUBLIC_TOKEN"
+                  ],
                   "variable": [
                     {
                       "key": "PUBLIC_TOKEN",
@@ -7641,7 +8970,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/public/service-entry/:PUBLIC_TOKEN/survey",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "public",
@@ -7679,7 +9010,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/public/service-entry/:PUBLIC_TOKEN/survey",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -7767,8 +9100,16 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/surveys/stats?from=2023-01-01&to=2025-12-31&template_id=service-entry-calibration-survey-v5&template_version=5",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", "surveys", "stats"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                "surveys",
+                "stats"
+              ],
               "query": [
                 {
                   "key": "from",
@@ -7816,7 +9157,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/surveys/stats?template_id=service-entry-calibration-survey-v5&template_version=5",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "services",
@@ -7925,8 +9268,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/services/service-entry/surveys?template_id=service-entry-calibration-survey-v5&template_version=5&page=1&per_page=20",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "services", "service-entry", "surveys"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "services",
+                "service-entry",
+                "surveys"
+              ],
               "query": [
                 {
                   "key": "from",
@@ -7980,8 +9330,15 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/services/service-entry/surveys?from=2023-01-01&to=2025-12-31&template_id=service-entry-calibration-survey-v5&template_version=5&page=1&per_page=20",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "services", "service-entry", "surveys"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "services",
+                    "service-entry",
+                    "surveys"
+                  ],
                   "query": [
                     {
                       "key": "from",
@@ -8091,8 +9448,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customers",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers"
+              ]
             },
             "description": "Generated from cURL: curl -X POST https://api.example.com/v1/customers \\\n  -H 'Authorization: Bearer <JWT>' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"company_name\":\"Comercializadora Ejemplo\",\"client_code\":\"CLT-001\"}'\n"
           },
@@ -8127,8 +9489,13 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/customers",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers"
+                  ]
                 }
               },
               "status": "Created",
@@ -8196,8 +9563,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/options",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", "options"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                "options"
+              ]
             },
             "description": "Catálogo reutilizable no paginado de clientes activos. Requiere la capability auxiliar CUSTOMERS/READ_OPTIONS derivada por backend."
           },
@@ -8220,8 +9593,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers"
+              ],
               "query": [
                 {
                   "key": "search",
@@ -8255,8 +9633,13 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/customers",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers"
+                  ],
                   "query": [
                     {
                       "key": "search",
@@ -8341,8 +9724,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", ":CUSTOMER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                ":CUSTOMER_ID"
+              ],
               "variable": [
                 {
                   "key": "CUSTOMER_ID",
@@ -8370,8 +9759,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers", ":CUSTOMER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":CUSTOMER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "CUSTOMER_ID",
@@ -8458,8 +9853,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", ":CUSTOMER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                ":CUSTOMER_ID"
+              ],
               "variable": [
                 {
                   "key": "CUSTOMER_ID",
@@ -8500,8 +9901,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers", ":CUSTOMER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":CUSTOMER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "CUSTOMER_ID",
@@ -8586,8 +9993,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers", ":CUSTOMER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":CUSTOMER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "CUSTOMER_ID",
@@ -8661,8 +10074,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", ":CUSTOMER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                ":CUSTOMER_ID"
+              ],
               "variable": [
                 {
                   "key": "CUSTOMER_ID",
@@ -8690,8 +10109,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers", ":CUSTOMER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":CUSTOMER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "CUSTOMER_ID",
@@ -8769,8 +10194,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/customers/:CUSTOMER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "customers", ":CUSTOMER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":CUSTOMER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "CUSTOMER_ID",
@@ -8845,7 +10276,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/public/customer-fiscal-profiles/:PUBLIC_TOKEN",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "public",
@@ -8869,7 +10302,9 @@
                 "header": [],
                 "url": {
                   "raw": "{{HOST}}/v1/public/customer-fiscal-profiles/:PUBLIC_TOKEN",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -8958,7 +10393,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/public/customer-fiscal-profiles/:PUBLIC_TOKEN/submit",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "public",
@@ -8997,7 +10434,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/public/customer-fiscal-profiles/:PUBLIC_TOKEN/submit",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -9082,11 +10521,24 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users?page=1&limit=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "users"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                "{{CUSTOMER_ID}}",
+                "users"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             },
             "description": "Requiere CUSTOMERS/READ. Permite consultar Clientes activos o inactivos no eliminados."
@@ -9109,8 +10561,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/available-users",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "available-users"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                "{{CUSTOMER_ID}}",
+                "available-users"
+              ]
             },
             "description": "Requiere CUSTOMERS/UPDATE. Devuelve usuarios USER activos sin relaciones con Clientes."
           },
@@ -9137,12 +10596,23 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"user_id\": \"{{USER_ID}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "customers", "{{CUSTOMER_ID}}", "users"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "customers",
+                "{{CUSTOMER_ID}}",
+                "users"
+              ]
             },
             "description": "Requiere CUSTOMERS/UPDATE. Devuelve 201 Created; rechaza relación duplicada con 409."
           },
@@ -9164,7 +10634,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/customers/{{CUSTOMER_ID}}/users/{{USER_ID}}",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "customers",
@@ -9199,8 +10671,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/providers?page=1&limit=12&search=prov",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "providers"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "providers"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -9261,8 +10738,13 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/providers?page=1&limit=12&search=prov",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers"
+                  ],
                   "query": [
                     {
                       "key": "page",
@@ -9382,8 +10864,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/providers",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "providers"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "providers"
+              ]
             },
             "description": "Generated from cURL: curl -X POST http://localhost:3000/v1/providers \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_JWT_TOKEN\" \\\n  -d '{\n    \"company_name\": \"Proveedores SA de CV\",\n    \"provider_code\": \"PROV-001\",\n    \"contact\": {\n      \"name\": \"Juan Pérez\",\n      \"phone\": \"5512345678\",\n      \"email\": \"juan.perez@proveedores.com\"\n    }\n  }'"
           },
@@ -9418,8 +10905,13 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/providers",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers"
+                  ]
                 }
               },
               "status": "Created",
@@ -9498,8 +10990,13 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/providers",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers"]
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers"
+                  ]
                 }
               },
               "status": "Conflict",
@@ -9567,8 +11064,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "providers", ":PROVIDER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "providers",
+                ":PROVIDER_ID"
+              ],
               "variable": [
                 {
                   "key": "PROVIDER_ID",
@@ -9596,8 +11099,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -9675,8 +11184,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -9763,8 +11278,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "providers", ":PROVIDER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "providers",
+                ":PROVIDER_ID"
+              ],
               "variable": [
                 {
                   "key": "PROVIDER_ID",
@@ -9805,8 +11326,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -9891,8 +11418,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -9977,8 +11510,14 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -10056,8 +11595,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "providers", ":PROVIDER_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "providers",
+                ":PROVIDER_ID"
+              ],
               "variable": [
                 {
                   "key": "PROVIDER_ID",
@@ -10089,8 +11634,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -10172,8 +11723,14 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/providers/:PROVIDER_ID",
-                  "host": ["{{HOST}}"],
-                  "path": ["v1", "providers", ":PROVIDER_ID"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "providers",
+                    ":PROVIDER_ID"
+                  ],
                   "variable": [
                     {
                       "key": "PROVIDER_ID",
@@ -10254,8 +11811,15 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "public", "provider-profiles", ":PUBLIC_TOKEN"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "public",
+                "provider-profiles",
+                ":PUBLIC_TOKEN"
+              ],
               "variable": [
                 {
                   "key": "PUBLIC_TOKEN",
@@ -10279,7 +11843,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -10353,7 +11919,9 @@
                 ],
                 "url": {
                   "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -10442,7 +12010,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN/submit",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "public",
@@ -10486,7 +12056,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN/submit",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -10574,7 +12146,9 @@
                 },
                 "url": {
                   "raw": "{{HOST}}/v1/public/provider-profiles/:PUBLIC_TOKEN/submit",
-                  "host": ["{{HOST}}"],
+                  "host": [
+                    "{{HOST}}"
+                  ],
                   "path": [
                     "v1",
                     "public",
@@ -10660,8 +12234,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/contacts?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -10718,8 +12297,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/contacts/search?q=alberto&limit=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts", "search"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                "search"
+              ],
               "query": [
                 {
                   "key": "q",
@@ -10764,8 +12349,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/contacts",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts"
+              ]
             }
           },
           "response": []
@@ -10787,8 +12377,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts", ":CONTACT_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
               "variable": [
                 {
                   "key": "CONTACT_ID",
@@ -10829,8 +12425,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts", ":CONTACT_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
               "variable": [
                 {
                   "key": "CONTACT_ID",
@@ -10858,8 +12460,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/contacts/:CONTACT_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "contacts", ":CONTACT_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "contacts",
+                ":CONTACT_ID"
+              ],
               "variable": [
                 {
                   "key": "CONTACT_ID",
@@ -10892,8 +12500,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/recipient-groups?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "recipient-groups"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -10958,8 +12571,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/recipient-groups",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "recipient-groups"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups"
+              ]
             }
           },
           "response": []
@@ -10981,8 +12599,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "recipient-groups", ":RECIPIENT_GROUP_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
               "variable": [
                 {
                   "key": "RECIPIENT_GROUP_ID",
@@ -11023,8 +12647,14 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "recipient-groups", ":RECIPIENT_GROUP_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
               "variable": [
                 {
                   "key": "RECIPIENT_GROUP_ID",
@@ -11052,8 +12682,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/recipient-groups/:RECIPIENT_GROUP_ID",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "recipient-groups", ":RECIPIENT_GROUP_ID"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "recipient-groups",
+                ":RECIPIENT_GROUP_ID"
+              ],
               "variable": [
                 {
                   "key": "RECIPIENT_GROUP_ID",
@@ -11086,8 +12722,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-status-policies"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-status-policies"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -11139,8 +12780,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies/catalog",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-status-policies", "catalog"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-status-policies",
+                "catalog"
+              ]
             }
           },
           "response": []
@@ -11162,8 +12809,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies/options?status=ACTIVE",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-status-policies", "options"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-status-policies",
+                "options"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -11205,8 +12858,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-status-policies"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-status-policies"
+              ]
             }
           },
           "response": []
@@ -11228,7 +12886,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies/:EXPIRATION_STATUS_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-status-policies",
@@ -11274,7 +12934,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies/:EXPIRATION_STATUS_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-status-policies",
@@ -11307,7 +12969,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-status-policies/:EXPIRATION_STATUS_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-status-policies",
@@ -11345,8 +13009,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-notification-policies"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-notification-policies"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -11398,8 +13067,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies/catalog",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-notification-policies", "catalog"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-notification-policies",
+                "catalog"
+              ]
             }
           },
           "response": []
@@ -11421,8 +13096,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies/options?status=ACTIVE",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-notification-policies", "options"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-notification-policies",
+                "options"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -11464,8 +13145,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "expiration-notification-policies"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "expiration-notification-policies"
+              ]
             }
           },
           "response": []
@@ -11487,7 +13173,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies/:EXPIRATION_NOTIFICATION_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-notification-policies",
@@ -11533,7 +13221,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies/:EXPIRATION_NOTIFICATION_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-notification-policies",
@@ -11566,7 +13256,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/expiration-notification-policies/:EXPIRATION_NOTIFICATION_POLICY_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "expiration-notification-policies",
@@ -11604,8 +13296,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records?page=1&items_per_page=10",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "internal-asset-maintenance-records"],
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-asset-maintenance-records"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -11662,8 +13359,14 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records/catalog",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "internal-asset-maintenance-records", "catalog"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-asset-maintenance-records",
+                "catalog"
+              ]
             }
           },
           "response": []
@@ -11698,8 +13401,13 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "internal-asset-maintenance-records"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-asset-maintenance-records"
+              ]
             }
           },
           "response": []
@@ -11721,7 +13429,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records/:RECORD_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-asset-maintenance-records",
@@ -11767,7 +13477,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records/:RECORD_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-asset-maintenance-records",
@@ -11800,7 +13512,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records/:RECORD_ID/provider-follow-up/send",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-asset-maintenance-records",
@@ -11835,7 +13549,9 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/internal-asset-maintenance-records/:RECORD_ID",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-asset-maintenance-records",
@@ -11882,7 +13598,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-jobs/internal-asset-maintenance-records/refresh-materializations",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-jobs",
@@ -11918,7 +13636,9 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-jobs/internal-asset-maintenance-records/refresh-materializations",
-              "host": ["{{HOST}}"],
+              "host": [
+                "{{HOST}}"
+              ],
               "path": [
                 "v1",
                 "internal-jobs",
@@ -11954,8 +13674,16 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/materializations/refresh",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "internal-jobs", "customer-service-records", "materializations", "refresh"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "customer-service-records",
+                "materializations",
+                "refresh"
+              ]
             }
           },
           "response": []
@@ -11985,8 +13713,96 @@
             },
             "url": {
               "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/materializations/refresh",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "internal-jobs", "customer-service-records", "materializations", "refresh"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "customer-service-records",
+                "materializations",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Billing Invoice Overdue (initial batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/invoices/overdue/refresh",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "customer-service-records",
+                "invoices",
+                "overdue",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Billing Invoice Overdue (next batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{INTERNAL_JOBS_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cursor\": \"{{BILLING_OVERDUE_CURSOR}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/internal-jobs/customer-service-records/invoices/overdue/refresh",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "internal-jobs",
+                "customer-service-records",
+                "invoices",
+                "overdue",
+                "refresh"
+              ]
             }
           },
           "response": []
@@ -12013,8 +13829,13 @@
             ],
             "url": {
               "raw": "{{HOST}}/v1/communication-channels",
-              "host": ["{{HOST}}"],
-              "path": ["v1", "communication-channels"]
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "communication-channels"
+              ]
             }
           },
           "response": []

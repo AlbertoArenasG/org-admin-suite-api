@@ -7,6 +7,8 @@ import {
   UpdateCustomerServiceRecordAssetResultDto,
   UpdateCustomerServiceRecordBillingStatusDto,
   UpdateCustomerServiceRecordBillingStatusResultDto,
+  UpdateCustomerServiceRecordBillingInstructionsDto,
+  UpdateCustomerServiceRecordBillingInstructionsResultDto,
   UpdateCustomerServiceRecordCustomerDto,
   UpdateCustomerServiceRecordCustomerResultDto,
   UpdateCustomerServiceRecordDetailsDto,
@@ -21,6 +23,7 @@ import {
   DeleteCustomerServiceRecordUseCase,
   UpdateCustomerServiceRecordAssetUseCase,
   UpdateCustomerServiceRecordBillingStatusUseCase,
+  UpdateCustomerServiceRecordBillingInstructionsUseCase,
   UpdateCustomerServiceRecordCustomerUseCase,
   UpdateCustomerServiceRecordDetailsUseCase,
   UpdateCustomerServiceRecordDocumentUseCase,
@@ -65,6 +68,34 @@ export class UpdateCustomerServiceRecordBillingStatusCommandAdapter
   ) {}
   static create(payload: UpdateCustomerServiceRecordBillingStatusDto) {
     return new UpdateCustomerServiceRecordBillingStatusCommandAdapter(payload);
+  }
+}
+export class UpdateCustomerServiceRecordBillingInstructionsCommandAdapter
+  implements ICommand
+{
+  private constructor(
+    public readonly payload: UpdateCustomerServiceRecordBillingInstructionsDto,
+  ) {}
+  static create(payload: UpdateCustomerServiceRecordBillingInstructionsDto) {
+    return new UpdateCustomerServiceRecordBillingInstructionsCommandAdapter(
+      payload,
+    );
+  }
+}
+@CommandHandler(UpdateCustomerServiceRecordBillingInstructionsCommandAdapter)
+export class UpdateCustomerServiceRecordBillingInstructionsHandler extends BaseCommandHandler<
+  UpdateCustomerServiceRecordBillingInstructionsCommandAdapter,
+  UpdateCustomerServiceRecordBillingInstructionsResultDto
+> {
+  constructor(
+    private readonly useCase: UpdateCustomerServiceRecordBillingInstructionsUseCase,
+  ) {
+    super();
+  }
+  async execute(
+    command: UpdateCustomerServiceRecordBillingInstructionsCommandAdapter,
+  ) {
+    return this.run(command, () => this.useCase.execute(command.payload));
   }
 }
 @CommandHandler(UpdateCustomerServiceRecordBillingStatusCommandAdapter)

@@ -30,12 +30,24 @@ ejecutar el seed de roles contra la base del entorno objetivo.
 | `GET /v1/customer-service-records` | administrativo `READ` | Listado existente; agrega filtro `billing_status`. |
 | `GET /v1/customer-service-records/:recordId` | administrativo `READ` | Detalle existente con estado y último aviso. |
 | `GET /v1/customer-service-records/billing-statuses/options` | administrativo `READ` | Tres opciones localizadas. |
-| `PATCH /v1/customer-service-records/:recordId/billing-status` | administrativo `UPDATE` | Cambia estado; admite los tres valores. |
+| `PATCH /v1/customer-service-records/:recordId/billing-status` | administrativo `UPDATE` | Cambia estado; admite los tres valores y `billing_instructions` opcional. En transición real a `SUBMITTED`, el correo incluye las instrucciones vigentes o las nuevas. |
+| `PATCH /v1/customer-service-records/:recordId/billing-instructions` | administrativo `UPDATE` | Edita `billing_instructions` (`string` o `null`) sin enviar correo. |
 | `GET /v1/billing/customer-service-records` | facturación `READ` | Listado paginado visible para facturación. |
 | `GET /v1/billing/customer-service-records/billing-statuses/options` | facturación `READ` | Dos opciones localizadas. |
 | `GET /v1/billing/customer-service-records/:recordId` | facturación `READ` | Detalle visible o `404`. |
 | `PATCH /v1/billing/customer-service-records/:recordId/billing-status` | facturación `UPDATE` | Cambia a `SUBMITTED` o `INVOICED`. |
 | `PUT /v1/billing/customer-service-records/:recordId/invoice` | facturación `UPDATE` | Reemplaza referencia y conjunto vigente de archivos de factura. |
+| `GET /v1/billing/customer-service-records/invoice-statuses/options` | facturación `READ` | Seis estados de factura localizados. |
+| `PATCH /v1/billing/customer-service-records/:recordId/billing-details` | facturación `UPDATE` | Edita parcialmente fechas y plazo de pago; `null` limpia el dato. |
+| `PATCH /v1/billing/customer-service-records/:recordId/invoice-status` | facturación `UPDATE` | Establece explícitamente el estado de factura. |
+| `PUT /v1/billing/customer-service-records/:recordId/purchase-order` | facturación `UPDATE` | Reemplaza referencia y archivos vigentes de orden de compra. |
+| `POST /v1/billing/customer-service-records/:recordId/invoice/payment-complements` | facturación `UPDATE` | Crea complemento con referencia opcional y archivos. |
+| `PUT /v1/billing/customer-service-records/:recordId/invoice/payment-complements/:complementId` | facturación `UPDATE` | Sustituye referencia y archivos de un complemento. |
+| `POST /v1/billing/customer-service-records/:recordId/invoice/archive` | facturación `UPDATE` | Archiva íntegramente la factura vigente y limpia sus datos actuales. |
+| `GET /v1/billing/customer-service-records/:recordId/invoice/archives` | facturación `READ` | Historial paginado de facturas archivadas (`page`, `limit`). |
+| `GET /v1/billing/customer-service-records/:recordId/invoice/archives/:archiveId` | facturación `READ` | Snapshot completo con URLs de sus archivos. |
+| `POST /v1/billing/customer-service-records/:recordId/comments` | facturación `UPDATE` | Crea comentario inmutable con texto y visibilidad `INTERNAL` o `EXTERNAL`. |
+| `GET /v1/billing/customer-service-records/:recordId/comments` | facturación `READ` | Comentarios paginados (`page`, `limit`), orden descendente estable. |
 
 El endpoint administrativo `PUT /v1/customer-service-records/:recordId/documents/invoice`
 permanece disponible con su permiso administrativo. Las escrituras de
@@ -74,6 +86,37 @@ administrativas correspondientes: el listado conserva su proyección de filas,
 y el detalle incluye equipos con adjuntos, `quotation`, `purchase_order`,
 `invoice` y `other_files`. `invoice` no se agrega a las filas del listado.
 El contrato de acceso de clientes externos no cambia.
+
+El detalle de facturación añade `billing` (`instructions`, `invoice_status`,
+`issued_at`, `delivered_at`, `payment_term`, `estimated_payment_at`, `paid_at`)
+y `invoice.payment_complements`. Cada complemento contiene un ID estable,
+`reference_number` y `files` con las mismas URLs de descarga y previsualización
+que otros adjuntos. La lista de facturación agrega el resumen de estado de
+factura y fecha estimada de pago. El estado de factura es independiente del
+estado de envío a facturación y puede cambiarse manualmente.
+
+Archivar guarda referencia, archivos, complementos, estado y fechas de la
+factura en una colección de historial. Devuelve `{archive_id, record}`;
+`record` es el detalle de facturación posterior al archivado. La factura
+vigente vuelve a estar vacía y su estado queda `PENDING`. El estado de envío,
+las instrucciones y el aviso permanecen. Los adjuntos históricos conservan
+sus URLs de descarga. Archivar una factura sin datos devuelve `409`; un ID de
+snapshot inexistente devuelve `404`. La lista de snapshots retorna el envelope
+con `pagination` y el detalle retorna el snapshot completo.
+
+Los comentarios viven en un recurso independiente del registro y de cada
+factura. La creación recibe `{ "text": "...", "visibility": "INTERNAL" }`
+y responde `201` con ID, texto, visibilidad y auditoría completa. Los comentarios
+no se editan ni eliminan en esta versión. La visibilidad `EXTERNAL` queda
+registrada para uso futuro: por ahora tampoco se expone en el portal de clientes
+ni en la ruta administrativa.
+
+Al modificar fecha de entrega o plazo, la API recalcula la fecha estimada si
+ambos están presentes; una fecha estimada explícita en el mismo PATCH prevalece.
+Registrar fecha de emisión pone el estado en proceso de pago; limpiarla lo deja
+pendiente. Registrar fecha de pago no cambia el estado. El job de vencimientos
+podrá cambiarlo posteriormente. Los seis valores del estado se obtienen del GET
+de opciones; el presenter entrega `{code,name,name_key}`.
 
 Ambos módulos exponen, tanto en fila como en detalle:
 

@@ -68,7 +68,8 @@
   },
   "STATE_CONFLICT": {
     "CUSTOMER_SERVICE_RECORD": {
-      "BILLING_STATUS_CHANGED": "El estado de facturación cambió; vuelve a cargar el registro"
+      "BILLING_STATUS_CHANGED": "El estado de facturación cambió; vuelve a cargar el registro",
+      "INVOICE_CHANGED": "La factura cambió; vuelve a cargar el registro"
     },
     "USER_CUSTOMER_RELATIONSHIP": {
       "ALREADY_EXISTS": "El usuario ya está relacionado con este cliente",
@@ -88,6 +89,7 @@
     "PROVIDER_BANKING_INFO": "No se encontró la información bancaria del proveedor",
     "SERVICE_PACKAGE_RECORD": "No se encontró el registro de servicio",
     "CUSTOMER_SERVICE_RECORD_SERVICE_TYPE": "No se encontró el tipo de servicio",
-    "CUSTOMER_SERVICE_RECORD": "No se encontró el registro de servicio"
+    "CUSTOMER_SERVICE_RECORD": "No se encontró el registro de servicio",
+    "BILLING_RECORD_ARCHIVE": "No se encontró la factura archivada"
   }
 }

@@ -38,6 +38,7 @@ export class CustomerServiceRecordPresenter {
       quotation: this.toDocument(result.quotation),
       purchase_order: this.toDocument(result.purchaseOrder),
       invoice: this.toDocument(result.invoice),
+      billing_instructions: result.billingInstructions,
       other_files: this.toAttachments(result.otherFiles),
       created_at: result.createdAt,
       updated_at: result.updatedAt,

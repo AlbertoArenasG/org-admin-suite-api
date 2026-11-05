@@ -91,6 +91,34 @@ El proceso termina cuando `data.next_cursor` es `null`. La respuesta expone
 `processed_records`, los cinco conteos bajo `materializations` y `duration_ms`.
 Conserva el mismo contrato de recuperación, cursor y lock descrito arriba.
 
+## Billing Invoice Overdue Refresh
+
+Endpoint:
+
+```text
+POST /v1/internal-jobs/customer-service-records/invoices/overdue/refresh
+```
+
+Cada llamada revisa hasta 100 facturas visibles en facturación cuya fecha
+estimada de pago sea anterior al día actual en Ciudad de México. Omite estados
+`PAID`, `CANCELLED`, `REJECTED` y los que ya son `OVERDUE`. La escritura es
+condicional a la revisión de la factura para evitar pisar una edición reciente.
+Solo cambia el estado a `OVERDUE` y aumenta `invoiceRevision`; no envía correo
+ni altera `billingStatus`, `updatedAt` o `updatedBy`.
+
+```bash
+curl --request POST "$API_URL/v1/internal-jobs/customer-service-records/invoices/overdue/refresh" \
+  --header "Authorization: Bearer $INTERNAL_JOBS_TOKEN" \
+  --header 'Content-Type: application/json' \
+  --data '{}'
+```
+
+Continuar con `{"cursor":"<data.next_cursor>"}` hasta recibir `null`.
+La respuesta devuelve `processed_records`, `updated_records`, `next_cursor`
+y `duration_ms`. El mismo cursor puede reintentarse: los ya vencidos se omiten.
+Un segundo ejecutor recibe 409 mientras el lock siga vigente. Aplican las
+reglas de recuperación y autenticación descritas arriba.
+
 ## Operational Verification
 
 After a controlled run, verify the following:

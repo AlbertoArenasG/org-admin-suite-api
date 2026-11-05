@@ -30,6 +30,25 @@ export enum CustomerServiceRecordBillingStatus {
   INVOICED = 'INVOICED',
 }
 
+export enum CustomerServiceRecordInvoiceStatus {
+  PENDING = 'PENDING',
+  IN_PROCESS_PAYMENT = 'IN_PROCESS_PAYMENT',
+  PAID = 'PAID',
+  OVERDUE = 'OVERDUE',
+  CANCELLED = 'CANCELLED',
+  REJECTED = 'REJECTED',
+}
+
+export interface CustomerServiceRecordBillingProps {
+  instructions: string | null;
+  invoiceStatus: CustomerServiceRecordInvoiceStatus | null;
+  issuedAt: string | null;
+  deliveredAt: string | null;
+  paymentTerm: CustomerServiceRecordIntervalProps | null;
+  estimatedPaymentAt: string | null;
+  paidAt: string | null;
+}
+
 export enum CustomerServiceRecordBillingNotificationStatus {
   NOT_REQUESTED = 'NOT_REQUESTED',
   SENT = 'SENT',
@@ -104,6 +123,16 @@ export interface CustomerServiceRecordFileAttachmentCollectionProps {
 export interface CustomerServiceRecordDocumentProps
   extends CustomerServiceRecordFileAttachmentCollectionProps {
   referenceNumber: string | null;
+}
+
+export interface CustomerServiceRecordPaymentComplementProps
+  extends CustomerServiceRecordDocumentProps {
+  id: string;
+}
+
+export interface CustomerServiceRecordInvoiceProps
+  extends CustomerServiceRecordDocumentProps {
+  paymentComplements: CustomerServiceRecordPaymentComplementProps[];
 }
 
 export interface CustomerServiceRecordAssetProps {
@@ -223,7 +252,7 @@ export interface CustomerServiceRecordProps {
   provider?: CustomerServiceRecordProviderProps | null;
   quotation?: CustomerServiceRecordDocumentProps;
   purchaseOrder?: CustomerServiceRecordDocumentProps;
-  invoice?: CustomerServiceRecordDocumentProps;
+  invoice?: CustomerServiceRecordInvoiceProps;
   otherFiles?: CustomerServiceRecordFileAttachmentCollectionProps;
   attachmentsCount?: number;
   customerVisibleAttachmentsCount?: number;
@@ -231,6 +260,8 @@ export interface CustomerServiceRecordProps {
   operationalStatus?: CustomerServiceRecordOperationalStatus;
   billingStatus?: CustomerServiceRecordBillingStatus;
   billingNotification?: CustomerServiceRecordBillingNotificationProps;
+  billing?: CustomerServiceRecordBillingProps;
+  invoiceRevision?: number;
   createdBy?: string | null;
   updatedBy?: string | null;
   createdAt?: Date;
@@ -238,6 +269,8 @@ export interface CustomerServiceRecordProps {
 }
 
 export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
+  private readonly loadedInvoiceRevision: number;
+
   constructor(props: CustomerServiceRecordProps) {
     props.id = props.id ?? genId();
     props.observations = props.observations ?? null;
@@ -263,7 +296,9 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     props.purchaseOrder = CustomerServiceRecord.normalizeDocument(
       props.purchaseOrder,
     );
-    props.invoice = CustomerServiceRecord.normalizeDocument(props.invoice);
+    props.invoice = CustomerServiceRecord.normalizeInvoice(props.invoice);
+    props.billing = CustomerServiceRecord.normalizeBilling(props.billing);
+    props.invoiceRevision = Math.max(0, props.invoiceRevision ?? 0);
     props.otherFiles = CustomerServiceRecord.normalizeAttachmentCollection(
       props.otherFiles,
     );
@@ -275,6 +310,7 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     props.createdBy = props.createdBy ?? null;
     props.updatedBy = props.updatedBy ?? null;
     super(props);
+    this.loadedInvoiceRevision = props.invoiceRevision;
   }
 
   get id(): string {
@@ -316,8 +352,31 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
   get purchaseOrder(): CustomerServiceRecordDocumentProps {
     return structuredClone(this.props.purchaseOrder!);
   }
-  get invoice(): CustomerServiceRecordDocumentProps {
+  get invoice(): CustomerServiceRecordInvoiceProps {
     return structuredClone(this.props.invoice!);
+  }
+  get billing(): CustomerServiceRecordBillingProps {
+    return structuredClone(this.props.billing!);
+  }
+  get invoiceRevision(): number {
+    return this.props.invoiceRevision ?? 0;
+  }
+  archiveInvoice(updatedBy: string): void {
+    this.props.invoice = CustomerServiceRecord.normalizeInvoice();
+    this.props.billing = {
+      ...this.billing,
+      invoiceStatus: CustomerServiceRecordInvoiceStatus.PENDING,
+      issuedAt: null,
+      deliveredAt: null,
+      paymentTerm: null,
+      estimatedPaymentAt: null,
+      paidAt: null,
+    };
+    this.props.invoiceRevision = this.invoiceRevision + 1;
+    this.touch(updatedBy);
+  }
+  get originalInvoiceRevision(): number {
+    return this.loadedInvoiceRevision;
   }
   get otherFiles(): CustomerServiceRecordFileAttachmentCollectionProps {
     return structuredClone(this.props.otherFiles!);
@@ -351,6 +410,14 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
   ): void {
     this.props.billingStatus = status;
     this.props.billingNotification = structuredClone(notification);
+    if (
+      status === CustomerServiceRecordBillingStatus.SUBMITTED &&
+      this.props.billing?.invoiceStatus === null
+    ) {
+      this.props.billing.invoiceStatus =
+        CustomerServiceRecordInvoiceStatus.PENDING;
+      this.props.invoiceRevision = this.invoiceRevision + 1;
+    }
     this.touch(updatedBy);
   }
   updateBillingNotification(
@@ -358,6 +425,21 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     updatedBy: string,
   ): void {
     this.props.billingNotification = structuredClone(notification);
+    this.touch(updatedBy);
+  }
+  updateBillingInstructions(
+    instructions: string | null,
+    updatedBy: string,
+  ): void {
+    this.props.billing!.instructions = instructions;
+    this.touch(updatedBy);
+  }
+  updateInvoiceBilling(
+    billing: CustomerServiceRecordBillingProps,
+    updatedBy: string,
+  ): void {
+    this.props.billing = CustomerServiceRecord.normalizeBilling(billing);
+    this.props.invoiceRevision = this.invoiceRevision + 1;
     this.touch(updatedBy);
   }
   get createdBy(): string | null {
@@ -418,10 +500,12 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
       this.props.purchaseOrder = CustomerServiceRecord.normalizeDocument(
         details.purchaseOrder,
       );
-    if (details.invoice !== undefined)
-      this.props.invoice = CustomerServiceRecord.normalizeDocument(
+    if (details.invoice !== undefined) {
+      this.props.invoice = CustomerServiceRecord.normalizeInvoice(
         details.invoice,
       );
+      this.props.invoiceRevision = this.invoiceRevision + 1;
+    }
     if (details.otherFiles !== undefined)
       this.props.otherFiles =
         CustomerServiceRecord.normalizeAttachmentCollection(details.otherFiles);
@@ -548,6 +632,34 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
     return {
       ...CustomerServiceRecord.normalizeAttachmentCollection(value),
       referenceNumber: value?.referenceNumber ?? null,
+    };
+  }
+
+  private static normalizeInvoice(
+    value?: CustomerServiceRecordInvoiceProps,
+  ): CustomerServiceRecordInvoiceProps {
+    return {
+      ...CustomerServiceRecord.normalizeDocument(value),
+      paymentComplements: (value?.paymentComplements ?? []).map((item) => ({
+        ...CustomerServiceRecord.normalizeDocument(item),
+        id: item.id ?? genId(),
+      })),
+    };
+  }
+
+  private static normalizeBilling(
+    value?: CustomerServiceRecordBillingProps,
+  ): CustomerServiceRecordBillingProps {
+    return {
+      instructions: value?.instructions ?? null,
+      invoiceStatus: value?.invoiceStatus ?? null,
+      issuedAt: value?.issuedAt ?? null,
+      deliveredAt: value?.deliveredAt ?? null,
+      paymentTerm: value?.paymentTerm
+        ? CustomerServiceRecord.normalizeInterval(value.paymentTerm)
+        : null,
+      estimatedPaymentAt: value?.estimatedPaymentAt ?? null,
+      paidAt: value?.paidAt ?? null,
     };
   }
 

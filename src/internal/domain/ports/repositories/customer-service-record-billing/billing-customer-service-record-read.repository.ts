@@ -14,6 +14,11 @@ export interface FindBillingCustomerServiceRecordsParams {
 }
 
 export interface IBillingCustomerServiceRecordReadRepository {
+  findOverdueCandidates(params: {
+    today: string;
+    after?: { createdAt: Date; recordId: string };
+    limit: number;
+  }): Promise<{ data: CustomerServiceRecord[] }>;
   findAll(
     params: FindBillingCustomerServiceRecordsParams,
   ): Promise<{ data: CustomerServiceRecord[]; total: number }>;

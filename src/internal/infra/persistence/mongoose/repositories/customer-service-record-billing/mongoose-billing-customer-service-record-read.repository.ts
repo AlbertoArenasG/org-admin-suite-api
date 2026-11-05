@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CustomerServiceRecord,
   CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordInvoiceStatus,
   CustomerServiceRecordStatus,
 } from '@domain/entities';
 import {
@@ -16,6 +17,43 @@ export class MongooseBillingCustomerServiceRecordReadRepositoryImpl
   extends MongooseCustomerServiceRecordBaseRepository
   implements IBillingCustomerServiceRecordReadRepository
 {
+  async findOverdueCandidates(params: {
+    today: string;
+    after?: { createdAt: Date; recordId: string };
+    limit: number;
+  }) {
+    const excluded = [
+      CustomerServiceRecordInvoiceStatus.PAID,
+      CustomerServiceRecordInvoiceStatus.CANCELLED,
+      CustomerServiceRecordInvoiceStatus.REJECTED,
+      CustomerServiceRecordInvoiceStatus.OVERDUE,
+    ];
+    const filter: Record<string, unknown> = {
+      status: CustomerServiceRecordStatus.ACTIVE,
+      billing_status: { $in: this.visible },
+      'billing.invoice_status': { $nin: excluded },
+      'billing.estimated_payment_at': { $type: 'string', $lt: params.today },
+    };
+    if (params.after)
+      filter.$or = [
+        { createdAt: { $gt: params.after.createdAt } },
+        {
+          createdAt: params.after.createdAt,
+          customer_service_record_id: { $gt: params.after.recordId },
+        },
+      ];
+    const documents = await this.customerServiceRecordModel
+      .find(filter)
+      .sort({ createdAt: 1, customer_service_record_id: 1 })
+      .limit(params.limit)
+      .session(this.transactionContext.getSession() ?? null)
+      .exec();
+    return {
+      data: documents
+        .map((document) => this.toDomain(document))
+        .filter((record): record is CustomerServiceRecord => Boolean(record)),
+    };
+  }
   private readonly visible = [
     CustomerServiceRecordBillingStatus.SUBMITTED,
     CustomerServiceRecordBillingStatus.INVOICED,

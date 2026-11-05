@@ -8,6 +8,7 @@ import {
   GetBillingCustomerServiceRecordsUseCase,
   GetBillingCustomerServiceRecordByIdUseCase,
   GetBillingCustomerServiceRecordStatusOptionsUseCase,
+  GetBillingCustomerServiceRecordInvoiceStatusOptionsUseCase,
 } from '@application/use-cases/customer-service-record-billing';
 import { BaseQueryHandler } from '@infra/cqrs/base-query.handler';
 
@@ -66,6 +67,30 @@ export class GetBillingCustomerServiceRecordByIdHandler
 export class GetBillingCustomerServiceRecordStatusOptionsQuery {
   static create() {
     return new GetBillingCustomerServiceRecordStatusOptionsQuery();
+  }
+}
+
+export class GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery {
+  static create() {
+    return new GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery();
+  }
+}
+@QueryHandler(GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery)
+export class GetBillingCustomerServiceRecordInvoiceStatusOptionsHandler
+  extends BaseQueryHandler<
+    GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery,
+    string[]
+  >
+  implements
+    IQueryHandler<GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery>
+{
+  constructor(
+    private readonly useCase: GetBillingCustomerServiceRecordInvoiceStatusOptionsUseCase,
+  ) {
+    super();
+  }
+  execute(query: GetBillingCustomerServiceRecordInvoiceStatusOptionsQuery) {
+    return this.run(query, async () => this.useCase.execute());
   }
 }
 

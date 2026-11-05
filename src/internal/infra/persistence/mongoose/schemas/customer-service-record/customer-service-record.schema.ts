@@ -4,6 +4,7 @@ import { Document } from 'mongoose';
 import {
   CustomerServiceRecordBillingNotificationStatus,
   CustomerServiceRecordBillingStatus,
+  CustomerServiceRecordInvoiceStatus,
   CustomerServiceRecordMaterializationSource,
   CustomerServiceRecordNotificationTriggerEventStatus,
   CustomerServiceRecordOperationalStatus,
@@ -107,6 +108,50 @@ export class CustomerServiceRecordDocumentReferenceDocument {
     default: [],
   })
   removed_files: CustomerServiceRecordRemovedFileAttachmentDocument[];
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordPaymentComplementDocument {
+  @Prop({ type: String, required: true }) complement_id: string;
+  @Prop({ type: String, default: null }) reference_number: string | null;
+  @Prop({ type: [CustomerServiceRecordFileAttachmentDocument], default: [] })
+  files: CustomerServiceRecordFileAttachmentDocument[];
+  @Prop({
+    type: [CustomerServiceRecordRemovedFileAttachmentDocument],
+    default: [],
+  })
+  removed_files: CustomerServiceRecordRemovedFileAttachmentDocument[];
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordInvoiceDocument {
+  @Prop({ type: String, default: null }) reference_number: string | null;
+  @Prop({ type: [CustomerServiceRecordFileAttachmentDocument], default: [] })
+  files: CustomerServiceRecordFileAttachmentDocument[];
+  @Prop({
+    type: [CustomerServiceRecordRemovedFileAttachmentDocument],
+    default: [],
+  })
+  removed_files: CustomerServiceRecordRemovedFileAttachmentDocument[];
+  @Prop({ type: [CustomerServiceRecordPaymentComplementDocument], default: [] })
+  payment_complements: CustomerServiceRecordPaymentComplementDocument[];
+}
+
+@Schema({ _id: false })
+export class CustomerServiceRecordBillingDocument {
+  @Prop({ type: String, default: null }) instructions: string | null;
+  @Prop({
+    type: String,
+    enum: Object.values(CustomerServiceRecordInvoiceStatus),
+    default: null,
+  })
+  invoice_status: CustomerServiceRecordInvoiceStatus | null;
+  @Prop({ type: String, default: null }) issued_at: string | null;
+  @Prop({ type: String, default: null }) delivered_at: string | null;
+  @Prop({ type: CustomerServiceRecordIntervalDocument, default: null })
+  payment_term: CustomerServiceRecordIntervalDocument | null;
+  @Prop({ type: String, default: null }) estimated_payment_at: string | null;
+  @Prop({ type: String, default: null }) paid_at: string | null;
 }
 
 @Schema({ _id: false })
@@ -448,11 +493,11 @@ export class CustomerServiceRecordDocument extends Document {
   })
   purchase_order: CustomerServiceRecordDocumentReferenceDocument;
   @Prop({
-    type: CustomerServiceRecordDocumentReferenceDocument,
+    type: CustomerServiceRecordInvoiceDocument,
     required: true,
     default: {},
   })
-  invoice: CustomerServiceRecordDocumentReferenceDocument;
+  invoice: CustomerServiceRecordInvoiceDocument;
   @Prop({
     type: CustomerServiceRecordFileAttachmentCollectionDocument,
     required: true,
@@ -491,6 +536,14 @@ export class CustomerServiceRecordDocument extends Document {
     default: {},
   })
   billing_notification: CustomerServiceRecordBillingNotificationDocument;
+  @Prop({
+    type: CustomerServiceRecordBillingDocument,
+    required: true,
+    default: {},
+  })
+  billing: CustomerServiceRecordBillingDocument;
+  @Prop({ type: Number, required: true, default: 0 })
+  invoice_revision: number;
   @Prop({ type: String, required: false, default: null, index: true })
   created_by?: string | null;
   @Prop({ type: String, required: false, default: null }) updated_by?:
@@ -558,4 +611,12 @@ CustomerServiceRecordSchema.index({
 CustomerServiceRecordSchema.index({
   status: 1,
   'provider.estimated_return_at': 1,
+});
+CustomerServiceRecordSchema.index({
+  status: 1,
+  billing_status: 1,
+  'billing.invoice_status': 1,
+  'billing.estimated_payment_at': 1,
+  createdAt: 1,
+  customer_service_record_id: 1,
 });

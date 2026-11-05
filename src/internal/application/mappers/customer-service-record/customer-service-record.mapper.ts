@@ -38,6 +38,7 @@ export class CustomerServiceRecordMapper {
       operationalStatus: record.operationalStatus,
       billingStatus: record.billingStatus,
       billingNotification: record.billingNotification,
+      billingInstructions: record.billing.instructions,
       attachmentsCount: record.attachmentsCount,
       quotation: {
         referenceNumber: record.quotation.referenceNumber,
