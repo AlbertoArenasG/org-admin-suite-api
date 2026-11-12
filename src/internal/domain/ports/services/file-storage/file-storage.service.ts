@@ -16,11 +16,15 @@ export interface GetObjectResult {
   contentType?: string;
 }
 
+export interface StoredObjectMetadata {
+  key: string;
+  bucket: string;
+}
+
 export interface IFileStorageService {
   upload(params: UploadFileParams): Promise<UploadFileResult>;
   getObject(key: string): Promise<GetObjectResult>;
-  copyObject(sourceKey: string, targetKey: string): Promise<UploadFileResult>;
-  deleteObject(key: string): Promise<void>;
+  getObjectMetadata(key: string): Promise<StoredObjectMetadata>;
 }
 
 export const IFileStorageServiceToken = Symbol('IFileStorageService');

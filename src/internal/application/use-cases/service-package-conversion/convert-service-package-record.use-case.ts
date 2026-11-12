@@ -96,7 +96,7 @@ export class ConvertServicePackageRecordUseCase {
       );
     }
     const prepared = await this.prepare(input, source);
-    const copied = await this.photoService.copy({
+    const photos = await this.photoService.prepare({
       sourceRecordId: source.id,
       actorUserId: input.actorUserId,
       items: prepared.map((item) => ({
@@ -104,99 +104,94 @@ export class ConvertServicePackageRecordUseCase {
         photos: item.photos,
       })),
     });
-    try {
-      return await this.transactions.execute(async () => {
-        const claimed = await this.sourceWrite.markConvertedIfAvailable(
-          source.id,
+    return this.transactions.execute(async () => {
+      const claimed = await this.sourceWrite.markConvertedIfAvailable(
+        source.id,
+      );
+      if (!claimed) {
+        throw StateConflictException.create(
+          StateConflictExceptionCode.SERVICE_PACKAGE_RECORD_ALREADY_CONVERTED,
         );
-        if (!claimed) {
-          throw StateConflictException.create(
-            StateConflictExceptionCode.SERVICE_PACKAGE_RECORD_ALREADY_CONVERTED,
+      }
+      for (const item of photos) {
+        await this.fileWrite.create(item.file);
+      }
+      const result: ConvertServicePackageRecordResultDto = {
+        sourceRecordId: source.id,
+        serviceOrder: source.serviceOrder,
+        records: [],
+      };
+      for (const item of prepared) {
+        const serviceNumber = await this.sequences.nextValue(
+          'customer_service_records',
+        );
+        const files = photos
+          .filter((copy) => copy.equipmentIndex === item.input.equipmentIndex)
+          .map(
+            (copy): CustomerServiceRecordFileAttachmentProps => ({
+              fileId: copy.file.id,
+              originalName: copy.file.originalName,
+              mimeType: copy.file.mimeType,
+              size: copy.file.size,
+              addedAt: new Date(),
+              addedBy: input.actorUserId,
+            }),
           );
-        }
-        for (const item of copied.copies) {
-          await this.fileWrite.create(item.file);
-        }
-        const result: ConvertServicePackageRecordResultDto = {
-          sourceRecordId: source.id,
-          serviceOrder: source.serviceOrder,
-          records: [],
-        };
-        for (const item of prepared) {
-          const serviceNumber = await this.sequences.nextValue(
-            'customer_service_records',
-          );
-          const files = copied.copies
-            .filter((copy) => copy.equipmentIndex === item.input.equipmentIndex)
-            .map(
-              (copy): CustomerServiceRecordFileAttachmentProps => ({
-                fileId: copy.file.id,
-                originalName: copy.file.originalName,
-                mimeType: copy.file.mimeType,
-                size: copy.file.size,
-                addedAt: new Date(),
-                addedBy: input.actorUserId,
-              }),
-            );
-          const asset = normalizeAssets([item.input.asset])[0];
-          const record = new CustomerServiceRecord({
-            sourceServicePackageRecordId: source.id,
-            sourceServiceOrder: source.serviceOrder,
-            serviceNumber,
-            ...item.serviceType,
-            requestedAt: item.requestedAt,
-            observations: null,
-            customer: item.customer,
-            assets: [
-              { ...asset, intakeConditionFiles: { files, removedFiles: [] } },
-            ],
-            attachmentsCount: files.length,
-            customerVisibleAttachmentsCount: files.length,
-            customerDelivery: {
-              receivedAt: item.receivedAt,
-              estimatedDeliveryInterval: {
-                years: 0,
-                months: 0,
-                weeks: 0,
-                days: 0,
-              },
-              estimatedDeliveryAt: null,
-              deliveredToCustomerAt: null,
-              statusPolicyId: null,
-              notificationPolicyId: null,
-              statusMaterialization: null,
-              notificationMaterialization: null,
+        const asset = normalizeAssets([item.input.asset])[0];
+        const record = new CustomerServiceRecord({
+          sourceServicePackageRecordId: source.id,
+          sourceServiceOrder: source.serviceOrder,
+          serviceNumber,
+          ...item.serviceType,
+          requestedAt: item.requestedAt,
+          observations: null,
+          customer: item.customer,
+          assets: [
+            { ...asset, intakeConditionFiles: { files, removedFiles: [] } },
+          ],
+          attachmentsCount: files.length,
+          customerVisibleAttachmentsCount: files.length,
+          customerDelivery: {
+            receivedAt: item.receivedAt,
+            estimatedDeliveryInterval: {
+              years: 0,
+              months: 0,
+              weeks: 0,
+              days: 0,
             },
-            provider: null,
-            operationalStatus: CustomerServiceRecordOperationalStatus.PENDING,
-            createdBy: input.actorUserId,
-            updatedBy: input.actorUserId,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-          const { data } = await this.targetWrite.create(record);
-          if (!data) throw new Error('Target record was not created');
-          await this.materializationsRefresher.refresh({
-            records: [data],
-            customerDeliveryStatus: true,
-            customerDeliveryNotification: true,
-            providerStatus: true,
-            providerNotification: true,
-            providerFollowUp: true,
-          });
-          result.records.push({
-            equipmentIndex: item.input.equipmentIndex,
-            customerServiceRecordId: data.id,
-            serviceNumber: data.serviceNumber,
-            serviceNumberDisplay: data.serviceNumberDisplay,
-          });
-        }
-        return result;
-      });
-    } catch (error) {
-      await this.photoService.remove(copied.keys);
-      throw error;
-    }
+            estimatedDeliveryAt: null,
+            deliveredToCustomerAt: null,
+            statusPolicyId: null,
+            notificationPolicyId: null,
+            statusMaterialization: null,
+            notificationMaterialization: null,
+          },
+          provider: null,
+          operationalStatus: CustomerServiceRecordOperationalStatus.PENDING,
+          createdBy: input.actorUserId,
+          updatedBy: input.actorUserId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        const { data } = await this.targetWrite.create(record);
+        if (!data) throw new Error('Target record was not created');
+        await this.materializationsRefresher.refresh({
+          records: [data],
+          customerDeliveryStatus: true,
+          customerDeliveryNotification: true,
+          providerStatus: true,
+          providerNotification: true,
+          providerFollowUp: true,
+        });
+        result.records.push({
+          equipmentIndex: item.input.equipmentIndex,
+          customerServiceRecordId: data.id,
+          serviceNumber: data.serviceNumber,
+          serviceNumberDisplay: data.serviceNumberDisplay,
+        });
+      }
+      return result;
+    });
   }
 
   private async prepare(

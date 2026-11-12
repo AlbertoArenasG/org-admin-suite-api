@@ -4,6 +4,7 @@ import { S3 } from 'aws-sdk';
 import {
   GetObjectResult,
   IFileStorageService,
+  StoredObjectMetadata,
   UploadFileParams,
   UploadFileResult,
 } from '@domain/ports/services';
@@ -50,26 +51,9 @@ export class S3FileStorageService implements IFileStorageService {
     };
   }
 
-  async copyObject(
-    sourceKey: string,
-    targetKey: string,
-  ): Promise<UploadFileResult> {
-    const encodedSource = sourceKey
-      .split('/')
-      .map(encodeURIComponent)
-      .join('/');
-    await this.s3
-      .copyObject({
-        Bucket: this.bucket,
-        CopySource: `${this.bucket}/${encodedSource}`,
-        Key: targetKey,
-      })
-      .promise();
-    return { key: targetKey, bucket: this.bucket };
-  }
-
-  async deleteObject(key: string): Promise<void> {
-    await this.s3.deleteObject({ Bucket: this.bucket, Key: key }).promise();
+  async getObjectMetadata(key: string): Promise<StoredObjectMetadata> {
+    await this.s3.headObject({ Bucket: this.bucket, Key: key }).promise();
+    return { key, bucket: this.bucket };
   }
 
   async getObject(key: string): Promise<GetObjectResult> {

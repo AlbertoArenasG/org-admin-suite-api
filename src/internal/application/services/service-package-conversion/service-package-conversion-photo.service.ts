@@ -1,5 +1,5 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { extname } from 'path';
+import { Inject, Injectable } from '@nestjs/common';
+import { basename } from 'path';
 
 import { File, ServicePackageRecordFileProps } from '@domain/entities';
 import {
@@ -13,78 +13,56 @@ export interface ServicePackageConversionPhotoInput {
   photos: ServicePackageRecordFileProps[];
 }
 
-export interface CopiedServicePackagePhoto {
+export interface ServicePackageConversionPhoto {
   equipmentIndex: number;
   file: File;
 }
 
-export interface ServicePackageConversionPhotos {
-  copies: CopiedServicePackagePhoto[];
-  keys: string[];
-}
-
 @Injectable()
 export class ServicePackageConversionPhotoService {
-  private readonly logger = new Logger(
-    ServicePackageConversionPhotoService.name,
-  );
-
   constructor(
     @Inject(IFileStorageServiceToken)
     private readonly storage: IFileStorageService,
   ) {}
 
-  async copy(input: {
+  async prepare(input: {
     sourceRecordId: string;
     actorUserId: string;
     items: ServicePackageConversionPhotoInput[];
-  }): Promise<ServicePackageConversionPhotos> {
-    const result: ServicePackageConversionPhotos = { copies: [], keys: [] };
-    try {
-      for (const item of input.items) {
-        for (const photo of item.photos) {
-          const fileId = genId();
-          const filename = `${fileId}${extname(photo.originalName).toLowerCase()}`;
-          const key = `uploads/${fileId}/${filename}`;
-          // Include the key before the request: the acknowledgement may be lost after S3 copies it.
-          result.keys.push(key);
-          const stored = await this.storage.copyObject(photo.s3Key, key);
-          result.copies.push({
-            equipmentIndex: item.equipmentIndex,
-            file: new File({
-              id: fileId,
-              originalName: photo.originalName,
-              filename,
-              mimeType: photo.contentType,
-              size: photo.size,
-              storageKey: stored.key,
-              bucket: stored.bucket,
-              url: null,
-              uploadedBy: input.actorUserId,
-              metadata: {
-                source_service_package_record_id: input.sourceRecordId,
-                source_file_id: photo.id ?? photo.s3Key,
-              },
-              createdAt: new Date(),
-            }),
-          });
-        }
-      }
-      return result;
-    } catch (error) {
-      await this.remove(result.keys);
-      throw error;
-    }
-  }
+  }): Promise<ServicePackageConversionPhoto[]> {
+    const references: ServicePackageConversionPhoto[] = [];
+    const objects = new Map<string, { key: string; bucket: string }>();
 
-  async remove(keys: string[]): Promise<void> {
-    const results = await Promise.allSettled(
-      keys.map((key) => this.storage.deleteObject(key)),
-    );
-    results.forEach((result, index) => {
-      if (result.status === 'rejected') {
-        this.logger.warn(`Could not remove copied object ${keys[index]}`);
+    for (const item of input.items) {
+      for (const photo of item.photos) {
+        let object = objects.get(photo.s3Key);
+        if (!object) {
+          object = await this.storage.getObjectMetadata(photo.s3Key);
+          objects.set(photo.s3Key, object);
+        }
+
+        references.push({
+          equipmentIndex: item.equipmentIndex,
+          file: new File({
+            id: genId(),
+            originalName: photo.originalName,
+            filename: basename(photo.s3Key),
+            mimeType: photo.contentType,
+            size: photo.size,
+            storageKey: object.key,
+            bucket: object.bucket,
+            url: null,
+            uploadedBy: input.actorUserId,
+            metadata: {
+              source_service_package_record_id: input.sourceRecordId,
+              source_file_id: photo.id ?? photo.s3Key,
+            },
+            createdAt: new Date(),
+          }),
+        });
       }
-    });
+    }
+
+    return references;
   }
 }

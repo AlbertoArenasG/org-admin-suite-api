@@ -39,4 +39,4 @@ Errores: origen inexistente 404; origen eliminado o convertido 409; cobertura de
 
 ## Límite de este backend
 
-Este contrato no define la vista ni sus pasos. La conversión copia las fotos elegidas al almacenamiento de Files, conserva los originales de la recolección y no cambia la carga ZIP de la PWA. La migración y el seed de roles son tareas del responsable del entorno.
+Este contrato no define la vista ni sus pasos. Cada foto elegida se registra como una entidad `File` con ID propio que conserva la clave S3 original de la recolección. Si una foto se asigna a varios equipos, cada registro recibe su propio ID de `File`, pero todos apuntan al mismo objeto S3. La conversión no duplica objetos ni cambia la carga ZIP de la PWA. Antes de introducir limpieza física de objetos de recolección, deberá considerarse que pueden estar referenciados por registros de servicio a clientes.
