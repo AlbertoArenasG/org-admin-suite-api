@@ -18,6 +18,9 @@ export class MongooseCustomerServiceRecordMapper {
     const value = document as any;
     return new CustomerServiceRecord({
       id: value.customer_service_record_id,
+      sourceServicePackageRecordId:
+        value.source_service_package_record_id ?? null,
+      sourceServiceOrder: value.source_service_order ?? null,
       serviceNumber: value.service_number,
       serviceTypeCode: value.service_type_code,
       serviceTypeName: value.service_type_name,
@@ -103,6 +106,8 @@ export class MongooseCustomerServiceRecordMapper {
   static toMongoose(record: CustomerServiceRecord): Record<string, unknown> {
     const value = record.currentState;
     return {
+      source_service_package_record_id: record.sourceServicePackageRecordId,
+      source_service_order: record.sourceServiceOrder,
       service_number: record.serviceNumber,
       service_number_display: record.serviceNumberDisplay,
       service_type_code: record.serviceTypeCode,

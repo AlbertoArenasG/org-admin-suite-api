@@ -28,6 +28,7 @@ export interface ServicePackageRecordProps {
   purpose?: string | null;
   files: ServicePackageRecordFileProps[];
   status?: ServicePackageRecordStatus;
+  convertedToCustomerServiceRecords?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -52,6 +53,8 @@ export class ServicePackageRecord extends Entity<ServicePackageRecordProps> {
     props.purpose = props.purpose ?? null;
     props.files = props.files ?? [];
     props.status = props.status ?? ServicePackageRecordStatus.ACTIVE;
+    props.convertedToCustomerServiceRecords =
+      props.convertedToCustomerServiceRecords ?? false;
     super(props);
   }
 
@@ -121,6 +124,10 @@ export class ServicePackageRecord extends Entity<ServicePackageRecordProps> {
 
   get status(): ServicePackageRecordStatus {
     return this.props.status ?? ServicePackageRecordStatus.ACTIVE;
+  }
+
+  get convertedToCustomerServiceRecords(): boolean {
+    return this.props.convertedToCustomerServiceRecords ?? false;
   }
 
   get createdAt(): Date | undefined {

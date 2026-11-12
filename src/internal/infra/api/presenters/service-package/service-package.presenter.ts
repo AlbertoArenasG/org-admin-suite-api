@@ -48,6 +48,8 @@ export class ServicePackagePresenter {
       service_type: record.serviceType,
       purpose: record.purpose,
       status: record.status,
+      converted_to_customer_service_records:
+        record.convertedToCustomerServiceRecords,
       created_at: record.createdAt ?? null,
       updated_at: record.updatedAt ?? null,
       files: record.files.map((file) => ({

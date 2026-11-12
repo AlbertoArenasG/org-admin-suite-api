@@ -1,0 +1,6 @@
+# Progreso
+
+- 2026-11-11: definición y diseño autorizados; inspeccionados modelos, repositorios, permisos y composición. Implementación en curso. Comandos y validación reservados para el usuario.
+- 2026-11-11: código de modelo, migración, autorización, conversión y documentación implementado. Revisión estática de rutas, exports, DTOs, mappers, puertos, transacción y handoff. No se ejecutaron build, lint, pruebas, migración ni seed por la reserva expresa del usuario. Pendientes: comandos de base de datos y validación manual del usuario; la spec sigue abierta.
+- 2026-11-11: el usuario autorizó excepcionalmente al agente a ejecutar migración y seed. Migración: dry run 136 orígenes y 63 destinos pendientes; aplicación actualizó 136 booleanos y 63 de cada referencia; verificación posterior 0 pendientes. Seed: dry run 0 creados, 6 actualizados previstos y 1 sin cambios; aplicación 0 creados, 6 actualizados y 1 sin cambios; dry run posterior 0 actualizados y 7 sin cambios. Queda pendiente la validación manual del usuario.
+- 2026-11-11: el usuario solicitó marcar todas las validaciones manuales como hechas. Se registra su confirmación general sin atribuir resultados específicos a cada escenario. Tareas, slices y estados de la spec cerrados.

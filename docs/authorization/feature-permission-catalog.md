@@ -468,6 +468,7 @@ Decisión de esta spec:
 Controller actual:
 
 - `src/internal/infra/api/controllers/service-package/service-package.controller.ts`
+- `src/internal/infra/api/controllers/service-package-conversion/service-package-record-conversion.controller.ts`
 
 Endpoints actuales:
 
@@ -497,10 +498,14 @@ Endpoints actuales:
   - operacion: `DELETE`
   - acceso actual: autenticado
   - nota: protegido por `PermissionsGuard` con `service_packages.DELETE`
+- `POST /v1/service-packages/records/:recordId/customer-service-records`
+  - operacion: `CONVERT`
+  - acceso actual: autenticado
+  - nota: protegido por `JwtAuthGuard` y `PermissionsGuard` con `service_packages.CONVERT`; crea un registro de servicio al cliente por equipo del origen, una sola vez
 
 Decisión de esta spec:
 
-- `service_packages` se mantiene como módulo funcional de negocio para consulta y eliminación de records
+- `service_packages` se mantiene como módulo funcional de negocio para consulta, eliminación y conversión de records
 - `POST /v1/service-packages/uploads` no se modela por ahora como operación `CREATE` de backoffice
 - ese endpoint se mantiene fuera del catálogo autenticado para conservar el flujo de la PWA; la visibilidad de la accion en Next Dashboard no sustituye una politica de autorizacion del API
 
@@ -799,9 +804,9 @@ Endpoints actuales:
   - acceso actual: autenticado
   - nota: administra el catálogo de tipos; el nombre y código son inmutables después del alta.
 - `GET /v1/customer-service-record-service-types/options`
-  - operacion: `READ`
+  - capability auxiliar: `CUSTOMER_SERVICE_RECORD_SERVICE_TYPES/READ_OPTIONS`
   - acceso actual: autenticado
-  - nota: lookup local de tipos activos para el módulo.
+  - nota: lookup reutilizable de tipos activos para administración, facturación y conversión desde recolecciones; `AuxiliaryCapabilitiesGuard`.
 
 El refresh técnico `POST /v1/internal-jobs/customer-service-records/materializations/refresh` no usa permisos del backoffice: está protegido por `InternalJobsAuthGuard`.
 

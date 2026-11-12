@@ -13,6 +13,7 @@ export interface MongooseExecutionContext {
   env: Env;
   now: Date;
   logger: MongooseSeedLogger;
+  dryRun?: boolean;
 }
 
 export type MongooseSeedContext = MongooseExecutionContext;

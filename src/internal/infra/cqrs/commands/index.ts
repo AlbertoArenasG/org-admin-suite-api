@@ -7,6 +7,7 @@ export * from './service-entry-survey';
 export * from './customer-fiscal-profile';
 export * from './customer';
 export * from './service-package';
+export * from './service-package-conversion';
 export * from './provider';
 export * from './role';
 export * from './contact';

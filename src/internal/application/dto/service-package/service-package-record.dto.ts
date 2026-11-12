@@ -30,6 +30,7 @@ export interface ServicePackageRecordViewDto {
   purpose: string | null;
   files: ServicePackageRecordFileDto[];
   status: ServicePackageRecordStatus;
+  convertedToCustomerServiceRecords: boolean;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
 }

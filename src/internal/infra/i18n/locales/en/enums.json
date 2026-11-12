@@ -218,6 +218,7 @@
       "UPDATE": "Edit",
       "UPDATE_PASSWORD": "Change user passwords",
       "DELETE": "Delete",
+      "CONVERT": "Convert to service records",
       "READ_PUBLIC_ACCESS": "Read public access",
       "RESEND": "Resend",
       "REVOKE": "Revoke",

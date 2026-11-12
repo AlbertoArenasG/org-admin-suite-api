@@ -94,6 +94,9 @@ export class ServicePackageRecordDocument extends Document {
   })
   status?: ServicePackageRecordStatus;
 
+  @Prop({ type: Boolean, required: true, default: false })
+  converted_to_customer_service_records: boolean;
+
   @Prop()
   createdAt?: Date;
 

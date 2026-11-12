@@ -226,6 +226,8 @@ export interface GetCustomerServiceRecordsDto extends PaginationParamsDto {
 
 export interface CustomerServiceRecordViewDto {
   id: string;
+  sourceServicePackageRecordId: string | null;
+  sourceServiceOrder: string | null;
   serviceNumber: number;
   serviceNumberDisplay: string;
   serviceType: { code: string; name: string };

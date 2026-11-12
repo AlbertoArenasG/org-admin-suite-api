@@ -67,6 +67,10 @@
     "DELIVERY_FAILED": "The billing notice could not be sent. Please try again"
   },
   "STATE_CONFLICT": {
+    "SERVICE_PACKAGE_RECORD": {
+      "ALREADY_CONVERTED": "This collection record was already converted to service records",
+      "NOT_ACTIVE": "This collection record is no longer active"
+    },
     "CUSTOMER_SERVICE_RECORD": {
       "BILLING_STATUS_CHANGED": "Billing status changed; reload the record",
       "INVOICE_CHANGED": "The invoice changed; reload the record"

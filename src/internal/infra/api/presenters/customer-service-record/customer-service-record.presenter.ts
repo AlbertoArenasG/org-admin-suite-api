@@ -101,6 +101,8 @@ export class CustomerServiceRecordPresenter {
   private toListResponse(result: CustomerServiceRecordViewDto) {
     return {
       customer_service_record_id: result.id,
+      source_service_package_record_id: result.sourceServicePackageRecordId,
+      source_service_order: result.sourceServiceOrder,
       service_number: result.serviceNumber,
       service_number_display: result.serviceNumberDisplay,
       service_type: {

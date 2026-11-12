@@ -50,6 +50,28 @@ export class S3FileStorageService implements IFileStorageService {
     };
   }
 
+  async copyObject(
+    sourceKey: string,
+    targetKey: string,
+  ): Promise<UploadFileResult> {
+    const encodedSource = sourceKey
+      .split('/')
+      .map(encodeURIComponent)
+      .join('/');
+    await this.s3
+      .copyObject({
+        Bucket: this.bucket,
+        CopySource: `${this.bucket}/${encodedSource}`,
+        Key: targetKey,
+      })
+      .promise();
+    return { key: targetKey, bucket: this.bucket };
+  }
+
+  async deleteObject(key: string): Promise<void> {
+    await this.s3.deleteObject({ Bucket: this.bucket, Key: key }).promise();
+  }
+
   async getObject(key: string): Promise<GetObjectResult> {
     const response = await this.s3
       .getObject({

@@ -27,6 +27,8 @@ export class ServicePackageRecordMapper {
       purpose: record.purpose,
       files: record.files.map((file) => this.toFileDto(file)),
       status: record.status,
+      convertedToCustomerServiceRecords:
+        record.convertedToCustomerServiceRecords,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     };

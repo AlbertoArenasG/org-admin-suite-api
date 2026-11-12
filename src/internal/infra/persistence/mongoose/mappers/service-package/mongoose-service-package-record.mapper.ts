@@ -35,6 +35,8 @@ export class MongooseServicePackageRecordMapper {
         this.mapFileDocumentToDomain(file),
       ),
       status: document.status ?? undefined,
+      convertedToCustomerServiceRecords:
+        document.converted_to_customer_service_records,
       createdAt: document.createdAt ?? undefined,
       updatedAt: document.updatedAt ?? undefined,
     });
@@ -59,6 +61,8 @@ export class MongooseServicePackageRecordMapper {
       purpose: record.purpose,
       files: record.files.map((file) => this.mapFileDomainToDocument(file)),
       status: record.status,
+      converted_to_customer_service_records:
+        record.convertedToCustomerServiceRecords,
     };
   }
 

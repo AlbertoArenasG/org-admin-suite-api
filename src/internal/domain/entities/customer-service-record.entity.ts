@@ -241,6 +241,8 @@ export interface CustomerServiceRecordProviderProps {
 
 export interface CustomerServiceRecordProps {
   id?: string;
+  sourceServicePackageRecordId?: string | null;
+  sourceServiceOrder?: string | null;
   serviceNumber: number;
   serviceTypeCode: string;
   serviceTypeName: string;
@@ -273,6 +275,9 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
 
   constructor(props: CustomerServiceRecordProps) {
     props.id = props.id ?? genId();
+    props.sourceServicePackageRecordId =
+      props.sourceServicePackageRecordId ?? null;
+    props.sourceServiceOrder = props.sourceServiceOrder ?? null;
     props.observations = props.observations ?? null;
     props.status = props.status ?? CustomerServiceRecordStatus.ACTIVE;
     props.operationalStatus =
@@ -315,6 +320,12 @@ export class CustomerServiceRecord extends Entity<CustomerServiceRecordProps> {
 
   get id(): string {
     return this.props.id!;
+  }
+  get sourceServicePackageRecordId(): string | null {
+    return this.props.sourceServicePackageRecordId ?? null;
+  }
+  get sourceServiceOrder(): string | null {
+    return this.props.sourceServiceOrder ?? null;
   }
   get serviceNumber(): number {
     return this.props.serviceNumber;

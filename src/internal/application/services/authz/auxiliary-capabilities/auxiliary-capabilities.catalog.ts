@@ -21,6 +21,12 @@ export const AUXILIARY_CAPABILITIES_CATALOG: AuxiliaryCapabilityCatalogEntry[] =
         'Permite consultar usuarios activos relacionados con un cliente para selección.',
     },
     {
+      module: 'CUSTOMER_SERVICE_RECORD_SERVICE_TYPES',
+      capability: 'READ_OPTIONS',
+      description:
+        'Permite consultar tipos de servicio activos para registros de servicio a clientes.',
+    },
+    {
       module: 'PROVIDERS',
       capability: 'READ_OPTIONS',
       description:

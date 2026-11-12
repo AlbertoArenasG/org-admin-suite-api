@@ -10,6 +10,8 @@ export class BillingCustomerServiceRecordMapper {
   ): BillingCustomerServiceRecordViewDto {
     return {
       id: record.id,
+      sourceServicePackageRecordId: record.sourceServicePackageRecordId,
+      sourceServiceOrder: record.sourceServiceOrder,
       serviceNumber: record.serviceNumber,
       serviceNumberDisplay: record.serviceNumberDisplay,
       serviceType: {

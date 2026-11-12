@@ -146,20 +146,22 @@ export const systemRolesSeed: MongooseSeedDefinition = {
       });
 
       if (!existing) {
-        await roleModel.create({
-          role_id: role.code,
-          name: role.name,
-          code: role.code,
-          scope: role.scope,
-          is_system: true,
-          is_immutable: true,
-          is_default: true,
-          status: RoleStatus.ACTIVE,
-          permissions: role.permissions,
-          auxiliary_capabilities: role.auxiliaryCapabilities,
-          created_by: null,
-          updated_by: null,
-        });
+        if (!context.dryRun) {
+          await roleModel.create({
+            role_id: role.code,
+            name: role.name,
+            code: role.code,
+            scope: role.scope,
+            is_system: true,
+            is_immutable: true,
+            is_default: true,
+            status: RoleStatus.ACTIVE,
+            permissions: role.permissions,
+            auxiliary_capabilities: role.auxiliaryCapabilities,
+            created_by: null,
+            updated_by: null,
+          });
+        }
         report.created += 1;
         continue;
       }
@@ -209,10 +211,12 @@ export const systemRolesSeed: MongooseSeedDefinition = {
       }
 
       if (Object.keys(updates).length > 0) {
-        await roleModel.collection.updateOne(
-          { _id: existing._id },
-          { $set: updates },
-        );
+        if (!context.dryRun) {
+          await roleModel.collection.updateOne(
+            { _id: existing._id },
+            { $set: updates },
+          );
+        }
         report.updated += 1;
         continue;
       }
@@ -254,7 +258,7 @@ export const systemRolesSeed: MongooseSeedDefinition = {
       ];
     });
 
-    if (bulkUpdates.length > 0) {
+    if (bulkUpdates.length > 0 && !context.dryRun) {
       await roleModel.collection.bulkWrite(bulkUpdates);
     }
 

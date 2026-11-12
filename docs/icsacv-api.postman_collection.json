@@ -8822,6 +8822,50 @@
               "body": "{\n    \"success\": true,\n    \"success_message\": \"Registro de servicio eliminado correctamente\",\n    \"status_code\": 200,\n    \"data\": {\n        \"record_id\": \"4I3K62B6Az2biorF\",\n        \"package_id\": \"07dWAJCcQyf3Pft7\",\n        \"service_order\": \"SRV-003\",\n        \"original_filename\": \"servicios-export-2025-11-24.zip\",\n        \"s3_folder_key\": \"service-packages/07dWAJCcQyf3Pft7/4I3K62B6Az2biorF\",\n        \"details\": {\n            \"serviceNumber\": \"SRV-003\",\n            \"serviceTime\": \"20:34\",\n            \"company\": \"Test\",\n            \"collectorName\": \"John Doe Recolector\",\n            \"contactPerson\": \"John Doe\",\n            \"visitDate\": \"2025-11-24\",\n            \"serviceType\": \"Calibración\",\n            \"purpose\": \"Servicio Técnico\",\n            \"email\": \"albarenasg@gmail.com\",\n            \"address\": \"Calle Sur 125 A, Colonia Los Cipreses, Mexico City, Iztapalapa, Mexico City, 09810, Mexico\",\n            \"phone\": \"5511223344\",\n            \"equipment\": [\n                {\n                    \"number\": 1,\n                    \"equipment\": \"equipo 1\",\n                    \"brand\": \"test\",\n                    \"model\": \"test\",\n                    \"identification\": \"id\",\n                    \"serialNumber\": \"eq1\"\n                }\n            ],\n            \"observations\": \"test\",\n            \"createdAt\": \"2025-11-24T02:35:05.238Z\",\n            \"synced\": false,\n            \"hasCollectorSignature\": true,\n            \"hasClientSignature\": true,\n            \"raw\": {\n                \"serviceNumber\": \"SRV-003\",\n                \"serviceTime\": \"20:34\",\n                \"company\": \"Test\",\n                \"collectorName\": \"John Doe Recolector\",\n                \"contactPerson\": \"John Doe\",\n                \"visitDate\": \"2025-11-24\",\n                \"serviceType\": \"Calibración\",\n                \"purpose\": \"Servicio Técnico\",\n                \"email\": \"albarenasg@gmail.com\",\n                \"address\": \"Calle Sur 125 A, Colonia Los Cipreses, Mexico City, Iztapalapa, Mexico City, 09810, Mexico\",\n                \"phone\": \"5511223344\",\n                \"equipment\": [\n                    {\n                        \"number\": 1,\n                        \"equipment\": \"equipo 1\",\n                        \"brand\": \"test\",\n                        \"model\": \"test\",\n                        \"identification\": \"id\",\n                        \"serialNumber\": \"eq1\"\n                    }\n                ],\n                \"observations\": \"test\",\n                \"createdAt\": \"2025-11-24T02:35:05.238Z\",\n                \"synced\": 0,\n                \"hasCollectorSignature\": true,\n                \"hasClientSignature\": true\n            }\n        },\n        \"company\": \"Test\",\n        \"collector_name\": \"John Doe Recolector\",\n        \"contact_person\": \"John Doe\",\n        \"email\": \"albarenasg@gmail.com\",\n        \"phone\": \"5511223344\",\n        \"address\": \"Calle Sur 125 A, Colonia Los Cipreses, Mexico City, Iztapalapa, Mexico City, 09810, Mexico\",\n        \"visit_date\": \"2025-11-24\",\n        \"service_type\": \"Calibración\",\n        \"purpose\": \"Servicio Técnico\",\n        \"status\": \"DELETED\",\n        \"created_at\": \"2025-11-24T02:35:05.782Z\",\n        \"updated_at\": \"2025-11-24T20:20:52.539Z\",\n        \"files\": [\n            {\n                \"file_id\": \"KBHi2YpA7QLXCfp4lwZckD7P\",\n                \"relative_path\": \"reporte-servicio.docx\",\n                \"original_name\": \"reporte-servicio.docx\",\n                \"size\": 8418,\n                \"mime_type\": \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/KBHi2YpA7QLXCfp4lwZckD7P/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/KBHi2YpA7QLXCfp4lwZckD7P/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"jUb0MgFYVEWR0S2ciJz08z90\",\n                \"relative_path\": \"reporte-servicio.xlsx\",\n                \"original_name\": \"reporte-servicio.xlsx\",\n                \"size\": 21444,\n                \"mime_type\": \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/jUb0MgFYVEWR0S2ciJz08z90/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/jUb0MgFYVEWR0S2ciJz08z90/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"hhtLYXU1PPYCh93EYjpuJU41\",\n                \"relative_path\": \"detalles-visita.txt\",\n                \"original_name\": \"detalles-visita.txt\",\n                \"size\": 1006,\n                \"mime_type\": \"text/plain\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/hhtLYXU1PPYCh93EYjpuJU41/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/hhtLYXU1PPYCh93EYjpuJU41/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"o8NEfHNwuk5YWtsNpDtgBC3Z\",\n                \"relative_path\": \"details.json\",\n                \"original_name\": \"details.json\",\n                \"size\": 750,\n                \"mime_type\": \"application/json\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/o8NEfHNwuk5YWtsNpDtgBC3Z/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/o8NEfHNwuk5YWtsNpDtgBC3Z/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"A0M2a3kutUb1WN0fhBONplep\",\n                \"relative_path\": \"foto-1.jpg\",\n                \"original_name\": \"foto-1.jpg\",\n                \"size\": 18429,\n                \"mime_type\": \"image/jpeg\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/A0M2a3kutUb1WN0fhBONplep/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"19CZ6lfIkOMU7lA0f3GXqAtL\",\n                \"relative_path\": \"firma-recolector.png\",\n                \"original_name\": \"firma-recolector.png\",\n                \"size\": 17348,\n                \"mime_type\": \"image/png\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/19CZ6lfIkOMU7lA0f3GXqAtL/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/19CZ6lfIkOMU7lA0f3GXqAtL/download?disposition=inline\"\n            },\n            {\n                \"file_id\": \"IdFmcounN935gfGbmwobcXiL\",\n                \"relative_path\": \"firma-cliente.png\",\n                \"original_name\": \"firma-cliente.png\",\n                \"size\": 16670,\n                \"mime_type\": \"image/png\",\n                \"download_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/IdFmcounN935gfGbmwobcXiL/download\",\n                \"preview_url\": \"{{HOST}}/v1/service-packages/records/4I3K62B6Az2biorF/files/IdFmcounN935gfGbmwobcXiL/download?disposition=inline\"\n            }\n        ]\n    }\n}"
             }
           ]
+        },
+        {
+          "name": "Convert Service Package Record to Customer Service Records",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-user-lang",
+                "value": "es"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"records\": [\n    {\n      \"equipment_index\": 0,\n      \"customer\": {\n        \"customer_id\": \"ID_CLIENTE\",\n        \"customer_user_ids\": []\n      },\n      \"service_type_code\": \"CODIGO_TIPO\",\n      \"requested_at\": \"2026-11-11\",\n      \"received_at\": \"2026-11-10\",\n      \"asset\": {\n        \"name\": \"Equipo\",\n        \"identifier\": \"ID-1\",\n        \"brand\": \"Marca\",\n        \"model\": \"Modelo\",\n        \"serial_number\": \"Serie\",\n        \"observations\": null\n      },\n      \"photo_file_ids\": [\n        \"ID_FOTO_ORIGEN\"\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/v1/service-packages/records/:recordId/customer-service-records",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "v1",
+                "service-packages",
+                "records",
+                ":recordId",
+                "customer-service-records"
+              ]
+            },
+            "description": "Requiere SERVICE_PACKAGES.CONVERT. records debe cubrir exactamente una vez cada índice de details.equipment. received_at usa visit_date si se omite. Cada foto debe pertenecer al origen y ser imagen. 201: data {source_record_id, service_order, records:[{equipment_index, customer_service_record_id, service_number, service_number_display}]}. 404 si no existe; 409 si ya se convirtió o eliminó; 400 para cobertura o fotos inválidas."
+          },
+          "response": []
         }
       ]
     },

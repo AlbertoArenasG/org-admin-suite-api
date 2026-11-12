@@ -12,14 +12,22 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-import { CurrentUser, RequirePermission } from '@src/common/decorators';
+import {
+  CurrentUser,
+  RequireAuxiliaryCapability,
+  RequirePermission,
+} from '@src/common/decorators';
 import { AuthenticatedUserContextDto } from '@application/dto';
 import {
   CreateCustomerServiceRecordServiceTypeRequestDto,
   GetCustomerServiceRecordServiceTypesRequestDto,
   UpdateCustomerServiceRecordServiceTypeRequestDto,
 } from '@infra/api/dto';
-import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
+import {
+  AuxiliaryCapabilitiesGuard,
+  JwtAuthGuard,
+  PermissionsGuard,
+} from '@infra/api/guards';
 import { CustomerServiceRecordServiceTypePresenter } from '@infra/api/presenters';
 import { ApiResponseBuilder } from '@infra/api/responses/api-response.builder';
 import {
@@ -80,8 +88,11 @@ export class CustomerServiceRecordServiceTypeController {
   }
 
   @Get('options')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @RequirePermission('customer_service_records', 'READ')
+  @UseGuards(JwtAuthGuard, AuxiliaryCapabilitiesGuard)
+  @RequireAuxiliaryCapability(
+    'customer_service_record_service_types',
+    'read_options',
+  )
   @HttpCode(HttpStatus.OK)
   async getOptions() {
     const result = await this.queryBus.execute(

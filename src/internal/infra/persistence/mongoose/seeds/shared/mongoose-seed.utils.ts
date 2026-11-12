@@ -30,8 +30,14 @@ export function createSeedLogger(): MongooseSeedLogger {
   };
 }
 
-export async function connectSeedMongo(env: Env): Promise<mongoose.Connection> {
-  await mongoose.connect(env.MONGO_URI);
+export async function connectSeedMongo(
+  env: Env,
+  dryRun = false,
+): Promise<mongoose.Connection> {
+  await mongoose.connect(
+    env.MONGO_URI,
+    dryRun ? { autoIndex: false, autoCreate: false } : {},
+  );
 
   return mongoose.connection;
 }
@@ -40,11 +46,13 @@ export function createSeedContext(params: {
   connection: mongoose.Connection;
   env: Env;
   logger: MongooseSeedLogger;
+  dryRun?: boolean;
 }): MongooseSeedContext {
   return {
     connection: params.connection,
     env: params.env,
     logger: params.logger,
+    dryRun: params.dryRun,
     now: new Date(),
   };
 }

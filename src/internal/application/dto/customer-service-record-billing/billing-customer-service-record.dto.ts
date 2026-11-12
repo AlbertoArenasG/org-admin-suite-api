@@ -43,6 +43,8 @@ export interface BillingCustomerServiceRecordAssetViewDto {
 
 export interface BillingCustomerServiceRecordViewDto {
   id: string;
+  sourceServicePackageRecordId: string | null;
+  sourceServiceOrder: string | null;
   serviceNumber: number;
   serviceNumberDisplay: string;
   serviceType: { code: string; name: string };

@@ -9,19 +9,22 @@ import {
 
 export async function runMongooseSeeds(
   seeds: MongooseSeedDefinition[],
+  options: { dryRun?: boolean } = {},
 ): Promise<SeedReportItem[]> {
   const env = loadSeedEnv();
   const logger = createSeedLogger();
-  const connection = await connectSeedMongo(env);
+  const connection = await connectSeedMongo(env, options.dryRun);
   const reports: SeedReportItem[] = [];
 
   try {
     logger.info(`Connected to MongoDB. Registered seeds: ${seeds.length}.`);
+    if (options.dryRun) logger.info('Mode: dry-run (no writes).');
 
     const context = createSeedContext({
       connection,
       env,
       logger,
+      dryRun: options.dryRun,
     });
 
     for (const seed of seeds) {

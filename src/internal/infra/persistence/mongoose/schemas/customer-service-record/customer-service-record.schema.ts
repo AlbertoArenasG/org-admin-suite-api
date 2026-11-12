@@ -433,6 +433,10 @@ export class CustomerServiceRecordProviderDocument {
   toObject: { virtuals: true },
 })
 export class CustomerServiceRecordDocument extends Document {
+  @Prop({ type: String, default: null, immutable: true, index: true })
+  source_service_package_record_id: string | null;
+  @Prop({ type: String, default: null, immutable: true })
+  source_service_order: string | null;
   @Prop({
     type: String,
     required: true,

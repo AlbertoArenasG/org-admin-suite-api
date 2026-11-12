@@ -32,6 +32,10 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
       consumerModule: 'CUSTOMER_SERVICE_RECORDS',
       auxiliaryCapabilities: [
         {
+          module: 'CUSTOMER_SERVICE_RECORD_SERVICE_TYPES',
+          capability: 'READ_OPTIONS',
+        },
+        {
           module: 'CUSTOMERS',
           capability: 'READ_OPTIONS',
         },
@@ -53,6 +57,28 @@ export const AUXILIARY_CAPABILITIES_DERIVATION_CATALOG: AuxiliaryCapabilityDeriv
         },
         {
           module: 'EXPIRATION_NOTIFICATION_POLICIES',
+          capability: 'READ_OPTIONS',
+        },
+      ],
+    },
+    {
+      consumerModule: 'SERVICE_PACKAGES',
+      auxiliaryCapabilities: [
+        { module: 'CUSTOMERS', capability: 'READ_OPTIONS' },
+        { module: 'CUSTOMERS', capability: 'READ_RELATED_USERS_OPTIONS' },
+        {
+          module: 'CUSTOMER_SERVICE_RECORD_SERVICE_TYPES',
+          capability: 'READ_OPTIONS',
+        },
+      ],
+    },
+    {
+      consumerModule: 'BILLING_CUSTOMER_SERVICE_RECORDS',
+      auxiliaryCapabilities: [
+        { module: 'CUSTOMERS', capability: 'READ_OPTIONS' },
+        { module: 'CUSTOMERS', capability: 'READ_RELATED_USERS_OPTIONS' },
+        {
+          module: 'CUSTOMER_SERVICE_RECORD_SERVICE_TYPES',
           capability: 'READ_OPTIONS',
         },
       ],
