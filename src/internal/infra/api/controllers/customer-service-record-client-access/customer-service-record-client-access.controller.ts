@@ -10,6 +10,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import {
   AuthenticatedUserContextDto,
   GetCustomerServiceRecordClientAccessListResultDto,
+  GetCustomerServiceRecordClientAccessTimelineResultDto,
   CustomerServiceRecordClientAccessViewDto,
   CustomerServiceRecordClientAccessCustomerOptionDto,
   CustomerServiceRecordClientAccessServiceTypeOptionDto,
@@ -18,12 +19,14 @@ import { CurrentUser, RequirePermission } from '@src/common/decorators';
 import { JwtAuthGuard, PermissionsGuard } from '@infra/api/guards';
 import {
   GetCustomerServiceRecordClientAccessListRequestDto,
+  GetCustomerServiceRecordClientAccessTimelineRequestDto,
   GetCustomerServiceRecordClientAccessCustomerOptionsRequestDto,
   GetCustomerServiceRecordClientAccessServiceTypeOptionsRequestDto,
 } from '@infra/api/dto';
 import { CustomerServiceRecordClientAccessPresenter } from '@infra/api/presenters/customer-service-record-client-access';
 import {
   GetCustomerServiceRecordClientAccessListQuery,
+  GetCustomerServiceRecordClientAccessTimelineQuery,
   GetCustomerServiceRecordClientAccessByIdQuery,
   GetCustomerServiceRecordClientAccessCustomerOptionsQuery,
   GetCustomerServiceRecordClientAccessServiceTypeOptionsQuery,
@@ -90,6 +93,24 @@ export class CustomerServiceRecordClientAccessController {
       ),
     );
     return this.response(this.presenter.toServiceTypeOptions(result)).build();
+  }
+  @Get('timeline')
+  @RequirePermission('customer_service_records_client_access', 'READ')
+  async findTimeline(
+    @CurrentUser() user: AuthenticatedUserContextDto,
+    @Query() query: GetCustomerServiceRecordClientAccessTimelineRequestDto,
+  ) {
+    const result = await this.queryBus.execute<
+      GetCustomerServiceRecordClientAccessTimelineQuery,
+      GetCustomerServiceRecordClientAccessTimelineResultDto
+    >(
+      GetCustomerServiceRecordClientAccessTimelineQuery.create(
+        query.toDomain(user.userId),
+      ),
+    );
+    return this.response(this.presenter.toTimelineCollection(result.items))
+      .withPagination(result.page, result.perPage, result.total)
+      .build();
   }
   @Get(':recordId')
   @RequirePermission('customer_service_records_client_access', 'READ')

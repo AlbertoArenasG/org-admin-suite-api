@@ -2,21 +2,87 @@ import { BadRequestException } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsDefined,
   IsIn,
   IsOptional,
   IsString,
   Matches,
+  Validate,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
   ValidateNested,
 } from 'class-validator';
 import {
   GetCustomerServiceRecordClientAccessListDto,
   GetCustomerServiceRecordClientAccessOptionsDto,
+  GetCustomerServiceRecordClientAccessTimelineDto,
 } from '@application/dto';
 import {
   CUSTOMER_SERVICE_RECORD_SORT_STRATEGIES,
   CustomerServiceRecordSortStrategy,
 } from '@domain/ports/repositories';
 import { PaginationRequestDto } from '@infra/api/dto/shared';
+
+@ValidatorConstraint({ name: 'CustomerServiceRecordClientAccessTimelineRange' })
+class CustomerServiceRecordClientAccessTimelineRangeValidator
+  implements ValidatorConstraintInterface
+{
+  validate(to: unknown, args: ValidationArguments): boolean {
+    const from = (
+      args.object as GetCustomerServiceRecordClientAccessTimelineRequestDto
+    ).from;
+    if (typeof from !== 'string' || typeof to !== 'string') return false;
+    const parseDay = (value: string): number | null => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+      const millis = Date.parse(`${value}T00:00:00.000Z`);
+      if (!Number.isFinite(millis)) return null;
+      return new Date(millis).toISOString().slice(0, 10) === value
+        ? millis
+        : null;
+    };
+    const first = parseDay(from);
+    const last = parseDay(to);
+    return (
+      first !== null &&
+      last !== null &&
+      last >= first &&
+      (last - first) / 86_400_000 < 42
+    );
+  }
+
+  defaultMessage(): string {
+    return 'from and to must be real ordered dates within 42 inclusive days';
+  }
+}
+
+export class GetCustomerServiceRecordClientAccessTimelineRequestDto extends PaginationRequestDto {
+  @IsDefined()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  from!: string;
+
+  @IsDefined()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  @Validate(CustomerServiceRecordClientAccessTimelineRangeValidator)
+  to!: string;
+
+  @IsOptional()
+  @IsIn(['periods', 'customer_milestones'])
+  match?: 'periods' | 'customer_milestones';
+
+  toDomain(
+    actorUserId: string,
+  ): GetCustomerServiceRecordClientAccessTimelineDto {
+    return {
+      actorUserId,
+      from: this.from,
+      to: this.to,
+      match: this.match ?? 'periods',
+      page: this.getPage(),
+      perPage: this.getPerPage(),
+    };
+  }
+}
 
 const fields = [
   'service_number',

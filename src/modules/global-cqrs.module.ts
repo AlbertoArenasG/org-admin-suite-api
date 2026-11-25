@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import {
   GetCustomerServiceRecordClientAccessListHandler,
+  GetCustomerServiceRecordClientAccessTimelineHandler,
   GetCustomerServiceRecordClientAccessByIdHandler,
   GetCustomerServiceRecordClientAccessCustomerOptionsHandler,
   GetCustomerServiceRecordClientAccessServiceTypeOptionsHandler,
@@ -155,6 +156,7 @@ import {
 
 const providers = [
   GetCustomerServiceRecordClientAccessListHandler,
+  GetCustomerServiceRecordClientAccessTimelineHandler,
   GetCustomerServiceRecordClientAccessByIdHandler,
   GetCustomerServiceRecordClientAccessCustomerOptionsHandler,
   GetCustomerServiceRecordClientAccessServiceTypeOptionsHandler,

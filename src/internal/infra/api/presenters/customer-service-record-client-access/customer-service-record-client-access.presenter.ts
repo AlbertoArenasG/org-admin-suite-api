@@ -4,6 +4,7 @@ import {
   CustomerServiceRecordClientAccessCustomerOptionDto,
   CustomerServiceRecordClientAccessServiceTypeOptionDto,
   CustomerServiceRecordClientAccessViewDto,
+  CustomerServiceRecordClientAccessTimelineViewDto,
 } from '@application/dto';
 import {
   CustomerServiceRecordCustomerDeliveryProps,
@@ -58,6 +59,65 @@ export class CustomerServiceRecordClientAccessPresenter {
 
   toCollection(values: CustomerServiceRecordClientAccessViewDto[]) {
     return values.map((value) => this.toListResponse(value));
+  }
+
+  toTimelineCollection(
+    values: CustomerServiceRecordClientAccessTimelineViewDto[],
+  ) {
+    return values.map((value) => ({
+      customer_service_record_id: value.id,
+      service_number: value.serviceNumber,
+      service_number_display: value.serviceNumberDisplay,
+      service_type: {
+        service_type_code: value.serviceType.code,
+        name: value.serviceType.name,
+      },
+      requested_at: value.requestedAt,
+      customer: {
+        customer_id: value.customer.customerId,
+        name: value.customer.name,
+      },
+      assets: value.assets.map((asset) => ({
+        asset_id: asset.assetId,
+        name: asset.name,
+        identifier: asset.identifier,
+      })),
+      operational_status: this.localized(
+        'OPERATIONAL_STATUS',
+        value.operationalStatus,
+      ),
+      customer_delivery: {
+        received_at: value.customerDelivery.receivedAt,
+        estimated_delivery_at: value.customerDelivery.estimatedDeliveryAt,
+        status_materialization: this.timelineMaterialization(
+          value.customerDelivery.statusMaterialization,
+        ),
+      },
+    }));
+  }
+
+  private timelineMaterialization(
+    value: {
+      source: string;
+      code: string;
+      label: string;
+      labelKey: string | null;
+      colorHex: string;
+      effectiveStartDate: string | null;
+    } | null,
+  ) {
+    if (!value) return null;
+    return {
+      code: value.code,
+      name:
+        value.source === 'POLICY'
+          ? value.label
+          : this.enumNameService.getEnumName(value.labelKey),
+      name_key: value.labelKey,
+      color_hex: value.colorHex,
+      source: this.localized('MATERIALIZATION_SOURCE', value.source),
+      effective_start_date: value.effectiveStartDate,
+    };
   }
 
   toViewResponse(value: CustomerServiceRecordClientAccessViewDto) {

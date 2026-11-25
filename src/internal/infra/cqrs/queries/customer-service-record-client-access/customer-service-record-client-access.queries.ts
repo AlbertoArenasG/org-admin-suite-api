@@ -1,6 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import {
   GetCustomerServiceRecordClientAccessListDto,
+  GetCustomerServiceRecordClientAccessTimelineDto,
+  GetCustomerServiceRecordClientAccessTimelineResultDto,
   GetCustomerServiceRecordClientAccessOptionsDto,
   GetCustomerServiceRecordClientAccessListResultDto,
   CustomerServiceRecordClientAccessViewDto,
@@ -11,6 +13,7 @@ import {
   GetCustomerServiceRecordClientAccessByIdUseCase,
   GetCustomerServiceRecordClientAccessCustomerOptionsUseCase,
   GetCustomerServiceRecordClientAccessListUseCase,
+  GetCustomerServiceRecordClientAccessTimelineUseCase,
   GetCustomerServiceRecordClientAccessServiceTypeOptionsUseCase,
 } from '@application/use-cases';
 import { BaseQueryHandler } from '@infra/cqrs/base-query.handler';
@@ -20,6 +23,32 @@ export class GetCustomerServiceRecordClientAccessListQuery {
   ) {}
   static create(payload: GetCustomerServiceRecordClientAccessListDto) {
     return new this(payload);
+  }
+}
+export class GetCustomerServiceRecordClientAccessTimelineQuery {
+  private constructor(
+    readonly payload: GetCustomerServiceRecordClientAccessTimelineDto,
+  ) {}
+  static create(payload: GetCustomerServiceRecordClientAccessTimelineDto) {
+    return new this(payload);
+  }
+}
+
+@QueryHandler(GetCustomerServiceRecordClientAccessTimelineQuery)
+export class GetCustomerServiceRecordClientAccessTimelineHandler
+  extends BaseQueryHandler<
+    GetCustomerServiceRecordClientAccessTimelineQuery,
+    GetCustomerServiceRecordClientAccessTimelineResultDto
+  >
+  implements IQueryHandler<GetCustomerServiceRecordClientAccessTimelineQuery>
+{
+  constructor(
+    private readonly useCase: GetCustomerServiceRecordClientAccessTimelineUseCase,
+  ) {
+    super();
+  }
+  execute(query: GetCustomerServiceRecordClientAccessTimelineQuery) {
+    return this.run(query, () => this.useCase.execute(query.payload));
   }
 }
 export class GetCustomerServiceRecordClientAccessByIdQuery {

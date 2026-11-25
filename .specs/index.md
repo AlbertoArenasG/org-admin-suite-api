@@ -1,5 +1,6 @@
 # Specs Index
 
+- [customer-service-record-client-access-timeline](./2026/2026-11/2026-11-24_1336_customer-service-record-client-access-timeline/00-definition.md) - Completada
 - [service-package-record-conversion](./2026/2026-11/2026-11-11_2000_service-package-record-conversion/00-definition.md) - Completada; código, documentación, migración, seed y validación manual cerrados
 - [customer-service-record-billing-lifecycle](./2026/2026-11/2026-11-04_2100_customer-service-record-billing-lifecycle/00-definition.md) - Completada; código, migración, documentación y validación manual cerrados
 - [customer-service-record-timeline-read](./2026/2026-10/2026-10-25_2240_customer-service-record-timeline-read/00-definition.md) - Completada; consulta temporal, contrato y validación manual confirmados

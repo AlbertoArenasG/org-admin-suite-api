@@ -872,8 +872,9 @@ Endpoints actuales:
 - `GET /v1/customer-service-records-client-access/:recordId`: detalle visible o `404`; operacion `READ`.
 - `GET /v1/customer-service-records-client-access/customers/options`: Clientes distintos de registros visibles, conserva filtros excepto `customer_id`; operacion `READ`.
 - `GET /v1/customer-service-records-client-access/service-types/options`: tipos distintos de registros visibles, conserva filtros excepto `service_type_code`; operacion `READ`.
+- `GET /v1/customer-service-records-client-access/timeline`: periodos e hitos del cliente, paginados y restringidos al mismo alcance visible; operacion `READ`.
 
-Los cuatro endpoints requieren JWT y `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS/READ`.
+Los cinco endpoints requieren JWT y `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS/READ`.
 No heredan permisos del modulo administrativo ni requieren capabilities auxiliares.
 Solo consultan registros `ACTIVE`: staff interno omite ambas restricciones
 relacionales; externos requieren relacion vigente usuario-cliente y pertenencia

@@ -14,7 +14,36 @@ import {
 import {
   CustomerServiceRecordClientAccessSortField,
   CustomerServiceRecordSortStrategy,
+  CustomerServiceRecordTimelineMatch,
+  CustomerServiceRecordTimelineMaterialization,
 } from '@domain/ports/repositories';
+
+export interface GetCustomerServiceRecordClientAccessTimelineDto
+  extends PaginationParamsDto {
+  actorUserId: string;
+  from: string;
+  to: string;
+  match: CustomerServiceRecordTimelineMatch;
+}
+
+export interface CustomerServiceRecordClientAccessTimelineViewDto {
+  id: string;
+  serviceNumber: number;
+  serviceNumberDisplay: string;
+  serviceType: { code: string; name: string };
+  requestedAt: string;
+  customer: { customerId: string; name: string };
+  assets: Array<{ assetId: string; name: string; identifier: string }>;
+  operationalStatus: CustomerServiceRecordOperationalStatus;
+  customerDelivery: {
+    receivedAt: string | null;
+    estimatedDeliveryAt: string | null;
+    statusMaterialization: CustomerServiceRecordTimelineMaterialization | null;
+  };
+}
+
+export type GetCustomerServiceRecordClientAccessTimelineResultDto =
+  PaginatedResultDto<CustomerServiceRecordClientAccessTimelineViewDto>;
 
 export interface GetCustomerServiceRecordClientAccessListDto
   extends PaginationParamsDto {

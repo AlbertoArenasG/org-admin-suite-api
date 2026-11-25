@@ -9,7 +9,7 @@ confirmacion del usuario el 2026-09-06.
 
 Modulo independiente `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS`, operacion `READ`.
 Copy de navegacion: Seguimiento de servicios. Copy de permisos: Acceso de clientes
-a registros de servicio. Los cuatro endpoints requieren Bearer JWT y ese permiso.
+a registros de servicio. Los cinco endpoints requieren Bearer JWT y ese permiso.
 El permiso administrativo `CUSTOMER_SERVICE_RECORDS/READ` no lo sustituye.
 
 Cada lectura exige READ y estatus tecnico ACTIVE. Backend lee is_internal_staff
@@ -33,6 +33,33 @@ Base: `/v1/customer-service-records-client-access`.
 | GET | `/:recordId` | Detalle visible o 404 |
 | GET | `/customers/options` | Opciones contextuales de Clientes |
 | GET | `/service-types/options` | Opciones contextuales de tipos |
+| GET | `/timeline` | Períodos e hitos del cliente paginados para calendario y Gantt |
+
+## Timeline del portal
+
+`GET /timeline?from=2026-11-01&to=2026-11-30&match=periods&page=1&limit=10`
+requiere el mismo JWT y `CUSTOMER_SERVICE_RECORDS_CLIENT_ACCESS/READ` que el
+listado. `from` y `to` son fechas reales `YYYY-MM-DD`, inclusivas y ordenadas;
+el máximo es 42 días inclusivos. `match=periods` (valor predeterminado) incluye
+registros cuya recepción o entrega estimada caiga dentro del rango, o cuyo
+período cruce el rango. `match=customer_milestones` incluye solo los extremos.
+`page`, `limit` y `items_per_page` siguen la paginación del listado; el orden
+es por ID de registro ascendente. Devuelve 400 para rango, `match` o paginación
+inválidos; 401 sin autenticación y 403 sin READ.
+
+La búsqueda, el total y la paginación aplican el mismo alcance que el listado:
+solo ACTIVE y, para usuarios externos, relación vigente con el cliente **y**
+asignación en `customer.users`. Staff interno ve todos los ACTIVE. La
+proyección es ligera e incluye ID, folio numérico y formateado, tipo de servicio,
+fecha de solicitud, cliente, equipos (`asset_id`, `name`, `identifier`), estado
+operativo y `customer_delivery` con recepción, entrega estimada y estado
+materializado localizado. No contiene `provider` ni datos de facturación,
+contactos, adjuntos o notificaciones. Usa el envelope común con `data` y
+`pagination`; sin coincidencias devuelve `data: []` y `total: 0`.
+
+Los filtros de búsqueda del listado no son parámetros de `/timeline`. En la
+interfaz, tabla, lista y Kanban comparten el listado filtrado; calendario y Gantt
+consultan este endpoint por rango. Esta separación sigue la vista administrativa.
 
 ## Filtros y orden
 
@@ -151,7 +178,7 @@ materializacion. La de notificaciones incluye sus fechas, reglas y eventos con
 estatus localizado. `operational_status` tambien se expone como codigo, nombre
 y `name_key` localizado.
 
-No se exponen provider, requested_at, updated_at ni observaciones de assets.
+En listado y detalle no se exponen provider, requested_at, updated_at ni observaciones de assets. El endpoint `/timeline` sí expone `requested_at`.
 No se exponen campos, politicas, materializaciones o eventos pertenecientes a
 Proveedor.
 

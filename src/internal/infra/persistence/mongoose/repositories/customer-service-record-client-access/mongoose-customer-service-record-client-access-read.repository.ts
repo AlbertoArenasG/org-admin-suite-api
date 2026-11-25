@@ -6,10 +6,15 @@ import {
 } from '@domain/entities';
 import {
   FindCustomerServiceRecordClientAccessParams,
+  FindCustomerServiceRecordClientAccessTimelineParams,
+  CustomerServiceRecordClientAccessTimelineReadModel,
   ICustomerServiceRecordClientAccessReadRepository,
 } from '@domain/ports/repositories';
 import { buildAccentInsensitiveRegex } from '@src/common/utils';
-import { CustomerServiceRecordDocument } from '@infra/persistence/mongoose/schemas';
+import {
+  CustomerServiceRecordDocument,
+  CustomerServiceRecordStatusMaterializationDocument,
+} from '@infra/persistence/mongoose/schemas';
 import { MongooseCustomerServiceRecordBaseRepository } from '../customer-service-record/mongoose-customer-service-record-base.repository';
 
 @Injectable()
@@ -17,6 +22,118 @@ export class MongooseCustomerServiceRecordClientAccessReadRepositoryImpl
   extends MongooseCustomerServiceRecordBaseRepository
   implements ICustomerServiceRecordClientAccessReadRepository
 {
+  async findTimeline(
+    params: FindCustomerServiceRecordClientAccessTimelineParams,
+  ): Promise<{
+    data: CustomerServiceRecordClientAccessTimelineReadModel[];
+    total: number;
+  }> {
+    if (!params.isInternalStaff && !params.customerIds.length)
+      return { data: [], total: 0 };
+    const customerStart = 'customer_delivery.received_at';
+    const customerEnd = 'customer_delivery.estimated_delivery_at';
+    const inRange = (field: string) => ({
+      [field]: { $gte: params.from, $lte: params.to },
+    });
+    const milestones = [inRange(customerStart), inRange(customerEnd)];
+    const filter = {
+      ...this.base(
+        params.actorUserId,
+        params.customerIds,
+        params.isInternalStaff,
+      ),
+      $or:
+        params.match === 'customer_milestones'
+          ? milestones
+          : [
+              ...milestones,
+              {
+                [customerStart]: { $lte: params.to },
+                [customerEnd]: { $gte: params.from },
+              },
+            ],
+    };
+    const fields = [
+      'customer_service_record_id',
+      'service_number',
+      'service_type_code',
+      'service_type_name',
+      'requested_at',
+      'customer.customer_id',
+      'customer.customer_name',
+      'assets.asset_id',
+      'assets.name',
+      'assets.identifier',
+      'operational_status',
+      customerStart,
+      customerEnd,
+      'customer_delivery.status_materialization.source',
+      'customer_delivery.status_materialization.code',
+      'customer_delivery.status_materialization.label',
+      'customer_delivery.status_materialization.label_key',
+      'customer_delivery.status_materialization.color_hex',
+      'customer_delivery.status_materialization.effective_start_date',
+    ];
+    const session = this.transactionContext.getSession() ?? null;
+    const [documents, total] = await Promise.all([
+      this.customerServiceRecordModel
+        .find(filter)
+        .select(fields.join(' '))
+        .sort({ customer_service_record_id: 1 })
+        .skip((params.page - 1) * params.perPage)
+        .limit(params.perPage)
+        .session(session)
+        .lean()
+        .exec(),
+      this.customerServiceRecordModel
+        .countDocuments(filter)
+        .session(session)
+        .exec(),
+    ]);
+    return {
+      data: documents.map((document) => ({
+        id: document.customer_service_record_id,
+        serviceNumber: document.service_number,
+        serviceTypeCode: document.service_type_code,
+        serviceTypeName: document.service_type_name,
+        requestedAt: document.requested_at,
+        customer: {
+          customerId: document.customer.customer_id,
+          name: document.customer.customer_name,
+        },
+        assets: (document.assets ?? []).map((asset) => ({
+          assetId: asset.asset_id,
+          name: asset.name,
+          identifier: asset.identifier,
+        })),
+        operationalStatus: document.operational_status,
+        customerDelivery: {
+          receivedAt: document.customer_delivery.received_at ?? null,
+          estimatedDeliveryAt:
+            document.customer_delivery.estimated_delivery_at ?? null,
+          statusMaterialization: this.toTimelineMaterialization(
+            document.customer_delivery.status_materialization,
+          ),
+        },
+      })),
+      total,
+    };
+  }
+
+  private toTimelineMaterialization(
+    value?: CustomerServiceRecordStatusMaterializationDocument | null,
+  ) {
+    if (!value) return null;
+    return {
+      source: value.source,
+      code: value.code,
+      label: value.label,
+      labelKey: value.label_key ?? null,
+      colorHex: value.color_hex,
+      effectiveStartDate: value.effective_start_date ?? null,
+    };
+  }
+
   async findAll(params: FindCustomerServiceRecordClientAccessParams) {
     if (!params.isInternalStaff && !params.customerIds.length)
       return { data: [], total: 0 };

@@ -1,5 +1,25 @@
 import { CustomerServiceRecord } from '@domain/entities';
-import type { CustomerServiceRecordSortStrategy } from '../customer-service-record';
+import type {
+  CustomerServiceRecordSortStrategy,
+  CustomerServiceRecordTimelineMatch,
+  CustomerServiceRecordTimelineReadModel,
+} from '../customer-service-record';
+
+export interface FindCustomerServiceRecordClientAccessTimelineParams {
+  actorUserId: string;
+  customerIds: string[];
+  isInternalStaff: boolean;
+  from: string;
+  to: string;
+  match: CustomerServiceRecordTimelineMatch;
+  page: number;
+  perPage: number;
+}
+
+export type CustomerServiceRecordClientAccessTimelineReadModel = Omit<
+  CustomerServiceRecordTimelineReadModel,
+  'provider'
+>;
 
 export type CustomerServiceRecordClientAccessSortField =
   | 'service_number'
@@ -27,6 +47,12 @@ export interface FindCustomerServiceRecordClientAccessParams {
 }
 
 export interface ICustomerServiceRecordClientAccessReadRepository {
+  findTimeline(
+    params: FindCustomerServiceRecordClientAccessTimelineParams,
+  ): Promise<{
+    data: CustomerServiceRecordClientAccessTimelineReadModel[];
+    total: number;
+  }>;
   findAll(params: FindCustomerServiceRecordClientAccessParams): Promise<{
     data: CustomerServiceRecord[];
     total: number;
